@@ -1,0 +1,19 @@
+{
+  "name": "u18-baseball-scraper",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "discover": "tsx src/discover.ts",
+    "scrape": "tsx src/index.ts",
+    "test": "tsx src/accumulate.test.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.47.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "@types/node": "^20.16.10"
+  }
+}

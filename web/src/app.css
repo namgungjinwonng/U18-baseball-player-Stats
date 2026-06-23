@@ -1,0 +1,218 @@
+/* ============================================================
+   레이아웃 — 데스크탑/모바일 공통 컨테이너 규칙 (Nike 8px 리듬)
+   ============================================================ */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* --- Utility bar --- */
+.utility-bar {
+  background: var(--color-soft-cloud);
+  color: var(--color-ink);
+  font-size: var(--type-caption-sm);
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+.utility-bar .container {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+/* --- Primary nav (desktop) --- */
+.primary-nav {
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline-soft);
+  height: 64px;
+}
+.primary-nav .container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: var(--space-xl);
+}
+.brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.nav-links {
+  display: flex;
+  gap: var(--space-xl);
+  flex: 1;
+}
+.nav-links a {
+  font-weight: 500;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.nav-links a.active {
+  border-bottom-color: var(--color-ink);
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 280px;
+}
+
+/* --- Page section --- */
+.page {
+  padding: var(--space-section) 0;
+}
+.tabs {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+}
+
+/* --- Hero campaign --- */
+.hero {
+  background: linear-gradient(135deg, #111 0%, #2a2a2a 100%);
+  color: var(--color-on-primary);
+  padding: var(--space-section) 40px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero .display-campaign {
+  max-width: 12ch;
+}
+.hero__sub {
+  color: var(--color-stone);
+  margin: var(--space-md) 0 var(--space-xl);
+  max-width: 48ch;
+}
+
+/* --- Leaders grid --- */
+.leader-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-sm);
+}
+.leader-card {
+  background: var(--color-soft-cloud);
+  padding: var(--space-xl);
+}
+.leader-card h3 {
+  font-size: var(--type-caption);
+  color: var(--color-mute);
+  margin: 0 0 var(--space-md);
+  font-weight: 500;
+}
+.leader-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-hairline);
+}
+.leader-row:last-child {
+  border-bottom: none;
+}
+.leader-row .nm {
+  font-weight: 500;
+}
+.leader-row .tm {
+  color: var(--color-mute);
+  font-size: var(--type-caption-sm);
+  margin-left: var(--space-sm);
+}
+.leader-row .val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* --- Search results --- */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-hairline);
+  cursor: pointer;
+}
+.result-row .pos {
+  color: var(--color-mute);
+  font-size: var(--type-caption);
+}
+
+/* --- Player detail --- */
+.player-head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+}
+.player-head .meta {
+  color: var(--color-mute);
+}
+.stat-strip {
+  display: flex;
+  gap: var(--space-section);
+  flex-wrap: wrap;
+  padding: var(--space-xl) 0;
+  border-top: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: var(--space-xl);
+}
+.stat-strip .stat .k {
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+  text-transform: uppercase;
+}
+.stat-strip .stat .v {
+  font-size: var(--type-heading-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Matchup picker --- */
+.matchup-pick {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+  margin-bottom: var(--space-section);
+}
+.matchup-pick .vs {
+  align-self: center;
+  font-family: var(--font-display);
+  font-size: 32px;
+}
+.pick-list {
+  border: 1px solid var(--color-hairline);
+  max-height: 280px;
+  overflow-y: auto;
+}
+.pick-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-hairline-soft);
+  padding: var(--space-md);
+  cursor: pointer;
+  font: inherit;
+}
+.pick-list button.sel {
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+}
+.muted {
+  color: var(--color-mute);
+}
+.state {
+  padding: var(--space-section) 0;
+  text-align: center;
+  color: var(--color-mute);
+}

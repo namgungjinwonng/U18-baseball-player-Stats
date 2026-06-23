@@ -1,0 +1,188 @@
+/* ============================================================
+   Nike.md 핵심 컴포넌트 — 알약 CTA, flat 카드, hairline 테이블.
+   그림자 금지. radius 는 알약(lg) 일관.
+   ============================================================ */
+
+/* --- Buttons --- */
+.btn {
+  font-family: var(--font-ui);
+  font-size: var(--type-button);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  padding: 16px 32px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+.btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+.btn--primary {
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+}
+.btn--secondary {
+  background: var(--color-soft-cloud);
+  color: var(--color-ink);
+}
+.btn--on-image {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  padding: 12px 24px;
+}
+.btn--sm {
+  font-size: var(--type-button-sm);
+  padding: 8px 20px;
+  min-height: 40px;
+}
+.btn--block {
+  width: 100%;
+}
+
+/* --- Icon-circular --- */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-soft-cloud);
+  color: var(--color-ink);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* --- Filter chip (선택 시 완전 반전) --- */
+.chip {
+  font-size: var(--type-button-sm);
+  font-weight: 500;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 8px 16px;
+  min-height: 40px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip--active {
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+  border-color: var(--color-ink);
+}
+
+/* --- Search pill --- */
+.search-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  min-height: 40px;
+}
+.search-pill input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-ui);
+  font-size: var(--type-body);
+  width: 100%;
+  color: var(--color-ink);
+}
+.search-pill--focused {
+  background: var(--color-canvas);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 12px var(--color-soft-cloud);
+}
+
+/* --- Flat card --- */
+.card {
+  background: var(--color-canvas);
+  border-radius: var(--radius-none);
+}
+.card--cloud {
+  background: var(--color-soft-cloud);
+}
+
+/* --- Campaign / hero tile --- */
+.campaign {
+  position: relative;
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+  overflow: hidden;
+  padding: var(--space-section);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.campaign__kicker {
+  font-size: var(--type-caption);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-bottom: var(--space-md);
+}
+
+/* --- Stat table (Nike 어휘로 표현: hairline 구분선) --- */
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-caption);
+}
+.stat-table th,
+.stat-table td {
+  text-align: right;
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid var(--color-hairline);
+  white-space: nowrap;
+}
+.stat-table th {
+  font-weight: 500;
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  cursor: pointer;
+  user-select: none;
+}
+.stat-table td:first-child,
+.stat-table th:first-child {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background: var(--color-canvas);
+}
+.stat-table tbody tr:active {
+  background: var(--color-soft-cloud);
+}
+.stat-table .num {
+  font-variant-numeric: tabular-nums;
+}
+.stat-table__scroll {
+  overflow-x: auto;
+}
+
+/* --- Hairline divider --- */
+.divider {
+  height: 1px;
+  background: var(--color-hairline);
+  border: none;
+  margin: var(--space-section) 0;
+}
+
+/* --- Section header --- */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+}

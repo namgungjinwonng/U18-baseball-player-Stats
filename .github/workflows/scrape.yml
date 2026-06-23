@@ -1,0 +1,50 @@
+name: Scrape & Accumulate Data
+
+on:
+  schedule:
+    # 시즌 중 매일 1회 (UTC 15:00 = KST 00:00). 필요 시 조정.
+    - cron: "0 15 * * *"
+  workflow_dispatch: # 수동 실행
+
+permissions:
+  contents: write # data/ 커밋용
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+
+      - name: Install
+        working-directory: scraper
+        run: npm ci
+
+      - name: Install Playwright (Chromium)
+        working-directory: scraper
+        run: npx playwright install --with-deps chromium
+
+      - name: Scrape new games & re-aggregate
+        working-directory: scraper
+        run: npm run scrape
+
+      - name: Commit data changes
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "chore(data): 데이터 갱신 $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
