@@ -5,6 +5,9 @@ import { RecordsPage } from "./pages/RecordsPage";
 import { MatchupPage } from "./pages/MatchupPage";
 import { SearchPage } from "./pages/SearchPage";
 import { PlayerPage } from "./pages/PlayerPage";
+import { Footer } from "../shared/Footer";
+import { YearSelect } from "../shared/year";
+import { InAppBanner, InstallButton } from "../shared/pwa";
 
 function DesktopSearch() {
   const [q, setQ] = useState("");
@@ -35,11 +38,11 @@ function DesktopSearch() {
 export function DesktopApp() {
   return (
     <>
+      <InAppBanner />
       <div className="utility-bar">
         <div className="container">
-          <span>2026 시즌</span>
           <span>고교 · U18</span>
-          <span>도움말</span>
+          <InstallButton />
         </div>
       </div>
       <nav className="primary-nav">
@@ -53,6 +56,7 @@ export function DesktopApp() {
             <NavLink to="/search">선수 검색</NavLink>
           </div>
           <div className="nav-right">
+            <YearSelect />
             <DesktopSearch />
           </div>
         </div>
@@ -66,6 +70,7 @@ export function DesktopApp() {
           <Route path="/player/:id" element={<PlayerPage />} />
         </Routes>
       </main>
+      <Footer />
     </>
   );
 }

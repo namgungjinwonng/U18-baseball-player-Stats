@@ -8,9 +8,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { aggregate, readGames, readRoster, writeAggregated } from "./accumulate.js";
-import { existingGameIds, isAfterSeasonStart, listGameRefs } from "./fetchGames.js";
+import {
+  aggregate, groupBySeason, readGames, readRoster, writeYear, writeYearsIndex,
+} from "./accumulate.js";
+import {
+  existingGameIds, incrementalMonths, isAfterSeasonStart, listGameRefs,
+} from "./fetchGames.js";
 import { parseRecordDetail } from "./parseRecord.js";
+import type { Meta } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
@@ -26,7 +31,9 @@ const MONTHS = process.env.MONTHS
 async function collectNewGames(): Promise<number> {
   let added = 0;
   try {
-    const refs = await listGameRefs(2026, MONTHS);
+    // 증분: env 미지정 시 마지막 수집 경기의 월부터만 스캔(시간 절약)
+    const months = MONTHS ?? incrementalMonths(DATA_DIR);
+    const refs = await listGameRefs(2026, months);
     const have = existingGameIds(DATA_DIR);
     for (const ref of refs) {
       if (added >= GAME_LIMIT) break;
@@ -51,11 +58,21 @@ async function main() {
     console.log("경기 데이터가 없어 집계를 건너뜁니다.");
     return;
   }
-  const agg = aggregate(games, SOURCE, readRoster(DATA_DIR));
-  writeAggregated(DATA_DIR, agg);
-  console.log(
-    `✓ 집계 완료 · 경기 ${games.length} · 선수 ${agg.players.length} · 상대전적 ${agg.matchups.length} (신규 ${added})`
-  );
+  const roster = readRoster(DATA_DIR);
+  // 시즌별 누적 집계 → data/{year}/ 에 기록 (연도 선택용).
+  const bySeason = groupBySeason(games);
+  const years = [...bySeason.keys()].sort((a, b) => b - a);
+  let latest: Meta | undefined;
+  for (const year of years) {
+    const agg = aggregate(bySeason.get(year)!, SOURCE, roster);
+    writeYear(DATA_DIR, year, agg);
+    if (latest === undefined) latest = agg.meta;
+    console.log(
+      `✓ ${year} · 경기 ${agg.meta.gameCount} · 선수 ${agg.players.length} · 상대전적 ${agg.matchups.length}`
+    );
+  }
+  if (latest) writeYearsIndex(DATA_DIR, years, latest);
+  console.log(`✓ 연도 ${years.join(", ")} · 신규 ${added}경기`);
 }
 
 main().catch((e) => {

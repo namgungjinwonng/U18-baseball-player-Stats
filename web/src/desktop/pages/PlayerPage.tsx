@@ -20,7 +20,11 @@ function BattingStrip({ b }: { b: BattingStats }) {
       <Stat k="안타" v={String(b.h)} />
       <Stat k="홈런" v={String(b.hr)} />
       <Stat k="타점" v={String(b.rbi)} />
+      <Stat k="득점" v={String(b.r)} />
       <Stat k="도루" v={String(b.sb)} />
+      <Stat k="볼넷" v={String(b.bb)} />
+      <Stat k="사구" v={String(b.hbp)} />
+      <Stat k="삼진" v={String(b.so)} />
     </div>
   );
 }
@@ -56,8 +60,9 @@ export function PlayerPage() {
         <h1 className="heading-xl">{player.name}</h1>
         <span className="meta">
           {player.team} · {player.position}
-          {player.bats && ` · ${player.bats}타`}
-          {player.throws && ` ${player.throws}투`} · {player.season} 시즌
+          {player.grade && ` · ${player.grade}학년`}
+          {player.number && ` · ${player.number}번`}
+          {player.throws && player.bats && ` · ${player.throws}투${player.bats}타`} · {player.season} 시즌
         </span>
       </div>
 

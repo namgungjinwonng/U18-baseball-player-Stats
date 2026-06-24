@@ -38,6 +38,7 @@ export function MSearch() {
             <span style={{ fontWeight: 500 }}>{p.name}</span>
             <span className="tm" style={{ color: "var(--color-mute)", marginLeft: 8 }}>
               {p.team}
+              {p.grade && ` · ${p.grade}학년`}
             </span>
           </span>
           <span className="pos">{p.position}</span>

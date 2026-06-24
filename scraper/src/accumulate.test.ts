@@ -11,7 +11,7 @@ const game = (id: string, date: string): GameBoxScore => ({
   id, date, season: 2026, home: "서울고", away: "덕수고",
   score: { home: 5, away: 3 },
   batters: [
-    { playerId: "b1", name: "김타자", team: "서울고", ab: 4, h: 2, b2: 1, b3: 0, hr: 1, rbi: 3, r: 2, bb: 0, so: 1, sb: 0 },
+    { playerId: "b1", name: "김타자", team: "서울고", ab: 4, h: 2, b2: 1, b3: 0, hr: 1, rbi: 3, r: 2, bb: 0, hbp: 0, so: 1, sb: 0 },
   ],
   pitchers: [
     { playerId: "p1", name: "이투수", team: "덕수고", outs: 18, h: 5, r: 3, er: 2, bb: 1, so: 7, w: 0, l: 1, sv: 0 },

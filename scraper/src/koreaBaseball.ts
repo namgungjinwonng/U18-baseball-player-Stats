@@ -72,16 +72,16 @@ export async function fetchGameRefs(
 // 반환 null = 타석 아님(승부주자/공란). 그 외 타석 1.
 export function classifyAtBat(
   raw: string
-): { ab: number; h: number; hr: number; bb: number; so: number } | null {
+): { ab: number; h: number; hr: number; bb: number; hbp: number; so: number } | null {
   const c = raw.replace(/\s/g, "");
   if (!c || c === "승부주자") return null;
-  if (/(^|,)(4구|고4|고의4구)/.test(c)) return { ab: 0, h: 0, hr: 0, bb: 1, so: 0 }; // 볼넷
-  if (/사구/.test(c)) return { ab: 0, h: 0, hr: 0, bb: 1, so: 0 }; // 몸에맞는공(출루)
+  if (/사구/.test(c)) return { ab: 0, h: 0, hr: 0, bb: 0, hbp: 1, so: 0 }; // 몸에 맞는 공
+  if (/(^|,)(4구|고4|고의4구)/.test(c)) return { ab: 0, h: 0, hr: 0, bb: 1, hbp: 0, so: 0 }; // 볼넷
   const isSac = /^희/.test(c); // 희생타/희생플라이 → 타수 제외
   const isK = /삼진/.test(c);
   const isHR = /홈런|월홈|장외/.test(c); // 우월홈/좌월홈 = 담장 넘는 홈런
   const isHit = /안/.test(c) || isHR || /[좌중우]\d?\d?2/.test(c); // 안타/2·3루타/홈런
-  return { ab: isSac ? 0 : 1, h: isHit ? 1 : 0, hr: isHR ? 1 : 0, bb: 0, so: isK ? 1 : 0 };
+  return { ab: isSac ? 0 : 1, h: isHit ? 1 : 0, hr: isHR ? 1 : 0, bb: 0, hbp: 0, so: isK ? 1 : 0 };
 }
 
 interface ParsedPitcher extends PitcherLine {
@@ -205,13 +205,13 @@ function parseBatters(
       // 합계 셀에서 직접: 타수/안타/타점/득점 (신뢰도 높음)
       ab: n(summary[0]), h: n(summary[1]), rbi: n(summary[2]), r: n(summary[3]),
       // 2·3루타는 그리드에서 신뢰 추출 어려움 → 0(장타율 일부 과소). 문서화된 한계.
-      b2: 0, b3: 0, hr: 0, bb: 0, so: 0, sb: 0,
+      b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 0, sb: 0,
     };
     cells.forEach((cell, i) => {
       const res = classifyAtBat(cell);
       if (!res) return;
-      // 홈런/볼넷/삼진/도루는 타석 결과 코드에서 집계(합계 셀에 없음)
-      line.hr += res.hr; line.bb += res.bb; line.so += res.so;
+      // 홈런/볼넷/사구/삼진/도루는 타석 결과 코드에서 집계(합계 셀에 없음)
+      line.hr += res.hr; line.bb += res.bb; line.hbp += res.hbp; line.so += res.so;
       if (/도루/.test(cell)) line.sb += 1;
       // 상대전적: 해당 이닝(컬럼 i+1) 투수에 귀속
       const pit = forInning(i + 1);

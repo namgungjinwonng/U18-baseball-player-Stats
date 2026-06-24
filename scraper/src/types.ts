@@ -13,6 +13,7 @@ export interface BatterLine {
   rbi: number;
   r: number;
   bb: number;
+  hbp: number; // 사구(몸에 맞는 공)
   so: number;
   sb: number;
 }
@@ -58,7 +59,7 @@ export interface GameBoxScore {
 export interface BattingStats {
   g: number; pa: number; ab: number; r: number; h: number;
   b2: number; b3: number; hr: number; rbi: number; bb: number;
-  so: number; sb: number; avg: number; obp: number; slg: number;
+  hbp: number; so: number; sb: number; avg: number; obp: number; slg: number;
 }
 export interface PitchingStats {
   g: number; w: number; l: number; sv: number; ip: number;
@@ -70,11 +71,13 @@ export interface GameLogEntry {
 }
 export interface Player {
   id: string; name: string; team: string; position: string;
+  number?: string; grade?: string; personNo?: string;
   bats?: string; throws?: string; season: number;
   batting?: BattingStats; pitching?: PitchingStats; gameLog: GameLogEntry[];
 }
 export interface PlayerIndexEntry {
   id: string; name: string; team: string; position: string;
+  number?: string; grade?: string;
 }
 export interface Matchup {
   batterId: string; batterName: string; pitcherId: string; pitcherName: string;

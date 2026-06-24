@@ -5,6 +5,8 @@ export interface PlayerIndexEntry {
   name: string;
   team: string;
   position: string; // 타자/투수/내야수 등
+  number?: string; // 등번호
+  grade?: string; // 1/2/3 학년
 }
 
 export interface BattingStats {
@@ -18,6 +20,7 @@ export interface BattingStats {
   hr: number; // 홈런
   rbi: number; // 타점
   bb: number; // 볼넷
+  hbp: number; // 사구
   so: number; // 삼진
   sb: number; // 도루
   avg: number; // 타율
@@ -52,6 +55,9 @@ export interface Player {
   name: string;
   team: string;
   position: string;
+  number?: string; // 등번호
+  grade?: string; // 1/2/3 학년
+  personNo?: string; // KBSA 공식 선수 ID
   bats?: string; // 좌/우/양
   throws?: string;
   season: number;

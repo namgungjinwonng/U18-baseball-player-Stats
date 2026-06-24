@@ -6,6 +6,9 @@ import { MRecords } from "./pages/MRecords";
 import { MMatchup } from "./pages/MMatchup";
 import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
+import { Footer } from "../shared/Footer";
+import { YearSelect } from "../shared/year";
+import { InAppBanner, InstallButton } from "../shared/pwa";
 
 function Drawer({ onClose }: { onClose: () => void }) {
   return (
@@ -67,6 +70,7 @@ export function MobileApp() {
   const [search, setSearch] = useState(false);
   return (
     <div className="m-shell">
+      <InAppBanner />
       <header className="m-topbar">
         <button className="icon-btn" onClick={() => setDrawer(true)} aria-label="메뉴">
           ☰
@@ -75,6 +79,8 @@ export function MobileApp() {
           U18 BASEBALL
         </Link>
         <div className="m-topbar__group">
+          <InstallButton />
+          <YearSelect />
           <button
             className="icon-btn"
             onClick={() => setSearch(true)}
@@ -97,6 +103,7 @@ export function MobileApp() {
           <Route path="/player/:id" element={<MPlayer />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

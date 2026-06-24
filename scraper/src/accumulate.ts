@@ -22,11 +22,15 @@ export interface Aggregated {
   meta: Meta;
 }
 
-// 박스스코어에 없는 명단 정보(세부 포지션/투타) 보강용 선택 오버레이.
+// 박스스코어에 없는 명단 정보(학년/person_no/포지션/투타) 보강용 오버레이.
+// 키: `${이름}|${등번호}` (roster.ts 산출물)
 export interface RosterEntry {
-  position?: string; // 내야수/외야수/포수 등 (없으면 투수/타자 자동 분류)
+  team?: string; // 정식 팀명(박스스코어 축약명 보정)
+  grade?: string; // 1/2/3
+  position?: string; // 내야수/외야수/포수 등
   bats?: string;
   throws?: string;
+  personNo?: string; // KBSA 공식 선수 ID
 }
 export type Roster = Record<string, RosterEntry>;
 
@@ -69,7 +73,7 @@ export function aggregate(
       p.season = g.season;
       const a = bAcc.get(b.playerId) ?? emptyBatting();
       a.g += 1; a.ab += b.ab; a.h += b.h; a.b2 += b.b2; a.b3 += b.b3;
-      a.hr += b.hr; a.rbi += b.rbi; a.r += b.r; a.bb += b.bb;
+      a.hr += b.hr; a.rbi += b.rbi; a.r += b.r; a.bb += b.bb; a.hbp += b.hbp;
       a.so += b.so; a.sb += b.sb;
       bAcc.set(b.playerId, a);
       p.gameLog.push({
@@ -107,20 +111,36 @@ export function aggregate(
 
   // 파생 수치 확정
   for (const [id, p] of players) {
-    const ros = roster[id];
+    // 로스터 조인: `이름|등번호`. 박스스코어 팀명은 축약될 수 있어
+    // 팀명 접두 일치로 동명이인 오조인을 방지한다.
+    const number = id.split("_").pop() ?? "";
+    p.number = number;
+    const cand = roster[`${p.name}|${number}`];
+    const ros =
+      cand &&
+      (!cand.team ||
+        cand.team.startsWith(p.team) ||
+        p.team.startsWith(cand.team) ||
+        p.team.length < 2)
+        ? cand
+        : undefined;
     p.position = ros?.position ?? (pitcherIds.has(id) ? "투수" : "타자");
     if (ros?.bats) p.bats = ros.bats;
     if (ros?.throws) p.throws = ros.throws;
+    if (ros?.grade) p.grade = ros.grade;
+    if (ros?.personNo) p.personNo = ros.personNo;
+    if (ros?.team) p.team = ros.team; // 정식 팀명으로 보정
     p.gameLog.reverse(); // 최신순
     const b = bAcc.get(id);
     if (b) {
       const singles = b.h - b.b2 - b.b3 - b.hr;
       const totalBases = singles + 2 * b.b2 + 3 * b.b3 + 4 * b.hr;
+      const onBaseDen = b.ab + b.bb + b.hbp;
       p.batting = {
-        g: b.g, pa: b.ab + b.bb, ab: b.ab, r: b.r, h: b.h, b2: b.b2, b3: b.b3,
-        hr: b.hr, rbi: b.rbi, bb: b.bb, so: b.so, sb: b.sb,
+        g: b.g, pa: b.ab + b.bb + b.hbp, ab: b.ab, r: b.r, h: b.h, b2: b.b2, b3: b.b3,
+        hr: b.hr, rbi: b.rbi, bb: b.bb, hbp: b.hbp, so: b.so, sb: b.sb,
         avg: b.ab ? r3(b.h / b.ab) : 0,
-        obp: b.ab + b.bb ? r3((b.h + b.bb) / (b.ab + b.bb)) : 0,
+        obp: onBaseDen ? r3((b.h + b.bb + b.hbp) / onBaseDen) : 0,
         slg: b.ab ? r3(totalBases / b.ab) : 0,
       };
     }
@@ -153,6 +173,7 @@ export function aggregate(
   );
   const index: PlayerIndexEntry[] = playerList.map((p) => ({
     id: p.id, name: p.name, team: p.team, position: p.position,
+    number: p.number, grade: p.grade,
   }));
 
   const season = ordered.at(-1)?.season ?? new Date().getFullYear();
@@ -167,7 +188,7 @@ export function aggregate(
 }
 
 function emptyBatting() {
-  return { g: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, rbi: 0, r: 0, bb: 0, so: 0, sb: 0 };
+  return { g: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, rbi: 0, r: 0, bb: 0, hbp: 0, so: 0, sb: 0 };
 }
 function emptyPitching() {
   return { g: 0, outs: 0, h: 0, r: 0, er: 0, bb: 0, so: 0, w: 0, l: 0, sv: 0 };
@@ -200,9 +221,9 @@ export function readGames(dataDir: string): GameBoxScore[] {
     .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as GameBoxScore);
 }
 
-export function writeAggregated(dataDir: string, agg: Aggregated): void {
+function writeAgg(baseDir: string, agg: Aggregated): void {
   const w = (rel: string, obj: unknown) => {
-    const fp = path.join(dataDir, rel);
+    const fp = path.join(baseDir, rel);
     fs.mkdirSync(path.dirname(fp), { recursive: true });
     fs.writeFileSync(fp, JSON.stringify(obj, null, 2) + "\n");
   };
@@ -215,4 +236,32 @@ export function writeAggregated(dataDir: string, agg: Aggregated): void {
     agg.players.map(({ gameLog: _gl, ...rest }) => rest)
   );
   for (const p of agg.players) w(`players/${p.id}.json`, p);
+}
+
+// 단일 디렉터리(루트)에 기록 — 테스트/단순용.
+export function writeAggregated(dataDir: string, agg: Aggregated): void {
+  writeAgg(dataDir, agg);
+}
+
+// 연도별 디렉터리(data/{year}/…)에 기록 — 누적/연도 선택용.
+export function writeYear(dataDir: string, year: number, agg: Aggregated): void {
+  writeAgg(path.join(dataDir, String(year)), agg);
+}
+
+// 루트 years.json(내림차순) + 최신 meta.json 기록.
+export function writeYearsIndex(dataDir: string, years: number[], latestMeta: Meta): void {
+  const sorted = [...years].sort((a, b) => b - a);
+  fs.writeFileSync(path.join(dataDir, "years.json"), JSON.stringify(sorted, null, 2) + "\n");
+  fs.writeFileSync(path.join(dataDir, "meta.json"), JSON.stringify(latestMeta, null, 2) + "\n");
+}
+
+// 경기들을 시즌별로 그룹.
+export function groupBySeason(games: GameBoxScore[]): Map<number, GameBoxScore[]> {
+  const m = new Map<number, GameBoxScore[]>();
+  for (const g of games) {
+    const arr = m.get(g.season) ?? [];
+    arr.push(g);
+    m.set(g.season, arr);
+  }
+  return m;
 }

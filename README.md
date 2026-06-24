@@ -33,17 +33,25 @@ npm run dev        # http://localhost:5173
 
 - **경기 목록**: `GET /game/calendar?kind_cd=31&month=M` → `game_idx` + 날짜 + 팀/스코어
 - **경기 박스스코어**: `GET /game/record_detail?game_idx=N` → 스코어보드 + 타자 이닝별 타석 그리드 + 투수기록
+- **팀 로스터**: `GET /info/team/team_list` · `/info/team/team_player?club_idx=X` → 학년·person_no·포지션·투타
 - **부(division) `kind_cd`**: 41=대학부, **31=18세 이하부(U18)**, 51=일반부
-- (대안) 선수 시즌기록: `GET /record/record/player_record?kind_cd=31&club_idx=&person_no=&record_type=1|2&begin_year=&end_year=`
 
 ```bash
 cd scraper
 npm install
-npx playwright install chromium     # discover 전용(탐색 시에만 필요)
-npm run discover -- "<URL>"          # 데이터 구조 재확인용
-MONTHS=6 GAME_LIMIT=20 npm run scrape # 신규 경기 수집 → data/ 누적(게임ID 멱등)
+npm run roster                       # 팀 로스터 수집(학년/person_no) → data/roster.json (가끔)
+npm run scrape                       # 증분 수집(마지막 경기 월부터) → data/{year}/ 누적
+MONTHS=6 GAME_LIMIT=20 npm run scrape # 월/건수 제한 수집(초기 적재·테스트)
 npm test                             # 집계 멱등성/정확성 테스트
+npx playwright install chromium && npm run discover -- "<URL>"  # 구조 재확인(탐색 전용)
 ```
+
+**연도 누적**: 집계는 시즌별로 `data/{year}/`에 기록되고 `data/years.json`에 연도 목록이 쌓입니다. 프론트 상단의 연도 셀렉터로 해당 시즌 기록을 조회합니다. **증분 수집**: `npm run scrape`는 마지막으로 수집된 경기의 '월'부터만 캘린더를 훑어 갱신 시간을 줄입니다(이미 받은 `game_idx`는 건너뜀).
+
+**로스터 오버레이**: 박스스코어에는 이름·등번호만 있어, `(이름,등번호)` 키로 로스터와 조인해 **학년/person_no/정식 팀명/투타**를 보강합니다(팀명 접두 일치로 동명이인 오조인 방지, 매칭률 ~98%).
+
+### PWA(모바일 설치)
+`web/public`의 `manifest.webmanifest` + `sw.js`로 홈 화면 설치를 지원합니다. 안드로이드 Chrome은 설치 버튼이 뜨고(설치 후 숨김), iOS Safari는 "공유 → 홈 화면에 추가" 안내를 노출합니다. 카카오톡 등 인앱 브라우저에서는 외부 브라우저로 여는 배너가 표시됩니다.
 
 `scrape`는 `record_detail`을 파싱해 타자(타수·안타·타점·득점·홈런·볼넷·삼진·도루), 투수(이닝·피안타·자책·삼진·승패), **타자×투수 상대전적**(이닝별 투수 귀속)을 산출합니다. 집계는 `data/games/*.json`을 진실의 원천으로 하는 순수 함수라 재실행해도 동일합니다.
 

@@ -20,7 +20,9 @@ export function MPlayer() {
         {p.name}
       </h2>
       <p className="caption" style={{ marginBottom: 16 }}>
-        {p.team} · {p.position} · {p.season} 시즌
+        {p.team} · {p.position}
+        {p.grade && ` · ${p.grade}학년`}
+        {p.number && ` · ${p.number}번`} · {p.season} 시즌
       </p>
 
       {p.batting && (
@@ -46,8 +48,24 @@ export function MPlayer() {
             <div className="v">{p.batting.rbi}</div>
           </div>
           <div className="cell">
+            <div className="k">득점</div>
+            <div className="v">{p.batting.r}</div>
+          </div>
+          <div className="cell">
             <div className="k">도루</div>
             <div className="v">{p.batting.sb}</div>
+          </div>
+          <div className="cell">
+            <div className="k">볼넷</div>
+            <div className="v">{p.batting.bb}</div>
+          </div>
+          <div className="cell">
+            <div className="k">사구</div>
+            <div className="v">{p.batting.hbp}</div>
+          </div>
+          <div className="cell">
+            <div className="k">삼진</div>
+            <div className="v">{p.batting.so}</div>
           </div>
         </div>
       )}

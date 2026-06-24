@@ -33,9 +33,12 @@ export const battingBasicColumns: Column<Player>[] = [
 export const battingDetailColumns: Column<Player>[] = [
   name,
   team,
+  { key: "r", label: "득점", value: (p) => p.batting?.r ?? 0 },
   { key: "b2", label: "2루타", value: (p) => p.batting?.b2 ?? 0 },
   { key: "b3", label: "3루타", value: (p) => p.batting?.b3 ?? 0 },
+  { key: "sb", label: "도루", value: (p) => p.batting?.sb ?? 0 },
   { key: "bb", label: "볼넷", value: (p) => p.batting?.bb ?? 0 },
+  { key: "hbp", label: "사구", value: (p) => p.batting?.hbp ?? 0 },
   { key: "so", label: "삼진", value: (p) => p.batting?.so ?? 0 },
   { key: "obp", label: "출루율", value: (p) => p.batting?.obp ?? 0, render: (p) => rate(p.batting?.obp) },
   { key: "slg", label: "장타율", value: (p) => p.batting?.slg ?? 0, render: (p) => rate(p.batting?.slg) },

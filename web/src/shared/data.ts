@@ -1,6 +1,7 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
 import { useEffect, useState } from "react";
 import type { Matchup, Meta, Player, PlayerIndexEntry } from "./types";
+import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
 
@@ -40,24 +41,36 @@ function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
   return state;
 }
 
-export const useMeta = () => useAsync<Meta>(() => getJSON("meta.json"), []);
+// 모든 로더는 선택된 연도(data/{year}/…) 기준으로 적재.
+export const useMeta = () => {
+  const { year } = useYear();
+  return useAsync<Meta>(() => getJSON(`${year}/meta.json`), [year]);
+};
 
-export const usePlayerIndex = () =>
-  useAsync<PlayerIndexEntry[]>(() => getJSON("players/index.json"), []);
+export const usePlayerIndex = () => {
+  const { year } = useYear();
+  return useAsync<PlayerIndexEntry[]>(() => getJSON(`${year}/players/index.json`), [year]);
+};
 
-export const usePlayer = (id: string | undefined) =>
-  useAsync<Player>(
-    () => (id ? getJSON(`players/${id}.json`) : Promise.reject(new Error("선수 없음"))),
-    [id]
+export const usePlayer = (id: string | undefined) => {
+  const { year } = useYear();
+  return useAsync<Player>(
+    () => (id ? getJSON(`${year}/players/${id}.json`) : Promise.reject(new Error("선수 없음"))),
+    [id, year]
   );
+};
 
-export const useMatchups = () =>
-  useAsync<Matchup[]>(() => getJSON("matchups.json"), []);
+export const useMatchups = () => {
+  const { year } = useYear();
+  return useAsync<Matchup[]>(() => getJSON(`${year}/matchups.json`), [year]);
+};
 
 // 기록 테이블/리더보드용: 사전 집계된 단일 파일을 로드(대규모 시즌 대비).
 // gameLog 가 빠진 슬림 형태이며, 선수 상세는 usePlayer 로 개별 로드.
-export const useAllPlayers = () =>
-  useAsync<Player[]>(() => getJSON("records/players.json"), []);
+export const useAllPlayers = () => {
+  const { year } = useYear();
+  return useAsync<Player[]>(() => getJSON(`${year}/records/players.json`), [year]);
+};
 
 // 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).
 export function searchPlayers(

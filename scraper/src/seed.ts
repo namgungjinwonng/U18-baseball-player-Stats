@@ -52,7 +52,7 @@ function makeBatter(p: Roster): BatterLine {
     playerId: p.id, name: p.name, team: p.team,
     ab, h, b2, b3, hr,
     rbi: hr ? between(1, 3) : between(0, 2),
-    r: between(0, 2), bb: rand() < 0.25 ? 1 : 0,
+    r: between(0, 2), bb: rand() < 0.25 ? 1 : 0, hbp: rand() < 0.05 ? 1 : 0,
     so: between(0, 2), sb: rand() < 0.2 ? 1 : 0,
   };
 }

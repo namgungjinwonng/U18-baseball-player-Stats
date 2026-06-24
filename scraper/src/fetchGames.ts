@@ -31,3 +31,23 @@ export function existingGameIds(dataDir: string): Set<string> {
 export function isAfterSeasonStart(date: string): boolean {
   return date >= SEASON_START;
 }
+
+// 증분 수집: 이미 수집된 경기 중 가장 최근 날짜의 '월'부터 12월까지만 스캔.
+// (기존 갱신 시점 이전 달은 다시 훑지 않아 캘린더 요청/시간을 절약)
+export function incrementalMonths(dataDir: string): number[] {
+  const dir = path.join(dataDir, "games");
+  if (!fs.existsSync(dir)) return DEFAULT_MONTHS;
+  let latest = "";
+  for (const f of fs.readdirSync(dir)) {
+    if (!f.endsWith(".json")) continue;
+    try {
+      const g = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as { date?: string };
+      if (g.date && g.date > latest) latest = g.date;
+    } catch {
+      /* 무시 */
+    }
+  }
+  if (!latest) return DEFAULT_MONTHS;
+  const startMonth = parseInt(latest.slice(5, 7), 10) || DEFAULT_MONTHS[0];
+  return DEFAULT_MONTHS.filter((m) => m >= startMonth);
+}
