@@ -16,12 +16,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
 const SOURCE = "korea-baseball.com (KBSA)";
 
+// 한 번에 수집할 신규 경기 상한(미설정 시 무제한). 초기 적재/테스트용.
+const GAME_LIMIT = process.env.GAME_LIMIT ? parseInt(process.env.GAME_LIMIT, 10) : Infinity;
+// 수집 대상 월(쉼표구분, 예: "6" 또는 "5,6"). 미설정 시 fetchGames 기본(3~12월).
+const MONTHS = process.env.MONTHS
+  ? process.env.MONTHS.split(",").map((s) => parseInt(s, 10))
+  : undefined;
+
 async function collectNewGames(): Promise<number> {
   let added = 0;
   try {
-    const refs = await listGameRefs(2026);
+    const refs = await listGameRefs(2026, MONTHS);
     const have = existingGameIds(DATA_DIR);
     for (const ref of refs) {
+      if (added >= GAME_LIMIT) break;
       if (have.has(ref.id) || !isAfterSeasonStart(ref.date)) continue;
       const box = await parseRecordDetail(ref);
       const fp = path.join(DATA_DIR, "games", `${box.id}.json`);

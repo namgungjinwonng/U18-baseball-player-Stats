@@ -84,7 +84,7 @@ export function MPlayer() {
       )}
 
       <h3 className="heading-md">경기 로그</h3>
-      {p.gameLog.map((g) => (
+      {(p.gameLog ?? []).map((g) => (
         <div
           key={g.gameId}
           className="m-result"

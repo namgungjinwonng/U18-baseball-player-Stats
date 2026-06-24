@@ -1,26 +1,22 @@
-// 신규 경기 목록 수집. discover.ts 로 내부 API 를 확정한 뒤 구현한다.
-//
-// 전략:
-//  1순위) SPA 가 호출하는 JSON API 를 직접 호출(가볍고 빠름).
-//  폴백)  Playwright 로 일정 페이지를 렌더해 경기 링크/ID 를 DOM 에서 추출.
-//
-// 반환: 아직 data/games/ 에 없는 경기 ID 목록(2026 시즌 이후만).
+// 신규 경기 목록 수집 — korea-baseball.com 캘린더(/game/calendar?kind_cd=31)에서
+// 2026 시즌 U18 경기 game_idx 를 모은다.
 import fs from "node:fs";
 import path from "node:path";
+import { fetchGameRefs, KIND, type GameRef } from "./koreaBaseball.js";
 
-export interface GameRef {
-  id: string;
-  date: string; // YYYY-MM-DD
-}
+export type { GameRef };
 
 const SEASON_START = "2026-01-01";
 
-export async function listGameRefs(_season = 2026): Promise<GameRef[]> {
-  // TODO(discover): 확정된 API 엔드포인트로 교체.
-  // 예) const res = await fetch(`${API}/games?season=${season}`); ...
-  throw new Error(
-    "listGameRefs 미구현 — `npm run discover` 로 내부 API/필드를 먼저 확정하세요."
-  );
+// 기본: 3~12월 (빈 달은 자동으로 0건). 환경에 따라 조정 가능.
+const DEFAULT_MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+export async function listGameRefs(
+  _season = 2026,
+  months: number[] = DEFAULT_MONTHS
+): Promise<GameRef[]> {
+  const refs = await fetchGameRefs(months, KIND.U18);
+  return refs.filter((r) => isAfterSeasonStart(r.date));
 }
 
 // 이미 수집(커밋)된 경기 ID 집합 → 신규만 추리는 데 사용(멱등 수집).

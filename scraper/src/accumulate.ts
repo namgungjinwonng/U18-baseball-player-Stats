@@ -209,5 +209,10 @@ export function writeAggregated(dataDir: string, agg: Aggregated): void {
   w("players/index.json", agg.index);
   w("matchups.json", agg.matchups);
   w("meta.json", agg.meta);
+  // 기록 테이블/리더보드용 단일 집계 파일(프론트가 N개 파일 대신 1개만 로드).
+  w(
+    "records/players.json",
+    agg.players.map(({ gameLog: _gl, ...rest }) => rest)
+  );
   for (const p of agg.players) w(`players/${p.id}.json`, p);
 }

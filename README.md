@@ -29,12 +29,25 @@ npm run dev        # http://localhost:5173
 
 ## 데이터 파이프라인
 
+데이터 소스는 KBSA(`korea-baseball.com`)의 서버 렌더 HTML입니다. (게임원 CMS, AJAX 아님)
+
+- **경기 목록**: `GET /game/calendar?kind_cd=31&month=M` → `game_idx` + 날짜 + 팀/스코어
+- **경기 박스스코어**: `GET /game/record_detail?game_idx=N` → 스코어보드 + 타자 이닝별 타석 그리드 + 투수기록
+- **부(division) `kind_cd`**: 41=대학부, **31=18세 이하부(U18)**, 51=일반부
+- (대안) 선수 시즌기록: `GET /record/record/player_record?kind_cd=31&club_idx=&person_no=&record_type=1|2&begin_year=&end_year=`
+
 ```bash
 cd scraper
 npm install
-npm run discover   # SPA가 호출하는 실제 API/DOM 구조 탐지(구현 1순위)
-npm run scrape     # 신규 경기 수집 → data/ 누적 머지(게임ID 멱등)
+npx playwright install chromium     # discover 전용(탐색 시에만 필요)
+npm run discover -- "<URL>"          # 데이터 구조 재확인용
+MONTHS=6 GAME_LIMIT=20 npm run scrape # 신규 경기 수집 → data/ 누적(게임ID 멱등)
+npm test                             # 집계 멱등성/정확성 테스트
 ```
+
+`scrape`는 `record_detail`을 파싱해 타자(타수·안타·타점·득점·홈런·볼넷·삼진·도루), 투수(이닝·피안타·자책·삼진·승패), **타자×투수 상대전적**(이닝별 투수 귀속)을 산출합니다. 집계는 `data/games/*.json`을 진실의 원천으로 하는 순수 함수라 재실행해도 동일합니다.
+
+**알려진 한계**: 2·3루타는 타석 그리드에서 신뢰 추출이 어려워 0 처리(장타율 일부 과소). 선수 ID는 `팀_이름_등번호` 슬러그(안정 ID는 `person_no` 매핑이 향후 개선점). 캘린더 `month`는 현재 연도(2026) 기준.
 
 GitHub Actions `scrape.yml`이 시즌 중 정기 실행하여 `data/` 변경분을 커밋하고, `deploy.yml`이 Pages로 배포합니다.
 

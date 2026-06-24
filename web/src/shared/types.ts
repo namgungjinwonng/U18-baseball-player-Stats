@@ -57,7 +57,7 @@ export interface Player {
   season: number;
   batting?: BattingStats;
   pitching?: PitchingStats;
-  gameLog: GameLogEntry[];
+  gameLog?: GameLogEntry[]; // records/players.json 슬림본에는 생략됨
 }
 
 export interface Matchup {

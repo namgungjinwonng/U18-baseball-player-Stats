@@ -29,10 +29,7 @@ jobs:
         working-directory: scraper
         run: npm ci
 
-      - name: Install Playwright (Chromium)
-        working-directory: scraper
-        run: npx playwright install --with-deps chromium
-
+      # 수집기는 fetch 기반(Playwright 불필요). discover 스크립트만 브라우저 사용.
       - name: Scrape new games & re-aggregate
         working-directory: scraper
         run: npm run scrape

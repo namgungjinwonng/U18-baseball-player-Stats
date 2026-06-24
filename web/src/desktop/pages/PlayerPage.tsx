@@ -77,7 +77,7 @@ export function PlayerPage() {
             </tr>
           </thead>
           <tbody>
-            {player.gameLog.map((g) => (
+            {(player.gameLog ?? []).map((g) => (
               <tr key={g.gameId}>
                 <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
                 <td style={{ textAlign: "left" }}>{g.opponent}</td>

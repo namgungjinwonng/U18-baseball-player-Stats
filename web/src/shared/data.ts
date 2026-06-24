@@ -54,13 +54,10 @@ export const usePlayer = (id: string | undefined) =>
 export const useMatchups = () =>
   useAsync<Matchup[]>(() => getJSON("matchups.json"), []);
 
-// 기록 테이블용: 색인의 전 선수 상세를 한 번에 적재.
-// (대규모 시즌에는 사전 집계된 records/*.json 으로 대체 권장)
+// 기록 테이블/리더보드용: 사전 집계된 단일 파일을 로드(대규모 시즌 대비).
+// gameLog 가 빠진 슬림 형태이며, 선수 상세는 usePlayer 로 개별 로드.
 export const useAllPlayers = () =>
-  useAsync<Player[]>(async () => {
-    const index = await getJSON<PlayerIndexEntry[]>("players/index.json");
-    return Promise.all(index.map((p) => getJSON<Player>(`players/${p.id}.json`)));
-  }, []);
+  useAsync<Player[]>(() => getJSON("records/players.json"), []);
 
 // 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).
 export function searchPlayers(
