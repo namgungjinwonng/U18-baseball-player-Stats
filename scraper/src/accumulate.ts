@@ -101,10 +101,11 @@ export function aggregate(
       const cur = mAcc.get(key) ?? {
         batterId: m.batterId, batterName: names.get(m.batterId) ?? m.batterId,
         pitcherId: m.pitcherId, pitcherName: names.get(m.pitcherId) ?? m.pitcherId,
-        pa: 0, ab: 0, h: 0, hr: 0, bb: 0, so: 0, avg: 0,
+        pa: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 0, avg: 0,
       };
-      cur.ab += m.ab; cur.h += m.h; cur.hr += m.hr; cur.bb += m.bb; cur.so += m.so;
-      cur.pa += m.ab + m.bb;
+      cur.ab += m.ab; cur.h += m.h; cur.b2 += m.b2; cur.b3 += m.b3;
+      cur.hr += m.hr; cur.bb += m.bb; cur.hbp += m.hbp; cur.so += m.so;
+      cur.pa += m.ab + m.bb + m.hbp;
       mAcc.set(key, cur);
     }
   }

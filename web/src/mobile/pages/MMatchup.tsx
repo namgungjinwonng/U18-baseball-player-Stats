@@ -100,8 +100,11 @@ export function MMatchup() {
           <div className="cell"><div className="k">타율</div><div className="v">{rate(selected.avg)}</div></div>
           <div className="cell"><div className="k">타수-안타</div><div className="v">{selected.ab}-{selected.h}</div></div>
           <div className="cell"><div className="k">타석</div><div className="v">{selected.pa}</div></div>
+          <div className="cell"><div className="k">2루타</div><div className="v">{selected.b2}</div></div>
+          <div className="cell"><div className="k">3루타</div><div className="v">{selected.b3}</div></div>
           <div className="cell"><div className="k">홈런</div><div className="v">{selected.hr}</div></div>
           <div className="cell"><div className="k">볼넷</div><div className="v">{selected.bb}</div></div>
+          <div className="cell"><div className="k">사구</div><div className="v">{selected.hbp}</div></div>
           <div className="cell"><div className="k">삼진</div><div className="v">{selected.so}</div></div>
         </div>
       )}

@@ -38,15 +38,20 @@ async function collectNewGames(): Promise<number> {
     for (const ref of refs) {
       if (added >= GAME_LIMIT) break;
       if (have.has(ref.id) || !isAfterSeasonStart(ref.date)) continue;
-      const box = await parseRecordDetail(ref);
-      const fp = path.join(DATA_DIR, "games", `${box.id}.json`);
-      fs.mkdirSync(path.dirname(fp), { recursive: true });
-      fs.writeFileSync(fp, JSON.stringify(box, null, 2) + "\n");
-      added++;
-      console.log(`+ 경기 추가: ${box.id} (${box.date})`);
+      // 개별 경기 실패(예: 410 Gone)는 그 경기만 건너뛰고 계속 진행.
+      try {
+        const box = await parseRecordDetail(ref);
+        const fp = path.join(DATA_DIR, "games", `${box.id}.json`);
+        fs.mkdirSync(path.dirname(fp), { recursive: true });
+        fs.writeFileSync(fp, JSON.stringify(box, null, 2) + "\n");
+        added++;
+        console.log(`+ 경기 추가: ${box.id} (${box.date})`);
+      } catch (e) {
+        console.warn(`  ⚠ 경기 ${ref.id} 건너뜀: ${(e as Error).message}`);
+      }
     }
   } catch (e) {
-    console.warn(`⚠ 신규 경기 수집 건너뜀: ${(e as Error).message}`);
+    console.warn(`⚠ 경기 목록 수집 실패: ${(e as Error).message}`);
   }
   return added;
 }

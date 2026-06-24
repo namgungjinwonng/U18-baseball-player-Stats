@@ -87,7 +87,8 @@ function game(id: string, date: string, home: string, away: string): GameBoxScor
         const h = Math.min(line.h, between(0, ab));
         matchups.push({
           batterId: b.id, pitcherId: oppPitcher.id,
-          ab, h, hr: h > 0 ? line.hr : 0, bb: line.bb, so: Math.min(line.so, ab),
+          ab, h, b2: 0, b3: 0, hr: h > 0 ? line.hr : 0, bb: line.bb,
+          hbp: 0, so: Math.min(line.so, ab),
         });
       }
     }

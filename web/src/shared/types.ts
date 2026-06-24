@@ -74,8 +74,11 @@ export interface Matchup {
   pa: number;
   ab: number;
   h: number;
+  b2: number; // 2루타
+  b3: number; // 3루타
   hr: number;
   bb: number;
+  hbp: number; // 사구
   so: number;
   avg: number;
 }

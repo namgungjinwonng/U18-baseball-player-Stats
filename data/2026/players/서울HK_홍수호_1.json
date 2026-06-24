@@ -1,0 +1,34 @@
+{
+  "id": "서울HK_홍수호_1",
+  "name": "홍수호",
+  "team": "서울HK야구단(U-18)",
+  "position": "투수",
+  "season": 2026,
+  "gameLog": [
+    {
+      "gameId": "37817",
+      "date": "2026-05-23",
+      "opponent": "서울HG",
+      "line": "1이닝 0자책 3탈삼진"
+    }
+  ],
+  "number": "1",
+  "bats": "우",
+  "throws": "우",
+  "grade": "3",
+  "personNo": "202002005003",
+  "pitching": {
+    "g": 1,
+    "w": 0,
+    "l": 0,
+    "sv": 0,
+    "ip": 1,
+    "h": 0,
+    "r": 0,
+    "er": 0,
+    "bb": 0,
+    "so": 3,
+    "era": 0,
+    "whip": 0
+  }
+}

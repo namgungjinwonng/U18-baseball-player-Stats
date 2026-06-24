@@ -17,7 +17,7 @@ const game = (id: string, date: string): GameBoxScore => ({
     { playerId: "p1", name: "이투수", team: "덕수고", outs: 18, h: 5, r: 3, er: 2, bb: 1, so: 7, w: 0, l: 1, sv: 0 },
   ],
   matchups: [
-    { batterId: "b1", pitcherId: "p1", ab: 3, h: 1, hr: 0, bb: 0, so: 1 },
+    { batterId: "b1", pitcherId: "p1", ab: 3, h: 1, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 1 },
   ],
 });
 

@@ -38,8 +38,11 @@ export interface MatchupLine {
   pitcherId: string;
   ab: number;
   h: number;
+  b2: number;
+  b3: number;
   hr: number;
   bb: number;
+  hbp: number;
   so: number;
 }
 
@@ -81,7 +84,8 @@ export interface PlayerIndexEntry {
 }
 export interface Matchup {
   batterId: string; batterName: string; pitcherId: string; pitcherName: string;
-  pa: number; ab: number; h: number; hr: number; bb: number; so: number; avg: number;
+  pa: number; ab: number; h: number; b2: number; b3: number; hr: number;
+  bb: number; hbp: number; so: number; avg: number;
 }
 export interface Meta {
   season: number; lastUpdated: string; gameCount: number; source: string;

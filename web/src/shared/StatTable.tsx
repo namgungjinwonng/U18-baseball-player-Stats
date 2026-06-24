@@ -18,15 +18,19 @@ export function StatTable<T>({
   initialSort,
   onRowClick,
   rowKey,
+  limit = 200,
 }: {
   columns: Column<T>[];
   rows: T[];
   initialSort?: string;
   onRowClick?: (row: T) => void;
   rowKey: (row: T) => string;
+  // 순위 테이블이므로 정렬 후 상위 N명만 렌더(대량 행 성능 보호).
+  limit?: number;
 }) {
   const [sortKey, setSortKey] = useState(initialSort ?? columns[0].key);
   const [desc, setDesc] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   const sorted = useMemo(() => {
     const col = columns.find((c) => c.key === sortKey);
@@ -54,6 +58,8 @@ export function StatTable<T>({
     }
   }
 
+  const capped = showAll ? sorted : sorted.slice(0, limit);
+
   return (
     <div className="stat-table__scroll">
       <table className="stat-table">
@@ -68,7 +74,7 @@ export function StatTable<T>({
           </tr>
         </thead>
         <tbody>
-          {sorted.map((row) => (
+          {capped.map((row) => (
             <tr
               key={rowKey(row)}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
@@ -83,6 +89,11 @@ export function StatTable<T>({
           ))}
         </tbody>
       </table>
+      {!showAll && sorted.length > limit && (
+        <button className="btn btn--secondary btn--sm" style={{ margin: "16px auto", display: "flex" }} onClick={() => setShowAll(true)}>
+          전체 {sorted.length}명 보기 (현재 상위 {limit}명)
+        </button>
+      )}
     </div>
   );
 }

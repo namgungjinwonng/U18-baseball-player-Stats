@@ -109,8 +109,11 @@ export function MatchupPage() {
           <Stat k="타율" v={rate(selected.avg)} />
           <Stat k="타석" v={String(selected.pa)} />
           <Stat k="타수-안타" v={`${selected.ab}-${selected.h}`} />
+          <Stat k="2루타" v={String(selected.b2)} />
+          <Stat k="3루타" v={String(selected.b3)} />
           <Stat k="홈런" v={String(selected.hr)} />
           <Stat k="볼넷" v={String(selected.bb)} />
+          <Stat k="사구" v={String(selected.hbp)} />
           <Stat k="삼진" v={String(selected.so)} />
         </div>
       )}

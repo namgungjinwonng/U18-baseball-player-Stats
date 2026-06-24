@@ -36,6 +36,7 @@ function DesktopSearch() {
 }
 
 export function DesktopApp() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <>
       <InAppBanner />
@@ -47,7 +48,14 @@ export function DesktopApp() {
       </div>
       <nav className="primary-nav">
         <div className="container">
-          <Link to="/" className="brand">
+          <button
+            className="nav-hamburger icon-btn"
+            aria-label="메뉴"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            ☰
+          </button>
+          <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
             U18 BASEBALL
           </Link>
           <div className="nav-links">
@@ -60,6 +68,13 @@ export function DesktopApp() {
             <DesktopSearch />
           </div>
         </div>
+        {menuOpen && (
+          <div className="nav-drawer">
+            <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록</NavLink>
+            <NavLink to="/matchup" onClick={() => setMenuOpen(false)}>상대전적</NavLink>
+            <NavLink to="/search" onClick={() => setMenuOpen(false)}>선수 검색</NavLink>
+          </div>
+        )}
       </nav>
       <main>
         <Routes>
