@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { usePlayer, useMatchups } from "../../shared/data";
+import { usePlayer, usePlayerMatchups } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import type { BattingStats, PitchingStats } from "../../shared/types";
@@ -72,7 +72,7 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
 export function PlayerPage() {
   const { id } = useParams();
   const { data: player, loading, error } = usePlayer(id);
-  const { data: matchups } = useMatchups();
+  const { data: matchups } = usePlayerMatchups(id);
 
   if (loading) return <div className="container state">불러오는 중…</div>;
   if (error || !player)

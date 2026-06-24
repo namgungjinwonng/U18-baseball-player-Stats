@@ -1,12 +1,12 @@
 import { Link, useParams } from "react-router-dom";
-import { usePlayer, useMatchups } from "../../shared/data";
+import { usePlayer, usePlayerMatchups } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 
 export function MPlayer() {
   const { id } = useParams();
   const { data: p, loading, error } = usePlayer(id);
-  const { data: matchups } = useMatchups();
+  const { data: matchups } = usePlayerMatchups(id);
 
   if (loading) return <div className="m-page state">불러오는 중…</div>;
   if (error || !p) return <div className="m-page state">선수를 찾을 수 없습니다.</div>;

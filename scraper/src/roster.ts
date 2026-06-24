@@ -24,6 +24,7 @@ export interface RosterEntry {
   throws?: string;
   personNo?: string;
   region?: string; // 지역(서울/경기 등)
+  clubIdx?: string; // 공식 기록 조회용 팀 ID
 }
 // 키: `${이름}|${등번호}`
 export type Roster = Record<string, RosterEntry>;
@@ -86,6 +87,7 @@ async function fetchTeamRoster(
     roster[`${name}|${number}`] = {
       team: teamName,
       region: region || undefined,
+      clubIdx,
       grade: grade(gradeRaw),
       position: position || undefined,
       personNo,

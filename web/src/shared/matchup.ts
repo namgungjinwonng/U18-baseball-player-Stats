@@ -51,3 +51,28 @@ export function facedOpponents(
 
 export const indexById = (index: PlayerIndexEntry[]) =>
   new Map(index.map((p) => [p.id, p]));
+
+// 상대한 학교 목록(+상대 인원수). 학교명 가나다순.
+export function facedSchools(
+  faced: { opponent: PlayerIndexEntry; matchup: Matchup }[]
+): { team: string; count: number }[] {
+  const m = new Map<string, number>();
+  for (const f of faced) m.set(f.opponent.team, (m.get(f.opponent.team) ?? 0) + 1);
+  return [...m.entries()]
+    .map(([team, count]) => ({ team, count }))
+    .sort((a, b) => a.team.localeCompare(b.team, "ko"));
+}
+
+// 상대전적 합계(특정 학교 또는 전체)
+export function sumMatchups(items: { matchup: Matchup }[]): Matchup | null {
+  if (items.length === 0) return null;
+  const acc = { pa: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 0 };
+  for (const { matchup: m } of items) {
+    acc.pa += m.pa; acc.ab += m.ab; acc.h += m.h; acc.b2 += m.b2; acc.b3 += m.b3;
+    acc.hr += m.hr; acc.bb += m.bb; acc.hbp += m.hbp; acc.so += m.so;
+  }
+  return {
+    batterId: "", batterName: "", pitcherId: "", pitcherName: "",
+    ...acc, avg: acc.ab ? Number((acc.h / acc.ab).toFixed(3)) : 0,
+  };
+}

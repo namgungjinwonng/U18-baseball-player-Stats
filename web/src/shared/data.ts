@@ -60,9 +60,13 @@ export const usePlayer = (id: string | undefined) => {
   );
 };
 
-export const useMatchups = () => {
+// 선수별 상대전적 샤드(모바일 최적화): 해당 선수가 관여한 매치업만 로드.
+export const usePlayerMatchups = (id: string | undefined) => {
   const { year } = useYear();
-  return useAsync<Matchup[]>(() => getJSON(`${year}/matchups.json`), [year]);
+  return useAsync<Matchup[]>(
+    () => (id ? getJSON<Matchup[]>(`${year}/matchups/${id}.json`).catch(() => []) : Promise.resolve([])),
+    [id, year]
+  );
 };
 
 // 기록 테이블/리더보드용: 사전 집계된 단일 파일을 로드(대규모 시즌 대비).

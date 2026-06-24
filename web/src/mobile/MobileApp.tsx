@@ -8,6 +8,7 @@ import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
 import { Footer } from "../shared/Footer";
 import { YearSelect } from "../shared/year";
+import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
 
 function Drawer({ onClose }: { onClose: () => void }) {
@@ -80,6 +81,7 @@ export function MobileApp() {
         </Link>
         <div className="m-topbar__group">
           <InstallButton />
+          <RefreshButton />
           <YearSelect />
           <button
             className="icon-btn"

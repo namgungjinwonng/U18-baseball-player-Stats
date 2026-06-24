@@ -30,6 +30,11 @@ jobs:
         run: npm ci
 
       # 수집기는 fetch 기반(Playwright 불필요). discover 스크립트만 브라우저 사용.
+      - name: Refresh rosters (학년/person_no/지역/club_idx)
+        working-directory: scraper
+        run: npm run roster
+
+      # 신규 경기 수집 → 신규 선수 공식기록 증분 수집 → 재집계 (마지막 갱신 이후만)
       - name: Scrape new games & re-aggregate
         working-directory: scraper
         run: npm run scrape

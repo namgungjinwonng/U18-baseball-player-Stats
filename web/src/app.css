@@ -99,6 +99,23 @@
   }
 }
 
+/* 데이터 갱신 버튼 */
+.refresh-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-soft-cloud);
+  color: var(--color-ink);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  flex: none;
+}
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* 연도 선택 드롭다운 (알약형) */
 .year-select {
   font-family: var(--font-ui);

@@ -67,7 +67,7 @@ function run() {
 // lastUpdated(시각) 필드를 제외한 스냅샷
 function snapshot(dir: string): string {
   const files = [
-    "players/index.json", "matchups.json",
+    "players/index.json", "matchups/b1.json",
     "players/b1.json", "players/p1.json",
   ];
   return files

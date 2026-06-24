@@ -89,4 +89,5 @@ export interface Matchup {
 }
 export interface Meta {
   season: number; lastUpdated: string; gameCount: number; source: string;
+  teamGames?: Record<string, number>; // 팀별 경기수(규정타석/이닝 기준)
 }

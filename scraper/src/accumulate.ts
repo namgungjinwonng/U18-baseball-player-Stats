@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type {
-  GameBoxScore, Matchup, Meta, Player, PlayerIndexEntry,
+  BattingStats, GameBoxScore, Matchup, Meta, PitchingStats, Player, PlayerIndexEntry,
 } from "./types.js";
 
 // --- 이닝/아웃 변환 ---
@@ -32,6 +32,7 @@ export interface RosterEntry {
   bats?: string;
   throws?: string;
   personNo?: string; // KBSA 공식 선수 ID
+  clubIdx?: string; // 공식 기록 조회용 팀 ID
 }
 export type Roster = Record<string, RosterEntry>;
 
@@ -41,10 +42,14 @@ export function readRoster(dataDir: string): Roster {
   return JSON.parse(fs.readFileSync(fp, "utf8")) as Roster;
 }
 
+// 공식기록 오버레이: personNo → {batting, pitching} (officialStats.collectOfficial 산출물)
+export type OfficialMap = Record<string, { batting?: BattingStats; pitching?: PitchingStats }>;
+
 export function aggregate(
   games: GameBoxScore[],
   source: string,
-  roster: Roster = {}
+  roster: Roster = {},
+  official: OfficialMap = {}
 ): Aggregated {
   const players = new Map<string, Player>();
   const bAcc = new Map<string, ReturnType<typeof emptyBatting>>();
@@ -157,6 +162,10 @@ export function aggregate(
         whip: pp.outs ? r2(((pp.h + pp.bb) * 3) / pp.outs) : 0,
       };
     }
+    // 공식기록 우선: personNo 매칭 시 박스스코어 파생값을 공식값으로 교체
+    const off = p.personNo ? official[p.personNo] : undefined;
+    if (off?.batting && off.batting.g > 0) p.batting = off.batting;
+    if (off?.pitching && off.pitching.g > 0) p.pitching = off.pitching;
   }
 
   const matchups = [...mAcc.values()]
@@ -179,12 +188,23 @@ export function aggregate(
     number: p.number, grade: p.grade, region: p.region,
   }));
 
+  // 팀별 경기수(규정타석/이닝 기준) — 선수 gameLog 의 distinct 경기 합집합.
+  const teamGameSets = new Map<string, Set<string>>();
+  for (const p of playerList) {
+    let s = teamGameSets.get(p.team);
+    if (!s) { s = new Set(); teamGameSets.set(p.team, s); }
+    for (const gl of p.gameLog) s.add(gl.gameId);
+  }
+  const teamGames: Record<string, number> = {};
+  for (const [t, s] of teamGameSets) teamGames[t] = s.size;
+
   const season = ordered.at(-1)?.season ?? new Date().getFullYear();
   const meta: Meta = {
     season,
     lastUpdated: new Date().toISOString(),
     gameCount: games.length,
     source,
+    teamGames,
   };
 
   return { players: playerList, index, matchups, meta };
@@ -225,13 +245,13 @@ export function readGames(dataDir: string): GameBoxScore[] {
 }
 
 function writeAgg(baseDir: string, agg: Aggregated): void {
+  // 생성 데이터는 매 실행 전체 재생성되므로 compact JSON(용량/파싱 최적화).
   const w = (rel: string, obj: unknown) => {
     const fp = path.join(baseDir, rel);
     fs.mkdirSync(path.dirname(fp), { recursive: true });
-    fs.writeFileSync(fp, JSON.stringify(obj, null, 2) + "\n");
+    fs.writeFileSync(fp, JSON.stringify(obj));
   };
   w("players/index.json", agg.index);
-  w("matchups.json", agg.matchups);
   w("meta.json", agg.meta);
   // 기록 테이블/리더보드용 단일 집계 파일(프론트가 N개 파일 대신 1개만 로드).
   w(
@@ -239,6 +259,18 @@ function writeAgg(baseDir: string, agg: Aggregated): void {
     agg.players.map(({ gameLog: _gl, ...rest }) => rest)
   );
   for (const p of agg.players) w(`players/${p.id}.json`, p);
+
+  // 상대전적 선수별 샤드(모바일 로딩 최적화): 6MB 단일 파일 대신 선수당 수KB.
+  // 한 매치업은 타자/투수 양쪽 샤드에 포함된다.
+  const byPlayer = new Map<string, Matchup[]>();
+  for (const m of agg.matchups) {
+    for (const pid of [m.batterId, m.pitcherId]) {
+      const arr = byPlayer.get(pid) ?? [];
+      arr.push(m);
+      byPlayer.set(pid, arr);
+    }
+  }
+  for (const [pid, ms] of byPlayer) w(`matchups/${pid}.json`, ms);
 }
 
 // 단일 디렉터리(루트)에 기록 — 테스트/단순용.

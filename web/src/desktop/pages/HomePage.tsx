@@ -11,8 +11,8 @@ export function HomePage() {
   const { data: meta } = useMeta();
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const boards = useMemo(
-    () => (players ? leaderboards(applyFilter(players, filter)) : []),
-    [players, filter]
+    () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames) : []),
+    [players, filter, meta]
   );
 
   return (
@@ -46,6 +46,9 @@ export function HomePage() {
             </span>
           )}
         </div>
+        <p className="caption-sm" style={{ marginTop: -8, marginBottom: 12 }}>
+          ※ 타율·평균자책 순위는 주말리그 게임수 기준 규정타석(경기수×3.1)·규정이닝(경기수×1) 충족 선수만 노출
+        </p>
         {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
         <div className="leader-grid">
           {boards.map((b) => (

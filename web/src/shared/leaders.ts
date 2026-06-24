@@ -9,9 +9,11 @@ export interface LeaderItem {
   raw: number;
 }
 
-// 비율 기록(타율/평균자책)은 소표본 왜곡을 막기 위한 규정 타석/이닝 필터를 둔다.
-const MIN_AB = 5; // 타율 자격 최소 타수
-const MIN_OUTS = 9; // 평균자책 자격 최소 아웃(=3이닝)
+// 규정타석/이닝(주말리그 게임수 기준): 규정타석 = 경기수 × 3.1, 규정이닝 = 경기수 × 1.0.
+// 팀 경기수를 모를 때를 대비한 최소 하한.
+const PA_PER_GAME = 3.1;
+const FALLBACK_MIN_AB = 5;
+const FALLBACK_MIN_OUTS = 9;
 
 function top(
   players: Player[],
@@ -35,17 +37,28 @@ const outsOf = (p: Player) => {
   return Math.floor(ip) * 3 + Math.round((ip % 1) * 10);
 };
 
-export function leaderboards(players: Player[]) {
+export function leaderboards(players: Player[], teamGames?: Record<string, number>) {
+  // 규정타석/이닝 자격: 팀 경기수 기반(없으면 하한)
+  const reqPA = (p: Player) => {
+    const g = teamGames?.[p.team];
+    return g ? g * PA_PER_GAME : FALLBACK_MIN_AB;
+  };
+  const reqOuts = (p: Player) => {
+    const g = teamGames?.[p.team];
+    return g ? g * 3 : FALLBACK_MIN_OUTS; // 규정이닝 = 경기수 × 1.0 → 아웃 = ×3
+  };
+  const qualifyBat = (p: Player) => (p.batting?.pa ?? p.batting?.ab ?? 0) >= reqPA(p);
+  const qualifyPit = (p: Player) => outsOf(p) >= reqOuts(p);
   return [
     {
-      title: `타율 (${MIN_AB}타수↑)`,
-      items: top(players, (p) => p.batting?.avg, rate, 5, false, (p) => (p.batting?.ab ?? 0) >= MIN_AB),
+      title: "타율 (규정타석)",
+      items: top(players, (p) => p.batting?.avg, rate, 5, false, qualifyBat),
     },
     { title: "홈런", items: top(players, (p) => p.batting?.hr, (n) => String(n)) },
     { title: "타점", items: top(players, (p) => p.batting?.rbi, (n) => String(n)) },
     {
-      title: "평균자책 (3이닝↑)",
-      items: top(players, (p) => p.pitching?.era, (n) => n.toFixed(2), 5, true, (p) => outsOf(p) >= MIN_OUTS),
+      title: "평균자책 (규정이닝)",
+      items: top(players, (p) => p.pitching?.era, (n) => n.toFixed(2), 5, true, qualifyPit),
     },
     { title: "탈삼진", items: top(players, (p) => p.pitching?.so, (n) => String(n)) },
   ];

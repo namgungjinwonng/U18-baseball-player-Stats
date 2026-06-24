@@ -1,38 +1,32 @@
 import { useMemo, useState } from "react";
-import { usePlayerIndex, useMatchups } from "../../shared/data";
+import { usePlayerIndex, usePlayerMatchups } from "../../shared/data";
 import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
 import {
-  facedOpponents, indexById, opposite, playerLabel, searchByRole, type Role,
+  facedOpponents, facedSchools, indexById, opposite, playerLabel, searchByRole,
+  sumMatchups, type Role,
 } from "../../shared/matchup";
 import type { PlayerIndexEntry } from "../../shared/types";
 
 export function MMatchup() {
   const { data: index } = usePlayerIndex();
-  const { data: matchups } = useMatchups();
   const [aRole, setARole] = useState<Role>("batter");
   const [query, setQuery] = useState("");
   const [a, setA] = useState<PlayerIndexEntry | null>(null);
-  const [bId, setBId] = useState("");
+  const [school, setSchool] = useState("");
+  const [oppId, setOppId] = useState("");
+  const { data: matchups } = usePlayerMatchups(a?.id);
 
   const byId = useMemo(() => indexById(index ?? []), [index]);
-  const candidates = useMemo(
-    () => (index ? searchByRole(index, aRole, query) : []),
-    [index, aRole, query]
-  );
-  const faced = useMemo(
-    () => (a && matchups ? facedOpponents(matchups, byId, aRole, a.id) : []),
-    [a, matchups, byId, aRole]
-  );
-  const selected = faced.find((f) => f.opponent.id === bId)?.matchup;
-  const bRoleLabel = opposite(aRole) === "pitcher" ? "투수" : "타자";
+  const candidates = useMemo(() => (index ? searchByRole(index, aRole, query) : []), [index, aRole, query]);
+  const faced = useMemo(() => (a && matchups ? facedOpponents(matchups, byId, aRole, a.id) : []), [a, matchups, byId, aRole]);
+  const schools = useMemo(() => facedSchools(faced), [faced]);
+  const schoolOpps = useMemo(() => faced.filter((f) => f.opponent.team === school), [faced, school]);
+  const schoolTotal = useMemo(() => sumMatchups(schoolOpps), [schoolOpps]);
+  const sel = schoolOpps.find((f) => f.opponent.id === oppId)?.matchup;
 
-  function reset(role: Role) {
-    setARole(role);
-    setA(null);
-    setQuery("");
-    setBId("");
-  }
+  function reset(role: Role) { setARole(role); setA(null); setQuery(""); setSchool(""); setOppId(""); }
+  const oppRoleLabel = opposite(aRole) === "pitcher" ? "투수" : "타자";
 
   return (
     <div className="m-page">
@@ -55,12 +49,8 @@ export function MMatchup() {
         <>
           <div className="search-pill" style={{ marginTop: 8 }}>
             <span aria-hidden>⌕</span>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={`${aRole === "batter" ? "타자" : "투수"} 이름`}
-              aria-label="선수 이름 검색"
-            />
+            <input value={query} onChange={(e) => setQuery(e.target.value)}
+              placeholder={`${aRole === "batter" ? "타자" : "투수"} 이름`} aria-label="선수 이름 검색" />
           </div>
           {query && (
             <div className="ac-list">
@@ -78,35 +68,51 @@ export function MMatchup() {
       {a && (
         <>
           <label className="caption" style={{ display: "block", marginTop: 16 }}>
-            ③ 상대한 {bRoleLabel} ({faced.length}명)
+            ③ 상대한 학교 ({schools.length}개)
           </label>
-          {faced.length === 0 ? (
-            <div className="state muted">맞대결 기록이 있는 {bRoleLabel}가 없습니다.</div>
+          {schools.length === 0 ? (
+            <div className="state muted">맞대결 기록이 있는 상대가 없습니다.</div>
           ) : (
-            <select className="m-select" value={bId} onChange={(e) => setBId(e.target.value)}>
-              <option value="">{bRoleLabel} 선택</option>
-              {faced.map(({ opponent, matchup }) => (
-                <option key={opponent.id} value={opponent.id}>
-                  {playerLabel(opponent)} — {matchup.ab}타수 {matchup.h}안타
-                </option>
+            <select className="m-select" value={school} onChange={(e) => { setSchool(e.target.value); setOppId(""); }}>
+              <option value="">학교 선택</option>
+              {schools.map((s) => (
+                <option key={s.team} value={s.team}>{s.team} · {s.count}명</option>
               ))}
             </select>
           )}
         </>
       )}
 
-      {selected && (
-        <div className="m-strip" style={{ marginTop: 16 }}>
-          <div className="cell"><div className="k">타율</div><div className="v">{rate(selected.avg)}</div></div>
-          <div className="cell"><div className="k">타수-안타</div><div className="v">{selected.ab}-{selected.h}</div></div>
-          <div className="cell"><div className="k">타석</div><div className="v">{selected.pa}</div></div>
-          <div className="cell"><div className="k">2루타</div><div className="v">{selected.b2}</div></div>
-          <div className="cell"><div className="k">3루타</div><div className="v">{selected.b3}</div></div>
-          <div className="cell"><div className="k">홈런</div><div className="v">{selected.hr}</div></div>
-          <div className="cell"><div className="k">볼넷</div><div className="v">{selected.bb}</div></div>
-          <div className="cell"><div className="k">사구</div><div className="v">{selected.hbp}</div></div>
-          <div className="cell"><div className="k">삼진</div><div className="v">{selected.so}</div></div>
-        </div>
+      {school && (
+        <>
+          <h3 className="heading-md" style={{ marginTop: 8 }}>{school} 상대 {oppRoleLabel}</h3>
+          {schoolTotal && (
+            <p className="caption" style={{ marginBottom: 8 }}>
+              학교 합계 {schoolTotal.ab}타수 {schoolTotal.h}안타 · {rate(schoolTotal.avg)}
+            </p>
+          )}
+          {schoolOpps.map(({ opponent, matchup }) => (
+            <div key={opponent.id} className="m-result"
+              style={{ cursor: "pointer", flexDirection: "column", alignItems: "stretch", gap: 4 }}
+              onClick={() => setOppId(opponent.id === oppId ? "" : opponent.id)}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>{opponent.grade ? `${opponent.grade}학년 ` : ""}<b>{opponent.name}</b></span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>{rate(matchup.avg)} ({matchup.ab}-{matchup.h})</span>
+              </div>
+              {opponent.id === oppId && sel && (
+                <div className="m-strip" style={{ marginTop: 8 }}>
+                  <div className="cell"><div className="k">타석</div><div className="v">{sel.pa}</div></div>
+                  <div className="cell"><div className="k">2루타</div><div className="v">{sel.b2}</div></div>
+                  <div className="cell"><div className="k">3루타</div><div className="v">{sel.b3}</div></div>
+                  <div className="cell"><div className="k">홈런</div><div className="v">{sel.hr}</div></div>
+                  <div className="cell"><div className="k">볼넷</div><div className="v">{sel.bb}</div></div>
+                  <div className="cell"><div className="k">사구</div><div className="v">{sel.hbp}</div></div>
+                  <div className="cell"><div className="k">삼진</div><div className="v">{sel.so}</div></div>
+                </div>
+              )}
+            </div>
+          ))}
+        </>
       )}
     </div>
   );

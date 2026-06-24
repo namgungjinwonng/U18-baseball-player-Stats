@@ -7,6 +7,7 @@ import { SearchPage } from "./pages/SearchPage";
 import { PlayerPage } from "./pages/PlayerPage";
 import { Footer } from "../shared/Footer";
 import { YearSelect } from "../shared/year";
+import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
 
 function DesktopSearch() {
@@ -64,6 +65,7 @@ export function DesktopApp() {
             <NavLink to="/search">선수 검색</NavLink>
           </div>
           <div className="nav-right">
+            <RefreshButton />
             <YearSelect />
             <DesktopSearch />
           </div>
