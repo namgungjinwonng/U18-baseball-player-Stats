@@ -15,6 +15,7 @@
   "number": "10",
   "grade": "2",
   "personNo": "202302004942",
+  "region": "서울",
   "batting": {
     "g": 1,
     "pa": 0,

@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { usePlayer, useMatchups } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
+import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 
 export function MPlayer() {
   const { id } = useParams();
@@ -99,6 +100,31 @@ export function MPlayer() {
             <div className="v">{p.pitching.sv}</div>
           </div>
         </div>
+      )}
+
+      {(p.batting || p.pitching) && (
+        <>
+          <h3 className="heading-md">세이버메트릭스</h3>
+          {p.batting && (() => { const a = battingAdvanced(p.batting!); return (
+            <div className="m-strip">
+              <div className="cell"><div className="k">OPS</div><div className="v">{rate(a.ops)}</div></div>
+              <div className="cell"><div className="k">ISO</div><div className="v">{rate(a.iso)}</div></div>
+              <div className="cell"><div className="k">BABIP</div><div className="v">{rate(a.babip)}</div></div>
+              <div className="cell"><div className="k">BB%</div><div className="v">{pct(a.bbPct)}</div></div>
+              <div className="cell"><div className="k">K%</div><div className="v">{pct(a.kPct)}</div></div>
+              <div className="cell"><div className="k">BB/K</div><div className="v">{dec2(a.bbK)}</div></div>
+            </div>
+          ); })()}
+          {p.pitching && (() => { const a = pitchingAdvanced(p.pitching!); return (
+            <div className="m-strip">
+              <div className="cell"><div className="k">WHIP</div><div className="v">{dec2(a.whip)}</div></div>
+              <div className="cell"><div className="k">K/9</div><div className="v">{dec1(a.k9)}</div></div>
+              <div className="cell"><div className="k">BB/9</div><div className="v">{dec1(a.bb9)}</div></div>
+              <div className="cell"><div className="k">H/9</div><div className="v">{dec1(a.h9)}</div></div>
+              <div className="cell"><div className="k">K/BB</div><div className="v">{dec2(a.kbb)}</div></div>
+            </div>
+          ); })()}
+        </>
       )}
 
       <h3 className="heading-md">경기 로그</h3>

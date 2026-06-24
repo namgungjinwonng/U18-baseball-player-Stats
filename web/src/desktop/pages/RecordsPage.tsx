@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAllPlayers } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
+import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../shared/filters";
 import type { Player } from "../../shared/types";
 
 export function RecordsPage() {
   const { data: players, loading, error } = useAllPlayers();
   const [tabId, setTabId] = useState(recordTabs[0].id);
+  const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const nav = useNavigate();
   const tab = recordTabs.find((t) => t.id === tabId)!;
+  const rows = useMemo(
+    () => (players ? applyFilter(filterByKind(players, tab.kind), filter) : []),
+    [players, tab.kind, filter]
+  );
 
   return (
     <div className="container page">
@@ -24,13 +30,14 @@ export function RecordsPage() {
           </Chip>
         ))}
       </div>
+      {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
 
       {loading && <div className="state">불러오는 중…</div>}
       {error && <div className="state">데이터를 불러오지 못했습니다.</div>}
       {players && (
         <StatTable<Player>
           columns={tab.columns}
-          rows={filterByKind(players, tab.kind)}
+          rows={rows}
           initialSort={tab.initialSort}
           rowKey={(p) => p.id}
           onRowClick={(p) => nav(`/player/${p.id}`)}

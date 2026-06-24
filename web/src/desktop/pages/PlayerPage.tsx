@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { usePlayer, useMatchups } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
+import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import type { BattingStats, PitchingStats } from "../../shared/types";
 
 function Stat({ k, v }: { k: string; v: string }) {
@@ -25,6 +26,33 @@ function BattingStrip({ b }: { b: BattingStats }) {
       <Stat k="볼넷" v={String(b.bb)} />
       <Stat k="사구" v={String(b.hbp)} />
       <Stat k="삼진" v={String(b.so)} />
+    </div>
+  );
+}
+
+function BattingSaber({ b }: { b: BattingStats }) {
+  const a = battingAdvanced(b);
+  return (
+    <div className="stat-strip">
+      <Stat k="OPS" v={rate(a.ops)} />
+      <Stat k="ISO" v={rate(a.iso)} />
+      <Stat k="BABIP" v={rate(a.babip)} />
+      <Stat k="BB%" v={pct(a.bbPct)} />
+      <Stat k="K%" v={pct(a.kPct)} />
+      <Stat k="BB/K" v={dec2(a.bbK)} />
+    </div>
+  );
+}
+
+function PitchingSaber({ p }: { p: PitchingStats }) {
+  const a = pitchingAdvanced(p);
+  return (
+    <div className="stat-strip">
+      <Stat k="WHIP" v={dec2(a.whip)} />
+      <Stat k="K/9" v={dec1(a.k9)} />
+      <Stat k="BB/9" v={dec1(a.bb9)} />
+      <Stat k="H/9" v={dec1(a.h9)} />
+      <Stat k="K/BB" v={dec2(a.kbb)} />
     </div>
   );
 }
@@ -68,6 +96,14 @@ export function PlayerPage() {
 
       {player.batting && <BattingStrip b={player.batting} />}
       {player.pitching && <PitchingStrip p={player.pitching} />}
+
+      {(player.batting || player.pitching) && (
+        <>
+          <h2 className="heading-md" style={{ marginTop: 8 }}>세이버메트릭스</h2>
+          {player.batting && <BattingSaber b={player.batting} />}
+          {player.pitching && <PitchingSaber p={player.pitching} />}
+        </>
+      )}
 
       <h2 className="heading-md" style={{ marginTop: 24 }}>
         경기 로그

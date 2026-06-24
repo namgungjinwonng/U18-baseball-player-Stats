@@ -1,13 +1,19 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAllPlayers, useMeta } from "../../shared/data";
 import { leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
+import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../shared/filters";
 
 export function HomePage() {
   const { data: players } = useAllPlayers();
   const { data: meta } = useMeta();
-  const boards = players ? leaderboards(players) : [];
+  const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  const boards = useMemo(
+    () => (players ? leaderboards(applyFilter(players, filter)) : []),
+    [players, filter]
+  );
 
   return (
     <>
@@ -40,6 +46,7 @@ export function HomePage() {
             </span>
           )}
         </div>
+        {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
         <div className="leader-grid">
           {boards.map((b) => (
             <div className="leader-card" key={b.title}>

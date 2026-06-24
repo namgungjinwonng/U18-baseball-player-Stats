@@ -26,6 +26,7 @@ export interface Aggregated {
 // 키: `${이름}|${등번호}` (roster.ts 산출물)
 export interface RosterEntry {
   team?: string; // 정식 팀명(박스스코어 축약명 보정)
+  region?: string; // 지역
   grade?: string; // 1/2/3
   position?: string; // 내야수/외야수/포수 등
   bats?: string;
@@ -130,6 +131,7 @@ export function aggregate(
     if (ros?.throws) p.throws = ros.throws;
     if (ros?.grade) p.grade = ros.grade;
     if (ros?.personNo) p.personNo = ros.personNo;
+    if (ros?.region) p.region = ros.region;
     if (ros?.team) p.team = ros.team; // 정식 팀명으로 보정
     p.gameLog.reverse(); // 최신순
     const b = bAcc.get(id);
@@ -174,7 +176,7 @@ export function aggregate(
   );
   const index: PlayerIndexEntry[] = playerList.map((p) => ({
     id: p.id, name: p.name, team: p.team, position: p.position,
-    number: p.number, grade: p.grade,
+    number: p.number, grade: p.grade, region: p.region,
   }));
 
   const season = ordered.at(-1)?.season ?? new Date().getFullYear();

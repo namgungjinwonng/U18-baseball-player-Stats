@@ -23,6 +23,7 @@ export interface RosterEntry {
   bats?: string;
   throws?: string;
   personNo?: string;
+  region?: string; // 지역(서울/경기 등)
 }
 // 키: `${이름}|${등번호}`
 export type Roster = Record<string, RosterEntry>;
@@ -33,19 +34,24 @@ async function get(url: string): Promise<string> {
   return res.text();
 }
 
-async function fetchTeams(kindCd: number): Promise<{ clubIdx: string; name: string }[]> {
-  const teams: { clubIdx: string; name: string }[] = [];
+async function fetchTeams(
+  kindCd: number
+): Promise<{ clubIdx: string; name: string; region: string }[]> {
+  const teams: { clubIdx: string; name: string; region: string }[] = [];
   const seen = new Set<string>();
   for (let page = 1; page <= 30; page++) {
     const html = await get(`${BASE}/info/team/team_list?kind_cd=${kindCd}&page=${page}`);
-    const links = [...html.matchAll(/team_player\?club_idx=(\d+)[^>]*>([\s\S]*?)<\/a>/gi)];
-    if (links.length === 0) break;
+    // "team_player?club_idx=" 기준으로 팀 블록 분할 후 각 블록에서 추출
+    const chunks = html.split("team_player?club_idx=").slice(1);
+    if (chunks.length === 0) break;
     let added = 0;
-    for (const m of links) {
-      const clubIdx = m[1];
-      if (seen.has(clubIdx)) continue;
+    for (const chunk of chunks) {
+      const clubIdx = (chunk.match(/^(\d+)/) || [])[1];
+      if (!clubIdx || seen.has(clubIdx)) continue;
       seen.add(clubIdx);
-      teams.push({ clubIdx, name: stripTags(m[2]) });
+      const name = stripTags((chunk.match(/>([\s\S]*?)<\/a>/) || [])[1] ?? "");
+      const region = (stripTags(chunk.slice(0, 500)).match(/지역\s*([가-힣]+)/) || [])[1] ?? "";
+      if (name) teams.push({ clubIdx, name, region });
       added++;
     }
     if (added === 0) break;
@@ -61,7 +67,9 @@ function throwBat(t: string): { throws?: string; bats?: string } {
   return m ? { throws: m[1], bats: m[2] } : {};
 }
 
-async function fetchTeamRoster(clubIdx: string, teamName: string, roster: Roster): Promise<number> {
+async function fetchTeamRoster(
+  clubIdx: string, teamName: string, region: string, roster: Roster
+): Promise<number> {
   const html = await get(`${BASE}/info/team/team_player?club_idx=${clubIdx}&kind_cd=${KIND.U18}`);
   // 선수 항목 단위로 파싱 (dl/dt/dd 구조)
   const items = [...html.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)].map((m) => m[1]);
@@ -77,6 +85,7 @@ async function fetchTeamRoster(clubIdx: string, teamName: string, roster: Roster
     const tb = (li.match(/<dt>\s*투타\s*<\/dt>\s*<dd>([^<]+)/i) || [])[1] ?? "";
     roster[`${name}|${number}`] = {
       team: teamName,
+      region: region || undefined,
       grade: grade(gradeRaw),
       position: position || undefined,
       personNo,
@@ -96,7 +105,7 @@ async function main() {
   for (const t of teams) {
     if (done >= limit) break;
     try {
-      const n = await fetchTeamRoster(t.clubIdx, t.name, roster);
+      const n = await fetchTeamRoster(t.clubIdx, t.name, t.region, roster);
       done++;
       if (done % 20 === 0) console.log(`  …${done}팀 (${Object.keys(roster).length}명)`);
       void n;

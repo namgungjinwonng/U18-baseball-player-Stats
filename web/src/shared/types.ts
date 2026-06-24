@@ -7,6 +7,7 @@ export interface PlayerIndexEntry {
   position: string; // 타자/투수/내야수 등
   number?: string; // 등번호
   grade?: string; // 1/2/3 학년
+  region?: string; // 지역
 }
 
 export interface BattingStats {
@@ -58,6 +59,7 @@ export interface Player {
   number?: string; // 등번호
   grade?: string; // 1/2/3 학년
   personNo?: string; // KBSA 공식 선수 ID
+  region?: string; // 지역
   bats?: string; // 좌/우/양
   throws?: string;
   season: number;

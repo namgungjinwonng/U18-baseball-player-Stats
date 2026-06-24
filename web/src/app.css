@@ -264,6 +264,18 @@
   color: var(--color-mute);
 }
 
+/* 지역/학교 필터 바 */
+.filter-bar {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+.filter-bar .m-select {
+  margin-bottom: 0;
+  max-width: 200px;
+}
+
 /* 자동완성 드롭다운 */
 .ac {
   position: relative;

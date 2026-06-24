@@ -74,13 +74,13 @@ export interface GameLogEntry {
 }
 export interface Player {
   id: string; name: string; team: string; position: string;
-  number?: string; grade?: string; personNo?: string;
+  number?: string; grade?: string; personNo?: string; region?: string;
   bats?: string; throws?: string; season: number;
   batting?: BattingStats; pitching?: PitchingStats; gameLog: GameLogEntry[];
 }
 export interface PlayerIndexEntry {
   id: string; name: string; team: string; position: string;
-  number?: string; grade?: string;
+  number?: string; grade?: string; region?: string;
 }
 export interface Matchup {
   batterId: string; batterName: string; pitcherId: string; pitcherName: string;
