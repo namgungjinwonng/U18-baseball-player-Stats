@@ -24,17 +24,23 @@ export function battingAdvanced(b: BattingStats): BattingAdvanced {
   };
 }
 
+// FIP 상수(리그 평균 보정) — 아마추어 리그 상수 미공개라 MLB 관례값 근사.
+const FIP_CONST = 3.1;
 export interface PitchingAdvanced {
-  k9: number; bb9: number; h9: number; kbb: number; whip: number;
+  k9: number; bb9: number; h9: number; kbb: number; whip: number; fip?: number;
 }
 export function pitchingAdvanced(p: PitchingStats): PitchingAdvanced {
   const ip = ipToInnings(p.ip);
+  // FIP = (13·피홈런 + 3·볼넷 − 2·탈삼진)/이닝 + 상수 (피홈런 데이터 있을 때만)
+  const fip =
+    p.hr != null && ip ? (13 * p.hr + 3 * p.bb - 2 * p.so) / ip + FIP_CONST : undefined;
   return {
     k9: ip ? (p.so * 9) / ip : 0,
     bb9: ip ? (p.bb * 9) / ip : 0,
     h9: ip ? (p.h * 9) / ip : 0,
     kbb: p.bb ? p.so / p.bb : p.so,
     whip: p.whip,
+    fip: fip != null ? Number(fip.toFixed(2)) : undefined,
   };
 }
 

@@ -27,6 +27,11 @@ export interface BattingStats {
   avg: number; // 타율
   obp: number; // 출루율
   slg: number; // 장타율
+  // 공식기록에서만 채워짐(선택)
+  sh?: number; // 희생번트
+  sf?: number; // 희생플라이
+  ibb?: number; // 고의4구
+  e?: number; // 실책
 }
 
 export interface PitchingStats {
@@ -42,6 +47,10 @@ export interface PitchingStats {
   so: number;
   era: number; // 평균자책
   whip: number;
+  // 공식기록에서만 채워짐(선택)
+  hr?: number; // 피홈런
+  bf?: number; // 상대타자
+  np?: number; // 투구수
 }
 
 export interface GameLogEntry {

@@ -6,6 +6,7 @@ import { MatchupPage } from "./pages/MatchupPage";
 import { SearchPage } from "./pages/SearchPage";
 import { PlayerPage } from "./pages/PlayerPage";
 import { Footer } from "../shared/Footer";
+import { Glossary } from "../shared/Glossary";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -63,6 +64,7 @@ export function DesktopApp() {
             <NavLink to="/records">선수 기록</NavLink>
             <NavLink to="/matchup">상대전적</NavLink>
             <NavLink to="/search">선수 검색</NavLink>
+            <NavLink to="/glossary">지표 설명</NavLink>
           </div>
           <div className="nav-right">
             <RefreshButton />
@@ -75,6 +77,7 @@ export function DesktopApp() {
             <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}>상대전적</NavLink>
             <NavLink to="/search" onClick={() => setMenuOpen(false)}>선수 검색</NavLink>
+            <NavLink to="/glossary" onClick={() => setMenuOpen(false)}>지표 설명</NavLink>
           </div>
         )}
       </nav>
@@ -85,6 +88,7 @@ export function DesktopApp() {
           <Route path="/matchup" element={<MatchupPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/player/:id" element={<PlayerPage />} />
+          <Route path="/glossary" element={<div className="container page"><Glossary /></div>} />
         </Routes>
       </main>
       <Footer />

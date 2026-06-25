@@ -43,17 +43,19 @@ const flt = (m: Map<string, string>, k: string) => parseFloat((m.get(k) ?? "").r
 
 export function sumBatting(rows: Map<string, string>[]): BattingStats {
   let g = 0, pa = 0, ab = 0, r = 0, h = 0, b2 = 0, b3 = 0, hr = 0, rbi = 0, bb = 0, hbp = 0, so = 0, sb = 0;
+  let sh = 0, sf = 0, ibb = 0, e = 0;
   for (const m of rows) {
     if (!m.has("타수")) continue;
     g++; pa += num(m, "타석"); ab += num(m, "타수"); r += num(m, "득점"); h += num(m, "총안타");
     b2 += num(m, "2루타"); b3 += num(m, "3루타"); hr += num(m, "홈런"); rbi += num(m, "타점");
     bb += num(m, "볼넷"); hbp += num(m, "사구"); so += num(m, "삼진"); sb += num(m, "도루");
+    sh += num(m, "희타"); sf += num(m, "희비"); ibb += num(m, "고의4구"); e += num(m, "실책");
   }
   const singles = h - b2 - b3 - hr;
   const tb = singles + 2 * b2 + 3 * b3 + 4 * hr;
   const obDen = ab + bb + hbp;
   return {
-    g, pa: pa || ab + bb + hbp, ab, r, h, b2, b3, hr, rbi, bb, hbp, so, sb,
+    g, pa: pa || ab + bb + hbp, ab, r, h, b2, b3, hr, rbi, bb, hbp, so, sb, sh, sf, ibb, e,
     avg: ab ? r3(h / ab) : 0,
     obp: obDen ? r3((h + bb + hbp) / obDen) : 0,
     slg: ab ? r3(tb / ab) : 0,
@@ -61,16 +63,17 @@ export function sumBatting(rows: Map<string, string>[]): BattingStats {
 }
 
 export function sumPitching(rows: Map<string, string>[]): PitchingStats {
-  let g = 0, w = 0, l = 0, sv = 0, outs = 0, h = 0, r = 0, er = 0, bb = 0, so = 0;
+  let g = 0, w = 0, l = 0, outs = 0, h = 0, hr = 0, r = 0, er = 0, bb = 0, so = 0, bf = 0, np = 0;
   for (const m of rows) {
     if (!m.has("이닝")) continue;
     g++; outs += ipToOuts(flt(m, "이닝"));
-    h += num(m, "피안타"); r += num(m, "실점"); er += num(m, "자책");
-    bb += num(m, "볼넷") + num(m, "사구"); so += num(m, "삼진");
-    w += num(m, "승"); l += num(m, "패"); sv += num(m, "세이브");
+    h += num(m, "피안타"); hr += num(m, "피홈런"); r += num(m, "실점"); er += num(m, "자책점") + num(m, "자책");
+    bb += num(m, "볼넷") + num(m, "사구"); so += num(m, "탈삼진"); // 라벨은 '탈삼진'
+    bf += num(m, "타자"); np += num(m, "투구수");
+    w += num(m, "승"); l += num(m, "패");
   }
   return {
-    g, w, l, sv, ip: outsToIp(outs), h, r, er, bb, so,
+    g, w, l, sv: 0, ip: outsToIp(outs), h, hr, r, er, bb, so, bf, np,
     era: outs ? r2((er * 27) / outs) : 0,
     whip: outs ? r2(((h + bb) * 3) / outs) : 0,
   };

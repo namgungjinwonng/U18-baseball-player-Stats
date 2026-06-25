@@ -281,6 +281,40 @@
   color: var(--color-mute);
 }
 
+/* 지표 설명(부록) */
+.glossary-row {
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-hairline);
+}
+.glossary-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+.glossary-abbr {
+  font-weight: 700;
+  font-size: var(--type-heading-md);
+}
+.glossary-name {
+  color: var(--color-mute);
+  font-size: var(--type-caption);
+}
+.glossary-formula {
+  font-variant-numeric: tabular-nums;
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  display: inline-block;
+  font-size: var(--type-caption);
+  margin-bottom: var(--space-sm);
+}
+.glossary-desc {
+  color: var(--color-charcoal);
+  font-size: var(--type-body);
+  line-height: 1.6;
+}
+
 /* 지역/학교 필터 바 */
 .filter-bar {
   display: flex;

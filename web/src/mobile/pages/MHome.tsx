@@ -43,9 +43,16 @@ export function MHome() {
             {meta.gameCount}경기 · 갱신 {formatDate(meta.lastUpdated)}
           </p>
         )}
-        <p className="caption-sm" style={{ marginBottom: 12 }}>
-          ※ 타율·평균자책은 주말리그 게임수 기준 규정타석·규정이닝 충족자만 노출
-        </p>
+        {(() => {
+          const g = filter.team ? meta?.teamGames?.[filter.team] : undefined;
+          return (
+            <p className="caption-sm" style={{ marginBottom: 12 }}>
+              {g
+                ? `※ ${filter.team} ${g}게임 반영 → 규정타석 ${Math.ceil(g * 3.1)}·규정이닝 ${g} 이상만 노출`
+                : "※ 타율·평균자책은 소속팀 경기수 기준 규정타석·규정이닝 충족자만 노출"}
+            </p>
+          );
+        })()}
         {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
         {boards.map((b) => (
           <div className="m-leader" key={b.title}>

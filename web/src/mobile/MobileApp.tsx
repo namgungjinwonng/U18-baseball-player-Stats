@@ -7,6 +7,7 @@ import { MMatchup } from "./pages/MMatchup";
 import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
 import { Footer } from "../shared/Footer";
+import { Glossary } from "../shared/Glossary";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -27,6 +28,9 @@ function Drawer({ onClose }: { onClose: () => void }) {
         </NavLink>
         <NavLink to="/search" onClick={onClose}>
           선수 검색
+        </NavLink>
+        <NavLink to="/glossary" onClick={onClose}>
+          지표 설명
         </NavLink>
       </nav>
     </>
@@ -103,6 +107,7 @@ export function MobileApp() {
           <Route path="/matchup" element={<MMatchup />} />
           <Route path="/search" element={<MSearch />} />
           <Route path="/player/:id" element={<MPlayer />} />
+          <Route path="/glossary" element={<div className="m-page"><Glossary /></div>} />
         </Routes>
       </main>
       <Footer />

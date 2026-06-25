@@ -14,18 +14,30 @@ function Stat({ k, v }: { k: string; v: string }) {
 }
 
 function BattingStrip({ b }: { b: BattingStats }) {
+  const n = (v: number | undefined) => String(v ?? 0);
   return (
     <div className="stat-strip">
       <Stat k="타율" v={rate(b.avg)} />
+      <Stat k="경기" v={n(b.g)} />
+      <Stat k="타석" v={n(b.pa)} />
+      <Stat k="타수" v={n(b.ab)} />
+      <Stat k="안타" v={n(b.h)} />
+      <Stat k="2루타" v={n(b.b2)} />
+      <Stat k="3루타" v={n(b.b3)} />
+      <Stat k="홈런" v={n(b.hr)} />
+      <Stat k="타점" v={n(b.rbi)} />
+      <Stat k="득점" v={n(b.r)} />
+      <Stat k="도루" v={n(b.sb)} />
+      <Stat k="볼넷" v={n(b.bb)} />
+      <Stat k="고의4구" v={n(b.ibb)} />
+      <Stat k="사구" v={n(b.hbp)} />
+      <Stat k="삼진" v={n(b.so)} />
+      <Stat k="희타" v={n(b.sh)} />
+      <Stat k="희비" v={n(b.sf)} />
+      <Stat k="실책" v={n(b.e)} />
+      <Stat k="출루율" v={rate(b.obp)} />
+      <Stat k="장타율" v={rate(b.slg)} />
       <Stat k="OPS" v={rate(b.obp + b.slg)} />
-      <Stat k="안타" v={String(b.h)} />
-      <Stat k="홈런" v={String(b.hr)} />
-      <Stat k="타점" v={String(b.rbi)} />
-      <Stat k="득점" v={String(b.r)} />
-      <Stat k="도루" v={String(b.sb)} />
-      <Stat k="볼넷" v={String(b.bb)} />
-      <Stat k="사구" v={String(b.hbp)} />
-      <Stat k="삼진" v={String(b.so)} />
     </div>
   );
 }
@@ -49,6 +61,7 @@ function PitchingSaber({ p }: { p: PitchingStats }) {
   return (
     <div className="stat-strip">
       <Stat k="WHIP" v={dec2(a.whip)} />
+      {a.fip != null && <Stat k="FIP" v={dec2(a.fip)} />}
       <Stat k="K/9" v={dec1(a.k9)} />
       <Stat k="BB/9" v={dec1(a.bb9)} />
       <Stat k="H/9" v={dec1(a.h9)} />
@@ -58,13 +71,23 @@ function PitchingSaber({ p }: { p: PitchingStats }) {
 }
 
 function PitchingStrip({ p }: { p: PitchingStats }) {
+  const n = (v: number | undefined) => String(v ?? 0);
   return (
     <div className="stat-strip">
       <Stat k="평균자책" v={dec2(p.era)} />
-      <Stat k="WHIP" v={dec2(p.whip)} />
+      <Stat k="경기" v={n(p.g)} />
+      <Stat k="승" v={n(p.w)} />
+      <Stat k="패" v={n(p.l)} />
       <Stat k="이닝" v={inn(p.ip)} />
-      <Stat k="승-패" v={`${p.w}-${p.l}`} />
-      <Stat k="탈삼진" v={String(p.so)} />
+      <Stat k="상대타자" v={n(p.bf)} />
+      <Stat k="투구수" v={n(p.np)} />
+      <Stat k="피안타" v={n(p.h)} />
+      <Stat k="피홈런" v={n(p.hr)} />
+      <Stat k="볼넷" v={n(p.bb)} />
+      <Stat k="탈삼진" v={n(p.so)} />
+      <Stat k="실점" v={n(p.r)} />
+      <Stat k="자책" v={n(p.er)} />
+      <Stat k="WHIP" v={dec2(p.whip)} />
     </div>
   );
 }

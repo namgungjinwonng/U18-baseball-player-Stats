@@ -28,77 +28,32 @@ export function MPlayer() {
 
       {p.batting && (
         <div className="m-strip">
-          <div className="cell">
-            <div className="k">타율</div>
-            <div className="v">{rate(p.batting.avg)}</div>
-          </div>
-          <div className="cell">
-            <div className="k">OPS</div>
-            <div className="v">{rate(p.batting.obp + p.batting.slg)}</div>
-          </div>
-          <div className="cell">
-            <div className="k">안타</div>
-            <div className="v">{p.batting.h}</div>
-          </div>
-          <div className="cell">
-            <div className="k">홈런</div>
-            <div className="v">{p.batting.hr}</div>
-          </div>
-          <div className="cell">
-            <div className="k">타점</div>
-            <div className="v">{p.batting.rbi}</div>
-          </div>
-          <div className="cell">
-            <div className="k">득점</div>
-            <div className="v">{p.batting.r}</div>
-          </div>
-          <div className="cell">
-            <div className="k">도루</div>
-            <div className="v">{p.batting.sb}</div>
-          </div>
-          <div className="cell">
-            <div className="k">볼넷</div>
-            <div className="v">{p.batting.bb}</div>
-          </div>
-          <div className="cell">
-            <div className="k">사구</div>
-            <div className="v">{p.batting.hbp}</div>
-          </div>
-          <div className="cell">
-            <div className="k">삼진</div>
-            <div className="v">{p.batting.so}</div>
-          </div>
+          {([
+            ["타율", rate(p.batting.avg)], ["경기", p.batting.g], ["타석", p.batting.pa],
+            ["타수", p.batting.ab], ["안타", p.batting.h], ["2루타", p.batting.b2],
+            ["3루타", p.batting.b3], ["홈런", p.batting.hr], ["타점", p.batting.rbi],
+            ["득점", p.batting.r], ["도루", p.batting.sb], ["볼넷", p.batting.bb],
+            ["고의4구", p.batting.ibb ?? 0], ["사구", p.batting.hbp], ["삼진", p.batting.so],
+            ["희타", p.batting.sh ?? 0], ["희비", p.batting.sf ?? 0], ["실책", p.batting.e ?? 0],
+            ["출루율", rate(p.batting.obp)], ["장타율", rate(p.batting.slg)],
+            ["OPS", rate(p.batting.obp + p.batting.slg)],
+          ] as [string, string | number][]).map(([k, v]) => (
+            <div className="cell" key={k}><div className="k">{k}</div><div className="v">{v}</div></div>
+          ))}
         </div>
       )}
 
       {p.pitching && (
         <div className="m-strip">
-          <div className="cell">
-            <div className="k">평균자책</div>
-            <div className="v">{dec2(p.pitching.era)}</div>
-          </div>
-          <div className="cell">
-            <div className="k">WHIP</div>
-            <div className="v">{dec2(p.pitching.whip)}</div>
-          </div>
-          <div className="cell">
-            <div className="k">이닝</div>
-            <div className="v">{inn(p.pitching.ip)}</div>
-          </div>
-          <div className="cell">
-            <div className="k">승-패</div>
-            <div className="v">
-              {p.pitching.w}-{p.pitching.l}
-            </div>
-          </div>
-          <div className="cell">
-            <div className="k">탈삼진</div>
-            <div className="v">{p.pitching.so}</div>
-          </div>
-          <div className="cell">
-            <div className="k">세이브</div>
-            <div className="v">{p.pitching.sv}</div>
-          </div>
+          {([
+            ["평균자책", dec2(p.pitching.era)], ["경기", p.pitching.g], ["승", p.pitching.w],
+            ["패", p.pitching.l], ["이닝", inn(p.pitching.ip)], ["상대타자", p.pitching.bf ?? 0],
+            ["투구수", p.pitching.np ?? 0], ["피안타", p.pitching.h], ["피홈런", p.pitching.hr ?? 0],
+            ["볼넷", p.pitching.bb], ["탈삼진", p.pitching.so], ["실점", p.pitching.r],
+            ["자책", p.pitching.er], ["WHIP", dec2(p.pitching.whip)],
+          ] as [string, string | number][]).map(([k, v]) => (
+            <div className="cell" key={k}><div className="k">{k}</div><div className="v">{v}</div></div>
+          ))}
         </div>
       )}
 
@@ -118,6 +73,7 @@ export function MPlayer() {
           {p.pitching && (() => { const a = pitchingAdvanced(p.pitching!); return (
             <div className="m-strip">
               <div className="cell"><div className="k">WHIP</div><div className="v">{dec2(a.whip)}</div></div>
+              {a.fip != null && <div className="cell"><div className="k">FIP</div><div className="v">{dec2(a.fip)}</div></div>}
               <div className="cell"><div className="k">K/9</div><div className="v">{dec1(a.k9)}</div></div>
               <div className="cell"><div className="k">BB/9</div><div className="v">{dec1(a.bb9)}</div></div>
               <div className="cell"><div className="k">H/9</div><div className="v">{dec1(a.h9)}</div></div>

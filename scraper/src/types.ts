@@ -63,11 +63,15 @@ export interface BattingStats {
   g: number; pa: number; ab: number; r: number; h: number;
   b2: number; b3: number; hr: number; rbi: number; bb: number;
   hbp: number; so: number; sb: number; avg: number; obp: number; slg: number;
+  // 공식기록에서만 채워지는 항목(선택)
+  sh?: number; sf?: number; ibb?: number; e?: number;
 }
 export interface PitchingStats {
   g: number; w: number; l: number; sv: number; ip: number;
   h: number; r: number; er: number; bb: number; so: number;
   era: number; whip: number;
+  // 공식기록에서만 채워지는 항목(선택)
+  hr?: number; bf?: number; np?: number;
 }
 export interface GameLogEntry {
   gameId: string; date: string; opponent: string; line: string;
