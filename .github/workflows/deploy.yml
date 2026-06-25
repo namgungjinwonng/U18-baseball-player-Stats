@@ -38,8 +38,8 @@ jobs:
       - name: Build
         working-directory: web
         env:
-          # GitHub Pages 프로젝트 사이트 경로(리포명). 사용자/조직 페이지면 "/" 로 변경.
-          VITE_BASE: /U18-baseball-player/
+          # GitHub Pages 프로젝트 사이트 경로(= 리포명). 사용자/조직 페이지면 "/" 로 변경.
+          VITE_BASE: /U18-baseball-player-records/
         run: npm run build
 
       - name: SPA fallback (client routing)
