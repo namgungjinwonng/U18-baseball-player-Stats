@@ -31501,6 +31501,16 @@
     "throws": "우",
     "bats": "우"
   },
+  "김민찬|16": {
+    "team": "천안CSBC(U-18)",
+    "region": "충남",
+    "clubIdx": "1697",
+    "grade": "2",
+    "position": "내야수",
+    "personNo": "202103001447",
+    "throws": "우",
+    "bats": "좌"
+  },
   "김성진|37": {
     "team": "천안CSBC(U-18)",
     "region": "충남",
@@ -31591,6 +31601,24 @@
     "throws": "우",
     "bats": "좌"
   },
+  "신현승|11": {
+    "team": "천안CSBC(U-18)",
+    "region": "충남",
+    "clubIdx": "1697",
+    "grade": "2",
+    "position": "투수",
+    "personNo": "201902000185",
+    "throws": "우",
+    "bats": "우"
+  },
+  "여민준|6": {
+    "team": "천안CSBC(U-18)",
+    "region": "충남",
+    "clubIdx": "1697",
+    "grade": "1",
+    "position": "미지정",
+    "personNo": "202605012025"
+  },
   "오승원|35": {
     "team": "천안CSBC(U-18)",
     "region": "충남",
@@ -31601,6 +31629,16 @@
     "throws": "우",
     "bats": "우"
   },
+  "이상형|36": {
+    "team": "천안CSBC(U-18)",
+    "region": "충남",
+    "clubIdx": "1697",
+    "grade": "3",
+    "position": "투수",
+    "personNo": "201901002385",
+    "throws": "우",
+    "bats": "우"
+  },
   "이현준|17": {
     "team": "천안CSBC(U-18)",
     "region": "충남",
@@ -31608,6 +31646,16 @@
     "grade": "2",
     "position": "외야수",
     "personNo": "201902006410",
+    "throws": "우",
+    "bats": "우"
+  },
+  "임주환|33": {
+    "team": "천안CSBC(U-18)",
+    "region": "충남",
+    "clubIdx": "1697",
+    "grade": "1",
+    "position": "외야수",
+    "personNo": "202405001040",
     "throws": "우",
     "bats": "우"
   },
