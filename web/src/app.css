@@ -244,6 +244,23 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* compact: 항목당 1줄(라벨 + 값) — 선수 상세 전체 항목용 */
+.stat-strip--compact {
+  gap: var(--space-md) var(--space-xl);
+}
+.stat-strip--compact .stat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+.stat-strip--compact .stat .k {
+  text-transform: none;
+}
+.stat-strip--compact .stat .v {
+  font-size: var(--type-body);
+  font-weight: 700;
+}
+
 /* --- Matchup picker --- */
 .matchup-pick {
   display: grid;
@@ -286,10 +303,12 @@
   padding: var(--space-lg) 0;
   border-bottom: 1px solid var(--color-hairline);
 }
-.glossary-head {
+/* 1줄차: 약어 + 이름 + 계산식, 2줄차: 설명 */
+.glossary-line1 {
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);
+  flex-wrap: wrap;
   margin-bottom: var(--space-xs);
 }
 .glossary-abbr {
@@ -304,15 +323,13 @@
   font-variant-numeric: tabular-nums;
   background: var(--color-soft-cloud);
   border-radius: var(--radius-md);
-  padding: 6px 12px;
-  display: inline-block;
+  padding: 3px 10px;
   font-size: var(--type-caption);
-  margin-bottom: var(--space-sm);
 }
 .glossary-desc {
   color: var(--color-charcoal);
-  font-size: var(--type-body);
-  line-height: 1.6;
+  font-size: var(--type-caption);
+  line-height: 1.5;
 }
 
 /* 지역/학교 필터 바 */

@@ -168,13 +168,52 @@ export function aggregate(
     if (off?.pitching && off.pitching.g > 0) p.pitching = off.pitching;
   }
 
-  const matchups = [...mAcc.values()]
-    .map((m) => ({
-      ...m,
-      batterName: names.get(m.batterId) ?? m.batterName,
-      pitcherName: names.get(m.pitcherId) ?? m.pitcherName,
-      avg: m.ab ? r3(m.h / m.ab) : 0,
-    }))
+  // --- 동일 선수(personNo) 중복 슬러그 병합 (팀명 축약/번호변경 등으로 분리된 항목) ---
+  const remap = new Map<string, string>(); // oldId → 대표 id
+  {
+    const byPerson = new Map<string, Player[]>();
+    for (const p of players.values()) {
+      if (!p.personNo) continue;
+      const arr = byPerson.get(p.personNo) ?? [];
+      arr.push(p);
+      byPerson.set(p.personNo, arr);
+    }
+    for (const group of byPerson.values()) {
+      if (group.length < 2) continue;
+      // 대표: 투타정보 보유 → 경기수 많은 순
+      const score = (x: Player) =>
+        (x.throws && x.bats ? 1000 : 0) + (x.batting?.g ?? 0) + (x.pitching?.g ?? 0);
+      const rep = [...group].sort((a, b) => score(b) - score(a))[0];
+      const seen = new Set(rep.gameLog.map((l) => l.gameId));
+      for (const p of group) {
+        if (p.id === rep.id) continue;
+        remap.set(p.id, rep.id);
+        for (const l of p.gameLog) if (!seen.has(l.gameId)) { seen.add(l.gameId); rep.gameLog.push(l); }
+        rep.bats ??= p.bats; rep.throws ??= p.throws; rep.grade ??= p.grade; rep.region ??= p.region;
+        players.delete(p.id);
+      }
+      rep.gameLog.sort((a, b) => b.date.localeCompare(a.date));
+    }
+  }
+  const canon = (id: string) => remap.get(id) ?? id;
+
+  // 매치업 id 재매핑 후 동일 쌍 병합
+  const mMerged = new Map<string, Matchup>();
+  for (const m of mAcc.values()) {
+    const bId = canon(m.batterId);
+    const pId = canon(m.pitcherId);
+    const key = `${bId}|${pId}`;
+    const cur = mMerged.get(key) ?? {
+      batterId: bId, batterName: names.get(bId) ?? m.batterName,
+      pitcherId: pId, pitcherName: names.get(pId) ?? m.pitcherName,
+      pa: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 0, avg: 0,
+    };
+    cur.pa += m.pa; cur.ab += m.ab; cur.h += m.h; cur.b2 += m.b2; cur.b3 += m.b3;
+    cur.hr += m.hr; cur.bb += m.bb; cur.hbp += m.hbp; cur.so += m.so;
+    mMerged.set(key, cur);
+  }
+  const matchups = [...mMerged.values()]
+    .map((m) => ({ ...m, avg: m.ab ? r3(m.h / m.ab) : 0 }))
     .sort((a, b) =>
       a.batterName.localeCompare(b.batterName, "ko") ||
       a.pitcherName.localeCompare(b.pitcherName, "ko")

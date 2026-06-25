@@ -16,7 +16,7 @@ function Stat({ k, v }: { k: string; v: string }) {
 function BattingStrip({ b }: { b: BattingStats }) {
   const n = (v: number | undefined) => String(v ?? 0);
   return (
-    <div className="stat-strip">
+    <div className="stat-strip stat-strip--compact">
       <Stat k="타율" v={rate(b.avg)} />
       <Stat k="경기" v={n(b.g)} />
       <Stat k="타석" v={n(b.pa)} />
@@ -45,7 +45,7 @@ function BattingStrip({ b }: { b: BattingStats }) {
 function BattingSaber({ b }: { b: BattingStats }) {
   const a = battingAdvanced(b);
   return (
-    <div className="stat-strip">
+    <div className="stat-strip stat-strip--compact">
       <Stat k="OPS" v={rate(a.ops)} />
       <Stat k="ISO" v={rate(a.iso)} />
       <Stat k="BABIP" v={rate(a.babip)} />
@@ -59,7 +59,7 @@ function BattingSaber({ b }: { b: BattingStats }) {
 function PitchingSaber({ p }: { p: PitchingStats }) {
   const a = pitchingAdvanced(p);
   return (
-    <div className="stat-strip">
+    <div className="stat-strip stat-strip--compact">
       <Stat k="WHIP" v={dec2(a.whip)} />
       {a.fip != null && <Stat k="FIP" v={dec2(a.fip)} />}
       <Stat k="K/9" v={dec1(a.k9)} />
@@ -73,7 +73,7 @@ function PitchingSaber({ p }: { p: PitchingStats }) {
 function PitchingStrip({ p }: { p: PitchingStats }) {
   const n = (v: number | undefined) => String(v ?? 0);
   return (
-    <div className="stat-strip">
+    <div className="stat-strip stat-strip--compact">
       <Stat k="평균자책" v={dec2(p.era)} />
       <Stat k="경기" v={n(p.g)} />
       <Stat k="승" v={n(p.w)} />

@@ -34,11 +34,11 @@ function Section({ title, terms }: { title: string; terms: Term[] }) {
       <h2 className="heading-lg" style={{ marginBottom: "var(--space-md)" }}>{title}</h2>
       {terms.map((t) => (
         <div className="glossary-row" key={t.abbr}>
-          <div className="glossary-head">
+          <div className="glossary-line1">
             <span className="glossary-abbr">{t.abbr}</span>
             <span className="glossary-name">{t.name}</span>
+            <span className="glossary-formula">{t.formula}</span>
           </div>
-          <div className="glossary-formula">{t.formula}</div>
           <div className="glossary-desc">{t.desc}</div>
         </div>
       ))}
