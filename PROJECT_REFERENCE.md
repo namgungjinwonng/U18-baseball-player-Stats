@@ -45,10 +45,12 @@
 │     │   ├─ refresh.tsx     RefreshButton (캐시 전부 비우고 location.reload)
 │     │   ├─ format.ts       rate(.333) / dec2 / inn(6.2) / int / formatDate
 │     │   ├─ sabermetrics.ts OPS/ISO/BABIP/BB%·K%·BB/K, K9·BB9·H9·KBB·FIP
-│     │   ├─ columns.ts      recordTabs (타자 기본/세부, 투수 기본/세부) + 컬럼 정의
+│     │   ├─ columns.ts      recordTabs (타자 기본/세부, 투수 기본/세부) + 컬럼 정의. 모든 탭 initialSort="g".
 │     │   ├─ leaders.ts      홈 리더보드(규정타석=경기수×3.1, 규정이닝=경기수×1.0)
-│     │   ├─ matchup.ts      Role/playerLabel/facedOpponents/facedSchools/sumMatchups
-│     │   ├─ filters.tsx, StatTable.tsx, Glossary.tsx, Footer.tsx
+│     │   ├─ matchup.ts      Role/playerLabel/facedOpponents/facedSchools/sumMatchups + batsThrowsLabel/matchupOpponentMeta
+│     │   ├─ Glossary.tsx    TERM_MAP export (약어→설명) — SaberTerm 모달에서 참조
+│     │   ├─ SaberTerm.tsx   클릭형 세이버 용어 라벨 + 설명 모달
+│     │   ├─ filters.tsx, StatTable.tsx, Footer.tsx
 │     ├─ desktop/  DesktopApp.tsx + pages/{Home,Records,Matchup,Search,Player}Page.tsx
 │     └─ mobile/   MobileApp.tsx + mobile.css + pages/{MHome,MRecords,MMatchup,MSearch,MPlayer}.tsx
 │
@@ -211,3 +213,4 @@ npx playwright install chromium && npm run discover -- "<URL>"
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)
 - 2026-06-27: 워크플로 이름 한글화 — `Deploy to GitHub Pages` → `웹사이트 배포 (GitHub Pages)`, `Scrape & Accumulate Data` → `데이터 수집·집계`. (GitHub 자동 생성 `pages-build-deployment` 은 이름 변경 불가.)
 - 2026-06-27: 워크플로 분리·자동 체이닝. `scrape.yml` 을 "데이터 수집·집계 (증분)" 으로 명확화, 신규 `scrape-full.yml` "데이터 수집·집계 (전체 월 스캔)" 추가(수동 전용·`MONTHS=3-12`). `deploy.yml` 에 `workflow_run` 트리거를 추가해 두 스크레이프 success 시 자동 배포되도록 함(`GITHUB_TOKEN` 푸시가 push 트리거를 깨우지 못하는 이슈 해결).
+- 2026-06-27: UX 일괄 개선 — (1) 필터 라벨 "전체 X" → "X 선택", (2) 유령 선수(이름 `()`·등번호 누락) 스크레이퍼/프론트 양쪽 필터, (3) 모바일 탭 wrap 으로 한 화면에 표시, (4) 기록 테이블 기본 정렬 경기수(g) 내림차순(detail 탭에 G 컬럼 추가), (5) 선수 상세 헤더 한 줄화 + 투타 표기 + "시즌" 텍스트 제거, (6) 세이버메트릭스 라벨 클릭 → 설명 모달(`SaberTerm` + `Glossary.TERM_MAP`), (7) 매치업 행 라벨 `vs 상대(학교·학년·투타)`, (9) 선수 상세 섹션 분리(타자·투수·세이버·경기로그·상대 타자·상대 투수). `PlayerIndexEntry` 에 `bats/throws` 추가(상대 메타용). **시합/리그 선택(#1·#8 일부)** 은 KBSA 캘린더에 시합 메타가 없어 보류 — 별도 데이터 매핑 필요.
