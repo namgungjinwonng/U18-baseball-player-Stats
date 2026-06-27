@@ -150,6 +150,8 @@ function parsePitchers(table: string, team: string): ParsedPitcher[] {
     // 컬럼: 등판,결과,승,패,이닝,타자,투구수,타수,피안타,피홈런,4사구,삼진,실점,자책,평균자책점
     const [appear, result, w, l, ip, , , , h, , bb, so, r, er] = tds;
     const { name, num } = splitName(nameRaw);
+    // 이름·번호가 비면(파싱 누락·합계행 등) 유령 선수로 들어가므로 건너뛴다.
+    if (!name || !num) continue;
     order += 1;
     out.push({
       playerId: slug(team, name, num),

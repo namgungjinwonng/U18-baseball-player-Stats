@@ -219,12 +219,17 @@ export function aggregate(
       a.pitcherName.localeCompare(b.pitcherName, "ko")
     );
 
+  // 유령 선수(파싱 누락으로 이름·등번호가 빈 행) 제거.
+  for (const [id, p] of [...players]) {
+    if (!p.name || p.name === "()" || !p.number) players.delete(id);
+  }
   const playerList = [...players.values()].sort((a, b) =>
     a.id.localeCompare(b.id)
   );
   const index: PlayerIndexEntry[] = playerList.map((p) => ({
     id: p.id, name: p.name, team: p.team, position: p.position,
     number: p.number, grade: p.grade, region: p.region,
+    bats: p.bats, throws: p.throws,
   }));
 
   // 팀별 경기수(규정타석/이닝 기준) — 선수 gameLog 의 distinct 경기 합집합.

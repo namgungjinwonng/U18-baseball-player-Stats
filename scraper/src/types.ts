@@ -85,6 +85,7 @@ export interface Player {
 export interface PlayerIndexEntry {
   id: string; name: string; team: string; position: string;
   number?: string; grade?: string; region?: string;
+  bats?: string; throws?: string; // 상대전적 보조 라벨용
 }
 export interface Matchup {
   batterId: string; batterName: string; pitcherId: string; pitcherName: string;
