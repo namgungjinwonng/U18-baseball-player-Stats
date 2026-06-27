@@ -56,7 +56,8 @@
 │
 ├─ scraper/
 │  └─ src/
-│     ├─ index.ts            ★ 메인 진입(`npm run scrape`): collectNewGames → updateOfficialFor → aggregate → writeYear/writeYearsIndex
+│     ├─ index.ts            ★ 메인 진입(`npm run scrape`): collectNewGames → updateOfficialFor → aggregate → writeYear/writeYearsIndex + 시합별 분리 집계 (`by-tournament/{slug}/records.json` + `tournaments.json`). 최근 3일치 게임은 무조건 재수집.
+│     ├─ backfillTitles.ts   기존 game JSON 에 `title` 없는 항목 재fetch 채우기 (1회용)
 │     ├─ koreaBaseball.ts    KBSA HTML 어댑터 (BASE/KIND/fetchGameRefs/fetchRecordDetail/classifyAtBat)
 │     ├─ fetchGames.ts       listGameRefs, existingGameIds, isAfterSeasonStart(2026-01-01~), incrementalMonths
 │     ├─ parseRecordDetail.ts (얇은 래퍼)
@@ -213,4 +214,11 @@ npx playwright install chromium && npm run discover -- "<URL>"
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)
 - 2026-06-27: 워크플로 이름 한글화 — `Deploy to GitHub Pages` → `웹사이트 배포 (GitHub Pages)`, `Scrape & Accumulate Data` → `데이터 수집·집계`. (GitHub 자동 생성 `pages-build-deployment` 은 이름 변경 불가.)
 - 2026-06-27: 워크플로 분리·자동 체이닝. `scrape.yml` 을 "데이터 수집·집계 (증분)" 으로 명확화, 신규 `scrape-full.yml` "데이터 수집·집계 (전체 월 스캔)" 추가(수동 전용·`MONTHS=3-12`). `deploy.yml` 에 `workflow_run` 트리거를 추가해 두 스크레이프 success 시 자동 배포되도록 함(`GITHUB_TOKEN` 푸시가 push 트리거를 깨우지 못하는 이슈 해결).
-- 2026-06-27: UX 일괄 개선 — (1) 필터 라벨 "전체 X" → "X 선택", (2) 유령 선수(이름 `()`·등번호 누락) 스크레이퍼/프론트 양쪽 필터, (3) 모바일 탭 wrap 으로 한 화면에 표시, (4) 기록 테이블 기본 정렬 경기수(g) 내림차순(detail 탭에 G 컬럼 추가), (5) 선수 상세 헤더 한 줄화 + 투타 표기 + "시즌" 텍스트 제거, (6) 세이버메트릭스 라벨 클릭 → 설명 모달(`SaberTerm` + `Glossary.TERM_MAP`), (7) 매치업 행 라벨 `vs 상대(학교·학년·투타)`, (9) 선수 상세 섹션 분리(타자·투수·세이버·경기로그·상대 타자·상대 투수). `PlayerIndexEntry` 에 `bats/throws` 추가(상대 메타용). **시합/리그 선택(#1·#8 일부)** 은 KBSA 캘린더에 시합 메타가 없어 보류 — 별도 데이터 매핑 필요.
+- 2026-06-27: UX 일괄 개선 — (1) 필터 라벨 "전체 X" → "X 선택", (2) 유령 선수(이름 `()`·등번호 누락) 스크레이퍼/프론트 양쪽 필터, (3) 모바일 탭 wrap 으로 한 화면에 표시, (4) 기록 테이블 기본 정렬 경기수(g) 내림차순(detail 탭에 G 컬럼 추가), (5) 선수 상세 헤더 한 줄화 + 투타 표기 + "시즌" 텍스트 제거, (6) 세이버메트릭스 라벨 클릭 → 설명 모달(`SaberTerm` + `Glossary.TERM_MAP`), (7) 매치업 행 라벨 `vs 상대(학교·학년·투타)`, (9) 선수 상세 섹션 분리(타자·투수·세이버·경기로그·상대 타자·상대 투수). `PlayerIndexEntry` 에 `bats/throws` 추가(상대 메타용).
+- 2026-06-27: 시합/대회 구분 + 학교 정규화 + 실시간 증분 + PWA 자산 (참고 소스 `C:\Users\user\claude\U-18 Baseball` 패턴 차용):
+  - **시합 (#1·#8)**: `koreaBaseball.fetchRecordDetail` 가 `<dl class="game_name"><dt>` 에서 시합명을 추출해 `GameBoxScore.title` 에 저장. `accumulate` 가 시합별로 슬림 records 를 `data/{year}/by-tournament/{slug}/records.json` 로 분리 집계하고 `tournaments.json` 인덱스 생성. 프론트 `useTournaments` / `useTournamentRecords(slug)` 훅 + `FilterBar` 시합 셀렉터(기본 "시즌 전체"). 선수 상세는 `playerStats.filterPlayerStats` 로 gameLog 의 `bStat`/`pStat` 에서 재집계 → 시합별 통계 표기. 1회성 백필: `npm run backfill-titles` 가 기존 게임 JSON 에 title 채움(503/826 완료, 나머지 410 Gone).
+  - **학교 정규화 (#2)**: `accumulate.buildTeamNormalizer` — 참고 소스의 `_core()` 패턴 미러. 접미사(`(U-18)`, `야구단`, `BC`, `고등학교`) 제거 + 접두 일치 + `ALIAS_EXPLICIT` 으로 박스스코어 축약명("한국마사")을 KBSA 정식명("한국마사고BC")으로 통합. 팀 113개로 중복 해소.
+  - **실시간 증분 (#6)**: `index.collectNewGames` 가 "최근 3일치 게임은 이미 수집되어 있어도 무조건 재fetch" (참고 소스 `main_incremental`). 추가로 오늘 월을 base 월 셋에 무조건 포함. PWA 는 network-first SW 이므로 CI 가 데이터를 푸시하면 앱 새로고침으로 즉시 반영.
+  - **PWA (#3)**: `manifest.webmanifest` name="U-18 Player Stats". 아이콘 192/512 교체 (`web/public/icon-*.png`). 512 에 `purpose:"maskable"` 추가해 안드로이드 런처에서 512 사용. `index.html` 에 `apple-touch-icon` 192/512 + `apple-mobile-web-app-title` 추가. `sw.js` 캐시 v1→v2 (새 자산 강제 갱신).
+  - **큰 모바일 정렬 (#4)**: `.m-page` 에 `max-width: 560px; margin: 0 auto` + ≥480px·≥720px 미디어쿼리로 양옆 패딩 확장. `.m-hero` 도 동일.
+  - **탭 구성 (#5)**: 기본 탭 = 카운팅 스탯(G/타석/타수/안타/2·3루타/홈런/타점/득점/도루/볼넷/사구/삼진 또는 G/승/패/세이브/이닝/피안타/실점/자책/볼넷/탈삼진), 세부 탭 = 비율+세이버(타율/OBP/SLG/OPS/ISO/BABIP/BB%/K%/BB/K 또는 ERA/WHIP/FIP/K9/BB9/H9/KBB).
