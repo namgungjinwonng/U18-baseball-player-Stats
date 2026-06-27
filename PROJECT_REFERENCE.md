@@ -16,7 +16,7 @@
 - **프론트엔드**: `web/` — React 18 + Vite 5 + TS, React Router v6. 데스크탑·모바일 **완전 분리 트리**(`shared/`만 공유).
 - **수집기**: `scraper/` — Node 20 + TS + tsx. **fetch 기반**(Playwright는 `discover`만 사용).
 - **데이터 "DB"**: 리포 루트 `data/` 의 **커밋되는 정적 JSON**. GitHub Pages가 그대로 서빙. 진실의 원천(Source of Truth)은 `data/games/*.json`(원본 박스스코어). 그 외 파일(`data/{year}/…`)은 **순수 함수로 파생** → 멱등.
-- **CI**: `.github/workflows/scrape.yml`(매일 KST 00:00 데이터 갱신 → 커밋) + `deploy.yml`(`web/**`·`data/**` 푸시 시 Pages 배포).
+- **CI**: `.github/workflows/scrape.yml`("데이터 수집·집계", 매일 KST 00:00 → 커밋) + `deploy.yml`("웹사이트 배포 (GitHub Pages)", `web/**`·`data/**` 푸시 시 Pages 배포). GitHub가 자동 추가하는 `pages-build-deployment`(파일 없음, 이름 변경 불가)도 함께 표시될 수 있음.
 - **GitHub Pages base**: `/U18-baseball-player-Stats/` (배포 워크플로의 `VITE_BASE`, 리포명과 동일). 로컬 dev는 `/`.
 
 ---
@@ -204,3 +204,4 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)
+- 2026-06-27: 워크플로 이름 한글화 — `Deploy to GitHub Pages` → `웹사이트 배포 (GitHub Pages)`, `Scrape & Accumulate Data` → `데이터 수집·집계`. (GitHub 자동 생성 `pages-build-deployment` 은 이름 변경 불가.)

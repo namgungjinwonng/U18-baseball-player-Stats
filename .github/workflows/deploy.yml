@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: 웹사이트 배포 (GitHub Pages)
 
 on:
   push:
