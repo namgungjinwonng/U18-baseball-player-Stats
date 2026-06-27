@@ -179,6 +179,98 @@
   margin: var(--space-section) 0;
 }
 
+/* --- Sabermetrics term (clickable label) + modal --- */
+.saber-term {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dotted var(--color-mute);
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.saber-term:hover,
+.saber-term:focus-visible {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+  outline: none;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.55);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-card {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.modal-head h3 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.modal-abbr {
+  font-size: 22px;
+  font-weight: 700;
+}
+.modal-name {
+  font-size: 14px;
+  color: var(--color-mute);
+}
+.modal-formula {
+  font-size: 13px;
+  color: var(--color-mute);
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin: 0 0 12px;
+}
+.modal-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* --- Player detail: single-line meta + section spacing --- */
+.player-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: baseline;
+  color: var(--color-mute);
+  font-size: 14px;
+  margin: 4px 0 16px;
+}
+.player-meta-line > span:not(:last-child)::after {
+  content: "·";
+  margin-left: 10px;
+  color: var(--color-hairline);
+}
+.player-section {
+  margin-top: 24px;
+}
+.player-section > h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
 /* --- Section header --- */
 .section-head {
   display: flex;

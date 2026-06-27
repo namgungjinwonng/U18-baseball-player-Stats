@@ -1,12 +1,12 @@
 // 세이버메트릭스 지표 설명(부록) — 데스크탑/모바일 공용.
-interface Term {
+export interface Term {
   abbr: string;
   name: string;
   formula: string;
   desc: string;
 }
 
-const BATTING: Term[] = [
+export const BATTING: Term[] = [
   { abbr: "AVG", name: "타율", formula: "안타 ÷ 타수", desc: "타수당 안타 비율. 가장 기본적인 타격 지표." },
   { abbr: "OBP", name: "출루율", formula: "(안타+볼넷+사구) ÷ (타수+볼넷+사구)", desc: "타자가 아웃되지 않고 출루하는 비율." },
   { abbr: "SLG", name: "장타율", formula: "총루타 ÷ 타수", desc: "타수당 루타수. 장타 생산력을 나타냄(단타1·2루타2·3루타3·홈런4)." },
@@ -18,7 +18,7 @@ const BATTING: Term[] = [
   { abbr: "BB/K", name: "볼넷/삼진", formula: "볼넷 ÷ 삼진", desc: "삼진 대비 볼넷 비율. 1 이상이면 매우 우수한 선구안." },
 ];
 
-const PITCHING: Term[] = [
+export const PITCHING: Term[] = [
   { abbr: "ERA", name: "평균자책점", formula: "자책점 × 9 ÷ 이닝", desc: "9이닝당 내준 자책점. 투수의 대표 지표." },
   { abbr: "WHIP", name: "이닝당 출루허용", formula: "(피안타+볼넷) ÷ 이닝", desc: "이닝당 출루 허용 수. 낮을수록 주자를 적게 내보냄." },
   { abbr: "FIP", name: "수비무관 평균자책", formula: "(13·피홈런+3·볼넷−2·탈삼진) ÷ 이닝 + 상수", desc: "수비 영향을 배제하고 투수 본연의 능력(삼진·볼넷·피홈런)만으로 본 ERA 추정. 상수는 리그 보정값(근사 3.10)." },
@@ -27,6 +27,11 @@ const PITCHING: Term[] = [
   { abbr: "H/9", name: "9이닝당 피안타", formula: "피안타 × 9 ÷ 이닝", desc: "9이닝당 허용 안타 수." },
   { abbr: "K/BB", name: "탈삼진/볼넷", formula: "탈삼진 ÷ 볼넷", desc: "볼넷 대비 삼진 비율. 높을수록 제구·구위가 모두 우수." },
 ];
+
+// 약어→설명 즉시 조회용 맵 (선수 상세 페이지의 클릭형 용어 모달이 참조).
+export const TERM_MAP: Record<string, Term> = Object.fromEntries(
+  [...BATTING, ...PITCHING].map((t) => [t.abbr, t])
+);
 
 function Section({ title, terms }: { title: string; terms: Term[] }) {
   return (

@@ -33,6 +33,7 @@ export const battingBasicColumns: Column<Player>[] = [
 export const battingDetailColumns: Column<Player>[] = [
   name,
   team,
+  { key: "g", label: "G", value: (p) => p.batting?.g ?? 0 },
   { key: "r", label: "득점", value: (p) => p.batting?.r ?? 0 },
   { key: "b2", label: "2루타", value: (p) => p.batting?.b2 ?? 0 },
   { key: "b3", label: "3루타", value: (p) => p.batting?.b3 ?? 0 },
@@ -66,6 +67,7 @@ export const pitchingBasicColumns: Column<Player>[] = [
 export const pitchingDetailColumns: Column<Player>[] = [
   name,
   team,
+  { key: "g", label: "G", value: (p) => p.pitching?.g ?? 0 },
   { key: "h", label: "피안타", value: (p) => p.pitching?.h ?? 0 },
   { key: "r", label: "실점", value: (p) => p.pitching?.r ?? 0 },
   { key: "er", label: "자책", value: (p) => p.pitching?.er ?? 0 },
@@ -83,11 +85,12 @@ export type RecordTab = {
   initialSort: string;
 };
 
+// 기본 정렬은 모두 경기수(g) 내림차순 — 표본이 많은 선수를 위에 노출.
 export const recordTabs: RecordTab[] = [
-  { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "avg" },
-  { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns, initialSort: "ops" },
-  { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "era" },
-  { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns, initialSort: "whip" },
+  { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "g" },
+  { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns, initialSort: "g" },
+  { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "g" },
+  { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns, initialSort: "g" },
 ];
 
 export function filterByKind(players: Player[], kind: "batting" | "pitching") {

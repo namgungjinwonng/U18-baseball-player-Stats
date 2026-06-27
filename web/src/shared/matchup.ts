@@ -16,6 +16,29 @@ export function playerLabel(p: PlayerIndexEntry): string {
   return `${p.name} (${p.team}${num})`;
 }
 
+// 투타 표기: throws='우', bats='좌' → "우투좌타". 한쪽만 있으면 그 부분만.
+export function batsThrowsLabel(p: { bats?: string; throws?: string }): string {
+  const t = p.throws ? `${p.throws}투` : "";
+  const b = p.bats ? `${p.bats}타` : "";
+  return `${t}${b}`;
+}
+
+// 상대전적 행 보조 라벨: "(학교·N학년·우투좌타)" — 없는 항목은 자연스럽게 생략.
+export function matchupOpponentMeta(p?: {
+  team?: string;
+  grade?: string;
+  bats?: string;
+  throws?: string;
+}): string {
+  if (!p) return "";
+  const parts: string[] = [];
+  if (p.team) parts.push(p.team);
+  if (p.grade) parts.push(`${p.grade}학년`);
+  const bt = batsThrowsLabel(p);
+  if (bt) parts.push(bt);
+  return parts.length ? `(${parts.join("·")})` : "";
+}
+
 // 이름/팀 부분 일치로 역할 내 후보 검색.
 export function searchByRole(
   index: PlayerIndexEntry[],

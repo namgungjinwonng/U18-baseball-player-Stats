@@ -48,7 +48,7 @@ export function FilterBar({
         onChange={(e) => onChange({ region: e.target.value, team: "" })}
         aria-label="지역 선택"
       >
-        <option value="">전체 지역</option>
+        <option value="">지역 선택</option>
         {regions.map((r) => (
           <option key={r} value={r}>{r}</option>
         ))}
@@ -59,7 +59,7 @@ export function FilterBar({
         onChange={(e) => onChange({ ...value, team: e.target.value })}
         aria-label="학교 선택"
       >
-        <option value="">전체 학교</option>
+        <option value="">학교 선택</option>
         {teams.map((t) => (
           <option key={t} value={t}>{t}</option>
         ))}

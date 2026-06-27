@@ -92,13 +92,19 @@
   margin: 12px 0 18px;
 }
 
-/* Mobile tabs scroll */
+/* Mobile tabs — 좌우 스크롤 없이 한 화면에 보이도록 wrap + 칩 축소 */
 .m-tabs {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.m-tabs .chip {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px 10px;
+  font-size: 13px;
+  min-height: 36px;
 }
 
 /* Mobile leader cards stacked */

@@ -47,9 +47,16 @@ export const useMeta = () => {
   return useAsync<Meta>(() => getJSON(`${year}/meta.json`), [year]);
 };
 
+// 유령 선수(이름이 빈/괄호만/등번호 누락) 행은 모든 화면에서 제외 (스크레이퍼 재집계 전 안전망).
+const isRealPlayer = <T extends { name?: string; number?: string }>(p: T) =>
+  !!p.name && p.name !== "()" && !!p.number;
+
 export const usePlayerIndex = () => {
   const { year } = useYear();
-  return useAsync<PlayerIndexEntry[]>(() => getJSON(`${year}/players/index.json`), [year]);
+  return useAsync<PlayerIndexEntry[]>(
+    () => getJSON<PlayerIndexEntry[]>(`${year}/players/index.json`).then((rows) => rows.filter(isRealPlayer)),
+    [year]
+  );
 };
 
 export const usePlayer = (id: string | undefined) => {
@@ -73,7 +80,10 @@ export const usePlayerMatchups = (id: string | undefined) => {
 // gameLog 가 빠진 슬림 형태이며, 선수 상세는 usePlayer 로 개별 로드.
 export const useAllPlayers = () => {
   const { year } = useYear();
-  return useAsync<Player[]>(() => getJSON(`${year}/records/players.json`), [year]);
+  return useAsync<Player[]>(
+    () => getJSON<Player[]>(`${year}/records/players.json`).then((rows) => rows.filter(isRealPlayer)),
+    [year]
+  );
 };
 
 // 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).

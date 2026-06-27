@@ -8,6 +8,8 @@ export interface PlayerIndexEntry {
   number?: string; // 등번호
   grade?: string; // 1/2/3 학년
   region?: string; // 지역
+  bats?: string; // 좌/우/양 — 상대전적 보조 라벨용
+  throws?: string; // 좌/우/양
 }
 
 export interface BattingStats {
