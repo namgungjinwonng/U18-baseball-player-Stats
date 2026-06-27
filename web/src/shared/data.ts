@@ -86,6 +86,34 @@ export const useAllPlayers = () => {
   );
 };
 
+// 시합/대회 목록 (없으면 빈 배열)
+export interface TournamentEntry {
+  slug: string;
+  title: string;
+  gameCount: number;
+}
+export const useTournaments = () => {
+  const { year } = useYear();
+  return useAsync<TournamentEntry[]>(
+    () => getJSON<TournamentEntry[]>(`${year}/tournaments.json`).catch(() => []),
+    [year]
+  );
+};
+
+// 특정 시합의 records (slim Player[]). slug 비면 전체 시즌 records 로 폴백.
+export const useTournamentRecords = (slug: string | "") => {
+  const { year } = useYear();
+  return useAsync<Player[]>(
+    () =>
+      slug
+        ? getJSON<Player[]>(`${year}/by-tournament/${encodeURIComponent(slug)}/records.json`)
+            .then((rows) => rows.filter(isRealPlayer))
+            .catch(() => [])
+        : getJSON<Player[]>(`${year}/records/players.json`).then((rows) => rows.filter(isRealPlayer)),
+    [year, slug]
+  );
+};
+
 // 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).
 export function searchPlayers(
   index: PlayerIndexEntry[],

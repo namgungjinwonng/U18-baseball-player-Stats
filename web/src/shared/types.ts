@@ -60,6 +60,10 @@ export interface GameLogEntry {
   date: string; // YYYY-MM-DD
   opponent: string;
   line: string; // 요약 (예: "3타수 2안타 1타점")
+  title?: string; // 시합/대회명 (예: "황금사자기", "주말리그 전반기(충청권)")
+  // 시합 필터 시 재집계용 per-game raw stats (있으면).
+  bStat?: { ab: number; h: number; b2: number; b3: number; hr: number; rbi: number; r: number; bb: number; hbp: number; so: number; sb: number };
+  pStat?: { outs: number; h: number; r: number; er: number; bb: number; so: number; w: number; l: number; sv: number };
 }
 
 export interface Player {

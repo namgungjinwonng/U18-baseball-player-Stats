@@ -1,20 +1,30 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { usePlayer, usePlayerIndex, usePlayerMatchups } from "../../shared/data";
+import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournaments } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { filterPlayerStats } from "../../shared/playerStats";
 
 export function MPlayer() {
   const { id } = useParams();
   const { data: p, loading, error } = usePlayer(id);
   const { data: matchups } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
+  const { data: tournaments } = useTournaments();
+  const [tournament, setTournament] = useState("");
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
+  const view = useMemo(() => (p ? filterPlayerStats(p, tournament) : null), [p, tournament]);
+  const playerTournaments = useMemo(() => {
+    if (!tournaments || !p?.gameLog) return [];
+    const titles = new Set(p.gameLog.map((g) => g.title).filter(Boolean) as string[]);
+    return tournaments.filter((t) => titles.has(t.title));
+  }, [tournaments, p?.gameLog]);
 
   if (loading) return <div className="m-page state">불러오는 중…</div>;
   if (error || !p) return <div className="m-page state">선수를 찾을 수 없습니다.</div>;
+  const v = view!;
 
   const asBatter = (matchups ?? []).filter((m) => m.batterId === p.id);
   const asPitcher = (matchups ?? []).filter((m) => m.pitcherId === p.id);
@@ -33,46 +43,64 @@ export function MPlayer() {
         {bt && <span>{bt}</span>}
       </div>
 
-      {p.batting && (
+      {playerTournaments.length > 0 && (
+        <div className="filter-bar" style={{ marginBottom: 12 }}>
+          <select
+            className="m-select"
+            value={tournament}
+            onChange={(e) => setTournament(e.target.value)}
+            aria-label="시합 선택"
+          >
+            <option value="">시즌 전체</option>
+            {playerTournaments.map((t) => (
+              <option key={t.slug} value={t.title}>
+                {t.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {v.batting && (
         <section className="player-section">
           <h3>타자 기록</h3>
           <div className="m-strip">
             {([
-              ["타율", rate(p.batting.avg)], ["경기", p.batting.g], ["타석", p.batting.pa],
-              ["타수", p.batting.ab], ["안타", p.batting.h], ["2루타", p.batting.b2],
-              ["3루타", p.batting.b3], ["홈런", p.batting.hr], ["타점", p.batting.rbi],
-              ["득점", p.batting.r], ["도루", p.batting.sb], ["볼넷", p.batting.bb],
-              ["고의4구", p.batting.ibb ?? 0], ["사구", p.batting.hbp], ["삼진", p.batting.so],
-              ["희타", p.batting.sh ?? 0], ["희비", p.batting.sf ?? 0], ["실책", p.batting.e ?? 0],
-              ["출루율", rate(p.batting.obp)], ["장타율", rate(p.batting.slg)],
-            ] as [string, string | number][]).map(([k, v]) => (
-              <div className="cell" key={k}><div className="k">{k}</div><div className="v">{v}</div></div>
+              ["타율", rate(v.batting.avg)], ["경기", v.batting.g], ["타석", v.batting.pa],
+              ["타수", v.batting.ab], ["안타", v.batting.h], ["2루타", v.batting.b2],
+              ["3루타", v.batting.b3], ["홈런", v.batting.hr], ["타점", v.batting.rbi],
+              ["득점", v.batting.r], ["도루", v.batting.sb], ["볼넷", v.batting.bb],
+              ["고의4구", v.batting.ibb ?? 0], ["사구", v.batting.hbp], ["삼진", v.batting.so],
+              ["희타", v.batting.sh ?? 0], ["희비", v.batting.sf ?? 0], ["실책", v.batting.e ?? 0],
+              ["출루율", rate(v.batting.obp)], ["장타율", rate(v.batting.slg)],
+            ] as [string, string | number][]).map(([k, val]) => (
+              <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
             ))}
-            <div className="cell"><div className="k"><SaberTerm abbr="OPS" /></div><div className="v">{rate(p.batting.obp + p.batting.slg)}</div></div>
+            <div className="cell"><div className="k"><SaberTerm abbr="OPS" /></div><div className="v">{rate(v.batting.obp + v.batting.slg)}</div></div>
           </div>
         </section>
       )}
 
-      {p.pitching && (
+      {v.pitching && (
         <section className="player-section">
           <h3>투수 기록</h3>
           <div className="m-strip">
             {([
-              ["평균자책", dec2(p.pitching.era)], ["경기", p.pitching.g], ["승", p.pitching.w],
-              ["패", p.pitching.l], ["이닝", inn(p.pitching.ip)], ["상대타자", p.pitching.bf ?? 0],
-              ["투구수", p.pitching.np ?? 0], ["피안타", p.pitching.h], ["피홈런", p.pitching.hr ?? 0],
-              ["볼넷", p.pitching.bb], ["탈삼진", p.pitching.so], ["실점", p.pitching.r],
-              ["자책", p.pitching.er],
-            ] as [string, string | number][]).map(([k, v]) => (
-              <div className="cell" key={k}><div className="k">{k}</div><div className="v">{v}</div></div>
+              ["평균자책", dec2(v.pitching.era)], ["경기", v.pitching.g], ["승", v.pitching.w],
+              ["패", v.pitching.l], ["이닝", inn(v.pitching.ip)], ["상대타자", v.pitching.bf ?? 0],
+              ["투구수", v.pitching.np ?? 0], ["피안타", v.pitching.h], ["피홈런", v.pitching.hr ?? 0],
+              ["볼넷", v.pitching.bb], ["탈삼진", v.pitching.so], ["실점", v.pitching.r],
+              ["자책", v.pitching.er],
+            ] as [string, string | number][]).map(([k, val]) => (
+              <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
             ))}
-            <div className="cell"><div className="k"><SaberTerm abbr="WHIP" /></div><div className="v">{dec2(p.pitching.whip)}</div></div>
+            <div className="cell"><div className="k"><SaberTerm abbr="WHIP" /></div><div className="v">{dec2(v.pitching.whip)}</div></div>
           </div>
         </section>
       )}
 
-      {p.batting && (() => {
-        const a = battingAdvanced(p.batting!);
+      {v.batting && (() => {
+        const a = battingAdvanced(v.batting!);
         return (
           <section className="player-section">
             <h3>세이버메트릭스 (타자)</h3>
@@ -87,8 +115,8 @@ export function MPlayer() {
           </section>
         );
       })()}
-      {p.pitching && (() => {
-        const a = pitchingAdvanced(p.pitching!);
+      {v.pitching && (() => {
+        const a = pitchingAdvanced(v.pitching!);
         return (
           <section className="player-section">
             <h3>세이버메트릭스 (투수)</h3>
@@ -106,14 +134,15 @@ export function MPlayer() {
 
       <section className="player-section">
         <h3>경기 로그</h3>
-        {(p.gameLog ?? []).map((g) => (
+        {v.gameLog.map((g, i) => (
           <div
-            key={g.gameId}
+            key={`${g.gameId}-${i}`}
             className="m-result"
             style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
           >
             <span className="caption">
               {formatDate(g.date)} · {g.opponent}
+              {g.title && <span className="muted"> · {g.title}</span>}
             </span>
             <span>{g.line}</span>
           </div>

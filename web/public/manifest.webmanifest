@@ -1,6 +1,6 @@
 {
-  "name": "U18 야구 선수 기록",
-  "short_name": "U18 야구",
+  "name": "U-18 Player Stats",
+  "short_name": "U-18 Player Stats",
   "description": "고교/18세 이하부 야구 선수 기록·상대전적 조회",
   "start_url": ".",
   "scope": ".",
@@ -9,7 +9,8 @@
   "theme_color": "#111111",
   "orientation": "any",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

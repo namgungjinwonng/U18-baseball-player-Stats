@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
-import { useMemo } from "react";
-import { usePlayer, usePlayerIndex, usePlayerMatchups } from "../../shared/data";
+import { useMemo, useState } from "react";
+import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournaments } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { filterPlayerStats } from "../../shared/playerStats";
 import type { BattingStats, PitchingStats } from "../../shared/types";
 
 function Stat({ k, v }: { k: string; v: string }) {
@@ -111,13 +112,25 @@ export function PlayerPage() {
   const { data: player, loading, error } = usePlayer(id);
   const { data: matchups } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
+  const { data: tournaments } = useTournaments();
+  const [tournament, setTournament] = useState("");
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
 
+  // 시합 필터에 맞춰 stats/gameLog 재집계 (필터 없으면 시즌 전체).
+  const view = useMemo(() => (player ? filterPlayerStats(player, tournament) : null), [player, tournament]);
+  // 이 선수가 실제로 출전한 시합만 셀렉터에 노출.
+  const playerTournaments = useMemo(() => {
+    if (!tournaments || !player?.gameLog) return [];
+    const titles = new Set(player.gameLog.map((g) => g.title).filter(Boolean) as string[]);
+    return tournaments.filter((t) => titles.has(t.title));
+  }, [tournaments, player?.gameLog]);
+
   if (loading) return <div className="container state">불러오는 중…</div>;
-  if (error || !player)
-    return <div className="container state">선수를 찾을 수 없습니다.</div>;
+  if (error || !player) return <div className="container state">선수를 찾을 수 없습니다.</div>;
+  const v = view!;
 
   // 상대전적: 내가 타자인 경우(상대 = 투수), 내가 투수인 경우(상대 = 타자) 로 분리.
+  // 매치업은 시합 필터를 적용하지 않음(시즌 전체 누적).
   const asBatter = (matchups ?? []).filter((m) => m.batterId === player.id);
   const asPitcher = (matchups ?? []).filter((m) => m.pitcherId === player.id);
   const bt = batsThrowsLabel(player);
@@ -135,29 +148,47 @@ export function PlayerPage() {
         </div>
       </div>
 
-      {player.batting && (
+      {playerTournaments.length > 0 && (
+        <div className="filter-bar" style={{ marginBottom: 16 }}>
+          <select
+            className="m-select"
+            value={tournament}
+            onChange={(e) => setTournament(e.target.value)}
+            aria-label="시합 선택"
+          >
+            <option value="">시즌 전체</option>
+            {playerTournaments.map((t) => (
+              <option key={t.slug} value={t.title}>
+                {t.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {v.batting && (
         <section className="player-section">
           <h3>타자 기록</h3>
-          <BattingStrip b={player.batting} />
+          <BattingStrip b={v.batting} />
         </section>
       )}
-      {player.pitching && (
+      {v.pitching && (
         <section className="player-section">
           <h3>투수 기록</h3>
-          <PitchingStrip p={player.pitching} />
+          <PitchingStrip p={v.pitching} />
         </section>
       )}
 
-      {player.batting && (
+      {v.batting && (
         <section className="player-section">
           <h3>세이버메트릭스 (타자)</h3>
-          <BattingSaber b={player.batting} />
+          <BattingSaber b={v.batting} />
         </section>
       )}
-      {player.pitching && (
+      {v.pitching && (
         <section className="player-section">
           <h3>세이버메트릭스 (투수)</h3>
-          <PitchingSaber p={player.pitching} />
+          <PitchingSaber p={v.pitching} />
         </section>
       )}
 
@@ -168,14 +199,16 @@ export function PlayerPage() {
             <thead>
               <tr>
                 <th style={{ textAlign: "left" }}>날짜</th>
+                <th style={{ textAlign: "left" }}>시합</th>
                 <th style={{ textAlign: "left" }}>상대</th>
                 <th style={{ textAlign: "left" }}>기록</th>
               </tr>
             </thead>
             <tbody>
-              {(player.gameLog ?? []).map((g) => (
-                <tr key={g.gameId}>
+              {v.gameLog.map((g, i) => (
+                <tr key={`${g.gameId}-${i}`}>
                   <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
+                  <td style={{ textAlign: "left" }} className="muted">{g.title ?? "-"}</td>
                   <td style={{ textAlign: "left" }}>{g.opponent}</td>
                   <td style={{ textAlign: "left" }}>{g.line}</td>
                 </tr>

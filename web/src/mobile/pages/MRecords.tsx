@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAllPlayers } from "../../shared/data";
+import { useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
@@ -8,9 +8,9 @@ import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../sh
 import type { Player } from "../../shared/types";
 
 export function MRecords() {
-  const { data: players, loading } = useAllPlayers();
   const [tabId, setTabId] = useState(recordTabs[0].id);
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  const { data: players, loading } = useTournamentRecords(filter.tournament);
   const nav = useNavigate();
   const tab = recordTabs.find((t) => t.id === tabId)!;
   const rows = useMemo(

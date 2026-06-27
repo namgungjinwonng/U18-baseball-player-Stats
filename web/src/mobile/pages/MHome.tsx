@@ -1,15 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAllPlayers, useMeta } from "../../shared/data";
+import { useMeta, useTournamentRecords } from "../../shared/data";
 import { leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../shared/filters";
 
 export function MHome() {
-  const { data: players } = useAllPlayers();
-  const { data: meta } = useMeta();
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  const { data: players } = useTournamentRecords(filter.tournament);
+  const { data: meta } = useMeta();
   const boards = useMemo(
     () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames) : []),
     [players, filter, meta]

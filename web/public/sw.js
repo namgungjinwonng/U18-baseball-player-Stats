@@ -1,6 +1,6 @@
 // 서비스 워커 — network-first(데이터 최신 우선), 오프라인 시 캐시 폴백.
 // u81-baseball 방식 참고.
-const CACHE = "u18-baseball-v1";
+const CACHE = "u18-baseball-v2";
 
 self.addEventListener("install", () => self.skipWaiting());
 
