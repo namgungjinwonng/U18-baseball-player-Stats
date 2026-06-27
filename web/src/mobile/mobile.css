@@ -185,12 +185,28 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* 셀렉터는 메인 화면 알약 버튼(btn--sm: padding 8/20, min-height 40, radius lg) 과 동일 크기로 */
 .m-select {
   width: 100%;
-  font: inherit;
-  padding: 12px;
+  font-family: var(--font-ui);
+  font-size: var(--type-button-sm);
+  font-weight: 500;
+  padding: 8px 36px 8px 20px; /* 우측은 셀렉트 화살표 여백 */
+  min-height: 40px;
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--color-soft-cloud);
+  margin-bottom: 8px;
+  color: var(--color-ink);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23111' fill='none' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   margin-bottom: 12px;
 }

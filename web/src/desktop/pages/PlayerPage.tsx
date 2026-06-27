@@ -6,6 +6,7 @@ import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/saber
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
 import { filterPlayerStats } from "../../shared/playerStats";
+import { TournamentPicker } from "../../shared/filters";
 import type { BattingStats, PitchingStats } from "../../shared/types";
 
 function Stat({ k, v }: { k: string; v: string }) {
@@ -113,17 +114,18 @@ export function PlayerPage() {
   const { data: matchups } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
-  const [tournament, setTournament] = useState("");
+  const [tournamentSlug, setTournamentSlug] = useState("");
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
 
-  // 시합 필터에 맞춰 stats/gameLog 재집계 (필터 없으면 시즌 전체).
-  const view = useMemo(() => (player ? filterPlayerStats(player, tournament) : null), [player, tournament]);
-  // 이 선수가 실제로 출전한 시합만 셀렉터에 노출.
-  const playerTournaments = useMemo(() => {
-    if (!tournaments || !player?.gameLog) return [];
-    const titles = new Set(player.gameLog.map((g) => g.title).filter(Boolean) as string[]);
-    return tournaments.filter((t) => titles.has(t.title));
-  }, [tournaments, player?.gameLog]);
+  // slug → title 매핑 후 gameLog 재집계 (필터 없으면 시즌 전체).
+  const tournamentTitle = useMemo(
+    () => tournaments?.find((t) => t.slug === tournamentSlug)?.title ?? "",
+    [tournaments, tournamentSlug]
+  );
+  const view = useMemo(
+    () => (player ? filterPlayerStats(player, tournamentTitle) : null),
+    [player, tournamentTitle]
+  );
 
   if (loading) return <div className="container state">불러오는 중…</div>;
   if (error || !player) return <div className="container state">선수를 찾을 수 없습니다.</div>;
@@ -148,23 +150,9 @@ export function PlayerPage() {
         </div>
       </div>
 
-      {playerTournaments.length > 0 && (
-        <div className="filter-bar" style={{ marginBottom: 16 }}>
-          <select
-            className="m-select"
-            value={tournament}
-            onChange={(e) => setTournament(e.target.value)}
-            aria-label="시합 선택"
-          >
-            <option value="">시즌 전체</option>
-            {playerTournaments.map((t) => (
-              <option key={t.slug} value={t.title}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      <div className="filter-bar" style={{ marginBottom: 16 }}>
+        <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+      </div>
 
       {v.batting && (
         <section className="player-section">

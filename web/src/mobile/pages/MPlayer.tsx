@@ -6,6 +6,7 @@ import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/saber
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
 import { filterPlayerStats } from "../../shared/playerStats";
+import { TournamentPicker } from "../../shared/filters";
 
 export function MPlayer() {
   const { id } = useParams();
@@ -13,14 +14,13 @@ export function MPlayer() {
   const { data: matchups } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
-  const [tournament, setTournament] = useState("");
+  const [tournamentSlug, setTournamentSlug] = useState("");
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
-  const view = useMemo(() => (p ? filterPlayerStats(p, tournament) : null), [p, tournament]);
-  const playerTournaments = useMemo(() => {
-    if (!tournaments || !p?.gameLog) return [];
-    const titles = new Set(p.gameLog.map((g) => g.title).filter(Boolean) as string[]);
-    return tournaments.filter((t) => titles.has(t.title));
-  }, [tournaments, p?.gameLog]);
+  const tournamentTitle = useMemo(
+    () => tournaments?.find((t) => t.slug === tournamentSlug)?.title ?? "",
+    [tournaments, tournamentSlug]
+  );
+  const view = useMemo(() => (p ? filterPlayerStats(p, tournamentTitle) : null), [p, tournamentTitle]);
 
   if (loading) return <div className="m-page state">불러오는 중…</div>;
   if (error || !p) return <div className="m-page state">선수를 찾을 수 없습니다.</div>;
@@ -43,23 +43,9 @@ export function MPlayer() {
         {bt && <span>{bt}</span>}
       </div>
 
-      {playerTournaments.length > 0 && (
-        <div className="filter-bar" style={{ marginBottom: 12 }}>
-          <select
-            className="m-select"
-            value={tournament}
-            onChange={(e) => setTournament(e.target.value)}
-            aria-label="시합 선택"
-          >
-            <option value="">시즌 전체</option>
-            {playerTournaments.map((t) => (
-              <option key={t.slug} value={t.title}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      <div className="filter-bar" style={{ marginBottom: 12 }}>
+        <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+      </div>
 
       {v.batting && (
         <section className="player-section">

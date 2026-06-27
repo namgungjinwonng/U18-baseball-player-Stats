@@ -9,6 +9,7 @@
     "official": "tsx src/officialStats.ts",
     "scrape": "tsx src/index.ts",
     "backfill-titles": "tsx src/backfillTitles.ts",
+    "fill-from-ref": "tsx src/fillFromReference.ts",
     "test": "tsx src/accumulate.test.ts"
   },
   "dependencies": {

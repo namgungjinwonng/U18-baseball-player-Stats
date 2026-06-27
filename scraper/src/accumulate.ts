@@ -59,25 +59,42 @@ function teamCore(s: string): string {
 function buildTeamNormalizer(roster: Roster): (name: string) => string {
   const rosterTeams = new Set<string>();
   for (const ros of Object.values(roster)) if (ros.team) rosterTeams.add(ros.team);
+  const officials = [...rosterTeams];
   const coreToOfficial = new Map<string, string>();
   const collisions = new Set<string>();
-  for (const t of rosterTeams) {
+  for (const t of officials) {
     const c = teamCore(t);
     if (!c) continue;
     if (coreToOfficial.has(c) && coreToOfficial.get(c) !== t) collisions.add(c);
     coreToOfficial.set(c, t);
   }
+  // 박스스코어 너비 제한으로 잘린 형태(예: "광남고B"→"광남고BC", "아산BC("→"아산BC(U-18)")
+  // 까지 잡으려면 input 을 raw official 명의 접두로도 매칭한다.
+  const prefixMatchRaw = (input: string): string | null => {
+    if (input.length < 2) return null;
+    const cands = officials.filter((o) => o.startsWith(input));
+    return cands.length === 1 ? cands[0] : null;
+  };
   return (name: string): string => {
     if (!name) return name;
     if (rosterTeams.has(name)) return name;
     if (ALIAS_EXPLICIT[name]) return ALIAS_EXPLICIT[name];
+    // 1) 접미사 제거 후 core 일치
     const c = teamCore(name);
-    if (!c) return name;
-    if (!collisions.has(c) && coreToOfficial.has(c)) return coreToOfficial.get(c)!;
-    // 박스스코어 셀 너비 제한으로 잘린 케이스(예: "한국마사" → "한국마사고") — 접두 일치 유일하면 채택.
-    if (c.length >= 3) {
+    if (c && !collisions.has(c) && coreToOfficial.has(c)) return coreToOfficial.get(c)!;
+    // 2) core 끼리 접두 일치 (예: "한국마사" → "한국마사고" → "한국마사고BC")
+    if (c && c.length >= 3) {
       const cands = [...coreToOfficial.entries()].filter(([rc]) => rc.startsWith(c));
       if (cands.length === 1) return cands[0][1];
+    }
+    // 3) 원본 official 명에 input 이 통째로 접두로 들어맞는 경우 (예: "광남고B" → "광남고BC")
+    const raw = prefixMatchRaw(name);
+    if (raw) return raw;
+    // 4) 끝의 불완전 토큰(괄호/숫자) 제거 후 다시 raw 접두 매칭 (예: "아산BC(" → "아산BC")
+    const trimmed = name.replace(/[(\[][^)\]]*$/, "").trim();
+    if (trimmed && trimmed !== name) {
+      const raw2 = prefixMatchRaw(trimmed);
+      if (raw2) return raw2;
     }
     return name;
   };
