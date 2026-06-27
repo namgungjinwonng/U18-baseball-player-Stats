@@ -8,6 +8,14 @@ on:
       - "data/**"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
+  # 스크레이프 워크플로 성공 시 자동 배포(GITHUB_TOKEN 푸시는 push 트리거를 못 깨우므로 필요).
+  # 워크플로 name 과 정확히 일치해야 함.
+  workflow_run:
+    workflows:
+      - "데이터 수집·집계 (증분)"
+      - "데이터 수집·집계 (전체 월 스캔)"
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read
@@ -21,6 +29,8 @@ concurrency:
 
 jobs:
   build:
+    # workflow_run 으로 트리거됐을 땐 상위 워크플로 성공 시에만 실행(실패면 스킵).
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

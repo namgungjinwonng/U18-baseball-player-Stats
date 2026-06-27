@@ -16,7 +16,12 @@
 - **프론트엔드**: `web/` — React 18 + Vite 5 + TS, React Router v6. 데스크탑·모바일 **완전 분리 트리**(`shared/`만 공유).
 - **수집기**: `scraper/` — Node 20 + TS + tsx. **fetch 기반**(Playwright는 `discover`만 사용).
 - **데이터 "DB"**: 리포 루트 `data/` 의 **커밋되는 정적 JSON**. GitHub Pages가 그대로 서빙. 진실의 원천(Source of Truth)은 `data/games/*.json`(원본 박스스코어). 그 외 파일(`data/{year}/…`)은 **순수 함수로 파생** → 멱등.
-- **CI**: `.github/workflows/scrape.yml`("데이터 수집·집계", 매일 KST 00:00 → 커밋) + `deploy.yml`("웹사이트 배포 (GitHub Pages)", `web/**`·`data/**` 푸시 시 Pages 배포). GitHub가 자동 추가하는 `pages-build-deployment`(파일 없음, 이름 변경 불가)도 함께 표시될 수 있음.
+- **CI 워크플로 3개** (`.github/workflows/`):
+  - `scrape.yml` = **"데이터 수집·집계 (증분)"** — 매일 KST 00:00 cron + 수동. `incrementalMonths()` 동작: 마지막 수집 월부터만 스캔(빠름).
+  - `scrape-full.yml` = **"데이터 수집·집계 (전체 월 스캔)"** — 수동 전용. `MONTHS=3,4,5,6,7,8,9,10,11,12` 강제. 누락 경기까지 모두 채움(멱등).
+  - `deploy.yml` = **"웹사이트 배포 (GitHub Pages)"** — `web/**`·`data/**` 푸시 + 수동 + **`workflow_run` 트리거(위 두 스크레이프 워크플로 success 시 자동 실행)**. GITHUB_TOKEN 푸시는 push 트리거를 깨우지 못해 workflow_run 이 필수.
+- 두 스크레이프는 `concurrency: scrape` 그룹을 공유해 동시 실행 불가(데이터 충돌 방지).
+- GitHub가 자동 추가하는 `pages-build-deployment`(파일 없음, 이름 변경 불가)도 함께 표시될 수 있음.
 - **GitHub Pages base**: `/U18-baseball-player-Stats/` (배포 워크플로의 `VITE_BASE`, 리포명과 동일). 로컬 dev는 `/`.
 
 ---
@@ -205,3 +210,4 @@ npx playwright install chromium && npm run discover -- "<URL>"
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)
 - 2026-06-27: 워크플로 이름 한글화 — `Deploy to GitHub Pages` → `웹사이트 배포 (GitHub Pages)`, `Scrape & Accumulate Data` → `데이터 수집·집계`. (GitHub 자동 생성 `pages-build-deployment` 은 이름 변경 불가.)
+- 2026-06-27: 워크플로 분리·자동 체이닝. `scrape.yml` 을 "데이터 수집·집계 (증분)" 으로 명확화, 신규 `scrape-full.yml` "데이터 수집·집계 (전체 월 스캔)" 추가(수동 전용·`MONTHS=3-12`). `deploy.yml` 에 `workflow_run` 트리거를 추가해 두 스크레이프 success 시 자동 배포되도록 함(`GITHUB_TOKEN` 푸시가 push 트리거를 깨우지 못하는 이슈 해결).
