@@ -45,6 +45,44 @@ export function readRoster(dataDir: string): Roster {
 // 공식기록 오버레이: personNo → {batting, pitching} (officialStats.collectOfficial 산출물)
 export type OfficialMap = Record<string, { batting?: BattingStats; pitching?: PitchingStats }>;
 
+// 팀명 정규화 (참고: U-18 Baseball generate_schedule.py)
+// 박스스코어가 너비 제한으로 "한국마사" / "한국마사고" / "한국마사고BC" 처럼 변형해 같은 팀이 여러 이름으로 나오는 문제 해결.
+const TEAM_SUFFIXES = ["(U-18)", "야구단", "BC", "고등학교"];
+const ALIAS_EXPLICIT: Record<string, string> = {
+  "상우고": "상우고야구단",
+};
+function teamCore(s: string): string {
+  let out = s;
+  for (const suf of TEAM_SUFFIXES) out = out.split(suf).join("");
+  return out.trim();
+}
+function buildTeamNormalizer(roster: Roster): (name: string) => string {
+  const rosterTeams = new Set<string>();
+  for (const ros of Object.values(roster)) if (ros.team) rosterTeams.add(ros.team);
+  const coreToOfficial = new Map<string, string>();
+  const collisions = new Set<string>();
+  for (const t of rosterTeams) {
+    const c = teamCore(t);
+    if (!c) continue;
+    if (coreToOfficial.has(c) && coreToOfficial.get(c) !== t) collisions.add(c);
+    coreToOfficial.set(c, t);
+  }
+  return (name: string): string => {
+    if (!name) return name;
+    if (rosterTeams.has(name)) return name;
+    if (ALIAS_EXPLICIT[name]) return ALIAS_EXPLICIT[name];
+    const c = teamCore(name);
+    if (!c) return name;
+    if (!collisions.has(c) && coreToOfficial.has(c)) return coreToOfficial.get(c)!;
+    // 박스스코어 셀 너비 제한으로 잘린 케이스(예: "한국마사" → "한국마사고") — 접두 일치 유일하면 채택.
+    if (c.length >= 3) {
+      const cands = [...coreToOfficial.entries()].filter(([rc]) => rc.startsWith(c));
+      if (cands.length === 1) return cands[0][1];
+    }
+    return name;
+  };
+}
+
 export function aggregate(
   games: GameBoxScore[],
   source: string,
@@ -57,6 +95,7 @@ export function aggregate(
   const pitcherIds = new Set<string>();
   const mAcc = new Map<string, Matchup>();
   const names = new Map<string, string>();
+  const normalizeTeam = buildTeamNormalizer(roster);
 
   // 경기 시간순 정렬 → gameLog 최신순 출력 위해 뒤에서 reverse
   const ordered = [...games].sort((a, b) => a.date.localeCompare(b.date));
@@ -86,6 +125,8 @@ export function aggregate(
         gameId: g.id, date: g.date,
         opponent: opponentOf(g, b.team),
         line: batterLineText(b),
+        title: g.title,
+        bStat: { ab: b.ab, h: b.h, b2: b.b2, b3: b.b3, hr: b.hr, rbi: b.rbi, r: b.r, bb: b.bb, hbp: b.hbp, so: b.so, sb: b.sb },
       });
     }
     for (const pi of g.pitchers) {
@@ -100,6 +141,8 @@ export function aggregate(
         gameId: g.id, date: g.date,
         opponent: opponentOf(g, pi.team),
         line: pitcherLineText(pi),
+        title: g.title,
+        pStat: { outs: pi.outs, h: pi.h, r: pi.r, er: pi.er, bb: pi.bb, so: pi.so, w: pi.w, l: pi.l, sv: pi.sv },
       });
     }
     for (const m of g.matchups) {
@@ -137,7 +180,8 @@ export function aggregate(
     if (ros?.grade) p.grade = ros.grade;
     if (ros?.personNo) p.personNo = ros.personNo;
     if (ros?.region) p.region = ros.region;
-    if (ros?.team) p.team = ros.team; // 정식 팀명으로 보정
+    if (ros?.team) p.team = ros.team; // 정식 팀명으로 보정 (로스터 매칭 시)
+    p.team = normalizeTeam(p.team); // 로스터 미매칭/축약 팀명도 KBSA 정식명으로 통합
     p.gameLog.reverse(); // 최신순
     const b = bAcc.get(id);
     if (b) {

@@ -53,6 +53,7 @@ export interface GameBoxScore {
   home: string;
   away: string;
   score: { home: number; away: number };
+  title?: string; // 시합/대회명 (예: "주말리그 후반기(서울권B)", "황금사자기") — record_detail.dl.game_name
   batters: BatterLine[];
   pitchers: PitcherLine[];
   matchups: MatchupLine[];
@@ -75,6 +76,10 @@ export interface PitchingStats {
 }
 export interface GameLogEntry {
   gameId: string; date: string; opponent: string; line: string;
+  title?: string; // 시합/대회명 (이 경기가 속한 대회)
+  // 선수 상세에서 시합 필터링 시 재집계용 per-game raw stats (있으면).
+  bStat?: { ab: number; h: number; b2: number; b3: number; hr: number; rbi: number; r: number; bb: number; hbp: number; so: number; sb: number };
+  pStat?: { outs: number; h: number; r: number; er: number; bb: number; so: number; w: number; l: number; sv: number };
 }
 export interface Player {
   id: string; name: string; team: string; position: string;

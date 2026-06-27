@@ -8,6 +8,7 @@
     "roster": "tsx src/roster.ts",
     "official": "tsx src/officialStats.ts",
     "scrape": "tsx src/index.ts",
+    "backfill-titles": "tsx src/backfillTitles.ts",
     "test": "tsx src/accumulate.test.ts"
   },
   "dependencies": {

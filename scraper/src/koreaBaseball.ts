@@ -103,8 +103,21 @@ interface ParsedPitcher extends PitcherLine {
 }
 
 // ---- record_detail 파싱 ----
+// 대회명 추출 (참고: U-18 Baseball/fetch_u18_schedule.py — box_score 페이지의 같은 dl.game_name)
+function extractTitle(html: string): string | undefined {
+  const m = html.match(/<dl[^>]*class="game_name"[^>]*>([\s\S]*?)<\/dl>/i);
+  if (!m) return undefined;
+  const dt = m[1].match(/<dt[^>]*>([\s\S]*?)<\/dt>/i);
+  if (!dt) return undefined;
+  const raw = stripTags(dt[1]);
+  // "제80회 황금사자기 ... 2026.05.02 09:30 비동야구장" 같이 시간·구장이 붙어 옴 → 날짜 앞까지만.
+  const cut = raw.split(/\s+\d{4}\.\d{2}\.\d{2}/)[0].trim();
+  return cut || undefined;
+}
+
 export async function fetchRecordDetail(ref: GameRef): Promise<GameBoxScore> {
   const html = await get(`${BASE}/game/record_detail?game_idx=${ref.id}`);
+  const title = extractTitle(html);
   const tables = [...html.matchAll(/<table[^>]*>([\s\S]*?)<\/table>/gi)].map((m) => m[1]);
 
   // 투수표: 표2(원정), 표4(홈) — 표 인덱스는 타자그리드/투수표가 번갈아 등장
@@ -130,6 +143,7 @@ export async function fetchRecordDetail(ref: GameRef): Promise<GameBoxScore> {
     home: ref.home,
     away: ref.away,
     score: { home: ref.homeScore, away: ref.awayScore },
+    title,
     batters: [...awayBatters, ...homeBatters],
     pitchers: [...awayPitchers, ...homePitchers].map(stripPitcherMeta),
     matchups,
