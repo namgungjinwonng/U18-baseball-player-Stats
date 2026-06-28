@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND } from "./koreaBaseball.js";
-import { readRoster } from "./accumulate.js";
+import { lookupRoster, readRoster } from "./accumulate.js";
 import type { BattingStats, GameBoxScore, PitchingStats } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -122,9 +122,8 @@ export async function collectOfficial(
       const g = JSON.parse(fs.readFileSync(path.join(gamesDir, f), "utf8")) as GameBoxScore;
       const mark = (name: string, id: string, kind: "bat" | "pit", team: string) => {
         const number = id.split("_").pop() ?? "";
-        const ros = roster[`${name}|${number}`];
+        const ros = lookupRoster(roster, name, number, team);
         if (!ros?.personNo || !ros.clubIdx) return;
-        if (ros.team && !(ros.team.startsWith(team) || team.startsWith(ros.team))) return;
         const job = need.get(ros.personNo) ?? { personNo: ros.personNo, clubIdx: ros.clubIdx, bat: false, pit: false };
         job[kind] = true;
         need.set(ros.personNo, job);

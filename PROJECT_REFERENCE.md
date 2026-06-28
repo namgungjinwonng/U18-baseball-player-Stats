@@ -220,6 +220,17 @@ npx playwright install chromium && npm run discover -- "<URL>"
 - **연도별 변경**: `SEASON_CONFIG` 에 연도 키 추가하면 됨(미정의 연도는 최신 연도 폴백).
 - 랭킹 페이지(`LeadersView`)에 "규정 미달 포함" 토글 — 켜면 미달자도 보이되 `규정 미달` 뱃지 + 순번 `–`.
 
+## 선수 중복 병합 & 수집 누락 (accumulate / 스크레이퍼)
+
+- **roster.json 구조**: `이름|번호 → RosterEntry[]`(배열). 다른 학교 동명·동번호 충돌 보존(이전 단일 객체는 덮어써져 personNo 유실). `lookupRoster(roster,name,number,team)` 가 팀 일치로 정확 항목 선택. officialStats 도 동일 사용.
+- **중복 병합 4단계** (`accumulate.aggregate`):
+  1. **정규팀 재슬러그**: `p.id` 를 정규팀 기반 `${team}_${name}_${number}` 로 재생성 → `광남고B`/`광남고BC` 처럼 축약 팀명으로 갈라진 동일 선수 병합(personNo 없어도).
+  2. **personNo 병합**: 같은 personNo 슬러그를 대표로 합산(raw stats `addBatting`/`addPitching` → derive 재계산).
+  3. **(이름,정규팀) 유일 폴백**: `nameTeamFallback` — 번호변경/임시번호로 (이름,번호)가 안 맞아도 같은 학교 동명 1명뿐이면 personNo 부여.
+  4. **번호 미상(`0`/빈) 병합**: 같은 이름·팀에 실번호 형제가 유일하면 거기로 병합.
+  - 매치업 id 는 `canon()` = reslug → personNo 순으로 재매핑. **잔여 중복은 KBSA personNo 가 다른 실제 동명이인뿐**(2026 기준 8그룹).
+- **빈 박스스코어 재수집**: `fetchGames.emptyGameIds/emptyGameMonths` — 타자 0명 게임(수집 당시 record_detail 이 일시적으로 비어있던 경기)을 game_idx 가 있어도 매 증분마다 재fetch. `index.collectNewGames` 가 빈 게임 월을 스캔 월에 포함. **단, record_detail 자체에 선수 행이 없는 게임(KBSA 미게시, "합계 0.000")은 원본 부재라 복구 불가** — 게시되면 자동 채워짐.
+
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).

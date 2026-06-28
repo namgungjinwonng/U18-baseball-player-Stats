@@ -28,6 +28,38 @@ export function existingGameIds(dataDir: string): Set<string> {
   );
 }
 
+// 박스스코어가 비어있는(타자 0명) 경기 정보 → 수집 당시 record_detail 이 일시적으로
+// 비어있던 경기. game_idx 가 있어 증분이 건너뛰므로 재수집 대상으로 별도 표시한다.
+function readEmptyGames(dataDir: string): { id: string; date: string }[] {
+  const dir = path.join(dataDir, "games");
+  if (!fs.existsSync(dir)) return [];
+  const out: { id: string; date: string }[] = [];
+  for (const f of fs.readdirSync(dir)) {
+    if (!f.endsWith(".json")) continue;
+    try {
+      const g = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as {
+        id?: string; date?: string; batters?: unknown[];
+      };
+      if (g.id && (!g.batters || g.batters.length === 0)) out.push({ id: g.id, date: g.date ?? "" });
+    } catch {
+      /* 무시 */
+    }
+  }
+  return out;
+}
+export function emptyGameIds(dataDir: string): Set<string> {
+  return new Set(readEmptyGames(dataDir).map((g) => g.id));
+}
+// 빈 경기들이 속한 '월' 집합 → 증분 스캔 시 해당 월을 포함해야 재수집된다.
+export function emptyGameMonths(dataDir: string): number[] {
+  const ms = new Set<number>();
+  for (const g of readEmptyGames(dataDir)) {
+    const m = parseInt(g.date.slice(5, 7), 10);
+    if (m) ms.add(m);
+  }
+  return [...ms];
+}
+
 export function isAfterSeasonStart(date: string): boolean {
   return date >= SEASON_START;
 }

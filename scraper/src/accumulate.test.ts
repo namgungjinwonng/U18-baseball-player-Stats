@@ -7,17 +7,20 @@ import assert from "node:assert/strict";
 import { aggregate, readGames, writeAggregated, outsToIp } from "./accumulate.js";
 import type { GameBoxScore } from "./types.js";
 
+// 실데이터 슬러그 형식: `${team}_${name}_${number}` (accumulate 가 정규팀으로 재슬러그하므로 동일해야 함).
+const B = "서울고_김타자_7";
+const P = "덕수고_이투수_1";
 const game = (id: string, date: string): GameBoxScore => ({
   id, date, season: 2026, home: "서울고", away: "덕수고",
   score: { home: 5, away: 3 },
   batters: [
-    { playerId: "b1", name: "김타자", team: "서울고", ab: 4, h: 2, b2: 1, b3: 0, hr: 1, rbi: 3, r: 2, bb: 0, hbp: 0, so: 1, sb: 0 },
+    { playerId: B, name: "김타자", team: "서울고", ab: 4, h: 2, b2: 1, b3: 0, hr: 1, rbi: 3, r: 2, bb: 0, hbp: 0, so: 1, sb: 0 },
   ],
   pitchers: [
-    { playerId: "p1", name: "이투수", team: "덕수고", outs: 18, h: 5, r: 3, er: 2, bb: 1, so: 7, w: 0, l: 1, sv: 0 },
+    { playerId: P, name: "이투수", team: "덕수고", outs: 18, h: 5, r: 3, er: 2, bb: 1, so: 7, w: 0, l: 1, sv: 0 },
   ],
   matchups: [
-    { batterId: "b1", pitcherId: "p1", ab: 3, h: 1, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 1 },
+    { batterId: B, pitcherId: P, ab: 3, h: 1, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 1 },
   ],
 });
 
@@ -42,19 +45,19 @@ function run() {
   assert.equal(snap1, snap2, "재집계 결과가 1차와 달라짐(멱등성 위반)");
 
   // 집계 정확성: 2경기 합산
-  const batter = agg2.players.find((p) => p.id === "b1")!;
+  const batter = agg2.players.find((p) => p.id === B)!;
   assert.equal(batter.batting!.h, 4, "안타 합산 오류");
   assert.equal(batter.batting!.hr, 2, "홈런 합산 오류");
   assert.equal(batter.batting!.avg, 0.5, "타율 계산 오류"); // 4/8
   assert.equal(batter.position, "타자");
 
-  const pitcher = agg2.players.find((p) => p.id === "p1")!;
+  const pitcher = agg2.players.find((p) => p.id === P)!;
   assert.equal(pitcher.position, "투수");
   assert.equal(pitcher.pitching!.ip, outsToIp(36), "이닝 합산 오류"); // 12.0
   assert.equal(pitcher.pitching!.so, 14, "탈삼진 합산 오류");
   assert.equal(pitcher.pitching!.era, 3.0, "ERA 오류"); // 4ER*9/12IP = 3.00
 
-  const m = agg2.matchups.find((x) => x.batterId === "b1" && x.pitcherId === "p1")!;
+  const m = agg2.matchups.find((x) => x.batterId === B && x.pitcherId === P)!;
   assert.equal(m.ab, 6);
   assert.equal(m.h, 2);
   assert.equal(m.avg, 0.333);
@@ -67,8 +70,8 @@ function run() {
 // lastUpdated(시각) 필드를 제외한 스냅샷
 function snapshot(dir: string): string {
   const files = [
-    "players/index.json", "matchups/b1.json",
-    "players/b1.json", "players/p1.json",
+    "players/index.json", `matchups/${B}.json`,
+    `players/${B}.json`, `players/${P}.json`,
   ];
   return files
     .map((f) => fs.readFileSync(path.join(dir, f), "utf8"))

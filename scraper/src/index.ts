@@ -12,7 +12,7 @@ import {
   aggregate, groupBySeason, readGames, readRoster, writeYear, writeYearsIndex,
 } from "./accumulate.js";
 import {
-  existingGameIds, incrementalMonths, isAfterSeasonStart, listGameRefs,
+  emptyGameIds, emptyGameMonths, existingGameIds, incrementalMonths, isAfterSeasonStart, listGameRefs,
 } from "./fetchGames.js";
 import { parseRecordDetail } from "./parseRecord.js";
 import { collectOfficial } from "./officialStats.js";
@@ -64,7 +64,9 @@ async function collectNewGames(): Promise<string[]> {
     }
     const todayISO = new Date().toISOString().slice(0, 10);
     const recentMonth = parseInt(todayISO.slice(5, 7), 10);
-    const months = [...new Set([...baseMonths, recentMonth])].sort((a, b) => a - b);
+    // 증분 스캔 월 = base + 오늘 월 + 빈 경기가 있는 월(이전 달의 미수집 보강).
+    const months = [...new Set([...baseMonths, recentMonth, ...emptyGameMonths(DATA_DIR)])]
+      .sort((a, b) => a - b);
     const refs = await listGameRefs(2026, months);
     const have = existingGameIds(DATA_DIR);
     // 최근 3일치 game_idx 는 이미 수집되어 있어도 강제 재수집(점수 0-0 오인·실시간 업데이트 교정).
@@ -74,11 +76,18 @@ async function collectNewGames(): Promise<string[]> {
       d.setDate(d.getDate() - k);
       recentDays.add(d.toISOString().slice(0, 10));
     }
+    // 이미 수집됐지만 박스스코어가 비어있는(타자 0명) 경기 = 수집 당시 record_detail 이
+    // 일시적으로 비어있던 케이스. game_idx 가 있어 증분이 건너뛰므로 별도로 재수집한다.
+    const emptyIds = emptyGameIds(DATA_DIR);
     const recentRefs = refs.filter((r) => recentDays.has(r.date) && have.has(r.id));
+    const emptyRefs = refs.filter((r) => emptyIds.has(r.id));
     const eligible = refs.filter(
-      (r) => (!have.has(r.id) || recentDays.has(r.date)) && isAfterSeasonStart(r.date)
+      (r) =>
+        (!have.has(r.id) || recentDays.has(r.date) || emptyIds.has(r.id)) &&
+        isAfterSeasonStart(r.date)
     );
     if (recentRefs.length) console.log(`  ↻ 최근 3일치 ${recentRefs.length}경기 재수집 대상`);
+    if (emptyRefs.length) console.log(`  ↻ 빈 박스스코어 ${emptyRefs.length}경기 재수집 대상`);
     const todo = GAME_LIMIT === Infinity ? eligible : eligible.slice(0, GAME_LIMIT);
     let failed: typeof todo = [];
     for (const ref of todo) if ((await fetchOne(ref)) === "fail") failed.push(ref);

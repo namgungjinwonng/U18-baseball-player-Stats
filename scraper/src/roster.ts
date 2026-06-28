@@ -26,8 +26,9 @@ export interface RosterEntry {
   region?: string; // 지역(서울/경기 등)
   clubIdx?: string; // 공식 기록 조회용 팀 ID
 }
-// 키: `${이름}|${등번호}`
-export type Roster = Record<string, RosterEntry>;
+// 키: `${이름}|${등번호}` → 항목 배열.
+// (다른 학교에 동일 이름·번호 선수가 있을 수 있어 충돌 보존을 위해 배열로 저장한다.)
+export type Roster = Record<string, RosterEntry[]>;
 
 async function get(url: string): Promise<string> {
   const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (U18 roster sync)" } });
@@ -84,7 +85,8 @@ async function fetchTeamRoster(
     const personNo = (li.match(/person_no=(\d+)/) || [])[1];
     const position = stripTags((li.match(/<dt>\s*선수구분\s*<\/dt>[\s\S]*?<dd>([^<]+)/i) || [])[1] ?? "");
     const tb = (li.match(/<dt>\s*투타\s*<\/dt>\s*<dd>([^<]+)/i) || [])[1] ?? "";
-    roster[`${name}|${number}`] = {
+    const key = `${name}|${number}`;
+    const entry: RosterEntry = {
       team: teamName,
       region: region || undefined,
       clubIdx,
@@ -93,6 +95,9 @@ async function fetchTeamRoster(
       personNo,
       ...throwBat(tb),
     };
+    // 같은 이름·번호가 여러 학교에 있을 수 있어 배열로 누적(같은 personNo 중복은 제외).
+    const arr = roster[key] ?? (roster[key] = []);
+    if (!arr.some((e) => e.personNo === entry.personNo)) arr.push(entry);
     count++;
   }
   return count;

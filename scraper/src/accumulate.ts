@@ -34,12 +34,35 @@ export interface RosterEntry {
   personNo?: string; // KBSA 공식 선수 ID
   clubIdx?: string; // 공식 기록 조회용 팀 ID
 }
-export type Roster = Record<string, RosterEntry>;
+// 키: `${이름}|${등번호}` → 항목 배열(다른 학교 동명·동번호 충돌 보존).
+export type Roster = Record<string, RosterEntry[]>;
 
 export function readRoster(dataDir: string): Roster {
   const fp = path.join(dataDir, "roster.json");
   if (!fs.existsSync(fp)) return {};
-  return JSON.parse(fs.readFileSync(fp, "utf8")) as Roster;
+  const raw = JSON.parse(fs.readFileSync(fp, "utf8")) as Record<string, RosterEntry | RosterEntry[]>;
+  // 구버전(단일 객체) 호환: 배열로 정규화.
+  const out: Roster = {};
+  for (const [k, v] of Object.entries(raw)) out[k] = Array.isArray(v) ? v : [v];
+  return out;
+}
+
+const teamMatches = (rosterTeam: string | undefined, boxTeam: string): boolean =>
+  !rosterTeam ||
+  rosterTeam.startsWith(boxTeam) ||
+  boxTeam.startsWith(rosterTeam) ||
+  boxTeam.length < 2;
+
+// (이름,번호) 정확 매칭 우선, 팀명 접두 일치로 후보 압축.
+export function lookupRoster(
+  roster: Roster, name: string, number: string, boxTeam: string
+): RosterEntry | undefined {
+  const arr = roster[`${name}|${number}`];
+  if (!arr || arr.length === 0) return undefined;
+  if (arr.length === 1) return teamMatches(arr[0].team, boxTeam) ? arr[0] : undefined;
+  // 다중 후보(동명·동번호 다른 학교): 팀명 일치하는 항목만.
+  const matched = arr.filter((e) => e.team && (e.team.startsWith(boxTeam) || boxTeam.startsWith(e.team)));
+  return matched.length === 1 ? matched[0] : undefined;
 }
 
 // 공식기록 오버레이: personNo → {batting, pitching} (officialStats.collectOfficial 산출물)
@@ -58,7 +81,7 @@ function teamCore(s: string): string {
 }
 function buildTeamNormalizer(roster: Roster): (name: string) => string {
   const rosterTeams = new Set<string>();
-  for (const ros of Object.values(roster)) if (ros.team) rosterTeams.add(ros.team);
+  for (const arr of Object.values(roster)) for (const ros of arr) if (ros.team) rosterTeams.add(ros.team);
   const officials = [...rosterTeams];
   const coreToOfficial = new Map<string, string>();
   const collisions = new Set<string>();
@@ -113,6 +136,27 @@ export function aggregate(
   const mAcc = new Map<string, Matchup>();
   const names = new Map<string, string>();
   const normalizeTeam = buildTeamNormalizer(roster);
+
+  // (이름, 정규팀core) → RosterEntry, 단 유일할 때만. 번호 변경/임시번호로 (이름,번호) 매칭이
+  // 실패해도 같은 학교에 동명 1명뿐이면 personNo 를 부여해 병합되도록 하는 폴백.
+  // roster 키는 `이름|번호` 이므로 이름을 키에서 추출한다.
+  const nameTeamFallback = new Map<string, RosterEntry>(); // `${name}|${teamCore}` → entry
+  {
+    const pnSet = new Map<string, Set<string>>();
+    const rep = new Map<string, RosterEntry>();
+    for (const [k, arr] of Object.entries(roster)) {
+      const nm = k.split("|")[0];
+      for (const e of arr) {
+        if (!e.team || !e.personNo) continue;
+        const nk = `${nm}|${teamCore(e.team)}`;
+        let s = pnSet.get(nk);
+        if (!s) { s = new Set(); pnSet.set(nk, s); }
+        s.add(e.personNo);
+        if (!rep.has(nk)) rep.set(nk, e);
+      }
+    }
+    for (const [nk, s] of pnSet) if (s.size === 1) nameTeamFallback.set(nk, rep.get(nk)!);
+  }
 
   // 경기 시간순 정렬 → gameLog 최신순 출력 위해 뒤에서 reverse
   const ordered = [...games].sort((a, b) => a.date.localeCompare(b.date));
@@ -198,22 +242,27 @@ export function aggregate(
       whip: pp.outs ? r2(((pp.h + pp.bb) * 3) / pp.outs) : 0,
     };
   };
+  // raw 누적값 합산 (중복 슬러그 병합 시).
+  const addBatting = (dst: ReturnType<typeof emptyBatting>, s: ReturnType<typeof emptyBatting>) => {
+    dst.g += s.g; dst.ab += s.ab; dst.h += s.h; dst.b2 += s.b2; dst.b3 += s.b3;
+    dst.hr += s.hr; dst.rbi += s.rbi; dst.r += s.r; dst.bb += s.bb; dst.hbp += s.hbp;
+    dst.so += s.so; dst.sb += s.sb;
+  };
+  const addPitching = (dst: ReturnType<typeof emptyPitching>, s: ReturnType<typeof emptyPitching>) => {
+    dst.g += s.g; dst.outs += s.outs; dst.h += s.h; dst.r += s.r; dst.er += s.er;
+    dst.bb += s.bb; dst.so += s.so; dst.w += s.w; dst.l += s.l; dst.sv += s.sv;
+  };
+  // oldId → newId 누적 매핑 (reslug + personNo 병합을 통합해 매치업 재매핑에 사용).
+  const reslugRemap = new Map<string, string>();
 
   // 파생 수치 확정
   for (const [id, p] of players) {
-    // 로스터 조인: `이름|등번호`. 박스스코어 팀명은 축약될 수 있어
-    // 팀명 접두 일치로 동명이인 오조인을 방지한다.
+    // 로스터 조인: (이름,번호) 정확 매칭 우선(팀 접두로 동명이인 오조인 방지).
     const number = id.split("_").pop() ?? "";
     p.number = number;
-    const cand = roster[`${p.name}|${number}`];
-    const ros =
-      cand &&
-      (!cand.team ||
-        cand.team.startsWith(p.team) ||
-        p.team.startsWith(cand.team) ||
-        p.team.length < 2)
-        ? cand
-        : undefined;
+    let ros = lookupRoster(roster, p.name, number, p.team);
+    // 번호 변경/임시번호로 (이름,번호) 가 안 맞으면 (이름,정규팀) 유일 폴백.
+    if (!ros) ros = nameTeamFallback.get(`${p.name}|${teamCore(normalizeTeam(p.team))}`);
     p.position = ros?.position ?? (pitcherIds.has(id) ? "투수" : "타자");
     if (ros?.bats) p.bats = ros.bats;
     if (ros?.throws) p.throws = ros.throws;
@@ -231,6 +280,51 @@ export function aggregate(
     const off = p.personNo ? official[p.personNo] : undefined;
     if (off?.batting && off.batting.g > 0) p.batting = off.batting;
     if (off?.pitching && off.pitching.g > 0) p.pitching = off.pitching;
+  }
+
+  // --- 정규팀 슬러그 재생성 → 박스스코어 축약 팀명(광남고B vs 광남고BC)으로 갈라진
+  //     동일 선수(같은 정규팀·이름·번호)를 personNo 없이도 병합 ---
+  {
+    const reslug = new Map<string, string>(); // oldId → newId
+    for (const [id, p] of players) {
+      const newId = `${p.team}_${p.name}_${p.number}`.replace(/\s+/g, "");
+      if (newId !== id) reslug.set(id, newId);
+    }
+    for (const [oldId, newId] of reslug) {
+      const src = players.get(oldId)!;
+      const dst = players.get(newId);
+      const sb = bAcc.get(oldId), sp = pAcc.get(oldId);
+      if (!dst) {
+        // 충돌 없음 → 단순 id 교체
+        src.id = newId;
+        players.delete(oldId); players.set(newId, src);
+        if (sb) { bAcc.delete(oldId); bAcc.set(newId, sb); }
+        if (sp) { pAcc.delete(oldId); pAcc.set(newId, sp); }
+        names.set(newId, src.name);
+        continue;
+      }
+      // 충돌 → 합산 병합
+      const seen = new Set(dst.gameLog.map((l) => l.gameId));
+      for (const l of src.gameLog) if (!seen.has(l.gameId)) { seen.add(l.gameId); dst.gameLog.push(l); }
+      dst.bats ??= src.bats; dst.throws ??= src.throws; dst.grade ??= src.grade;
+      dst.region ??= src.region; dst.personNo ??= src.personNo;
+      const db = bAcc.get(newId), dp = pAcc.get(newId);
+      if (sb) { if (db) { addBatting(db, sb); } else bAcc.set(newId, sb); }
+      if (sp) { if (dp) { addPitching(dp, sp); } else pAcc.set(newId, sp); }
+      bAcc.delete(oldId); pAcc.delete(oldId);
+      players.delete(oldId);
+      reslugRemap.set(oldId, newId);
+    }
+    // 합산 충돌건은 파생 stats 재계산.
+    for (const [, newId] of reslug) {
+      const p = players.get(newId);
+      if (!p) continue;
+      const off = p.personNo ? official[p.personNo] : undefined;
+      const b = bAcc.get(newId), pp = pAcc.get(newId);
+      if (b && !(off?.batting && off.batting.g > 0)) p.batting = deriveBatting(b);
+      if (pp && !(off?.pitching && off.pitching.g > 0)) p.pitching = derivePitching(pp);
+      p.gameLog.sort((a, c) => c.date.localeCompare(a.date));
+    }
   }
 
   // --- 동일 선수(personNo) 중복 슬러그 병합 (팀명 축약/번호변경 등으로 분리된 항목) ---
@@ -260,18 +354,9 @@ export function aggregate(
         rep.bats ??= p.bats; rep.throws ??= p.throws; rep.grade ??= p.grade; rep.region ??= p.region;
         // raw 누적값(bAcc/pAcc) 도 합산 → personNo 가 같으면 카운팅도 통합.
         const ob = bAcc.get(p.id);
-        if (ob && repB) {
-          repB.g += ob.g; repB.ab += ob.ab; repB.h += ob.h; repB.b2 += ob.b2; repB.b3 += ob.b3;
-          repB.hr += ob.hr; repB.rbi += ob.rbi; repB.r += ob.r; repB.bb += ob.bb; repB.hbp += ob.hbp;
-          repB.so += ob.so; repB.sb += ob.sb;
-          bChanged = true;
-        }
+        if (ob && repB) { addBatting(repB, ob); bChanged = true; }
         const op = pAcc.get(p.id);
-        if (op && repP) {
-          repP.g += op.g; repP.outs += op.outs; repP.h += op.h; repP.r += op.r; repP.er += op.er;
-          repP.bb += op.bb; repP.so += op.so; repP.w += op.w; repP.l += op.l; repP.sv += op.sv;
-          pChanged = true;
-        }
+        if (op && repP) { addPitching(repP, op); pChanged = true; }
         bAcc.delete(p.id); pAcc.delete(p.id);
         players.delete(p.id);
       }
@@ -284,7 +369,45 @@ export function aggregate(
       rep.gameLog.sort((a, b) => b.date.localeCompare(a.date));
     }
   }
-  const canon = (id: string) => remap.get(id) ?? id;
+
+  // --- 번호 미상("0"/빈) 슬러그를 같은 이름·팀의 유일한 실번호 선수로 병합 ---
+  // (박스스코어에 번호 없이 등장한 선수. roster 미등록이라 personNo 가 없어 위 병합에서 누락됨.)
+  {
+    const realByNameTeam = new Map<string, Player[]>(); // 실번호 보유자
+    for (const p of players.values()) {
+      const num = p.number ?? "";
+      if (num && num !== "0") {
+        const k = `${p.name}|${p.team}`;
+        (realByNameTeam.get(k) ?? realByNameTeam.set(k, []).get(k)!).push(p);
+      }
+    }
+    for (const [id, p] of [...players]) {
+      const num = p.number ?? "";
+      if (num && num !== "0") continue; // 실번호는 대상 아님
+      const cands = realByNameTeam.get(`${p.name}|${p.team}`);
+      if (!cands || cands.length !== 1) continue; // 유일할 때만(동명이인 오병합 방지)
+      const rep = cands[0];
+      remap.set(id, rep.id);
+      const seen = new Set(rep.gameLog.map((l) => l.gameId));
+      for (const l of p.gameLog) if (!seen.has(l.gameId)) { seen.add(l.gameId); rep.gameLog.push(l); }
+      const ob = bAcc.get(id), repB = bAcc.get(rep.id);
+      if (ob) { if (repB) addBatting(repB, ob); else bAcc.set(rep.id, ob); bAcc.delete(id); }
+      const op = pAcc.get(id), repP = pAcc.get(rep.id);
+      if (op) { if (repP) addPitching(repP, op); else pAcc.set(rep.id, op); pAcc.delete(id); }
+      players.delete(id);
+      const off = rep.personNo ? official[rep.personNo] : undefined;
+      const rb = bAcc.get(rep.id), rp = pAcc.get(rep.id);
+      if (rb && !(off?.batting && off.batting.g > 0)) rep.batting = deriveBatting(rb);
+      if (rp && !(off?.pitching && off.pitching.g > 0)) rep.pitching = derivePitching(rp);
+      rep.gameLog.sort((a, b) => b.date.localeCompare(a.date));
+    }
+  }
+
+  // 매치업 id 정규화: reslug(축약팀 통합) → personNo 대표 순으로 적용.
+  const canon = (id: string) => {
+    const r = reslugRemap.get(id) ?? id;
+    return remap.get(r) ?? r;
+  };
 
   // 매치업 id 재매핑 후 동일 쌍 병합
   const mMerged = new Map<string, Matchup>();
