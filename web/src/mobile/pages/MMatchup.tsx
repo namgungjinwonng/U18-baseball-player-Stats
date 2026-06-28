@@ -116,6 +116,8 @@ export function MMatchup() {
               {opponent.id === oppId && sel && (
                 <div className="m-strip" style={{ marginTop: 8 }}>
                   <div className="cell"><div className="k">타석</div><div className="v">{sel.pa}</div></div>
+                  <div className="cell"><div className="k">타수</div><div className="v">{sel.ab}</div></div>
+                  <div className="cell"><div className="k">안타</div><div className="v">{sel.h}</div></div>
                   <div className="cell"><div className="k">2루타</div><div className="v">{sel.b2}</div></div>
                   <div className="cell"><div className="k">3루타</div><div className="v">{sel.b3}</div></div>
                   <div className="cell"><div className="k">홈런</div><div className="v">{sel.hr}</div></div>

@@ -1,5 +1,5 @@
 // 지역/학교/시합 필터 — 선수 기록·시즌 리더 공용 (데스크탑·모바일).
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useTournaments } from "./data";
 import { buildTree, type Kind, type Phase } from "./tournamentTree";
 
@@ -47,10 +47,9 @@ export function TournamentPicker({
   const [kind, setKind] = useState<"" | Kind>("");
   const [phase, setPhase] = useState<"" | Phase>("");
 
-  // 외부에서 value 가 비면 내부 상태도 초기화 (예: 다른 페이지 진입).
-  useEffect(() => {
-    if (!value) { setKind(""); setPhase(""); }
-  }, [value]);
+  // ⚠ value 가 빈 문자열이 되면 내부 cascade 도 자동 초기화하는 useEffect 는 두지 말 것.
+  // 사용자가 시합구분=주말리그 만 고르고 아직 leaf(리그) 미선택 시 onChange("") 가 호출되며,
+  // 그 useEffect 가 setKind("") 로 cascade 를 즉시 풀어버려 시합구분 자체가 초기화되는 버그.
 
   if (!tree || (tree.주말리그.전반기.length + tree.주말리그.후반기.length + tree.전국대회.length === 0)) {
     return null;

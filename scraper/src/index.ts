@@ -151,7 +151,10 @@ async function main() {
     const tournamentList: { slug: string; title: string; gameCount: number }[] = [];
     for (const [title, games] of byTitle) {
       const slug = tournamentSlug(title);
-      const tAgg = aggregate(games, SOURCE, roster, official as never);
+      // ⚠ official 오버레이 제외: official 은 시즌 누적 공식기록이라
+      //    시합별 aggregate 에 넘기면 박스스코어 합산이 시즌 공식 stats 로
+      //    덮어써져 모든 시합 결과가 시즌과 동일해진다.
+      const tAgg = aggregate(games, SOURCE, roster, {});
       // 시합별 슬림 records + 시합별 매치업 단일 파일(상대전적 시합 필터용).
       const tDir = path.join(DATA_DIR, String(year), "by-tournament", slug);
       fs.mkdirSync(tDir, { recursive: true });

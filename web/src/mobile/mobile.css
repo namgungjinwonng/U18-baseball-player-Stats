@@ -211,6 +211,10 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+/* 항목 수가 홀수일 때 마지막 셀이 양옆 모두 차지 → 회색 빈 칸 노출 방지 */
+.m-strip > .cell:last-child:nth-child(odd) {
+  grid-column: span 2;
+}
 
 /* 셀렉터는 메인 화면 알약 버튼(btn--sm: padding 8/20, min-height 40, radius lg) 과 동일 크기로 */
 .m-select {

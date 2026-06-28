@@ -17,7 +17,8 @@ function MatchupStrip({ m }: { m: Matchup }) {
     <div className="stat-strip">
       <Stat k="타율" v={rate(m.avg)} />
       <Stat k="타석" v={String(m.pa)} />
-      <Stat k="타수-안타" v={`${m.ab}-${m.h}`} />
+      <Stat k="타수" v={String(m.ab)} />
+      <Stat k="안타" v={String(m.h)} />
       <Stat k="2루타" v={String(m.b2)} />
       <Stat k="3루타" v={String(m.b3)} />
       <Stat k="홈런" v={String(m.hr)} />

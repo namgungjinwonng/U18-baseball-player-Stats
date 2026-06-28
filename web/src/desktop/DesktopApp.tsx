@@ -7,6 +7,7 @@ import { SearchPage } from "./pages/SearchPage";
 import { PlayerPage } from "./pages/PlayerPage";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
+import { LeadersView } from "../shared/LeadersView";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -88,6 +89,7 @@ export function DesktopApp() {
           <Route path="/matchup" element={<MatchupPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/player/:id" element={<PlayerPage />} />
+          <Route path="/leaders/:id" element={<LeadersView wrapClass="container page" />} />
           <Route path="/glossary" element={<div className="container page"><Glossary /></div>} />
         </Routes>
       </main>

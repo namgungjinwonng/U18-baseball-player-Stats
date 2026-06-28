@@ -30,7 +30,8 @@ function SaberStat({ abbr, v }: { abbr: string; v: string }) {
 }
 
 function BattingStrip({ b }: { b: BattingStats }) {
-  const n = (v: number | undefined) => String(v ?? 0);
+  // undefined 값은 "-" 통일 표기. (시합 필터 재집계 시 sh/sf/ibb/e 등은 측정 불가)
+  const n = (v: number | undefined) => (v == null ? "-" : String(v));
   return (
     <div className="stat-strip stat-strip--compact">
       <Stat k="타율" v={rate(b.avg)} />
@@ -87,7 +88,7 @@ function PitchingSaber({ p }: { p: PitchingStats }) {
 }
 
 function PitchingStrip({ p }: { p: PitchingStats }) {
-  const n = (v: number | undefined) => String(v ?? 0);
+  const n = (v: number | undefined) => (v == null ? "-" : String(v));
   return (
     <div className="stat-strip stat-strip--compact">
       <Stat k="평균자책" v={dec2(p.era)} />

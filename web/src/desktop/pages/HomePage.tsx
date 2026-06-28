@@ -59,17 +59,27 @@ export function HomePage() {
         {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
         <div className="leader-grid">
           {boards.map((b) => (
-            <div className="leader-card" key={b.title}>
-              <h3>{b.title}</h3>
-              {b.items.map((it) => (
-                <Link to={`/player/${it.id}`} key={it.id} className="leader-row">
-                  <span>
-                    <span className="nm">{it.name}</span>
-                    <span className="tm">{it.team}</span>
-                  </span>
-                  <span className="val">{it.value}</span>
+            <div className="leader-card" key={b.id}>
+              <h3>
+                <Link to={`/leaders/${b.id}`} className="leader-title-link">
+                  {b.title} <span aria-hidden>›</span>
                 </Link>
-              ))}
+              </h3>
+              {b.items.length === 0 ? (
+                <div className="leader-row muted" style={{ fontSize: 12 }}>
+                  조건을 만족하는 선수가 없습니다.
+                </div>
+              ) : (
+                b.items.map((it) => (
+                  <Link to={`/player/${it.id}`} key={it.id} className="leader-row">
+                    <span>
+                      <span className="nm">{it.name}</span>
+                      <span className="tm">{it.team}</span>
+                    </span>
+                    <span className="val">{it.value}</span>
+                  </Link>
+                ))
+              )}
             </div>
           ))}
         </div>

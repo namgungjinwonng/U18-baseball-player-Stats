@@ -8,6 +8,7 @@ import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
+import { LeadersView } from "../shared/LeadersView";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -109,6 +110,7 @@ export function MobileApp() {
           <Route path="/matchup" element={<MMatchup />} />
           <Route path="/search" element={<MSearch />} />
           <Route path="/player/:id" element={<MPlayer />} />
+          <Route path="/leaders/:id" element={<LeadersView wrapClass="m-page" />} />
           <Route path="/glossary" element={<div className="m-page"><Glossary /></div>} />
         </Routes>
       </main>

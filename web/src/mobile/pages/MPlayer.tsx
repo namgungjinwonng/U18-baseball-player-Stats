@@ -66,17 +66,20 @@ export function MPlayer() {
         </div>
       </div>
 
-      {v.batting && (
+      {v.batting && (() => {
+        // undefined 값은 "-" 로 통일 표기 (시합 필터 재집계 시 sh/sf/ibb/e 등은 측정 불가).
+        const n = (x?: number) => (x == null ? "-" : String(x));
+        return (
         <section className="player-section">
           <h3>타자 기록</h3>
           <div className="m-strip">
             {([
-              ["타율", rate(v.batting.avg)], ["경기", v.batting.g], ["타석", v.batting.pa],
-              ["타수", v.batting.ab], ["안타", v.batting.h], ["2루타", v.batting.b2],
-              ["3루타", v.batting.b3], ["홈런", v.batting.hr], ["타점", v.batting.rbi],
-              ["득점", v.batting.r], ["도루", v.batting.sb], ["볼넷", v.batting.bb],
-              ["고의4구", v.batting.ibb ?? 0], ["사구", v.batting.hbp], ["삼진", v.batting.so],
-              ["희타", v.batting.sh ?? 0], ["희비", v.batting.sf ?? 0], ["실책", v.batting.e ?? 0],
+              ["타율", rate(v.batting.avg)], ["경기", n(v.batting.g)], ["타석", n(v.batting.pa)],
+              ["타수", n(v.batting.ab)], ["안타", n(v.batting.h)], ["2루타", n(v.batting.b2)],
+              ["3루타", n(v.batting.b3)], ["홈런", n(v.batting.hr)], ["타점", n(v.batting.rbi)],
+              ["득점", n(v.batting.r)], ["도루", n(v.batting.sb)], ["볼넷", n(v.batting.bb)],
+              ["고의4구", n(v.batting.ibb)], ["사구", n(v.batting.hbp)], ["삼진", n(v.batting.so)],
+              ["희타", n(v.batting.sh)], ["희비", n(v.batting.sf)], ["실책", n(v.batting.e)],
               ["출루율", rate(v.batting.obp)], ["장타율", rate(v.batting.slg)],
             ] as [string, string | number][]).map(([k, val]) => (
               <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
@@ -84,25 +87,29 @@ export function MPlayer() {
             <div className="cell"><div className="k"><SaberTerm abbr="OPS" /></div><div className="v">{rate(v.batting.obp + v.batting.slg)}</div></div>
           </div>
         </section>
-      )}
+        );
+      })()}
 
-      {v.pitching && (
+      {v.pitching && (() => {
+        const n = (x?: number) => (x == null ? "-" : String(x));
+        return (
         <section className="player-section">
           <h3>투수 기록</h3>
           <div className="m-strip">
             {([
-              ["평균자책", dec2(v.pitching.era)], ["경기", v.pitching.g], ["승", v.pitching.w],
-              ["패", v.pitching.l], ["이닝", inn(v.pitching.ip)], ["상대타자", v.pitching.bf ?? 0],
-              ["투구수", v.pitching.np ?? 0], ["피안타", v.pitching.h], ["피홈런", v.pitching.hr ?? 0],
-              ["볼넷", v.pitching.bb], ["탈삼진", v.pitching.so], ["실점", v.pitching.r],
-              ["자책", v.pitching.er],
+              ["평균자책", dec2(v.pitching.era)], ["경기", n(v.pitching.g)], ["승", n(v.pitching.w)],
+              ["패", n(v.pitching.l)], ["이닝", inn(v.pitching.ip)], ["상대타자", n(v.pitching.bf)],
+              ["투구수", n(v.pitching.np)], ["피안타", n(v.pitching.h)], ["피홈런", n(v.pitching.hr)],
+              ["볼넷", n(v.pitching.bb)], ["탈삼진", n(v.pitching.so)], ["실점", n(v.pitching.r)],
+              ["자책", n(v.pitching.er)],
             ] as [string, string | number][]).map(([k, val]) => (
               <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
             ))}
             <div className="cell"><div className="k"><SaberTerm abbr="WHIP" /></div><div className="v">{dec2(v.pitching.whip)}</div></div>
           </div>
         </section>
-      )}
+        );
+      })()}
 
       {v.batting && (() => {
         const a = battingAdvanced(v.batting!);
