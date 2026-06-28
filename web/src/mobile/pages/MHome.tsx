@@ -55,7 +55,7 @@ export function MHome() {
             </p>
           );
         })()}
-        {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
+        <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
         {boards.map((b) => (
           <div className="m-leader" key={b.id}>
             <h3>

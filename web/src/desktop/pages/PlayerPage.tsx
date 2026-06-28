@@ -52,9 +52,7 @@ function BattingStrip({ b }: { b: BattingStats }) {
       <Stat k="희타" v={n(b.sh)} />
       <Stat k="희비" v={n(b.sf)} />
       <Stat k="실책" v={n(b.e)} />
-      <Stat k="출루율" v={rate(b.obp)} />
-      <Stat k="장타율" v={rate(b.slg)} />
-      <SaberStat abbr="OPS" v={rate(b.obp + b.slg)} />
+      {/* OBP·SLG·OPS 는 세이버메트릭스 섹션 중복 — 제거 */}
     </div>
   );
 }
@@ -104,7 +102,7 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
       <Stat k="탈삼진" v={n(p.so)} />
       <Stat k="실점" v={n(p.r)} />
       <Stat k="자책" v={n(p.er)} />
-      <SaberStat abbr="WHIP" v={dec2(p.whip)} />
+      {/* WHIP 는 세이버메트릭스 섹션 중복 — 제거 */}
     </div>
   );
 }

@@ -56,7 +56,8 @@ export function HomePage() {
             </p>
           );
         })()}
-        {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
+        {/* players 가 잠깐 null 이어도 FilterBar 는 mount 유지(시합 cascade state 보존) */}
+        <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
         <div className="leader-grid">
           {boards.map((b) => (
             <div className="leader-card" key={b.id}>

@@ -73,6 +73,7 @@ export function MPlayer() {
         <section className="player-section">
           <h3>타자 기록</h3>
           <div className="m-strip">
+            {/* 비율/계산 지표(OBP·SLG·OPS) 는 세이버메트릭스 섹션에서만 노출 — 중복 제거. */}
             {([
               ["타율", rate(v.batting.avg)], ["경기", n(v.batting.g)], ["타석", n(v.batting.pa)],
               ["타수", n(v.batting.ab)], ["안타", n(v.batting.h)], ["2루타", n(v.batting.b2)],
@@ -80,11 +81,9 @@ export function MPlayer() {
               ["득점", n(v.batting.r)], ["도루", n(v.batting.sb)], ["볼넷", n(v.batting.bb)],
               ["고의4구", n(v.batting.ibb)], ["사구", n(v.batting.hbp)], ["삼진", n(v.batting.so)],
               ["희타", n(v.batting.sh)], ["희비", n(v.batting.sf)], ["실책", n(v.batting.e)],
-              ["출루율", rate(v.batting.obp)], ["장타율", rate(v.batting.slg)],
             ] as [string, string | number][]).map(([k, val]) => (
               <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
             ))}
-            <div className="cell"><div className="k"><SaberTerm abbr="OPS" /></div><div className="v">{rate(v.batting.obp + v.batting.slg)}</div></div>
           </div>
         </section>
         );
@@ -96,6 +95,7 @@ export function MPlayer() {
         <section className="player-section">
           <h3>투수 기록</h3>
           <div className="m-strip">
+            {/* 비율/계산 지표(WHIP) 는 세이버메트릭스 섹션에서만 노출. */}
             {([
               ["평균자책", dec2(v.pitching.era)], ["경기", n(v.pitching.g)], ["승", n(v.pitching.w)],
               ["패", n(v.pitching.l)], ["이닝", inn(v.pitching.ip)], ["상대타자", n(v.pitching.bf)],
@@ -105,7 +105,6 @@ export function MPlayer() {
             ] as [string, string | number][]).map(([k, val]) => (
               <div className="cell" key={k}><div className="k">{k}</div><div className="v">{val}</div></div>
             ))}
-            <div className="cell"><div className="k"><SaberTerm abbr="WHIP" /></div><div className="v">{dec2(v.pitching.whip)}</div></div>
           </div>
         </section>
         );

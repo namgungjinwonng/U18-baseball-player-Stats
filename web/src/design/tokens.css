@@ -41,10 +41,11 @@
 
   /* --- Radius --- */
   --radius-none: 0px;
-  --radius-sm: 18px;
-  --radius-md: 24px;
-  --radius-lg: 30px;
-  --radius-full: 9999px;
+  /* 알약형 라운드를 줄여 절제된 사각 모서리 (사용자 요청: 2~4pt). */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-full: 9999px; /* icon-btn 처럼 원형이 필요한 곳만 사용 */
 
   /* --- Typography families (md 권장 오픈소스 대체) --- */
   --font-display: "Bebas Neue", "Helvetica Neue", Arial, sans-serif;

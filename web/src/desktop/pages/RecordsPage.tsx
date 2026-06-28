@@ -30,7 +30,7 @@ export function RecordsPage() {
           </Chip>
         ))}
       </div>
-      {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
+      <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
 
       {loading && <div className="state">불러오는 중…</div>}
       {error && <div className="state">데이터를 불러오지 못했습니다.</div>}

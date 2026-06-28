@@ -28,7 +28,7 @@ export function MRecords() {
           </Chip>
         ))}
       </div>
-      {players && <FilterBar rows={players} value={filter} onChange={setFilter} />}
+      <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
       {loading && <div className="state">불러오는 중…</div>}
       {players && (
         <StatTable<Player>
