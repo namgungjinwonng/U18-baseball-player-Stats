@@ -22,7 +22,10 @@ function Drawer({ onClose }: { onClose: () => void }) {
           U18 BASEBALL
         </Link>
         <NavLink to="/records" onClick={onClose}>
-          선수 기록
+          선수 기록 상세
+        </NavLink>
+        <NavLink to="/leaders/avg" onClick={onClose}>
+          항목별 랭킹
         </NavLink>
         <NavLink to="/matchup" onClick={onClose}>
           상대전적

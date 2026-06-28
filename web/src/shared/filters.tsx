@@ -1,7 +1,7 @@
 // 지역/학교/시합 필터 — 선수 기록·시즌 리더 공용 (데스크탑·모바일).
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTournaments } from "./data";
-import { buildTree, type Kind, type Phase } from "./tournamentTree";
+import { buildTree, categorize, type Kind, type Phase } from "./tournamentTree";
 
 export interface RecordFilter {
   region: string;
@@ -9,6 +9,24 @@ export interface RecordFilter {
   tournament: string; // tournament slug ("" = 시즌 전체)
 }
 export const emptyFilter: RecordFilter = { region: "", team: "", tournament: "" };
+
+// URL ↔ RecordFilter 직렬화 (홈/랭킹 페이지 사이 필터 전파에 사용).
+export function filterToQuery(f: RecordFilter): string {
+  const p = new URLSearchParams();
+  if (f.tournament) p.set("t", f.tournament);
+  if (f.region) p.set("r", f.region);
+  if (f.team) p.set("s", f.team);
+  const s = p.toString();
+  return s ? `?${s}` : "";
+}
+export function filterFromQuery(search: string): RecordFilter {
+  const p = new URLSearchParams(search);
+  return {
+    tournament: p.get("t") ?? "",
+    region: p.get("r") ?? "",
+    team: p.get("s") ?? "",
+  };
+}
 
 interface HasTeam {
   team: string;
@@ -47,9 +65,17 @@ export function TournamentPicker({
   const [kind, setKind] = useState<"" | Kind>("");
   const [phase, setPhase] = useState<"" | Phase>("");
 
-  // ⚠ value 가 빈 문자열이 되면 내부 cascade 도 자동 초기화하는 useEffect 는 두지 말 것.
-  // 사용자가 시합구분=주말리그 만 고르고 아직 leaf(리그) 미선택 시 onChange("") 가 호출되며,
-  // 그 useEffect 가 setKind("") 로 cascade 를 즉시 풀어버려 시합구분 자체가 초기화되는 버그.
+  // 외부에서 들어온 value(slug) 로부터 kind/phase 를 1회 추정해 표시 (URL query 전파 케이스).
+  // ⚠ value="" 인 케이스에선 절대 cascade 를 초기화하지 말 것 — 사용자가 leaf 미선택 상태로
+  // 자연히 비어있는 정상 상태이므로 useEffect 가 setKind("") 로 만들면 시합구분 자체가 풀려버림.
+  useEffect(() => {
+    if (kind || !value || !tournaments) return;
+    const t = tournaments.find((x) => x.slug === value);
+    if (!t) return;
+    const c = categorize(t);
+    setKind(c.kind);
+    if (c.kind === "주말리그") setPhase(c.phase ?? "");
+  }, [tournaments, value, kind]);
 
   if (!tree || (tree.주말리그.전반기.length + tree.주말리그.후반기.length + tree.전국대회.length === 0)) {
     return null;

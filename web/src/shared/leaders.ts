@@ -82,9 +82,13 @@ export function rankByCategory(
   players: Player[],
   cat: LeaderCategory,
   teamGames?: Record<string, number>,
-  limit = Infinity
+  limit = Infinity,
+  // 시합/대회 필터가 적용된 경우 true → 규정타석/이닝 미적용 (표본이 작아 거의 비어버림 방지).
+  // KBSA U-18 의 시즌 규정타석은 통상 팀 경기수 × 3.1 이지만 단일 시합엔 해당 규정이 존재하지 않으므로,
+  // 시합 모드에선 해당 시합의 모든 기록을 그대로 랭킹화 한다.
+  ignoreQualify = false,
 ): LeaderItem[] {
-  const qualify = !cat.needsQualify
+  const qualify = !cat.needsQualify || ignoreQualify
     ? () => true
     : cat.kind === "batting"
       ? (p: Player) => qualifyBat(p, teamGames)
@@ -101,13 +105,19 @@ export function rankByCategory(
 }
 
 // 홈 카드용 — HOME_CATEGORY_IDS 순서로 TOP N.
+// tournamentActive=true → 규정타석/이닝 미적용 (시합 모드).
 export function leaderboards(
   players: Player[],
   teamGames?: Record<string, number>,
-  topN = 9
+  topN = 9,
+  tournamentActive = false,
 ): { id: LeaderCategoryId; title: string; items: LeaderItem[] }[] {
   return HOME_CATEGORY_IDS.map((id) => {
     const cat = findCategory(id)!;
-    return { id: cat.id, title: cat.title, items: rankByCategory(players, cat, teamGames, topN) };
+    return {
+      id: cat.id,
+      title: cat.title,
+      items: rankByCategory(players, cat, teamGames, topN, tournamentActive),
+    };
   });
 }

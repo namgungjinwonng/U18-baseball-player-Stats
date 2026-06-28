@@ -2,23 +2,25 @@
 // 상단: 타자/투수 탭 + 각 항목 칩 (선택 시 해당 항목 랭킹으로 이동).
 // 필터(시합·지역·학교) 그대로 사용.
 import { useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMeta, useTournamentRecords } from "./data";
 import { CATEGORIES, findCategory, rankByCategory } from "./leaders";
-import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "./filters";
+import { FilterBar, applyFilter, filterFromQuery, filterToQuery, type RecordFilter } from "./filters";
 
 export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const { id } = useParams();
   const nav = useNavigate();
+  const loc = useLocation();
   const cat = id ? findCategory(id) : undefined;
-  const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  // 메인에서 들어올 때 URL query 에 담겨온 필터 그대로 사용.
+  const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(loc.search));
   const { data: players, loading } = useTournamentRecords(filter.tournament);
   const { data: meta } = useMeta();
 
   const ranked = useMemo(() => {
     if (!players || !cat) return [];
     const filtered = applyFilter(players, filter);
-    return rankByCategory(filtered, cat, meta?.teamGames);
+    return rankByCategory(filtered, cat, meta?.teamGames, Infinity, !!filter.tournament);
   }, [players, filter, meta, cat]);
 
   // 상단 탭: 현재 카테고리의 kind 우선, 없으면 타자.
@@ -31,16 +33,16 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
     <div className={wrapClass}>
       <h2 className="heading-xl" style={{ marginBottom: 8 }}>랭킹</h2>
 
-      {/* 상단: 타자/투수 탭 + 항목 chip */}
+      {/* 상단: 타자/투수 탭 + 항목 chip. 현재 필터(시합/지역/학교)는 URL query 로 유지. */}
       <div className="tabs" style={{ marginBottom: 8 }}>
         <Link
-          to={`/leaders/${activeKind === "batting" ? id ?? "avg" : "avg"}`}
+          to={`/leaders/${activeKind === "batting" ? id ?? "avg" : "avg"}${filterToQuery(filter)}`}
           className={`chip ${activeKind === "batting" ? "chip--active" : ""}`}
         >
           타자
         </Link>
         <Link
-          to={`/leaders/${activeKind === "pitching" ? id ?? "era" : "era"}`}
+          to={`/leaders/${activeKind === "pitching" ? id ?? "era" : "era"}${filterToQuery(filter)}`}
           className={`chip ${activeKind === "pitching" ? "chip--active" : ""}`}
         >
           투수
@@ -50,7 +52,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
         {visibleCats.map((c) => (
           <Link
             key={c.id}
-            to={`/leaders/${c.id}`}
+            to={`/leaders/${c.id}${filterToQuery(filter)}`}
             className={`chip ${c.id === cat?.id ? "chip--active" : ""}`}
           >
             {c.title.replace(/\s*\([^)]+\)\s*/, "")}
@@ -64,7 +66,12 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
         <>
           <h3 className="heading-md" style={{ marginBottom: 4 }}>{cat.title}</h3>
           <p className="caption" style={{ marginBottom: 12 }}>
-            {cat.kind === "batting" ? "타자" : "투수"} · {cat.needsQualify ? "규정 미달자는 제외" : "누적값"}
+            {cat.kind === "batting" ? "타자" : "투수"} ·{" "}
+            {cat.needsQualify
+              ? filter.tournament
+                ? "시합 모드(규정 미적용)"
+                : "규정 미달자는 제외"
+              : "누적값"}
             {ranked.length > 0 && ` · 총 ${ranked.length}명`}
           </p>
 

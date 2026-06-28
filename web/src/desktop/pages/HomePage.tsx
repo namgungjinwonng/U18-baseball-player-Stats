@@ -4,14 +4,14 @@ import { useMeta, useTournamentRecords } from "../../shared/data";
 import { leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
-import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, emptyFilter, filterToQuery, type RecordFilter } from "../../shared/filters";
 
 export function HomePage() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const { data: players } = useTournamentRecords(filter.tournament);
   const { data: meta } = useMeta();
   const boards = useMemo(
-    () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames) : []),
+    () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames, 9, !!filter.tournament) : []),
     [players, filter, meta]
   );
 
@@ -62,7 +62,7 @@ export function HomePage() {
           {boards.map((b) => (
             <div className="leader-card" key={b.id}>
               <h3>
-                <Link to={`/leaders/${b.id}`} className="leader-title-link">
+                <Link to={`/leaders/${b.id}${filterToQuery(filter)}`} className="leader-title-link">
                   {b.title} <span aria-hidden>›</span>
                 </Link>
               </h3>

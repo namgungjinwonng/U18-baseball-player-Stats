@@ -62,7 +62,8 @@ export function DesktopApp() {
             U18 BASEBALL
           </Link>
           <div className="nav-links">
-            <NavLink to="/records">선수 기록</NavLink>
+            <NavLink to="/records">선수 기록 상세</NavLink>
+            <NavLink to="/leaders/avg">항목별 랭킹</NavLink>
             <NavLink to="/matchup">상대전적</NavLink>
             <NavLink to="/search">선수 검색</NavLink>
             <NavLink to="/glossary">지표 설명</NavLink>
@@ -75,7 +76,8 @@ export function DesktopApp() {
         </div>
         {menuOpen && (
           <div className="nav-drawer">
-            <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록</NavLink>
+            <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록 상세</NavLink>
+            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}>항목별 랭킹</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}>상대전적</NavLink>
             <NavLink to="/search" onClick={() => setMenuOpen(false)}>선수 검색</NavLink>
             <NavLink to="/glossary" onClick={() => setMenuOpen(false)}>지표 설명</NavLink>

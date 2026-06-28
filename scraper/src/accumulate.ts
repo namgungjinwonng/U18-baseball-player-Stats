@@ -176,6 +176,29 @@ export function aggregate(
     }
   }
 
+  // raw 누적값 → 파생 stats 변환 (personNo merge 후 합산본 재계산에도 사용).
+  const deriveBatting = (b: ReturnType<typeof emptyBatting>): BattingStats => {
+    const singles = b.h - b.b2 - b.b3 - b.hr;
+    const totalBases = singles + 2 * b.b2 + 3 * b.b3 + 4 * b.hr;
+    const onBaseDen = b.ab + b.bb + b.hbp;
+    return {
+      g: b.g, pa: b.ab + b.bb + b.hbp, ab: b.ab, r: b.r, h: b.h, b2: b.b2, b3: b.b3,
+      hr: b.hr, rbi: b.rbi, bb: b.bb, hbp: b.hbp, so: b.so, sb: b.sb,
+      avg: b.ab ? r3(b.h / b.ab) : 0,
+      obp: onBaseDen ? r3((b.h + b.bb + b.hbp) / onBaseDen) : 0,
+      slg: b.ab ? r3(totalBases / b.ab) : 0,
+    };
+  };
+  const derivePitching = (pp: ReturnType<typeof emptyPitching>): PitchingStats => {
+    const ip = outsToIp(pp.outs);
+    return {
+      g: pp.g, w: pp.w, l: pp.l, sv: pp.sv, ip,
+      h: pp.h, r: pp.r, er: pp.er, bb: pp.bb, so: pp.so,
+      era: pp.outs ? r2((pp.er * 27) / pp.outs) : 0,
+      whip: pp.outs ? r2(((pp.h + pp.bb) * 3) / pp.outs) : 0,
+    };
+  };
+
   // 파생 수치 확정
   for (const [id, p] of players) {
     // 로스터 조인: `이름|등번호`. 박스스코어 팀명은 축약될 수 있어
@@ -201,28 +224,9 @@ export function aggregate(
     p.team = normalizeTeam(p.team); // 로스터 미매칭/축약 팀명도 KBSA 정식명으로 통합
     p.gameLog.reverse(); // 최신순
     const b = bAcc.get(id);
-    if (b) {
-      const singles = b.h - b.b2 - b.b3 - b.hr;
-      const totalBases = singles + 2 * b.b2 + 3 * b.b3 + 4 * b.hr;
-      const onBaseDen = b.ab + b.bb + b.hbp;
-      p.batting = {
-        g: b.g, pa: b.ab + b.bb + b.hbp, ab: b.ab, r: b.r, h: b.h, b2: b.b2, b3: b.b3,
-        hr: b.hr, rbi: b.rbi, bb: b.bb, hbp: b.hbp, so: b.so, sb: b.sb,
-        avg: b.ab ? r3(b.h / b.ab) : 0,
-        obp: onBaseDen ? r3((b.h + b.bb + b.hbp) / onBaseDen) : 0,
-        slg: b.ab ? r3(totalBases / b.ab) : 0,
-      };
-    }
+    if (b) p.batting = deriveBatting(b);
     const pp = pAcc.get(id);
-    if (pp) {
-      const ip = outsToIp(pp.outs);
-      p.pitching = {
-        g: pp.g, w: pp.w, l: pp.l, sv: pp.sv, ip,
-        h: pp.h, r: pp.r, er: pp.er, bb: pp.bb, so: pp.so,
-        era: pp.outs ? r2((pp.er * 27) / pp.outs) : 0,
-        whip: pp.outs ? r2(((pp.h + pp.bb) * 3) / pp.outs) : 0,
-      };
-    }
+    if (pp) p.pitching = derivePitching(pp);
     // 공식기록 우선: personNo 매칭 시 박스스코어 파생값을 공식값으로 교체
     const off = p.personNo ? official[p.personNo] : undefined;
     if (off?.batting && off.batting.g > 0) p.batting = off.batting;
@@ -246,13 +250,37 @@ export function aggregate(
         (x.throws && x.bats ? 1000 : 0) + (x.batting?.g ?? 0) + (x.pitching?.g ?? 0);
       const rep = [...group].sort((a, b) => score(b) - score(a))[0];
       const seen = new Set(rep.gameLog.map((l) => l.gameId));
+      const repB = bAcc.get(rep.id);
+      const repP = pAcc.get(rep.id);
+      let bChanged = false, pChanged = false;
       for (const p of group) {
         if (p.id === rep.id) continue;
         remap.set(p.id, rep.id);
         for (const l of p.gameLog) if (!seen.has(l.gameId)) { seen.add(l.gameId); rep.gameLog.push(l); }
         rep.bats ??= p.bats; rep.throws ??= p.throws; rep.grade ??= p.grade; rep.region ??= p.region;
+        // raw 누적값(bAcc/pAcc) 도 합산 → personNo 가 같으면 카운팅도 통합.
+        const ob = bAcc.get(p.id);
+        if (ob && repB) {
+          repB.g += ob.g; repB.ab += ob.ab; repB.h += ob.h; repB.b2 += ob.b2; repB.b3 += ob.b3;
+          repB.hr += ob.hr; repB.rbi += ob.rbi; repB.r += ob.r; repB.bb += ob.bb; repB.hbp += ob.hbp;
+          repB.so += ob.so; repB.sb += ob.sb;
+          bChanged = true;
+        }
+        const op = pAcc.get(p.id);
+        if (op && repP) {
+          repP.g += op.g; repP.outs += op.outs; repP.h += op.h; repP.r += op.r; repP.er += op.er;
+          repP.bb += op.bb; repP.so += op.so; repP.w += op.w; repP.l += op.l; repP.sv += op.sv;
+          pChanged = true;
+        }
+        bAcc.delete(p.id); pAcc.delete(p.id);
         players.delete(p.id);
       }
+      // 합산 결과로 derived 재계산 (official 오버레이가 있던 경우는 우선 유지).
+      const off = rep.personNo ? official[rep.personNo] : undefined;
+      const hasOffB = !!(off?.batting && off.batting.g > 0);
+      const hasOffP = !!(off?.pitching && off.pitching.g > 0);
+      if (bChanged && repB && !hasOffB) rep.batting = deriveBatting(repB);
+      if (pChanged && repP && !hasOffP) rep.pitching = derivePitching(repP);
       rep.gameLog.sort((a, b) => b.date.localeCompare(a.date));
     }
   }
