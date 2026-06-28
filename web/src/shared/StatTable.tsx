@@ -1,4 +1,6 @@
 // 정렬 가능한 기록 테이블 — 데스크탑/모바일 공용 (프레젠테이션 전용).
+// 다중 정렬: 최대 3개 키. 헤더 클릭 1회=내림, 2회=오름, 3회=해제.
+// 우선순위는 추가된 순서 (먼저 추가한 키가 1순위).
 import { useMemo, useState } from "react";
 
 export interface Column<T> {
@@ -11,6 +13,13 @@ export interface Column<T> {
   // 기본 정렬 방향 (숫자 기록은 대개 내림차순)
   defaultDesc?: boolean;
 }
+
+interface SortKey {
+  key: string;
+  desc: boolean;
+}
+
+const MAX_KEYS = 3;
 
 export function StatTable<T>({
   columns,
@@ -28,34 +37,55 @@ export function StatTable<T>({
   // 순위 테이블이므로 정렬 후 상위 N명만 렌더(대량 행 성능 보호).
   limit?: number;
 }) {
-  const [sortKey, setSortKey] = useState(initialSort ?? columns[0].key);
-  const [desc, setDesc] = useState(true);
+  const initialKey = initialSort ?? columns[0]?.key;
+  const initialDesc = columns.find((c) => c.key === initialKey)?.defaultDesc ?? true;
+  const [sortKeys, setSortKeys] = useState<SortKey[]>(
+    initialKey ? [{ key: initialKey, desc: initialDesc }] : []
+  );
   const [showAll, setShowAll] = useState(false);
 
   const sorted = useMemo(() => {
-    const col = columns.find((c) => c.key === sortKey);
-    if (!col) return rows;
+    if (sortKeys.length === 0) return rows;
+    const cols = sortKeys
+      .map((s) => ({ s, col: columns.find((c) => c.key === s.key) }))
+      .filter((x) => x.col);
+    if (cols.length === 0) return rows;
     const copy = [...rows];
     copy.sort((a, b) => {
-      const av = col.value(a);
-      const bv = col.value(b);
-      if (typeof av === "number" && typeof bv === "number") {
-        return desc ? bv - av : av - bv;
+      for (const { s, col } of cols) {
+        const av = col!.value(a);
+        const bv = col!.value(b);
+        let cmp: number;
+        if (typeof av === "number" && typeof bv === "number") {
+          cmp = av - bv;
+        } else {
+          cmp = String(av).localeCompare(String(bv), "ko");
+        }
+        if (cmp !== 0) return s.desc ? -cmp : cmp;
       }
-      return desc
-        ? String(bv).localeCompare(String(av), "ko")
-        : String(av).localeCompare(String(bv), "ko");
+      return 0;
     });
     return copy;
-  }, [rows, columns, sortKey, desc]);
+  }, [rows, columns, sortKeys]);
 
   function clickHeader(col: Column<T>) {
-    if (col.key === sortKey) {
-      setDesc((d) => !d);
-    } else {
-      setSortKey(col.key);
-      setDesc(col.defaultDesc ?? true);
-    }
+    setSortKeys((prev) => {
+      const idx = prev.findIndex((s) => s.key === col.key);
+      if (idx === -1) {
+        // 신규 → 추가 (가장 최근 추가가 우선순위 마지막). 최대 3개.
+        const next: SortKey[] = [...prev, { key: col.key, desc: col.defaultDesc ?? true }];
+        return next.slice(-MAX_KEYS);
+      }
+      const cur = prev[idx];
+      if (cur.desc) {
+        // 내림 → 오름
+        const next = [...prev];
+        next[idx] = { ...cur, desc: false };
+        return next;
+      }
+      // 오름 → 해제
+      return prev.filter((_, i) => i !== idx);
+    });
   }
 
   const capped = showAll ? sorted : sorted.slice(0, limit);
@@ -65,12 +95,21 @@ export function StatTable<T>({
       <table className="stat-table">
         <thead>
           <tr>
-            {columns.map((col) => (
-              <th key={col.key} onClick={() => clickHeader(col)}>
-                {col.label}
-                {col.key === sortKey ? (desc ? " ▾" : " ▴") : ""}
-              </th>
-            ))}
+            {columns.map((col) => {
+              const idx = sortKeys.findIndex((s) => s.key === col.key);
+              const cur = idx >= 0 ? sortKeys[idx] : null;
+              return (
+                <th key={col.key} onClick={() => clickHeader(col)}>
+                  {col.label}
+                  {cur && (
+                    <span className="sort-mark">
+                      {cur.desc ? " ▾" : " ▴"}
+                      {sortKeys.length > 1 && <sup>{idx + 1}</sup>}
+                    </span>
+                  )}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -89,6 +128,21 @@ export function StatTable<T>({
           ))}
         </tbody>
       </table>
+      {sortKeys.length > 1 && (
+        <p className="caption" style={{ marginTop: 8 }}>
+          정렬 우선순위: {sortKeys.map((s, i) =>
+            `${i + 1}. ${columns.find((c) => c.key === s.key)?.label ?? s.key} ${s.desc ? "↓" : "↑"}`
+          ).join("  ·  ")}
+          {" · "}
+          <button
+            type="button"
+            className="link-btn"
+            onClick={(e) => { e.stopPropagation(); setSortKeys([]); }}
+          >
+            전체 해제
+          </button>
+        </p>
+      )}
       {!showAll && sorted.length > limit && (
         <button className="btn btn--secondary btn--sm" style={{ margin: "16px auto", display: "flex" }} onClick={() => setShowAll(true)}>
           전체 {sorted.length}명 보기 (현재 상위 {limit}명)

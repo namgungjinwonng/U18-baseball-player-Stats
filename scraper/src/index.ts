@@ -139,6 +139,10 @@ async function main() {
     writeYear(DATA_DIR, year, agg);
     if (latest === undefined) latest = agg.meta;
 
+    // 시즌 personNo → 정규 player.id 맵 (시합별 player.id 재매핑용).
+    const personNoToCanonId = new Map<string, string>();
+    for (const p of agg.players) if (p.personNo) personNoToCanonId.set(p.personNo, p.id);
+
     // --- 시합/대회별 집계 → 시합 선택 필터 ---
     const byTitle = new Map<string, typeof yearGames>();
     for (const g of yearGames) {
@@ -155,14 +159,34 @@ async function main() {
       //    시합별 aggregate 에 넘기면 박스스코어 합산이 시즌 공식 stats 로
       //    덮어써져 모든 시합 결과가 시즌과 동일해진다.
       const tAgg = aggregate(games, SOURCE, roster, {});
+
+      // 시합별 personNo merge 가 시즌과 다른 대표 id 를 고를 수 있으므로,
+      // 시즌의 정규 id 로 강제 매핑한다 (선수 클릭 시 404 방지).
+      const idRemap = new Map<string, string>();
+      for (const tp of tAgg.players) {
+        if (!tp.personNo) continue;
+        const canon = personNoToCanonId.get(tp.personNo);
+        if (canon && canon !== tp.id) idRemap.set(tp.id, canon);
+      }
+      const remappedPlayers = tAgg.players.map((tp) => {
+        const c = idRemap.get(tp.id);
+        return c ? { ...tp, id: c } : tp;
+      });
+      const remappedMatchups = tAgg.matchups.map((m) => {
+        const cb = idRemap.get(m.batterId);
+        const cp = idRemap.get(m.pitcherId);
+        if (!cb && !cp) return m;
+        return { ...m, batterId: cb ?? m.batterId, pitcherId: cp ?? m.pitcherId };
+      });
+
       // 시합별 슬림 records + 시합별 매치업 단일 파일(상대전적 시합 필터용).
       const tDir = path.join(DATA_DIR, String(year), "by-tournament", slug);
       fs.mkdirSync(tDir, { recursive: true });
       fs.writeFileSync(
         path.join(tDir, "records.json"),
-        JSON.stringify(tAgg.players.map(({ gameLog: _gl, ...rest }) => rest))
+        JSON.stringify(remappedPlayers.map(({ gameLog: _gl, ...rest }) => rest))
       );
-      fs.writeFileSync(path.join(tDir, "matchups.json"), JSON.stringify(tAgg.matchups));
+      fs.writeFileSync(path.join(tDir, "matchups.json"), JSON.stringify(remappedMatchups));
       fs.writeFileSync(path.join(tDir, "meta.json"), JSON.stringify(tAgg.meta));
       tournamentList.push({ slug, title, gameCount: games.length });
     }

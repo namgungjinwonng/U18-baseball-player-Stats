@@ -412,6 +412,22 @@
   color: var(--color-mute);
 }
 
+/* 다중 정렬 마크 / 인라인 링크 버튼 */
+.sort-mark sup {
+  font-size: 9px;
+  margin-left: 1px;
+  color: var(--color-mute);
+}
+.link-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-ink);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
 /* 랭킹 페이지 */
 .rank-list {
   list-style: none;
