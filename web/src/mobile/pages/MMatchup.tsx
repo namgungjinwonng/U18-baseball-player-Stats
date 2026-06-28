@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { usePlayerIndex, usePlayerMatchups } from "../../shared/data";
+import { usePlayerIndex, usePlayerMatchups, useTournamentMatchups } from "../../shared/data";
 import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
+import { TournamentPicker } from "../../shared/filters";
 import {
   facedOpponents, facedSchools, indexById, opposite, playerLabel, searchByRole,
   sumMatchups, type Role,
 } from "../../shared/matchup";
-import type { PlayerIndexEntry } from "../../shared/types";
+import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 
 export function MMatchup() {
   const { data: index } = usePlayerIndex();
@@ -15,7 +16,14 @@ export function MMatchup() {
   const [a, setA] = useState<PlayerIndexEntry | null>(null);
   const [school, setSchool] = useState("");
   const [oppId, setOppId] = useState("");
-  const { data: matchups } = usePlayerMatchups(a?.id);
+  const [tournamentSlug, setTournamentSlug] = useState("");
+  const { data: matchupsSeason } = usePlayerMatchups(a?.id);
+  const { data: tournamentMatchups } = useTournamentMatchups(tournamentSlug);
+  const matchups = useMemo<Matchup[]>(() => {
+    if (!tournamentSlug) return matchupsSeason ?? [];
+    if (!a) return [];
+    return (tournamentMatchups ?? []).filter((m) => m.batterId === a.id || m.pitcherId === a.id);
+  }, [tournamentSlug, tournamentMatchups, matchupsSeason, a]);
 
   const byId = useMemo(() => indexById(index ?? []), [index]);
   const candidates = useMemo(() => (index ? searchByRole(index, aRole, query) : []), [index, aRole, query]);
@@ -32,6 +40,12 @@ export function MMatchup() {
     <div className="m-page">
       <h2 className="heading-xl">상대전적</h2>
       <p className="caption" style={{ marginTop: -8, marginBottom: 16 }}>타자 vs 투수</p>
+
+      <div className="filter-bar">
+        <div className="filter-bar__row filter-bar__row--tournament">
+          <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+        </div>
+      </div>
 
       <label className="caption">① 기준 선수 유형</label>
       <div className="m-tabs" style={{ marginTop: 8 }}>

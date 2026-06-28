@@ -18,21 +18,23 @@ export function MHome() {
   return (
     <>
       <section className="m-hero">
-        <h1 className="display-campaign">RECORDS THAT STACK UP</h1>
-        <p className="m-hero__sub">
-          2026 시즌부터 누적되는 고교 야구 기록. 이름으로 조회하고 상대전적까지.
-        </p>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Link to="/records">
-            <Button variant="on-image" sm>
-              선수 기록
-            </Button>
-          </Link>
-          <Link to="/matchup">
-            <Button variant="secondary" sm>
-              상대전적
-            </Button>
-          </Link>
+        <div className="m-hero__inner">
+          <h1 className="display-campaign">RECORDS THAT STACK UP</h1>
+          <p className="m-hero__sub">
+            2026 시즌부터 누적되는 고교 야구 기록. 이름으로 조회하고 상대전적까지.
+          </p>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Link to="/records">
+              <Button variant="on-image" sm>
+                선수 기록
+              </Button>
+            </Link>
+            <Link to="/matchup">
+              <Button variant="secondary" sm>
+                상대전적
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

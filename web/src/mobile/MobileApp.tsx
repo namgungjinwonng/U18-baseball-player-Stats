@@ -77,23 +77,25 @@ export function MobileApp() {
     <div className="m-shell">
       <InAppBanner />
       <header className="m-topbar">
-        <button className="icon-btn" onClick={() => setDrawer(true)} aria-label="메뉴">
-          ☰
-        </button>
-        <Link to="/" className="brand">
-          U18 BASEBALL
-        </Link>
-        <div className="m-topbar__group">
-          <InstallButton />
-          <RefreshButton />
-          <YearSelect />
-          <button
-            className="icon-btn"
-            onClick={() => setSearch(true)}
-            aria-label="검색"
-          >
-            ⌕
+        <div className="m-topbar__inner">
+          <button className="icon-btn" onClick={() => setDrawer(true)} aria-label="메뉴">
+            ☰
           </button>
+          <Link to="/" className="brand">
+            U18 BASEBALL
+          </Link>
+          <div className="m-topbar__group">
+            <InstallButton />
+            <RefreshButton />
+            <YearSelect />
+            <button
+              className="icon-btn"
+              onClick={() => setSearch(true)}
+              aria-label="검색"
+            >
+              ⌕
+            </button>
+          </div>
         </div>
       </header>
 

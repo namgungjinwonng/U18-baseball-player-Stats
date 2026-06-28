@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { usePlayerIndex, usePlayerMatchups } from "../../shared/data";
+import { usePlayerIndex, usePlayerMatchups, useTournamentMatchups } from "../../shared/data";
 import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
+import { TournamentPicker } from "../../shared/filters";
 import {
   facedOpponents, facedSchools, indexById, opposite, playerLabel, searchByRole,
   sumMatchups, type Role,
@@ -34,7 +35,15 @@ export function MatchupPage() {
   const [a, setA] = useState<PlayerIndexEntry | null>(null);
   const [school, setSchool] = useState("");
   const [oppId, setOppId] = useState(""); // 선택적: 특정 상대 선수
-  const { data: matchups } = usePlayerMatchups(a?.id); // A 선수 샤드만 로드
+  const [tournamentSlug, setTournamentSlug] = useState("");
+  const { data: matchupsSeason } = usePlayerMatchups(a?.id); // A 선수 샤드만 로드
+  const { data: tournamentMatchups } = useTournamentMatchups(tournamentSlug);
+  // 시합 미선택 → 시즌 샤드(A 선수만). 선택 → 그 시합 전체 매치업에서 A 선수 ID 로 필터.
+  const matchups = useMemo<Matchup[]>(() => {
+    if (!tournamentSlug) return matchupsSeason ?? [];
+    if (!a) return [];
+    return (tournamentMatchups ?? []).filter((m) => m.batterId === a.id || m.pitcherId === a.id);
+  }, [tournamentSlug, tournamentMatchups, matchupsSeason, a]);
 
   const byId = useMemo(() => indexById(index ?? []), [index]);
   const candidates = useMemo(
@@ -61,6 +70,13 @@ export function MatchupPage() {
   return (
     <div className="container page">
       <div className="section-head"><h2 className="heading-xl">상대전적 · 타자 vs 투수</h2></div>
+
+      {/* 시합 필터 (선택) — 시합 범위 안에서만 매치업 집계 */}
+      <div className="filter-bar">
+        <div className="filter-bar__row filter-bar__row--tournament">
+          <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+        </div>
+      </div>
 
       {/* ① 기준 선수 유형 + 검색 */}
       <p className="caption" style={{ marginBottom: 8 }}>① 기준 선수 유형</p>

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
-import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournaments } from "../../shared/data";
+import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournamentMatchups, useTournaments } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
@@ -111,7 +111,7 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
 export function PlayerPage() {
   const { id } = useParams();
   const { data: player, loading, error } = usePlayer(id);
-  const { data: matchups } = usePlayerMatchups(id);
+  const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
   const [tournamentSlug, setTournamentSlug] = useState("");
@@ -126,6 +126,21 @@ export function PlayerPage() {
     () => (player ? filterPlayerStats(player, tournamentTitle) : null),
     [player, tournamentTitle]
   );
+  // 이 선수가 실제로 출전한 시합 slug 집합 (셀렉터 노출 제한).
+  const availableSlugs = useMemo(() => {
+    if (!tournaments || !player?.gameLog) return undefined;
+    const titles = new Set(player.gameLog.map((g) => g.title).filter(Boolean) as string[]);
+    return new Set(tournaments.filter((t) => titles.has(t.title)).map((t) => t.slug));
+  }, [tournaments, player?.gameLog]);
+  // 시합 매치업: 시합 선택 시 시합 전체 매치업에서 이 선수 ID 로 필터.
+  const { data: tournamentMatchups } = useTournamentMatchups(tournamentSlug);
+  const matchups = useMemo(() => {
+    if (!tournamentSlug) return matchupsSeason ?? [];
+    if (!player) return [];
+    return (tournamentMatchups ?? []).filter(
+      (m) => m.batterId === player.id || m.pitcherId === player.id
+    );
+  }, [tournamentSlug, tournamentMatchups, matchupsSeason, player]);
 
   if (loading) return <div className="container state">불러오는 중…</div>;
   if (error || !player) return <div className="container state">선수를 찾을 수 없습니다.</div>;
@@ -151,7 +166,13 @@ export function PlayerPage() {
       </div>
 
       <div className="filter-bar" style={{ marginBottom: 16 }}>
-        <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+        <div className="filter-bar__row filter-bar__row--tournament">
+          <TournamentPicker
+            value={tournamentSlug}
+            onChange={setTournamentSlug}
+            availableSlugs={availableSlugs}
+          />
+        </div>
       </div>
 
       {v.batting && (

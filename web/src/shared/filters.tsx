@@ -25,14 +25,24 @@ export function applyFilter<T extends HasTeam>(rows: T[], f: RecordFilter): T[] 
 
 // 시합구분 셀렉터: 시합구분(주말리그/전국대회) → (주말리그면) 상·하반기 → 리그(권역).
 // 전체 시즌 = 모든 셀렉터 "전체". 최종 leaf 선택 시에만 onChange 로 slug 전달.
+// availableSlugs 지정 시 해당 슬러그만 노출(예: 선수 상세 → 출전 시합만).
 export function TournamentPicker({
   value,
   onChange,
+  availableSlugs,
 }: {
   value: string;
   onChange: (slug: string) => void;
+  availableSlugs?: ReadonlySet<string>;
 }) {
-  const { data: tournaments } = useTournaments();
+  const { data: rawTournaments } = useTournaments();
+  const tournaments = useMemo(
+    () =>
+      rawTournaments && availableSlugs
+        ? rawTournaments.filter((t) => availableSlugs.has(t.slug))
+        : rawTournaments,
+    [rawTournaments, availableSlugs]
+  );
   const tree = useMemo(() => (tournaments ? buildTree(tournaments) : null), [tournaments]);
   const [kind, setKind] = useState<"" | Kind>("");
   const [phase, setPhase] = useState<"" | Phase>("");
@@ -145,33 +155,37 @@ export function FilterBar({
   return (
     <div className="filter-bar">
       {showTournament && (
-        <TournamentPicker
-          value={value.tournament}
-          onChange={(slug) => onChange({ ...value, tournament: slug })}
-        />
+        <div className="filter-bar__row filter-bar__row--tournament">
+          <TournamentPicker
+            value={value.tournament}
+            onChange={(slug) => onChange({ ...value, tournament: slug })}
+          />
+        </div>
       )}
-      <select
-        className="m-select"
-        value={value.region}
-        onChange={(e) => onChange({ ...value, region: e.target.value, team: "" })}
-        aria-label="지역 선택"
-      >
-        <option value="">지역 선택</option>
-        {regions.map((r) => (
-          <option key={r} value={r}>{r}</option>
-        ))}
-      </select>
-      <select
-        className="m-select"
-        value={value.team}
-        onChange={(e) => onChange({ ...value, team: e.target.value })}
-        aria-label="학교 선택"
-      >
-        <option value="">학교 선택</option>
-        {teams.map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
+      <div className="filter-bar__row filter-bar__row--2col">
+        <select
+          className="m-select"
+          value={value.region}
+          onChange={(e) => onChange({ ...value, region: e.target.value, team: "" })}
+          aria-label="지역 선택"
+        >
+          <option value="">지역 선택</option>
+          {regions.map((r) => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
+        <select
+          className="m-select"
+          value={value.team}
+          onChange={(e) => onChange({ ...value, team: e.target.value })}
+          aria-label="학교 선택"
+        >
+          <option value="">학교 선택</option>
+          {teams.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

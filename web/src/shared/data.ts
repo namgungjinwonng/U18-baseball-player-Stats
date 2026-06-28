@@ -114,6 +114,18 @@ export const useTournamentRecords = (slug: string | "") => {
   );
 };
 
+// 특정 시합의 매치업 전체 (Matchup[]). slug 비면 빈 배열(시합 미지정 시 호출자는 시즌 매치업 사용).
+export const useTournamentMatchups = (slug: string | "") => {
+  const { year } = useYear();
+  return useAsync<Matchup[]>(
+    () =>
+      slug
+        ? getJSON<Matchup[]>(`${year}/by-tournament/${encodeURIComponent(slug)}/matchups.json`).catch(() => [])
+        : Promise.resolve([]),
+    [year, slug]
+  );
+};
+
 // 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).
 export function searchPlayers(
   index: PlayerIndexEntry[],

@@ -27,14 +27,14 @@
 
 .m-page {
   padding: 24px 16px;
-  max-width: 560px;          /* 태블릿/폴드 등 큰 모바일에서 너무 늘어나지 않게 */
+  max-width: 720px;          /* 폴드 전개/태블릿까지 가운데 정렬 (px 단위 고정폭) */
   margin: 0 auto;
 }
 .m-page h2.heading-xl {
   font-size: 26px;
   margin-bottom: 16px;
 }
-/* 큰 모바일(폴드 전개·태블릿 등 480px~)에서 양옆 여백을 확보해 텍스트 좌측 치우침 해소 */
+/* 큰 모바일(폴드 전개·태블릿 등 480px~)에서 양옆 여백을 확보해 좌측 치우침 해소 */
 @media (min-width: 480px) {
   .m-page {
     padding-left: 24px;
@@ -47,17 +47,44 @@
     padding-right: 32px;
   }
 }
-/* hero(검은 배경) 도 가운데 정렬 — 너무 넓으면 좌측 치우쳐 보임 */
+/* hero(검은 배경): 배경은 전체 폭, 안쪽 텍스트만 가운데 정렬 */
+.m-hero__inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
 @media (min-width: 480px) {
   .m-hero {
     padding-left: 24px;
     padding-right: 24px;
   }
-  .m-hero > * {
-    max-width: 560px;
-    margin-left: auto;
-    margin-right: auto;
+}
+@media (min-width: 720px) {
+  .m-hero {
+    padding-left: 32px;
+    padding-right: 32px;
   }
+}
+/* 상단 토픽바: 큰 모바일에서도 양옆 여백 + 가운데 정렬 */
+.m-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  gap: 8px;
+}
+.m-topbar {
+  padding: 0 12px;
+}
+@media (min-width: 720px) {
+  .m-topbar {
+    padding: 0 24px;
+  }
+}
+/* 큰 화면에서 인앱 배너 가독성 */
+.inapp-banner {
+  max-width: 100%;
 }
 
 /* Drawer */
@@ -196,7 +223,7 @@
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-lg);
   background: var(--color-soft-cloud);
-  margin-bottom: 8px;
+  margin-bottom: 0;
   color: var(--color-ink);
   appearance: none;
   -webkit-appearance: none;
@@ -204,9 +231,24 @@
   background-repeat: no-repeat;
   background-position: right 16px center;
 }
+/* 필터 바: 2줄 고정 (위 = 시합구분 cascade, 아래 = 지역+학교 2칸).
+   리그 선택이 추가돼도 region/team 줄은 항상 보이도록 row 마다 별도 컨테이너. */
 .filter-bar {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
   margin-bottom: 12px;
+}
+.filter-bar__row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-bar__row > .m-select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+/* 아래 줄: 항상 2열(지역/학교) */
+.filter-bar__row--2col > .m-select {
+  flex: 1 1 calc(50% - 4px);
 }

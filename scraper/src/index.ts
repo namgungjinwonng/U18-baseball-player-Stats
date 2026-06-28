@@ -152,13 +152,14 @@ async function main() {
     for (const [title, games] of byTitle) {
       const slug = tournamentSlug(title);
       const tAgg = aggregate(games, SOURCE, roster, official as never);
-      // 시합별 슬림 records 만 기록(개별 player/matchup 파일은 생략 — 용량 절약).
+      // 시합별 슬림 records + 시합별 매치업 단일 파일(상대전적 시합 필터용).
       const tDir = path.join(DATA_DIR, String(year), "by-tournament", slug);
       fs.mkdirSync(tDir, { recursive: true });
       fs.writeFileSync(
         path.join(tDir, "records.json"),
         JSON.stringify(tAgg.players.map(({ gameLog: _gl, ...rest }) => rest))
       );
+      fs.writeFileSync(path.join(tDir, "matchups.json"), JSON.stringify(tAgg.matchups));
       fs.writeFileSync(path.join(tDir, "meta.json"), JSON.stringify(tAgg.meta));
       tournamentList.push({ slug, title, gameCount: games.length });
     }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournaments } from "../../shared/data";
+import { usePlayer, usePlayerIndex, usePlayerMatchups, useTournamentMatchups, useTournaments } from "../../shared/data";
 import { rate, dec2, inn, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
@@ -11,7 +11,7 @@ import { TournamentPicker } from "../../shared/filters";
 export function MPlayer() {
   const { id } = useParams();
   const { data: p, loading, error } = usePlayer(id);
-  const { data: matchups } = usePlayerMatchups(id);
+  const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
   const [tournamentSlug, setTournamentSlug] = useState("");
@@ -21,6 +21,19 @@ export function MPlayer() {
     [tournaments, tournamentSlug]
   );
   const view = useMemo(() => (p ? filterPlayerStats(p, tournamentTitle) : null), [p, tournamentTitle]);
+  const availableSlugs = useMemo(() => {
+    if (!tournaments || !p?.gameLog) return undefined;
+    const titles = new Set(p.gameLog.map((g) => g.title).filter(Boolean) as string[]);
+    return new Set(tournaments.filter((t) => titles.has(t.title)).map((t) => t.slug));
+  }, [tournaments, p?.gameLog]);
+  const { data: tournamentMatchups } = useTournamentMatchups(tournamentSlug);
+  const matchups = useMemo(() => {
+    if (!tournamentSlug) return matchupsSeason ?? [];
+    if (!p) return [];
+    return (tournamentMatchups ?? []).filter(
+      (m) => m.batterId === p.id || m.pitcherId === p.id
+    );
+  }, [tournamentSlug, tournamentMatchups, matchupsSeason, p]);
 
   if (loading) return <div className="m-page state">불러오는 중…</div>;
   if (error || !p) return <div className="m-page state">선수를 찾을 수 없습니다.</div>;
@@ -44,7 +57,13 @@ export function MPlayer() {
       </div>
 
       <div className="filter-bar" style={{ marginBottom: 12 }}>
-        <TournamentPicker value={tournamentSlug} onChange={setTournamentSlug} />
+        <div className="filter-bar__row filter-bar__row--tournament">
+          <TournamentPicker
+            value={tournamentSlug}
+            onChange={setTournamentSlug}
+            availableSlugs={availableSlugs}
+          />
+        </div>
       </div>
 
       {v.batting && (

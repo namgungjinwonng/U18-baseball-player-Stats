@@ -332,16 +332,27 @@
   line-height: 1.5;
 }
 
-/* 지역/학교 필터 바 */
+/* 지역/학교 필터 바 — 위 줄(시합 cascade) + 아래 줄(지역/학교 2칸) 고정 */
 .filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+.filter-bar__row {
   display: flex;
   gap: var(--space-sm);
   flex-wrap: wrap;
-  margin-bottom: var(--space-lg);
 }
-.filter-bar .m-select {
+.filter-bar__row > .m-select {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 180px;
+  max-width: 280px;
   margin-bottom: 0;
-  max-width: 200px;
+}
+.filter-bar__row--2col > .m-select {
+  flex: 0 0 auto;
 }
 
 /* 자동완성 드롭다운 */
