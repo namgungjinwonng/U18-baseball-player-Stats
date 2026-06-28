@@ -30921,6 +30921,16 @@
     "throws": "우",
     "bats": "우"
   },
+  "김민건|9": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "2",
+    "position": "내야수",
+    "personNo": "202001001666",
+    "throws": "좌",
+    "bats": "좌"
+  },
   "김민서|8": {
     "team": "진영고",
     "region": "경기",
@@ -30930,6 +30940,16 @@
     "personNo": "201807001386",
     "throws": "우",
     "bats": "좌"
+  },
+  "김예중|3": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "2",
+    "position": "투수",
+    "personNo": "201902005111",
+    "throws": "우",
+    "bats": "우"
   },
   "김재용|10": {
     "team": "진영고",
@@ -30948,6 +30968,26 @@
     "grade": "2",
     "position": "외야수",
     "personNo": "201801001571",
+    "throws": "우",
+    "bats": "우"
+  },
+  "김찬호|23": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "2",
+    "position": "내야수",
+    "personNo": "201902006812",
+    "throws": "우",
+    "bats": "우"
+  },
+  "김채헌|24": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "1",
+    "position": "내야수",
+    "personNo": "202407008817",
     "throws": "우",
     "bats": "우"
   },
@@ -31011,6 +31051,16 @@
     "throws": "우",
     "bats": "우"
   },
+  "윤서완|57": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "3",
+    "position": "투수",
+    "personNo": "202108000906",
+    "throws": "우",
+    "bats": "우"
+  },
   "이서진|56": {
     "team": "진영고",
     "region": "경기",
@@ -31038,6 +31088,16 @@
     "grade": "1",
     "position": "투수",
     "personNo": "202503004723",
+    "throws": "우",
+    "bats": "우"
+  },
+  "이태린|14": {
+    "team": "진영고",
+    "region": "경기",
+    "clubIdx": "775",
+    "grade": "1",
+    "position": "외야수",
+    "personNo": "202504009105",
     "throws": "우",
     "bats": "우"
   },
