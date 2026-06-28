@@ -1,18 +1,19 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMeta, useTournamentRecords } from "../../shared/data";
-import { leaderboards } from "../../shared/leaders";
+import { describeQualify, leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
-import { FilterBar, applyFilter, emptyFilter, filterToQuery, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 
 export function HomePage() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const { data: players } = useTournamentRecords(filter.tournament);
   const { data: meta } = useMeta();
+  const ctx = useQualifyContext(filter);
   const boards = useMemo(
-    () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames, 9, !!filter.tournament) : []),
-    [players, filter, meta]
+    () => (players ? leaderboards(applyFilter(players, filter), ctx, 9) : []),
+    [players, filter, ctx]
   );
 
   return (
@@ -46,16 +47,10 @@ export function HomePage() {
             </span>
           )}
         </div>
-        {(() => {
-          const g = filter.team ? meta?.teamGames?.[filter.team] : undefined;
-          return (
-            <p className="caption-sm" style={{ marginTop: -8, marginBottom: 12 }}>
-              {g
-                ? `※ ${filter.team} ${g}게임 반영 → 규정타석 ${Math.ceil(g * 3.1)}타석·규정이닝 ${g}이닝 이상만 타율·평균자책 순위 노출`
-                : "※ 타율·평균자책 순위는 소속팀 경기수 기준 규정타석(경기수×3.1)·규정이닝(경기수×1) 충족자만 노출 (팀별 경기수 상이)"}
-            </p>
-          );
-        })()}
+        <p className="caption-sm" style={{ marginTop: -8, marginBottom: 12 }}>
+          ※ {ctx.scope === "season" ? "전체 시즌" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} 기준 —{" "}
+          {describeQualify(ctx, "batting")} · {describeQualify(ctx, "pitching")} 충족자만 비율 순위에 노출
+        </p>
         {/* players 가 잠깐 null 이어도 FilterBar 는 mount 유지(시합 cascade state 보존) */}
         <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
         <div className="leader-grid">

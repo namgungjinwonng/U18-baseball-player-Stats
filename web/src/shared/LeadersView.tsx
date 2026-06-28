@@ -3,9 +3,11 @@
 // 필터(시합·지역·학교) 그대로 사용.
 import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useMeta, useTournamentRecords } from "./data";
-import { CATEGORIES, findCategory, rankByCategory } from "./leaders";
-import { FilterBar, applyFilter, filterFromQuery, filterToQuery, type RecordFilter } from "./filters";
+import { useTournamentRecords } from "./data";
+import { CATEGORIES, describeQualify, findCategory, rankByCategory } from "./leaders";
+import {
+  FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter,
+} from "./filters";
 
 export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const { id } = useParams();
@@ -14,14 +16,16 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const cat = id ? findCategory(id) : undefined;
   // 메인에서 들어올 때 URL query 에 담겨온 필터 그대로 사용.
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(loc.search));
+  const [includeUnqualified, setIncludeUnqualified] = useState(false);
   const { data: players, loading } = useTournamentRecords(filter.tournament);
-  const { data: meta } = useMeta();
+  const ctx = useQualifyContext(filter);
 
   const ranked = useMemo(() => {
     if (!players || !cat) return [];
     const filtered = applyFilter(players, filter);
-    return rankByCategory(filtered, cat, meta?.teamGames, Infinity, !!filter.tournament);
-  }, [players, filter, meta, cat]);
+    return rankByCategory(filtered, cat, ctx, Infinity, includeUnqualified);
+  }, [players, filter, ctx, cat, includeUnqualified]);
+  const qualifiedCount = useMemo(() => ranked.filter((r) => r.qualified).length, [ranked]);
 
   // 상단 탭: 현재 카테고리의 kind 우선, 없으면 타자.
   const activeKind: "batting" | "pitching" = cat?.kind ?? "batting";
@@ -65,17 +69,25 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
       ) : (
         <>
           <h3 className="heading-md" style={{ marginBottom: 4 }}>{cat.title}</h3>
-          <p className="caption" style={{ marginBottom: 12 }}>
-            {cat.kind === "batting" ? "타자" : "투수"} ·{" "}
+          <p className="caption" style={{ marginBottom: 8 }}>
+            {cat.kind === "batting" ? "타자" : "투수"}
             {cat.needsQualify
-              ? filter.tournament
-                ? "시합 모드(규정 미적용)"
-                : "규정 미달자는 제외"
-              : "누적값"}
-            {ranked.length > 0 && ` · 총 ${ranked.length}명`}
+              ? ` · ${describeQualify(ctx, cat.kind)} · 규정 ${qualifiedCount}명`
+              : " · 누적값"}
           </p>
 
           <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
+
+          {cat.needsQualify && (
+            <label className="qual-toggle">
+              <input
+                type="checkbox"
+                checked={includeUnqualified}
+                onChange={(e) => setIncludeUnqualified(e.target.checked)}
+              />
+              규정 미달 포함 (확인용)
+            </label>
+          )}
 
           {loading && <div className="state">불러오는 중…</div>}
           {!loading && ranked.length === 0 && (
@@ -83,19 +95,29 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
           )}
 
           <ol className="rank-list">
-            {ranked.map((it, i) => (
-              <li
-                key={it.id}
-                className="rank-row"
-                onClick={() => nav(`/player/${it.id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                <span className="rank-num">{i + 1}</span>
-                <span className="rank-name">{it.name}</span>
-                <span className="rank-team">{it.team}</span>
-                <span className="rank-val">{it.value}</span>
-              </li>
-            ))}
+            {(() => {
+              let rank = 0; // 규정 충족자만 순번 부여
+              return ranked.map((it) => {
+                if (it.qualified) rank += 1;
+                const r = rank;
+                return (
+                  <li
+                    key={it.id}
+                    className={`rank-row ${it.qualified ? "" : "rank-row--unqual"}`}
+                    onClick={() => nav(`/player/${it.id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="rank-num">{it.qualified ? r : "–"}</span>
+                    <span className="rank-name">
+                      {it.name}
+                      {!it.qualified && <span className="qual-badge">규정 미달</span>}
+                    </span>
+                    <span className="rank-team">{it.team}</span>
+                    <span className="rank-val">{it.value}</span>
+                  </li>
+                );
+              });
+            })()}
           </ol>
         </>
       )}

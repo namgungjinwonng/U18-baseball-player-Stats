@@ -1,18 +1,19 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMeta, useTournamentRecords } from "../../shared/data";
-import { leaderboards } from "../../shared/leaders";
+import { describeQualify, leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
-import { FilterBar, applyFilter, emptyFilter, filterToQuery, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 
 export function MHome() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const { data: players } = useTournamentRecords(filter.tournament);
   const { data: meta } = useMeta();
+  const ctx = useQualifyContext(filter);
   const boards = useMemo(
-    () => (players ? leaderboards(applyFilter(players, filter), meta?.teamGames, 9, !!filter.tournament) : []),
-    [players, filter, meta]
+    () => (players ? leaderboards(applyFilter(players, filter), ctx, 9) : []),
+    [players, filter, ctx]
   );
 
   return (
@@ -45,16 +46,10 @@ export function MHome() {
             {meta.gameCount}경기 · 갱신 {formatDate(meta.lastUpdated)}
           </p>
         )}
-        {(() => {
-          const g = filter.team ? meta?.teamGames?.[filter.team] : undefined;
-          return (
-            <p className="caption-sm" style={{ marginBottom: 12 }}>
-              {g
-                ? `※ ${filter.team} ${g}게임 반영 → 규정타석 ${Math.ceil(g * 3.1)}·규정이닝 ${g} 이상만 노출`
-                : "※ 타율·평균자책은 소속팀 경기수 기준 규정타석·규정이닝 충족자만 노출"}
-            </p>
-          );
-        })()}
+        <p className="caption-sm" style={{ marginBottom: 12 }}>
+          ※ {ctx.scope === "season" ? "전체 시즌" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} —{" "}
+          {describeQualify(ctx, "batting")}
+        </p>
         <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
         {boards.map((b) => (
           <div className="m-leader" key={b.id}>

@@ -1,4 +1,5 @@
 // 홈 리더보드 + 카테고리별 랭킹 페이지 공용 데이터 정의.
+// 규정타석/규정이닝은 "스코프(전체 시즌 / 주말리그 / 전국대회)" 별로 다르게 적용한다.
 import type { Player } from "./types";
 
 export interface LeaderItem {
@@ -7,13 +8,8 @@ export interface LeaderItem {
   team: string;
   value: string;
   raw: number;
+  qualified: boolean; // 규정 충족 여부 (규정 미달 포함 토글 시 표기용)
 }
-
-// 규정타석/이닝: 규정타석 = 팀 경기수 × 3.1, 규정이닝 = 팀 경기수 × 1.0.
-// 팀 경기수 미지정(시합 필터 등) 시 하한.
-const PA_PER_GAME = 3.1;
-const FALLBACK_MIN_AB = 5;
-const FALLBACK_MIN_OUTS = 9;
 
 const rateFmt = (v: number) => (v < 1 ? v.toFixed(3).replace(/^0/, "") : v.toFixed(3));
 const intFmt = (n: number) => String(n);
@@ -23,7 +19,104 @@ function outsOf(p: Player): number {
   const ip = p.pitching?.ip ?? 0;
   return Math.floor(ip) * 3 + Math.round((ip % 1) * 10);
 }
+const paOf = (p: Player) => p.batting?.pa ?? p.batting?.ab ?? 0;
 
+// ─────────────────────────────────────────────────────────────────────────
+// 규정 설정 — 연도별로 다를 수 있어 SEASON_CONFIG 에 키로 둔다 (없으면 최신 연도 폴백).
+// 2026: 주말리그 전반기 6 + 후반기 6 = 시즌 12경기. 전국대회는 토너먼트.
+// ─────────────────────────────────────────────────────────────────────────
+export interface SeasonConfig {
+  weekendLeagueGames: number; // 주말리그 한 리그(전/후반기) 풀 경기수
+  seasonGames: number;        // 시즌 전체 풀 경기수 (전반기+후반기)
+  paPerGame: number;          // 규정타석 계수 (타석/경기)
+  ipPerGame: number;          // 규정이닝 계수 (이닝/경기)
+  nationalMinGames: number;   // 전국대회 최소 출전 경기
+  nationalMinPA: number;      // 전국대회 최소 타석
+}
+
+const SEASON_CONFIG: Record<number, SeasonConfig> = {
+  2026: {
+    weekendLeagueGames: 6,
+    seasonGames: 12,
+    paPerGame: 3.1,
+    ipPerGame: 1.0,
+    nationalMinGames: 3,
+    nationalMinPA: 12,
+  },
+};
+
+export function seasonConfig(year: number): SeasonConfig {
+  if (SEASON_CONFIG[year]) return SEASON_CONFIG[year];
+  const years = Object.keys(SEASON_CONFIG).map(Number).sort((a, b) => b - a);
+  return SEASON_CONFIG[years[0]] ?? SEASON_CONFIG[2026];
+}
+
+export type ScopeKind = "season" | "weekend" | "national";
+
+export interface QualifyContext {
+  scope: ScopeKind;
+  config: SeasonConfig;
+  teamGames: Record<string, number>; // 스코프에 맞는 팀별 경기수 (시즌/리그/대회)
+}
+
+function maxGames(tg: Record<string, number>): number {
+  let m = 0;
+  for (const v of Object.values(tg)) if (v > m) m = v;
+  return m;
+}
+
+// 규정 기준 경기수 (팀별):
+// - season / weekend: 공식 목표(12 / 6)를 상한으로, 현재 진행된 최대 경기수로 동적 적용.
+// - national: 해당 팀이 그 대회에서 치른 경기수(팀마다 다름).
+export function baseGames(ctx: QualifyContext, team: string): number {
+  const { scope, config, teamGames } = ctx;
+  if (scope === "national") return teamGames[team] ?? 0;
+  const target = scope === "season" ? config.seasonGames : config.weekendLeagueGames;
+  const progressed = maxGames(teamGames);
+  // 데이터가 비어있으면(progressed=0) 0 → 규정 0 (모두 노출).
+  return progressed > 0 ? Math.min(target, progressed) : 0;
+}
+
+export function regPA(ctx: QualifyContext, team: string): number {
+  return Math.floor(baseGames(ctx, team) * ctx.config.paPerGame);
+}
+export function regOuts(ctx: QualifyContext, team: string): number {
+  return Math.floor(baseGames(ctx, team) * ctx.config.ipPerGame) * 3;
+}
+
+export function isQualifiedBat(p: Player, ctx: QualifyContext): boolean {
+  if (paOf(p) < regPA(ctx, p.team)) return false;
+  if (ctx.scope === "national") {
+    if ((p.batting?.g ?? 0) < ctx.config.nationalMinGames) return false;
+    if (paOf(p) < ctx.config.nationalMinPA) return false;
+  }
+  return true;
+}
+export function isQualifiedPit(p: Player, ctx: QualifyContext): boolean {
+  if (outsOf(p) < regOuts(ctx, p.team)) return false;
+  if (ctx.scope === "national") {
+    if ((p.pitching?.g ?? 0) < ctx.config.nationalMinGames) return false;
+  }
+  return true;
+}
+
+// 규정 기준 설명 문구 (캡션용).
+export function describeQualify(ctx: QualifyContext, kind: "batting" | "pitching"): string {
+  const c = ctx.config;
+  if (ctx.scope === "national") {
+    return kind === "batting"
+      ? `규정타석 = 팀 경기수×${c.paPerGame} (최소 ${c.nationalMinGames}경기·${c.nationalMinPA}타석)`
+      : `규정이닝 = 팀 경기수×${c.ipPerGame} (최소 ${c.nationalMinGames}경기)`;
+  }
+  const target = ctx.scope === "season" ? c.seasonGames : c.weekendLeagueGames;
+  const base = Math.min(target, maxGames(ctx.teamGames));
+  const label = ctx.scope === "season" ? "시즌" : "리그";
+  return kind === "batting"
+    ? `규정타석 ${Math.floor(base * c.paPerGame)} 이상 (${label} ${base}경기 기준)`
+    : `규정이닝 ${Math.floor(base * c.ipPerGame)} 이상 (${label} ${base}경기 기준)`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
 export type LeaderCategoryId =
   | "avg" | "hr" | "rbi" | "r" | "h" | "sb" | "obp" | "slg" | "ops"
   | "era" | "so" | "w" | "sv" | "ip" | "whip";
@@ -36,7 +129,6 @@ export interface LeaderCategory {
   asc: boolean;          // 낮을수록 좋은 지표(평균자책·WHIP) 만 true
   pick: (p: Player) => number | undefined;
   fmt: (n: number) => string;
-  shortLabel?: string;   // 카드 헤더 hover 등 보조
 }
 
 export const CATEGORIES: LeaderCategory[] = [
@@ -67,57 +159,40 @@ export const HOME_CATEGORY_IDS: LeaderCategoryId[] = [
   "avg", "hr", "rbi", "h", "r", "sb", "era", "whip", "so",
 ];
 
-function qualifyBat(p: Player, teamGames?: Record<string, number>): boolean {
-  const g = teamGames?.[p.team];
-  const req = g ? g * PA_PER_GAME : FALLBACK_MIN_AB;
-  return (p.batting?.pa ?? p.batting?.ab ?? 0) >= req;
-}
-function qualifyPit(p: Player, teamGames?: Record<string, number>): boolean {
-  const g = teamGames?.[p.team];
-  const req = g ? g * 3 : FALLBACK_MIN_OUTS;
-  return outsOf(p) >= req;
-}
-
 export function rankByCategory(
   players: Player[],
   cat: LeaderCategory,
-  teamGames?: Record<string, number>,
+  ctx?: QualifyContext,
   limit = Infinity,
-  // 시합/대회 필터가 적용된 경우 true → 규정타석/이닝 미적용 (표본이 작아 거의 비어버림 방지).
-  // KBSA U-18 의 시즌 규정타석은 통상 팀 경기수 × 3.1 이지만 단일 시합엔 해당 규정이 존재하지 않으므로,
-  // 시합 모드에선 해당 시합의 모든 기록을 그대로 랭킹화 한다.
-  ignoreQualify = false,
+  includeUnqualified = false,
 ): LeaderItem[] {
-  const qualify = !cat.needsQualify || ignoreQualify
-    ? () => true
-    : cat.kind === "batting"
-      ? (p: Player) => qualifyBat(p, teamGames)
-      : (p: Player) => qualifyPit(p, teamGames);
+  const needsQ = cat.needsQualify && !!ctx;
+  const qualifies = (p: Player): boolean => {
+    if (!needsQ) return true;
+    return cat.kind === "batting" ? isQualifiedBat(p, ctx!) : isQualifiedPit(p, ctx!);
+  };
   const rows = players
     .filter((p) => {
       const v = cat.pick(p);
-      return v != null && !Number.isNaN(v) && qualify(p);
+      return v != null && !Number.isNaN(v);
     })
-    .map((p) => ({ id: p.id, name: p.name, team: p.team, raw: cat.pick(p)! }))
+    .map((p) => ({ id: p.id, name: p.name, team: p.team, raw: cat.pick(p)!, qualified: qualifies(p) }))
+    .filter((x) => includeUnqualified || x.qualified)
     .sort((a, b) => (cat.asc ? a.raw - b.raw : b.raw - a.raw));
   const sliced = Number.isFinite(limit) ? rows.slice(0, limit) : rows;
-  return sliced.map((x) => ({ ...x, value: cat.fmt(x.raw) }));
+  return sliced.map((x) => ({
+    id: x.id, name: x.name, team: x.team, raw: x.raw, value: cat.fmt(x.raw), qualified: x.qualified,
+  }));
 }
 
-// 홈 카드용 — HOME_CATEGORY_IDS 순서로 TOP N.
-// tournamentActive=true → 규정타석/이닝 미적용 (시합 모드).
+// 홈 카드용 — HOME_CATEGORY_IDS 순서로 TOP N (규정 충족자만).
 export function leaderboards(
   players: Player[],
-  teamGames?: Record<string, number>,
+  ctx: QualifyContext,
   topN = 9,
-  tournamentActive = false,
 ): { id: LeaderCategoryId; title: string; items: LeaderItem[] }[] {
   return HOME_CATEGORY_IDS.map((id) => {
     const cat = findCategory(id)!;
-    return {
-      id: cat.id,
-      title: cat.title,
-      items: rankByCategory(players, cat, teamGames, topN, tournamentActive),
-    };
+    return { id: cat.id, title: cat.title, items: rankByCategory(players, cat, ctx, topN, false) };
   });
 }

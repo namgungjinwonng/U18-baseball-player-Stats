@@ -208,6 +208,18 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ---
 
+## 규정타석/규정이닝 (스코프별 차등 — leaders.ts)
+
+`leaders.ts` 의 `SeasonConfig`(연도별, `SEASON_CONFIG[2026]`) + `QualifyContext{scope,config,teamGames}` 로 계산. `filters.useQualifyContext(filter)` 가 필터에 맞는 스코프/팀경기수를 조립.
+
+- **전체 시즌(season)**: 규정타석 = `min(seasonGames=12, 리그최대경기) × 3.1`, 규정이닝 = `… × 1.0`. (12 = 전반기6+후반기6, 진행 중엔 최대경기로 동적)
+- **주말리그(weekend)**: `min(weekendLeagueGames=6, 리그최대경기) × 3.1`.
+- **전국대회(national)**: **팀별** `teamGames[team] × 3.1` + **최소 3경기·12타석**(투수는 최소 3경기). 토너먼트는 팀마다 경기수가 달라 per-team.
+- 스코프 판정: `filter.tournament` 없으면 season, 있으면 `tournamentTree.categorize().kind` 가 주말리그면 weekend, 아니면 national.
+- teamGames 출처: 시즌은 `data/{year}/meta.json`, 시합은 `data/{year}/by-tournament/{slug}/meta.json` (둘 다 aggregate 가 기록).
+- **연도별 변경**: `SEASON_CONFIG` 에 연도 키 추가하면 됨(미정의 연도는 최신 연도 폴백).
+- 랭킹 페이지(`LeadersView`)에 "규정 미달 포함" 토글 — 켜면 미달자도 보이되 `규정 미달` 뱃지 + 순번 `–`.
+
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).

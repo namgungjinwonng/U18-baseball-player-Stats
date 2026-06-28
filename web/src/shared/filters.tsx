@@ -1,6 +1,8 @@
 // 지역/학교/시합 필터 — 선수 기록·시즌 리더 공용 (데스크탑·모바일).
 import { useEffect, useMemo, useState } from "react";
-import { useTournaments } from "./data";
+import { useMeta, useTournamentMeta, useTournaments } from "./data";
+import { useYear } from "./year";
+import { seasonConfig, type QualifyContext, type ScopeKind } from "./leaders";
 import { buildTree, categorize, type Kind, type Phase } from "./tournamentTree";
 
 export interface RecordFilter {
@@ -26,6 +28,25 @@ export function filterFromQuery(search: string): RecordFilter {
     region: p.get("r") ?? "",
     team: p.get("s") ?? "",
   };
+}
+
+// 현재 필터(전체 시즌 / 주말리그 / 전국대회)에 맞는 규정 스코프 + 팀별 경기수 컨텍스트.
+// 시합 필터 시 해당 시합 meta 의 teamGames 를, 아니면 시즌 meta 의 teamGames 를 쓴다.
+export function useQualifyContext(filter: RecordFilter): QualifyContext {
+  const { year } = useYear();
+  const { data: seasonMeta } = useMeta();
+  const { data: tournaments } = useTournaments();
+  const { data: tMeta } = useTournamentMeta(filter.tournament);
+  return useMemo(() => {
+    const config = seasonConfig(year);
+    let scope: ScopeKind = "season";
+    if (filter.tournament) {
+      const t = tournaments?.find((x) => x.slug === filter.tournament);
+      scope = t && categorize(t).kind === "주말리그" ? "weekend" : "national";
+    }
+    const teamGames = (filter.tournament ? tMeta?.teamGames : seasonMeta?.teamGames) ?? {};
+    return { scope, config, teamGames };
+  }, [year, filter.tournament, tournaments, tMeta, seasonMeta]);
 }
 
 interface HasTeam {

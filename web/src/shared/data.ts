@@ -47,6 +47,18 @@ export const useMeta = () => {
   return useAsync<Meta>(() => getJSON(`${year}/meta.json`), [year]);
 };
 
+// 특정 시합/대회의 meta (teamGames 등 — 규정 계산 스코프용). slug 비면 null.
+export const useTournamentMeta = (slug: string | "") => {
+  const { year } = useYear();
+  return useAsync<Meta | null>(
+    () =>
+      slug
+        ? getJSON<Meta>(`${year}/by-tournament/${encodeURIComponent(slug)}/meta.json`).catch(() => null)
+        : Promise.resolve(null),
+    [year, slug]
+  );
+};
+
 // 유령 선수(이름이 빈/괄호만/등번호 누락) 행은 모든 화면에서 제외 (스크레이퍼 재집계 전 안전망).
 const isRealPlayer = <T extends { name?: string; number?: string }>(p: T) =>
   !!p.name && p.name !== "()" && !!p.number;
