@@ -12977,6 +12977,18 @@
       "bats": "우"
     }
   ],
+  "김재민|30": [
+    {
+      "team": "동산고",
+      "region": "인천",
+      "clubIdx": "161",
+      "grade": "1",
+      "position": "미지정",
+      "personNo": "202101000650",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "김진수|6": [
     {
       "team": "동산고",
@@ -13009,6 +13021,18 @@
       "grade": "1",
       "position": "투수",
       "personNo": "201703003357",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "노대경|17": [
+    {
+      "team": "동산고",
+      "region": "인천",
+      "clubIdx": "161",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201807002284",
       "throws": "우",
       "bats": "우"
     }
@@ -13061,6 +13085,18 @@
       "bats": "우"
     }
   ],
+  "박준서|4": [
+    {
+      "team": "동산고",
+      "region": "인천",
+      "clubIdx": "161",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102002160",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "배하진|25": [
     {
       "team": "동산고",
@@ -13081,6 +13117,18 @@
       "grade": "1",
       "position": "투수",
       "personNo": "201901002059",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신하진|31": [
+    {
+      "team": "동산고",
+      "region": "인천",
+      "clubIdx": "161",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201903003783",
       "throws": "우",
       "bats": "우"
     }
@@ -13261,6 +13309,18 @@
       "grade": "3",
       "position": "포수",
       "personNo": "201802004627",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조성현|45": [
+    {
+      "team": "동산고",
+      "region": "인천",
+      "clubIdx": "161",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202208000901",
       "throws": "우",
       "bats": "우"
     }
