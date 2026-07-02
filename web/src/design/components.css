@@ -246,6 +246,47 @@
   font-size: 14px;
   line-height: 1.5;
 }
+/* 용어 모달 리그평균 (전체/리그별/시합별) */
+.modal-card {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-averages {
+  margin-top: 14px;
+  border-top: 1px solid var(--color-soft-cloud);
+  padding-top: 10px;
+}
+.modal-averages__title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.modal-averages__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  padding: 3px 0;
+}
+.modal-averages__row b {
+  font-variant-numeric: tabular-nums;
+}
+.modal-averages__row--overall {
+  font-size: 14px;
+}
+.modal-averages__group {
+  margin-top: 6px;
+}
+.modal-averages__group summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-mute);
+  padding: 3px 0;
+}
+.modal-averages__group .modal-averages__row {
+  padding-left: 12px;
+  color: var(--color-mute);
+}
 
 /* --- Player detail: single-line meta + section spacing --- */
 .player-meta-line {

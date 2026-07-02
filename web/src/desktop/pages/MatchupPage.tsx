@@ -4,8 +4,8 @@ import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
 import { TournamentPicker } from "../../shared/filters";
 import {
-  facedOpponents, facedSchools, indexById, opposite, playerLabel, searchByRole,
-  sumMatchups, type Role,
+  batsThrowsLabel, facedOpponents, facedSchools, indexById, opposite, playerLabel,
+  searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 
@@ -148,6 +148,7 @@ export function MatchupPage() {
                 <tr>
                   <th style={{ textAlign: "left" }}>학년</th>
                   <th style={{ textAlign: "left" }}>{oppRoleLabel}</th>
+                  <th style={{ textAlign: "left" }}>투타</th>
                   <th>타율</th><th>타석</th><th>타수</th><th>안타</th>
                   <th>2타</th><th>3타</th><th>홈런</th><th>볼넷</th><th>사구</th><th>삼진</th>
                 </tr>
@@ -159,6 +160,7 @@ export function MatchupPage() {
                     onClick={() => setOppId(opponent.id === oppId ? "" : opponent.id)}>
                     <td style={{ textAlign: "left" }}>{opponent.grade ? `${opponent.grade}학년` : "-"}</td>
                     <td style={{ textAlign: "left" }}>{opponent.name}</td>
+                    <td style={{ textAlign: "left" }}>{batsThrowsLabel(opponent) || "-"}</td>
                     <td className="num">{rate(matchup.avg)}</td>
                     <td className="num">{matchup.pa}</td>
                     <td className="num">{matchup.ab}</td>

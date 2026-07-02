@@ -1,10 +1,11 @@
 // 타자/투수 기록 컬럼 정의.
 // - 기본 탭: 카운팅 스탯(누적값) 만. 타율·ERA 같은 비율은 세부로 이동.
-// - 세부 탭: 비율·세이버메트릭스 (타율·OBP·SLG·OPS·ISO·BABIP / ERA·WHIP·FIP·K9·BB9·H9·KBB).
+// - 세부 탭: 비율·세이버메트릭스 (타율·OBP·SLG·OPS·ISO·BABIP·wOBA·wRC+·WAR / ERA·WHIP·FIP·K9·BB9·H9·KBB·WAR).
+//   wRC+·WAR 는 리그평균(LeagueRates)이 필요해 세부 탭 컬럼은 lg 를 받는 팩토리다.
 import type { Column } from "./StatTable";
-import type { Player } from "./types";
+import type { LeagueRates, Player } from "./types";
 import { dec2, inn, rate } from "./format";
-import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "./sabermetrics";
+import { battingAdvanced, pitchingAdvanced, pct, dec1, woba } from "./sabermetrics";
 
 const name: Column<Player> = {
   key: "name",
@@ -38,51 +39,77 @@ export const battingBasicColumns: Column<Player>[] = [
   { key: "so", label: "삼진", value: (p) => p.batting?.so ?? 0 },
 ];
 
-// 타자 세부 — 비율 + 세이버메트릭스 (타율, OBP, SLG, OPS, ISO, BABIP, BB%, K%, BB/K)
-export const battingDetailColumns: Column<Player>[] = [
-  name,
-  team,
-  { key: "g", label: "G", value: (p) => p.batting?.g ?? 0 },
-  { key: "avg", label: "타율", value: (p) => p.batting?.avg ?? 0, render: (p) => rate(p.batting?.avg) },
-  { key: "obp", label: "출루율", value: (p) => p.batting?.obp ?? 0, render: (p) => rate(p.batting?.obp) },
-  { key: "slg", label: "장타율", value: (p) => p.batting?.slg ?? 0, render: (p) => rate(p.batting?.slg) },
-  {
-    key: "ops",
-    label: "OPS",
-    value: (p) => (p.batting ? p.batting.obp + p.batting.slg : 0),
-    render: (p) => (p.batting ? rate(p.batting.obp + p.batting.slg) : "-"),
-  },
-  {
-    key: "iso",
-    label: "ISO",
-    value: (p) => (p.batting ? battingAdvanced(p.batting).iso : 0),
-    render: (p) => (p.batting ? rate(battingAdvanced(p.batting).iso) : "-"),
-  },
-  {
-    key: "babip",
-    label: "BABIP",
-    value: (p) => (p.batting ? battingAdvanced(p.batting).babip : 0),
-    render: (p) => (p.batting ? rate(battingAdvanced(p.batting).babip) : "-"),
-  },
-  {
-    key: "bbPct",
-    label: "BB%",
-    value: (p) => (p.batting ? battingAdvanced(p.batting).bbPct : 0),
-    render: (p) => (p.batting ? pct(battingAdvanced(p.batting).bbPct) : "-"),
-  },
-  {
-    key: "kPct",
-    label: "K%",
-    value: (p) => (p.batting ? battingAdvanced(p.batting).kPct : 0),
-    render: (p) => (p.batting ? pct(battingAdvanced(p.batting).kPct) : "-"),
-  },
-  {
-    key: "bbK",
-    label: "BB/K",
-    value: (p) => (p.batting ? battingAdvanced(p.batting).bbK : 0),
-    render: (p) => (p.batting ? dec2(battingAdvanced(p.batting).bbK) : "-"),
-  },
-];
+// 타자 세부 — 비율 + 세이버메트릭스 (타율, OBP, SLG, OPS, ISO, BABIP, BB%, K%, BB/K, wOBA, wRC+, WAR)
+export function battingDetailColumns(lg?: LeagueRates | null): Column<Player>[] {
+  return [
+    name,
+    team,
+    { key: "g", label: "G", value: (p) => p.batting?.g ?? 0 },
+    { key: "avg", label: "타율", value: (p) => p.batting?.avg ?? 0, render: (p) => rate(p.batting?.avg) },
+    { key: "obp", label: "출루율", value: (p) => p.batting?.obp ?? 0, render: (p) => rate(p.batting?.obp) },
+    { key: "slg", label: "장타율", value: (p) => p.batting?.slg ?? 0, render: (p) => rate(p.batting?.slg) },
+    {
+      key: "ops",
+      label: "OPS",
+      value: (p) => (p.batting ? p.batting.obp + p.batting.slg : 0),
+      render: (p) => (p.batting ? rate(p.batting.obp + p.batting.slg) : "-"),
+    },
+    {
+      key: "iso",
+      label: "ISO",
+      value: (p) => (p.batting ? battingAdvanced(p.batting).iso : 0),
+      render: (p) => (p.batting ? rate(battingAdvanced(p.batting).iso) : "-"),
+    },
+    {
+      key: "babip",
+      label: "BABIP",
+      value: (p) => (p.batting ? battingAdvanced(p.batting).babip : 0),
+      render: (p) => (p.batting ? rate(battingAdvanced(p.batting).babip) : "-"),
+    },
+    {
+      key: "bbPct",
+      label: "BB%",
+      value: (p) => (p.batting ? battingAdvanced(p.batting).bbPct : 0),
+      render: (p) => (p.batting ? pct(battingAdvanced(p.batting).bbPct) : "-"),
+    },
+    {
+      key: "kPct",
+      label: "K%",
+      value: (p) => (p.batting ? battingAdvanced(p.batting).kPct : 0),
+      render: (p) => (p.batting ? pct(battingAdvanced(p.batting).kPct) : "-"),
+    },
+    {
+      key: "bbK",
+      label: "BB/K",
+      value: (p) => (p.batting ? battingAdvanced(p.batting).bbK : 0),
+      render: (p) => (p.batting ? dec2(battingAdvanced(p.batting).bbK) : "-"),
+    },
+    {
+      key: "woba",
+      label: "wOBA",
+      value: (p) => (p.batting ? woba(p.batting) : 0),
+      render: (p) => (p.batting ? rate(woba(p.batting)) : "-"),
+    },
+    {
+      key: "wrc",
+      label: "wRC+",
+      value: (p) => (p.batting ? battingAdvanced(p.batting, lg).wrcPlus ?? 0 : 0),
+      render: (p) => {
+        const v = p.batting ? battingAdvanced(p.batting, lg).wrcPlus : undefined;
+        return v != null ? String(v) : "-";
+      },
+    },
+    {
+      key: "war",
+      label: "WAR",
+      value: (p) => (p.batting ? battingAdvanced(p.batting, lg).war ?? 0 : 0),
+      render: (p) => {
+        const v = p.batting ? battingAdvanced(p.batting, lg).war : undefined;
+        return v != null ? dec1(v) : "-";
+      },
+    },
+  ];
+}
 
 // 투수 기본 — 카운팅 스탯만 (G, 승, 패, 세이브, 이닝, 피안타, 실점, 자책, 볼넷, 탈삼진)
 export const pitchingBasicColumns: Column<Player>[] = [
@@ -100,50 +127,61 @@ export const pitchingBasicColumns: Column<Player>[] = [
   { key: "so", label: "탈삼진", value: (p) => p.pitching?.so ?? 0 },
 ];
 
-// 투수 세부 — 비율 + 세이버메트릭스 (ERA, WHIP, FIP, K/9, BB/9, H/9, K/BB)
-export const pitchingDetailColumns: Column<Player>[] = [
-  name,
-  team,
-  { key: "g", label: "G", value: (p) => p.pitching?.g ?? 0 },
-  { key: "era", label: "ERA", value: (p) => p.pitching?.era ?? 99, render: (p) => dec2(p.pitching?.era), defaultDesc: false },
-  { key: "whip", label: "WHIP", value: (p) => p.pitching?.whip ?? 99, render: (p) => dec2(p.pitching?.whip), defaultDesc: false },
-  {
-    key: "fip",
-    label: "FIP",
-    value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).fip ?? 99 : 99),
-    render: (p) => {
-      const f = p.pitching ? pitchingAdvanced(p.pitching).fip : undefined;
-      return f != null ? dec2(f) : "-";
+// 투수 세부 — 비율 + 세이버메트릭스 (ERA, WHIP, FIP, K/9, BB/9, H/9, K/BB, WAR)
+export function pitchingDetailColumns(lg?: LeagueRates | null): Column<Player>[] {
+  return [
+    name,
+    team,
+    { key: "g", label: "G", value: (p) => p.pitching?.g ?? 0 },
+    { key: "era", label: "ERA", value: (p) => p.pitching?.era ?? 99, render: (p) => dec2(p.pitching?.era), defaultDesc: false },
+    { key: "whip", label: "WHIP", value: (p) => p.pitching?.whip ?? 99, render: (p) => dec2(p.pitching?.whip), defaultDesc: false },
+    {
+      key: "fip",
+      label: "FIP",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).fip ?? 99 : 99),
+      render: (p) => {
+        const f = p.pitching ? pitchingAdvanced(p.pitching).fip : undefined;
+        return f != null ? dec2(f) : "-";
+      },
+      defaultDesc: false,
     },
-    defaultDesc: false,
-  },
-  {
-    key: "k9",
-    label: "K/9",
-    value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).k9 : 0),
-    render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).k9) : "-"),
-  },
-  {
-    key: "bb9",
-    label: "BB/9",
-    value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).bb9 : 0),
-    render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).bb9) : "-"),
-    defaultDesc: false,
-  },
-  {
-    key: "h9",
-    label: "H/9",
-    value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).h9 : 0),
-    render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).h9) : "-"),
-    defaultDesc: false,
-  },
-  {
-    key: "kbb",
-    label: "K/BB",
-    value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).kbb : 0),
-    render: (p) => (p.pitching ? dec2(pitchingAdvanced(p.pitching).kbb) : "-"),
-  },
-];
+    {
+      key: "k9",
+      label: "K/9",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).k9 : 0),
+      render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).k9) : "-"),
+    },
+    {
+      key: "bb9",
+      label: "BB/9",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).bb9 : 0),
+      render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).bb9) : "-"),
+      defaultDesc: false,
+    },
+    {
+      key: "h9",
+      label: "H/9",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).h9 : 0),
+      render: (p) => (p.pitching ? dec1(pitchingAdvanced(p.pitching).h9) : "-"),
+      defaultDesc: false,
+    },
+    {
+      key: "kbb",
+      label: "K/BB",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching).kbb : 0),
+      render: (p) => (p.pitching ? dec2(pitchingAdvanced(p.pitching).kbb) : "-"),
+    },
+    {
+      key: "war",
+      label: "WAR",
+      value: (p) => (p.pitching ? pitchingAdvanced(p.pitching, lg).war ?? 0 : 0),
+      render: (p) => {
+        const v = p.pitching ? pitchingAdvanced(p.pitching, lg).war : undefined;
+        return v != null ? dec1(v) : "-";
+      },
+    },
+  ];
+}
 
 // 기록 탭 정의 (양 디바이스 공용)
 export type RecordTab = {
@@ -155,12 +193,15 @@ export type RecordTab = {
 };
 
 // 기본 정렬은 모두 경기수(g) 내림차순 — 표본이 많은 선수를 위에 노출.
-export const recordTabs: RecordTab[] = [
-  { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "g" },
-  { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns, initialSort: "g" },
-  { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "g" },
-  { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns, initialSort: "g" },
-];
+// 세부 탭의 wRC+/WAR 는 리그평균이 필요해 lg(스코프에 맞는 LeagueRates)를 받는다.
+export function recordTabs(lg?: LeagueRates | null): RecordTab[] {
+  return [
+    { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "g" },
+    { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns(lg), initialSort: "g" },
+    { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "g" },
+    { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns(lg), initialSort: "g" },
+  ];
+}
 
 export function filterByKind(players: Player[], kind: "batting" | "pitching") {
   return players.filter((p) => (kind === "batting" ? p.batting : p.pitching));

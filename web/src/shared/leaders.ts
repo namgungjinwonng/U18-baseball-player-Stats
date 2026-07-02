@@ -1,6 +1,8 @@
 // 홈 리더보드 + 카테고리별 랭킹 페이지 공용 데이터 정의.
 // 규정타석/규정이닝은 "스코프(전체 시즌 / 주말리그 / 전국대회)" 별로 다르게 적용한다.
-import type { Player } from "./types";
+// wOBA·wRC+·WAR 카테고리는 리그평균(LeagueRates)이 있어야 계산된다(pick 의 lg 인자).
+import type { LeagueRates, Player } from "./types";
+import { battingAdvanced, pitchingAdvanced, woba } from "./sabermetrics";
 
 export interface LeaderItem {
   id: string;
@@ -119,7 +121,8 @@ export function describeQualify(ctx: QualifyContext, kind: "batting" | "pitching
 // ─────────────────────────────────────────────────────────────────────────
 export type LeaderCategoryId =
   | "avg" | "hr" | "rbi" | "r" | "h" | "sb" | "obp" | "slg" | "ops"
-  | "era" | "so" | "w" | "sv" | "ip" | "whip";
+  | "woba" | "wrc" | "war-bat"
+  | "era" | "so" | "w" | "sv" | "ip" | "whip" | "war-pit";
 
 export interface LeaderCategory {
   id: LeaderCategoryId;
@@ -127,7 +130,8 @@ export interface LeaderCategory {
   kind: "batting" | "pitching";
   needsQualify: boolean; // 규정타석/이닝 필요 (비율 스탯)
   asc: boolean;          // 낮을수록 좋은 지표(평균자책·WHIP) 만 true
-  pick: (p: Player) => number | undefined;
+  // lg = 리그평균 (wRC+/WAR 산출용 — 없으면 해당 카테고리는 빈 목록)
+  pick: (p: Player, lg?: LeagueRates | null) => number | undefined;
   fmt: (n: number) => string;
 }
 
@@ -142,6 +146,9 @@ export const CATEGORIES: LeaderCategory[] = [
   { id: "obp", title: "출루율 (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => p.batting?.obp, fmt: rateFmt },
   { id: "slg", title: "장타율 (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => p.batting?.slg, fmt: rateFmt },
   { id: "ops", title: "OPS (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => (p.batting ? p.batting.obp + p.batting.slg : undefined), fmt: rateFmt },
+  { id: "woba", title: "wOBA (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => (p.batting ? woba(p.batting) : undefined), fmt: rateFmt },
+  { id: "wrc", title: "wRC+ (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p, lg) => (p.batting ? battingAdvanced(p.batting, lg).wrcPlus : undefined), fmt: intFmt },
+  { id: "war-bat", title: "WAR (타자)", kind: "batting", needsQualify: false, asc: false, pick: (p, lg) => (p.batting ? battingAdvanced(p.batting, lg).war : undefined), fmt: (n) => n.toFixed(1) },
   // 투수
   { id: "era", title: "평균자책 (규정이닝)", kind: "pitching", needsQualify: true, asc: true, pick: (p) => p.pitching?.era, fmt: dec2Fmt },
   { id: "whip", title: "WHIP (규정이닝)", kind: "pitching", needsQualify: true, asc: true, pick: (p) => p.pitching?.whip, fmt: dec2Fmt },
@@ -149,6 +156,7 @@ export const CATEGORIES: LeaderCategory[] = [
   { id: "w", title: "승", kind: "pitching", needsQualify: false, asc: false, pick: (p) => p.pitching?.w, fmt: intFmt },
   { id: "sv", title: "세이브", kind: "pitching", needsQualify: false, asc: false, pick: (p) => p.pitching?.sv, fmt: intFmt },
   { id: "ip", title: "이닝", kind: "pitching", needsQualify: false, asc: false, pick: (p) => p.pitching?.ip, fmt: (n) => n.toFixed(1) },
+  { id: "war-pit", title: "WAR (투수)", kind: "pitching", needsQualify: false, asc: false, pick: (p, lg) => (p.pitching ? pitchingAdvanced(p.pitching, lg).war : undefined), fmt: (n) => n.toFixed(1) },
 ];
 
 export const findCategory = (id: string): LeaderCategory | undefined =>
@@ -165,6 +173,7 @@ export function rankByCategory(
   ctx?: QualifyContext,
   limit = Infinity,
   includeUnqualified = false,
+  lg?: LeagueRates | null,
 ): LeaderItem[] {
   const needsQ = cat.needsQualify && !!ctx;
   const qualifies = (p: Player): boolean => {
@@ -173,10 +182,10 @@ export function rankByCategory(
   };
   const rows = players
     .filter((p) => {
-      const v = cat.pick(p);
+      const v = cat.pick(p, lg);
       return v != null && !Number.isNaN(v);
     })
-    .map((p) => ({ id: p.id, name: p.name, team: p.team, raw: cat.pick(p)!, qualified: qualifies(p) }))
+    .map((p) => ({ id: p.id, name: p.name, team: p.team, raw: cat.pick(p, lg)!, qualified: qualifies(p) }))
     .filter((x) => includeUnqualified || x.qualified)
     .sort((a, b) => (cat.asc ? a.raw - b.raw : b.raw - a.raw));
   const sliced = Number.isFinite(limit) ? rows.slice(0, limit) : rows;

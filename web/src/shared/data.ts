@@ -1,6 +1,6 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
 import { useEffect, useState } from "react";
-import type { Matchup, Meta, Player, PlayerIndexEntry } from "./types";
+import type { LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile } from "./types";
 import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
@@ -135,6 +135,25 @@ export const useTournamentMatchups = (slug: string | "") => {
         ? getJSON<Matchup[]>(`${year}/by-tournament/${encodeURIComponent(slug)}/matchups.json`).catch(() => [])
         : Promise.resolve([]),
     [year, slug]
+  );
+};
+
+// 선수 프로필(출신학교/수상내역 — KBSA player_view 수집본). personNo 없으면 null.
+export const usePlayerProfile = (personNo: string | undefined) =>
+  useAsync<PlayerProfile | null>(
+    () =>
+      personNo
+        ? getJSON<PlayerProfile>(`profiles/${personNo}.json`).catch(() => null)
+        : Promise.resolve(null),
+    [personNo]
+  );
+
+// 리그 평균 (전체/시합별 — 데이터 갱신 시점마다 재계산). 없으면 null.
+export const useLeagueAverages = () => {
+  const { year } = useYear();
+  return useAsync<LeagueAverages | null>(
+    () => getJSON<LeagueAverages>(`${year}/averages.json`).catch(() => null),
+    [year]
   );
 };
 

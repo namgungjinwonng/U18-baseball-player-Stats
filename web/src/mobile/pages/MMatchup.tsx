@@ -4,8 +4,8 @@ import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
 import { TournamentPicker } from "../../shared/filters";
 import {
-  facedOpponents, facedSchools, indexById, opposite, playerLabel, searchByRole,
-  sumMatchups, type Role,
+  batsThrowsLabel, facedOpponents, facedSchools, indexById, opposite, playerLabel,
+  searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 
@@ -110,7 +110,12 @@ export function MMatchup() {
               style={{ cursor: "pointer", flexDirection: "column", alignItems: "stretch", gap: 4 }}
               onClick={() => setOppId(opponent.id === oppId ? "" : opponent.id)}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>{opponent.grade ? `${opponent.grade}학년 ` : ""}<b>{opponent.name}</b></span>
+                <span>
+                  {opponent.grade ? `${opponent.grade}학년 ` : ""}<b>{opponent.name}</b>
+                  {batsThrowsLabel(opponent) && (
+                    <span className="muted"> · {batsThrowsLabel(opponent)}</span>
+                  )}
+                </span>
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>{rate(matchup.avg)} ({matchup.ab}-{matchup.h})</span>
               </div>
               {opponent.id === oppId && sel && (

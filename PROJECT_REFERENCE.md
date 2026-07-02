@@ -56,25 +56,30 @@
 │
 ├─ scraper/
 │  └─ src/
-│     ├─ index.ts            ★ 메인 진입(`npm run scrape`): collectNewGames → updateOfficialFor → aggregate → writeYear/writeYearsIndex + 시합별 분리 집계 (`by-tournament/{slug}/records.json` + `tournaments.json`). 최근 3일치 게임은 무조건 재수집.
+│     ├─ index.ts            ★ 메인 진입(`npm run scrape`): collectNewGames → updateOfficialFor → updateProfilesFor(프로필 증분) → aggregate → writeYear/writeYearsIndex + 시합별 분리 집계 (`by-tournament/{slug}/records.json` + `tournaments.json`) + 리그평균(`averages.json`). 최근 3일치 게임은 무조건 재수집.
 │     ├─ backfillTitles.ts   기존 game JSON 에 `title` 없는 항목 재fetch 채우기 (1회용)
 │     ├─ koreaBaseball.ts    KBSA HTML 어댑터 (BASE/KIND/fetchGameRefs/fetchRecordDetail/classifyAtBat)
 │     ├─ fetchGames.ts       listGameRefs, existingGameIds, isAfterSeasonStart(2026-01-01~), incrementalMonths
 │     ├─ parseRecordDetail.ts (얇은 래퍼)
-│     ├─ accumulate.ts       ★ 집계 순수함수(aggregate) + readGames/readRoster/writeYear/writeYearsIndex/groupBySeason + outsToIp + personNo 중복 슬러그 병합
+│     ├─ accumulate.ts       ★ 집계 순수함수(aggregate(games,source,roster,official,history)) + readGames/readRoster/readRosterHistory/writeYear/writeYearsIndex/groupBySeason + outsToIp + personNo 중복 슬러그 병합(현행 소속 우선 대표)
 │     ├─ officialStats.ts    /record/record/player_record 공식기록 수집 (개별 선수 batting/pitching) — 박스스코어 파생 덮어쓰기
-│     ├─ roster.ts           /info/team/team_list + /info/team/team_player → data/roster.json(키: `이름|등번호`)
+│     ├─ roster.ts           /info/team/team_list + /info/team/team_player → data/roster.json(키: `이름|등번호`, 등번호 미배정은 `이름|`) + roster-history.json 누적 + 선수등록현황(current_list) 총원 대조
+│     ├─ playerProfiles.ts   /info/player/player_view 프로필 수집(출신학교 연도별·수상내역·생년월일·키/몸무게) → data/profiles/{personNo}.json + 시즌 내 이적 이력 roster-history 병합. `npm run profiles` = 전체 재수집.
+│     ├─ leagueAverages.ts   리그 평균(computeLeagueRates) — 집계 결과 합산으로 AVG~wOBA·ERA~K/BB 산출 (averages.json 용, 갱신 시마다 재계산)
 │     ├─ types.ts            ← web/src/shared/types.ts 와 호환 유지 필수
 │     ├─ seed.ts, discover.ts(Playwright 탐색용), accumulate.test.ts
 │
-├─ data/  (커밋됨, 빌드 시 dist로 복사. games/·roster.json·official.json 은 dist 제외 — vite.config 참고)
+├─ data/  (커밋됨, 빌드 시 dist로 복사. games/·roster.json·roster-history.json·official.json 은 dist 제외 — vite.config 참고)
 │  ├─ games/{gameId}.json          ★ 원천: 경기당 GameBoxScore (멱등 키 = id)
-│  ├─ roster.json                  키: `${name}|${number}` → RosterEntry (학년/personNo/clubIdx/지역/투타)
+│  ├─ roster.json                  키: `${name}|${number}` → RosterEntry[] (학년/personNo/clubIdx/지역/투타)
+│  ├─ roster-history.json          로스터 스냅샷+프로필 출신학교의 누적 union — 이적 선수 personNo 조인용 (dist 제외)
+│  ├─ profiles/{personNo}.json     PlayerProfile (출신학교 연도별 이력·수상내역·생년월일 등 — 선수 상세 탭)
 │  ├─ years.json                   [2026, …] (내림차순)
 │  ├─ meta.json                    최신 시즌 Meta 복사본
 │  └─ {year}/
 │      ├─ meta.json                Meta
 │      ├─ official.json            personNo → {batting, pitching}  (공식기록 오버레이)
+│      ├─ averages.json            LeagueAverages (전체+시합별 리그평균 — 갱신 시마다 재계산, 용어 모달/wRC+/WAR 기준)
 │      ├─ players/index.json       PlayerIndexEntry[]  (검색·매치업 후보용 슬림)
 │      ├─ players/{id}.json        Player (gameLog 포함)
 │      ├─ records/players.json     Player[] (gameLog 제외 슬림본 — 리더보드/테이블용)
@@ -117,6 +122,8 @@
 | 팀 목록 | GET | `/info/team/team_list?kind_cd=31&page=N` | `team_player?club_idx=` 기준 분할 |
 | 팀 로스터 | GET | `/info/team/team_player?club_idx=X&kind_cd=31` | `<dt>학년</dt>` 있는 항목만 = 선수 |
 | 선수 공식기록 | GET | `/record/record/player_record?kind_cd=31&club_idx=&person_no=&record_type=1|2&begin_year=Y&end_year=Y` | `record_type` 1=타격 2=투구 |
+| 선수 프로필 | GET | `/info/player/player_view?person_no=N&gubun=P` | `summary_team` 표(선수명/백넘버/생년월일/포지션/키·몸무게/투타) + `<h4>출신학교` ul(지역/소속/연도/포지션 — **같은 연도 2개 학교 = 시즌 중 이적**) + `<h4>수상내역` ul(연도/대회명/수상명) |
+| 선수등록현황 | GET | `/info/current/current_list` | 지역×부별 팀/선수 총계 표. `총계` 행(25칸)의 18세 이하부 팀[12]·계[16] 로 로스터 수집 검증 |
 
 **`kind_cd`**: 41=대학부, **31=U18(고교)**, 51=일반부.
 
@@ -140,6 +147,9 @@
 - `PitchingStats`: g, w, l, sv, **ip(소수: `6.2`=6과 2/3)**, h, r, er, bb, so, era, whip / 공식 hr, bf, np.
 - `Matchup`: batterId/Name, pitcherId/Name, pa, ab, h, b2, b3, hr, bb, hbp, so, avg.
 - `Meta`: season, lastUpdated(ISO), gameCount, source, teamGames?(팀→경기수).
+- `GameLogEntry.team?`: 그 경기 당시 소속(이적 병합 후 팀별 경기수 정확 계산용).
+- `PlayerProfile`: personNo/name/birth/height/weight/투타 + `schools[]`(연도별 초·중·고) + `awards[]` — `data/profiles/{personNo}.json`.
+- `LeagueAverages`: `{ season, updatedAt, overall: LeagueRates, tournaments: {slug: {title, rates}} }` — `data/{year}/averages.json`. `LeagueRates` = avg~woba·rPerPa(타자) + era~kbb(투수). wOBA 가중치는 scraper `leagueAverages.WOBA_WEIGHTS` ↔ web `sabermetrics.W` **동일 유지**.
 - 선수 `id` 슬러그: `${team}_${name}_${number}` (공백 제거). 안정 ID 후보 = `personNo`.
 
 ---
@@ -222,17 +232,27 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 선수 중복 병합 & 수집 누락 (accumulate / 스크레이퍼)
 
-- **roster.json 구조**: `이름|번호 → RosterEntry[]`(배열). 다른 학교 동명·동번호 충돌 보존(이전 단일 객체는 덮어써져 personNo 유실). `lookupRoster(roster,name,number,team)` 가 팀 일치로 정확 항목 선택. officialStats 도 동일 사용.
+- **roster.json 구조**: `이름|번호 → RosterEntry[]`(배열). 다른 학교 동명·동번호 충돌 보존(이전 단일 객체는 덮어써져 personNo 유실). 등번호 미배정 선수는 키 `이름|`(빈 번호)로 포함 — KBSA 선수등록현황 총원과 일치. `lookupRoster(roster,name,number,team)` 가 팀 일치로 정확 항목 선택. officialStats 도 동일 사용.
+- **roster-history.json**: 로스터 스냅샷 + 프로필 출신학교(시즌 연도 행)의 누적 union. `aggregate` 5번째 인자(history)로 전달되어 ① (이름,번호,팀) 정확 매칭 폴백 ② nameTeamFallback 빈 자리 채움에 사용 → **이적 선수의 옛 소속 라인도 personNo 를 얻어 병합**.
 - **중복 병합 4단계** (`accumulate.aggregate`):
-  1. **정규팀 재슬러그**: `p.id` 를 정규팀 기반 `${team}_${name}_${number}` 로 재생성 → `광남고B`/`광남고BC` 처럼 축약 팀명으로 갈라진 동일 선수 병합(personNo 없어도).
-  2. **personNo 병합**: 같은 personNo 슬러그를 대표로 합산(raw stats `addBatting`/`addPitching` → derive 재계산).
-  3. **(이름,정규팀) 유일 폴백**: `nameTeamFallback` — 번호변경/임시번호로 (이름,번호)가 안 맞아도 같은 학교 동명 1명뿐이면 personNo 부여.
+  1. **정규팀 재슬러그**: `p.id` 를 정규팀 기반 `${team}_${name}_${number}` 로 재생성 → `광남고B`/`광남고BC` 처럼 축약 팀명으로 갈라진 동일 선수 병합(personNo 없어도). ⚠ 충돌 없는 단순 교체도 반드시 `reslugRemap` 에 기록(누락 시 매치업 id 가 옛 슬러그로 남아 상대 메타·링크·샤드 깨짐 — 2026-07-02 수정).
+  2. **personNo 병합**: 같은 personNo 슬러그를 대표로 합산(raw stats `addBatting`/`addPitching` → derive 재계산). 대표 선정: **현행 로스터 소속팀 일치**(이적 시 현재 학교 기준 표시) → 투타정보 보유 → 경기수 순.
+  3. **(이름,정규팀) 유일 폴백**: `nameTeamFallback`(현행 로스터 + history) — 번호변경/임시번호로 (이름,번호)가 안 맞아도 같은 학교 동명 1명뿐이면 personNo 부여.
   4. **번호 미상(`0`/빈) 병합**: 같은 이름·팀에 실번호 형제가 유일하면 거기로 병합.
-  - 매치업 id 는 `canon()` = reslug → personNo 순으로 재매핑. **잔여 중복은 KBSA personNo 가 다른 실제 동명이인뿐**(2026 기준 8그룹).
+  - 매치업 id 는 `canon()` = reslug → personNo 순으로 재매핑. **잔여 중복은 KBSA personNo 가 다른 실제 동명이인뿐**.
 - **빈 박스스코어 재수집**: `fetchGames.emptyGameIds/emptyGameMonths` — 타자 0명 게임(수집 당시 record_detail 이 일시적으로 비어있던 경기)을 game_idx 가 있어도 매 증분마다 재fetch. `index.collectNewGames` 가 빈 게임 월을 스캔 월에 포함. **단, record_detail 자체에 선수 행이 없는 게임(KBSA 미게시, "합계 0.000")은 원본 부재라 복구 불가** — 게시되면 자동 채워짐.
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-02: 상대전적 메타 누락/로스터 총원/이적 병합/WAR·wRC+/선수 상세 탭 일괄 개선:
+  - **매치업 id 재매핑 버그 수정 (#1·#5)**: reslug 비충돌 브랜치에서 `reslugRemap` 미기록 → 매치업 886건이 옛 축약팀 슬러그(`GD챌린_…`)로 남아 상대 (학교·학년·투타) 메타·링크·상대전적 샤드가 깨지던 문제. 한 줄 수정 + 재집계.
+  - **로스터 총원 일치 (#2)**: `roster.ts` 가 등번호 미배정 선수도 수집(키 `이름|`), 이름은 `<a>` 없을 때 span 폴백. 수집 후 `/info/current/current_list` 의 18세 이하부 총계와 자동 대조(±1% 초과 시 경고). 3,667 → 3,859명(공식 3,860).
+  - **이적 선수 기록 합산 (#3)**: `data/roster-history.json`(스냅샷 누적) + `playerProfiles.ts`(player_view 출신학교 연도별 이력 — 같은 연도 2개 학교 = 시즌 중 이적) → `aggregate(…, history)` 조인으로 옛 소속 라인 병합. 대표는 현행 로스터 소속팀 우선 → 고교·학년·투타는 현재 기준, 기록은 합산. `GameLogEntry.team` 추가로 팀별 경기수 왜곡 방지.
+  - **선수 상세 탭 (#3)**: 타자기록/투수기록/출신학교/수상내역 탭(Desktop `PlayerPage`·Mobile `MPlayer`). 기록 탭은 해당 기록 보유 시에만 노출, 출신학교=profiles 연도별(초·중·고), 수상내역=대회/수상명. 프로필의 생년월일·키/몸무게 헤더 표시.
+  - **WAR·wRC+ (#4)**: `sabermetrics.ts` 에 wOBA/wRC+/WAR(타자·투수 구분, 간이 계산 — 상수: wOBA스케일 1.15, 10런=1승, 대체수준 타자 −20런/600PA·투수 +0.6런/9IP). 리그평균은 스크레이퍼 `leagueAverages.ts` 가 갱신 시마다 재계산해 `data/{year}/averages.json`(전체+시합별) 기록. 용어 모달(`SaberTerm`)에 전체/리그별(주말리그)/시합별(전국대회) 리그평균 표시. Glossary 에 wOBA/wRC+/WAR(타자·투수) 계산식 추가(TERM_MAP 키: `WAR_BAT`/`WAR_PIT`).
+  - **상대전적 표에 투타 컬럼** (MatchupPage/MMatchup).
+  - **랭킹·기록 세부에도 확장**: `leaders.ts` 카테고리에 wOBA/wRC+/WAR(타자)·WAR(투수) 추가(id: `woba`/`wrc`/`war-bat`/`war-pit`, wRC+·wOBA 는 규정타석, WAR 는 누적). `columns.ts` 세부 탭이 lg(LeagueRates)를 받는 팩토리로 변경 — `recordTabs(lg)` 호출로 바뀜(RecordsPage/MRecords/LeadersView 가 averages.json 의 스코프별 rates 주입).
+  - scrape-full.yml 에 `npm run profiles`(전체 프로필 재수집) 스텝 추가. 증분 scrape 는 신규 경기 출전자만 프로필 갱신(`updateProfilesFor`).
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)
 - 2026-06-27: 워크플로 이름 한글화 — `Deploy to GitHub Pages` → `웹사이트 배포 (GitHub Pages)`, `Scrape & Accumulate Data` → `데이터 수집·집계`. (GitHub 자동 생성 `pages-build-deployment` 은 이름 변경 불가.)

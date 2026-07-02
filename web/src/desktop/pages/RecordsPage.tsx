@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTournamentRecords } from "../../shared/data";
+import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
@@ -8,11 +8,19 @@ import { FilterBar, applyFilter, emptyFilter, type RecordFilter } from "../../sh
 import type { Player } from "../../shared/types";
 
 export function RecordsPage() {
-  const [tabId, setTabId] = useState(recordTabs[0].id);
+  const [tabId, setTabId] = useState("hit-basic");
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const { data: players, loading, error } = useTournamentRecords(filter.tournament);
+  const { data: averages } = useLeagueAverages();
   const nav = useNavigate();
-  const tab = recordTabs.find((t) => t.id === tabId)!;
+  // 세부 탭 wRC+/WAR 기준 리그평균: 시합 필터 시 그 시합, 아니면 시즌 전체.
+  const lg = useMemo(() => {
+    if (!averages) return null;
+    if (filter.tournament) return averages.tournaments[filter.tournament]?.rates ?? null;
+    return averages.overall;
+  }, [averages, filter.tournament]);
+  const tabs = useMemo(() => recordTabs(lg), [lg]);
+  const tab = tabs.find((t) => t.id === tabId)!;
   const rows = useMemo(
     () => (players ? applyFilter(filterByKind(players, tab.kind), filter) : []),
     [players, tab.kind, filter]
@@ -24,7 +32,7 @@ export function RecordsPage() {
         <h2 className="heading-xl">선수 기록</h2>
       </div>
       <div className="tabs">
-        {recordTabs.map((t) => (
+        {tabs.map((t) => (
           <Chip key={t.id} active={t.id === tabId} onClick={() => setTabId(t.id)}>
             {t.label}
           </Chip>

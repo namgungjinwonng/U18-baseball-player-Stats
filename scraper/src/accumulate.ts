@@ -47,6 +47,18 @@ export function readRoster(dataDir: string): Roster {
   return out;
 }
 
+// 로스터 이력(과거 스냅샷 + 선수 프로필의 연도별 출신학교 누적).
+// 이적 선수의 "옛 소속" 박스스코어 라인을 personNo 로 조인하기 위한 보조 소스.
+// roster.json 과 동일 스키마(키 `이름|번호`, 번호 미상은 `이름|`).
+export function readRosterHistory(dataDir: string): Roster {
+  const fp = path.join(dataDir, "roster-history.json");
+  if (!fs.existsSync(fp)) return {};
+  const raw = JSON.parse(fs.readFileSync(fp, "utf8")) as Record<string, RosterEntry | RosterEntry[]>;
+  const out: Roster = {};
+  for (const [k, v] of Object.entries(raw)) out[k] = Array.isArray(v) ? v : [v];
+  return out;
+}
+
 const teamMatches = (rosterTeam: string | undefined, boxTeam: string): boolean =>
   !rosterTeam ||
   rosterTeam.startsWith(boxTeam) ||
@@ -127,7 +139,8 @@ export function aggregate(
   games: GameBoxScore[],
   source: string,
   roster: Roster = {},
-  official: OfficialMap = {}
+  official: OfficialMap = {},
+  history: Roster = {}
 ): Aggregated {
   const players = new Map<string, Player>();
   const bAcc = new Map<string, ReturnType<typeof emptyBatting>>();
@@ -140,22 +153,53 @@ export function aggregate(
   // (이름, 정규팀core) → RosterEntry, 단 유일할 때만. 번호 변경/임시번호로 (이름,번호) 매칭이
   // 실패해도 같은 학교에 동명 1명뿐이면 personNo 를 부여해 병합되도록 하는 폴백.
   // roster 키는 `이름|번호` 이므로 이름을 키에서 추출한다.
+  // 이력(roster-history)도 포함 — 이적 선수의 옛 소속 라인이 personNo 를 얻어 병합되도록.
   const nameTeamFallback = new Map<string, RosterEntry>(); // `${name}|${teamCore}` → entry
   {
     const pnSet = new Map<string, Set<string>>();
     const rep = new Map<string, RosterEntry>();
-    for (const [k, arr] of Object.entries(roster)) {
-      const nm = k.split("|")[0];
-      for (const e of arr) {
-        if (!e.team || !e.personNo) continue;
-        const nk = `${nm}|${teamCore(e.team)}`;
-        let s = pnSet.get(nk);
-        if (!s) { s = new Set(); pnSet.set(nk, s); }
-        s.add(e.personNo);
-        if (!rep.has(nk)) rep.set(nk, e);
+    const feed = (src: Roster, preferExisting: boolean) => {
+      for (const [k, arr] of Object.entries(src)) {
+        const nm = k.split("|")[0];
+        for (const e of arr) {
+          if (!e.team || !e.personNo) continue;
+          const nk = `${nm}|${teamCore(e.team)}`;
+          let s = pnSet.get(nk);
+          if (!s) { s = new Set(); pnSet.set(nk, s); }
+          s.add(e.personNo);
+          if (!preferExisting || !rep.has(nk)) rep.set(nk, e);
+        }
       }
-    }
+    };
+    feed(roster, false);   // 현행 로스터 우선
+    feed(history, true);   // 이력은 빈 자리만 채움
     for (const [nk, s] of pnSet) if (s.size === 1) nameTeamFallback.set(nk, rep.get(nk)!);
+  }
+
+  // personNo → 현행(현재 로스터 기준) 항목. 이적 선수의 표시 기준(현재 학교·학년·투타)과
+  // personNo 병합 대표 선정에 사용: "현재 기준 표시 + 기록은 합산" 요구사항.
+  // 같은 선수가 두 팀 페이지에 동시 게재된 경우(이적 직후)는 프로필 출신학교의
+  // 최신(첫 번째) 학교를 현행으로 우선한다. (history 의 번호미상 `이름|` 항목 = 프로필 순서)
+  const profileTeamOrder = new Map<string, string[]>(); // name → 최신순 팀 목록
+  for (const [k, arr] of Object.entries(history)) {
+    if (!k.endsWith("|")) continue;
+    const nm = k.slice(0, -1);
+    const teams = profileTeamOrder.get(nm) ?? [];
+    for (const e of arr) if (e.team && !teams.includes(e.team)) teams.push(e.team);
+    profileTeamOrder.set(nm, teams);
+  }
+  const personNoCurrentEntry = new Map<string, RosterEntry>();
+  for (const [k, arr] of Object.entries(roster)) {
+    const nm = k.split("|")[0];
+    for (const e of arr) {
+      if (!e.personNo || !e.team) continue;
+      const prev = personNoCurrentEntry.get(e.personNo);
+      if (!prev) { personNoCurrentEntry.set(e.personNo, e); continue; }
+      const order = profileTeamOrder.get(nm) ?? [];
+      const ip = order.indexOf(prev.team!);
+      const ie = order.indexOf(e.team);
+      if (ie !== -1 && (ip === -1 || ie < ip)) personNoCurrentEntry.set(e.personNo, e);
+    }
   }
 
   // 경기 시간순 정렬 → gameLog 최신순 출력 위해 뒤에서 reverse
@@ -184,6 +228,7 @@ export function aggregate(
       bAcc.set(b.playerId, a);
       p.gameLog.push({
         gameId: g.id, date: g.date,
+        team: b.team, // 그 경기 당시 소속(이적 선수 병합 후에도 팀별 경기수 정확 계산용)
         opponent: opponentOf(g, b.team),
         line: batterLineText(b),
         title: g.title,
@@ -200,6 +245,7 @@ export function aggregate(
       pAcc.set(pi.playerId, a);
       p.gameLog.push({
         gameId: g.id, date: g.date,
+        team: pi.team,
         opponent: opponentOf(g, pi.team),
         line: pitcherLineText(pi),
         title: g.title,
@@ -261,8 +307,14 @@ export function aggregate(
     const number = id.split("_").pop() ?? "";
     p.number = number;
     let ros = lookupRoster(roster, p.name, number, p.team);
+    // 현행 로스터에 없으면(이적 후 옛 소속 라인 등) 이력에서 (이름,번호,팀) 정확 매칭.
+    if (!ros) ros = lookupRoster(history, p.name, number, p.team);
     // 번호 변경/임시번호로 (이름,번호) 가 안 맞으면 (이름,정규팀) 유일 폴백.
     if (!ros) ros = nameTeamFallback.get(`${p.name}|${teamCore(normalizeTeam(p.team))}`);
+    // 이적 선수: 이력으로 조인된 옛 소속 항목이라도 현행 로스터에 등록되어 있으면
+    // "현재 소속" 항목 기준으로 표시(고교·학년·투타) — 기록은 아래 병합 단계에서 합산.
+    const cur = ros?.personNo ? personNoCurrentEntry.get(ros.personNo) : undefined;
+    if (cur && cur.team && ros?.team && cur.team !== ros.team) ros = cur;
     p.position = ros?.position ?? (pitcherIds.has(id) ? "투수" : "타자");
     if (ros?.bats) p.bats = ros.bats;
     if (ros?.throws) p.throws = ros.throws;
@@ -295,12 +347,14 @@ export function aggregate(
       const dst = players.get(newId);
       const sb = bAcc.get(oldId), sp = pAcc.get(oldId);
       if (!dst) {
-        // 충돌 없음 → 단순 id 교체
+        // 충돌 없음 → 단순 id 교체 (매치업 재매핑에도 반드시 반영 — 누락 시 상대전적 id 가
+        // 옛 축약팀 슬러그로 남아 상대 메타/링크/샤드가 모두 깨진다)
         src.id = newId;
         players.delete(oldId); players.set(newId, src);
         if (sb) { bAcc.delete(oldId); bAcc.set(newId, sb); }
         if (sp) { pAcc.delete(oldId); pAcc.set(newId, sp); }
         names.set(newId, src.name);
+        reslugRemap.set(oldId, newId);
         continue;
       }
       // 충돌 → 합산 병합
@@ -339,9 +393,15 @@ export function aggregate(
     }
     for (const group of byPerson.values()) {
       if (group.length < 2) continue;
-      // 대표: 투타정보 보유 → 경기수 많은 순
-      const score = (x: Player) =>
-        (x.throws && x.bats ? 1000 : 0) + (x.batting?.g ?? 0) + (x.pitching?.g ?? 0);
+      // 대표: 현행 로스터 소속팀 일치(이적 시 "현재 학교" 기준 표시) → 투타정보 보유 → 경기수 많은 순
+      const score = (x: Player) => {
+        const cur = x.personNo ? personNoCurrentEntry.get(x.personNo)?.team : undefined;
+        return (
+          (cur && x.team === cur ? 1_000_000 : 0) +
+          (x.throws && x.bats ? 1000 : 0) +
+          (x.batting?.g ?? 0) + (x.pitching?.g ?? 0)
+        );
+      };
       const rep = [...group].sort((a, b) => score(b) - score(a))[0];
       const seen = new Set(rep.gameLog.map((l) => l.gameId));
       const repB = bAcc.get(rep.id);
@@ -445,11 +505,15 @@ export function aggregate(
   }));
 
   // 팀별 경기수(규정타석/이닝 기준) — 선수 gameLog 의 distinct 경기 합집합.
+  // 이적 선수 병합 후에도 경기 당시 소속(gl.team)으로 귀속시켜 팀 경기수 왜곡 방지.
   const teamGameSets = new Map<string, Set<string>>();
   for (const p of playerList) {
-    let s = teamGameSets.get(p.team);
-    if (!s) { s = new Set(); teamGameSets.set(p.team, s); }
-    for (const gl of p.gameLog) s.add(gl.gameId);
+    for (const gl of p.gameLog) {
+      const t = gl.team ? normalizeTeam(gl.team) : p.team;
+      let s = teamGameSets.get(t);
+      if (!s) { s = new Set(); teamGameSets.set(t, s); }
+      s.add(gl.gameId);
+    }
   }
   const teamGames: Record<string, number> = {};
   for (const [t, s] of teamGameSets) teamGames[t] = s.size;
@@ -501,6 +565,10 @@ export function readGames(dataDir: string): GameBoxScore[] {
 }
 
 function writeAgg(baseDir: string, agg: Aggregated): void {
+  // players/·matchups/ 는 매 실행 전체 재생성 — 이전 실행의 스테일 파일(병합으로
+  // 사라진 옛 슬러그 등)이 남아 배포되지 않도록 디렉터리를 비우고 다시 쓴다.
+  fs.rmSync(path.join(baseDir, "players"), { recursive: true, force: true });
+  fs.rmSync(path.join(baseDir, "matchups"), { recursive: true, force: true });
   // 생성 데이터는 매 실행 전체 재생성되므로 compact JSON(용량/파싱 최적화).
   const w = (rel: string, obj: unknown) => {
     const fp = path.join(baseDir, rel);

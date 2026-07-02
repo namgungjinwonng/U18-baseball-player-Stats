@@ -9,14 +9,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  aggregate, groupBySeason, readGames, readRoster, writeYear, writeYearsIndex,
+  aggregate, groupBySeason, lookupRoster, readGames, readRoster, readRosterHistory,
+  writeYear, writeYearsIndex,
 } from "./accumulate.js";
 import {
   emptyGameIds, emptyGameMonths, existingGameIds, incrementalMonths, isAfterSeasonStart, listGameRefs,
 } from "./fetchGames.js";
 import { parseRecordDetail } from "./parseRecord.js";
 import { collectOfficial } from "./officialStats.js";
-import type { Meta } from "./types.js";
+import { collectProfiles, existingProfileIds } from "./playerProfiles.js";
+import { computeLeagueRates } from "./leagueAverages.js";
+import type { GameBoxScore, LeagueAverages, Meta } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
@@ -119,6 +122,31 @@ async function updateOfficialFor(year: number, newGameFiles: string[]) {
   console.log(`✓ 공식기록 병합: 신규 ${Object.keys(fresh).length}명 (총 ${Object.keys(merged).length})`);
 }
 
+// 신규 경기에 등장한 선수(+아직 프로필 없는 선수) 프로필 증분 수집.
+// 출신학교 연도별 이력·수상내역을 data/profiles/ 에 축적하고
+// roster-history 병합으로 이적 선수 기록 합산을 가능하게 한다.
+async function updateProfilesFor(
+  games: GameBoxScore[], newGameFiles: string[], years: number[]
+) {
+  const roster = readRoster(DATA_DIR);
+  const have = existingProfileIds(DATA_DIR);
+  const newSet = new Set(newGameFiles);
+  const personNos = new Set<string>();
+  for (const g of games) {
+    const isNew = newSet.has(`${g.id}.json`);
+    const mark = (name: string, id: string, team: string) => {
+      const number = id.split("_").pop() ?? "";
+      const pn = lookupRoster(roster, name, number, team)?.personNo;
+      if (!pn) return;
+      // 신규 경기 출전자는 항상 갱신(이적·수상 반영), 그 외엔 프로필 미보유자만.
+      if (isNew || !have.has(pn)) personNos.add(pn);
+    };
+    for (const b of g.batters) mark(b.name, b.playerId, b.team);
+    for (const p of g.pitchers) mark(p.name, p.playerId, p.team);
+  }
+  if (personNos.size) await collectProfiles(DATA_DIR, [...personNos], years);
+}
+
 async function main() {
   const newGameFiles = await collectNewGames();
   const games = readGames(DATA_DIR);
@@ -136,6 +164,9 @@ async function main() {
     const yearNew = newGameFiles.filter((f) => yearGameIds.has(f));
     await updateOfficialFor(year, yearNew);
   }
+  // 선수 프로필 증분 수집(출신학교/수상내역) + 이적 이력 병합 — 집계 전에 수행.
+  await updateProfilesFor(games, newGameFiles, years);
+  const history = readRosterHistory(DATA_DIR);
   let latest: Meta | undefined;
   for (const year of years) {
     // 공식기록 오버레이(있으면): data/{year}/official.json
@@ -144,9 +175,17 @@ async function main() {
       ? (JSON.parse(fs.readFileSync(offFp, "utf8")) as Record<string, { batting?: unknown; pitching?: unknown }>)
       : {};
     const yearGames = bySeason.get(year)!;
-    const agg = aggregate(yearGames, SOURCE, roster, official as never);
+    const agg = aggregate(yearGames, SOURCE, roster, official as never, history);
     writeYear(DATA_DIR, year, agg);
     if (latest === undefined) latest = agg.meta;
+
+    // 리그 평균 (전체 시즌) — 시합별은 아래 루프에서 채움. 갱신 시점마다 재계산.
+    const averages: LeagueAverages = {
+      season: year,
+      updatedAt: new Date().toISOString(),
+      overall: computeLeagueRates(agg.players),
+      tournaments: {},
+    };
 
     // 시즌 personNo → 정규 player.id 맵 (시합별 player.id 재매핑용).
     const personNoToCanonId = new Map<string, string>();
@@ -167,7 +206,7 @@ async function main() {
       // ⚠ official 오버레이 제외: official 은 시즌 누적 공식기록이라
       //    시합별 aggregate 에 넘기면 박스스코어 합산이 시즌 공식 stats 로
       //    덮어써져 모든 시합 결과가 시즌과 동일해진다.
-      const tAgg = aggregate(games, SOURCE, roster, {});
+      const tAgg = aggregate(games, SOURCE, roster, {}, history);
 
       // 시합별 personNo merge 가 시즌과 다른 대표 id 를 고를 수 있으므로,
       // 시즌의 정규 id 로 강제 매핑한다 (선수 클릭 시 404 방지).
@@ -197,12 +236,25 @@ async function main() {
       );
       fs.writeFileSync(path.join(tDir, "matchups.json"), JSON.stringify(remappedMatchups));
       fs.writeFileSync(path.join(tDir, "meta.json"), JSON.stringify(tAgg.meta));
+      averages.tournaments[slug] = { title, rates: computeLeagueRates(tAgg.players) };
       tournamentList.push({ slug, title, gameCount: games.length });
     }
     tournamentList.sort((a, b) => b.gameCount - a.gameCount);
+    // 스테일 시합 디렉터리 정리 (시합명 변경/병합으로 slug 가 사라진 경우)
+    const btDir = path.join(DATA_DIR, String(year), "by-tournament");
+    if (fs.existsSync(btDir)) {
+      const live = new Set(tournamentList.map((t) => t.slug));
+      for (const d of fs.readdirSync(btDir)) {
+        if (!live.has(d)) fs.rmSync(path.join(btDir, d), { recursive: true, force: true });
+      }
+    }
     fs.writeFileSync(
       path.join(DATA_DIR, String(year), "tournaments.json"),
       JSON.stringify(tournamentList)
+    );
+    fs.writeFileSync(
+      path.join(DATA_DIR, String(year), "averages.json"),
+      JSON.stringify(averages)
     );
     console.log(`  · 시합 ${tournamentList.length}개 분리 집계`);
     console.log(

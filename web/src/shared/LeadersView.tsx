@@ -3,7 +3,7 @@
 // 필터(시합·지역·학교) 그대로 사용.
 import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useTournamentRecords } from "./data";
+import { useLeagueAverages, useTournamentRecords } from "./data";
 import { CATEGORIES, describeQualify, findCategory, rankByCategory } from "./leaders";
 import {
   FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter,
@@ -18,13 +18,20 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(loc.search));
   const [includeUnqualified, setIncludeUnqualified] = useState(false);
   const { data: players, loading } = useTournamentRecords(filter.tournament);
+  const { data: averages } = useLeagueAverages();
   const ctx = useQualifyContext(filter);
+  // wRC+/WAR 기준 리그평균: 시합 필터 시 그 시합, 아니면 시즌 전체.
+  const lg = useMemo(() => {
+    if (!averages) return null;
+    if (filter.tournament) return averages.tournaments[filter.tournament]?.rates ?? null;
+    return averages.overall;
+  }, [averages, filter.tournament]);
 
   const ranked = useMemo(() => {
     if (!players || !cat) return [];
     const filtered = applyFilter(players, filter);
-    return rankByCategory(filtered, cat, ctx, Infinity, includeUnqualified);
-  }, [players, filter, ctx, cat, includeUnqualified]);
+    return rankByCategory(filtered, cat, ctx, Infinity, includeUnqualified, lg);
+  }, [players, filter, ctx, cat, includeUnqualified, lg]);
   const qualifiedCount = useMemo(() => ranked.filter((r) => r.qualified).length, [ranked]);
 
   // 상단 탭: 현재 카테고리의 kind 우선, 없으면 타자.

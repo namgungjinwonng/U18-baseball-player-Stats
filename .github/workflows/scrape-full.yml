@@ -34,6 +34,11 @@ jobs:
         working-directory: scraper
         run: npm run roster
 
+      # 등록 선수 전체 프로필(출신학교/수상내역) 재수집 — 전체 스캔 시에만 수행
+      - name: Refresh player profiles (출신학교/수상내역)
+        working-directory: scraper
+        run: npm run profiles
+
       - name: Scrape (3~12월 전체 스캔) & re-aggregate
         working-directory: scraper
         env:

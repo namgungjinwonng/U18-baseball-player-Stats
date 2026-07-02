@@ -34,9 +34,10 @@ function serveDataPlugin(): Plugin {
     closeBundle() {
       const out = path.resolve(root, "dist", "data");
       if (!fs.existsSync(dataDir)) return;
-      // games/(원본 박스스코어)·roster.json·official.json 은 프론트가 직접 읽지 않으므로
-      // 배포 산출물에서 제외(용량 절감). 집계 결과만 복사.
-      const skip = new Set(["games", "roster.json", "official.json"]);
+      // games/(원본 박스스코어)·roster.json·roster-history.json·official.json 은
+      // 프론트가 직접 읽지 않으므로 배포 산출물에서 제외(용량 절감). 집계 결과만 복사.
+      // (profiles/ 는 선수 상세 출신학교·수상내역 탭이 읽으므로 포함)
+      const skip = new Set(["games", "roster.json", "roster-history.json", "official.json"]);
       fs.cpSync(dataDir, out, {
         recursive: true,
         filter: (src) => {

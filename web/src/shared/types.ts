@@ -60,6 +60,7 @@ export interface GameLogEntry {
   date: string; // YYYY-MM-DD
   opponent: string;
   line: string; // 요약 (예: "3타수 2안타 1타점")
+  team?: string; // 그 경기 당시 소속팀(이적 선수 병합 후 구분용)
   title?: string; // 시합/대회명 (예: "황금사자기", "주말리그 전반기(충청권)")
   // 시합 필터 시 재집계용 per-game raw stats (있으면).
   bStat?: { ab: number; h: number; b2: number; b3: number; hr: number; rbi: number; r: number; bb: number; hbp: number; so: number; sb: number };
@@ -106,4 +107,46 @@ export interface Meta {
   gameCount: number;
   source: string;
   teamGames?: Record<string, number>; // 팀별 경기수(규정타석/이닝 기준)
+}
+
+// --- 선수 프로필 (KBSA /info/player/player_view 수집 — data/profiles/{personNo}.json) ---
+export interface SchoolHistoryEntry {
+  year: number;    // 연도
+  region?: string; // 지역
+  school: string;  // 소속(초·중·고 학교명)
+  position?: string;
+}
+export interface AwardEntry {
+  year: number;       // 수상 연도
+  tournament: string; // 대회명
+  award: string;      // 수상명
+}
+export interface PlayerProfile {
+  personNo: string;    // KBSA 선수 고유번호
+  name?: string;
+  number?: string;     // 백넘버
+  birth?: string;      // 생년월일 (예: 2008.01.19)
+  height?: string;     // 키(cm)
+  weight?: string;     // 몸무게(kg)
+  position?: string;
+  bats?: string; throws?: string;
+  schools: SchoolHistoryEntry[]; // 출신학교(연도별, 최신순)
+  awards: AwardEntry[];          // 수상내역
+  updatedAt: string;   // ISO
+}
+
+// --- 리그 평균 (데이터 갱신 시점마다 재계산 — data/{year}/averages.json) ---
+export interface LeagueRates {
+  avg: number; obp: number; slg: number; ops: number; iso: number; babip: number;
+  bbPct: number; kPct: number; bbK: number; woba: number;
+  rPerPa: number; // 타석당 득점 (wRC+ 기준값)
+  era: number; whip: number; fip?: number; // fip 는 피홈런 데이터(공식기록) 있을 때만
+  k9: number; bb9: number; h9: number; kbb: number;
+  pa: number; outs: number; // 표본 크기(참고)
+}
+export interface LeagueAverages {
+  season: number;
+  updatedAt: string; // ISO — 데이터 갱신 시점
+  overall: LeagueRates; // 시즌 전체
+  tournaments: Record<string, { title: string; rates: LeagueRates }>; // slug → 시합별
 }
