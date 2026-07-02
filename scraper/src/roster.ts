@@ -30,10 +30,23 @@ export interface RosterEntry {
 // (다른 학교에 동일 이름·번호 선수가 있을 수 있어 충돌 보존을 위해 배열로 저장한다.)
 export type Roster = Record<string, RosterEntry[]>;
 
+// 일시 오류(DNS EAI_AGAIN·타임아웃·5xx 등) 재시도 — CI 러너의 순간적 네트워크 문제로
+// 잡 전체가 죽지 않도록 지수 백오프 5회.
 async function get(url: string): Promise<string> {
-  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (U18 roster sync)" } });
-  if (!res.ok) throw new Error(`GET ${url} → ${res.status}`);
-  return res.text();
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, Math.min(3000 * 2 ** (attempt - 1), 20000)));
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (U18 roster sync)" } });
+      if (res.status >= 500) throw new Error(`GET ${url} → ${res.status}`);
+      if (!res.ok) throw Object.assign(new Error(`GET ${url} → ${res.status}`), { permanent: true });
+      return res.text();
+    } catch (e) {
+      if ((e as { permanent?: boolean }).permanent) throw e;
+      lastErr = e;
+    }
+  }
+  throw lastErr;
 }
 
 async function fetchTeams(
