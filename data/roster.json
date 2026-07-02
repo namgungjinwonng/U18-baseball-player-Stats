@@ -1,4 +1,290 @@
 {
+  "기민찬|14": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202603014952",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김민준|30": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202309005731",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김석훈|13": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202105002332",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김준이|16": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202102001789",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "노경윤|21": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202402012359",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "문찬우|10": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802005916",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "문청운|33": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202402010153",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박성진|8": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202403077464",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박지환|1": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202501001823",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "반명호|32": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201709000509",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "신현재|36": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202403006774",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유준영|18": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202212001268",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유호수|44": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202402012312",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이성후|7": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201909001025",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이정우|17": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202105001968",
+      "throws": "우",
+      "bats": "우"
+    },
+    {
+      "team": "중앙고",
+      "region": "서울",
+      "clubIdx": "183",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202105001968",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장예성|9": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202002003579",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전새벽|17": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202303024339",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정진우|6": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201801002720",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조환|4": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202004002386",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "주강희|2": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201901001130",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "최광범|27": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202202003733",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최동빈|5": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202103001197",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황부루|37": [
+    {
+      "team": "강원고",
+      "region": "강원",
+      "clubIdx": "575",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202301002347",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
   "기재혁|13": [
     {
       "team": "GD챌린저스BC(U-18)",
@@ -761,292 +1047,6 @@
       "personNo": "201909001704",
       "throws": "우",
       "bats": "우"
-    }
-  ],
-  "기민찬|14": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202603014952",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김민준|30": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202309005731",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김석훈|13": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202105002332",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김준이|16": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202102001789",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "노경윤|21": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202402012359",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "문찬우|10": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802005916",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "문청운|33": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202402010153",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박성진|8": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202403077464",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박지환|1": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202501001823",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "반명호|32": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201709000509",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "신현재|36": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202403006774",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유준영|18": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202212001268",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유호수|44": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202402012312",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이성후|7": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201909001025",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이정우|17": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202105001968",
-      "throws": "우",
-      "bats": "우"
-    },
-    {
-      "team": "중앙고",
-      "region": "서울",
-      "clubIdx": "183",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202105001968",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장예성|9": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202002003579",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전새벽|17": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202303024339",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정진우|6": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201801002720",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조환|4": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202004002386",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "주강희|2": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201901001130",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "최광범|27": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "202202003733",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최동빈|5": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202103001197",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황부루|37": [
-    {
-      "team": "강원고",
-      "region": "강원",
-      "clubIdx": "575",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202301002347",
-      "throws": "좌",
-      "bats": "좌"
     }
   ],
   "김광민|41": [
@@ -2555,522 +2555,6 @@
       "bats": "우"
     }
   ],
-  "김도건|52": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802000913",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김동윤|40": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802000290",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김동호|14": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202402005694",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김민찬|6": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202001001468",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김민후|20": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "201904001128",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김예안|15": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "201904001049",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김용완|23": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201809000199",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김정혁|42": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202001001493",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김지후|53": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202001003177",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김진하|16": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901001452",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김진혁|19": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201903012784",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "마주혁|12": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201704002423",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박시우|32": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901001319",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "박현서|3": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202204083286",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "방선웅|25": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202202003292",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "배수인|44": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "201901001304",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "배창렬|8": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201802000138",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백아인|37": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102004148",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "송지환|24": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202007001852",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안지후|34": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001001552",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유상연|22": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202108000507",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "유승주|29": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201802001741",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "유원석|11": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201910001349",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유지승|35": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202002002582",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤정후|5": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201708001119",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "이동형|41": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202102003629",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "이서준|47": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202402005273",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이수빈|17": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202202003691",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이주원|51": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201601001757",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이지우|10": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201902003192",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이지원|21": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802003755",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이태성|1": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201809000359",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이하민|50": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202002002667",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임도훈|4": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202002002126",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "정연후|45": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202101001409",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정윤호|28": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202102000575",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조지후|33": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202106000326",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "진건언|18": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802003158",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최유준|2": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202202003815",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최현성|7": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "2루수",
-      "personNo": "201801002627",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한동연|27": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201802000051",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "홍성욱|9": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202102000474",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황재원|31": [
-    {
-      "team": "경기항공고",
-      "region": "경기",
-      "clubIdx": "916",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201907002829",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "강로건|54": [
     {
       "team": "경기상업고",
@@ -3701,6 +3185,522 @@
       "grade": "1",
       "position": "내야수",
       "personNo": "202102003554",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김도건|52": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802000913",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김동윤|40": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802000290",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김동호|14": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202402005694",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민찬|6": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202001001468",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민후|20": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "201904001128",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김예안|15": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "201904001049",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김용완|23": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "201809000199",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김정혁|42": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202001001493",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김지후|53": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202001003177",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김진하|16": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901001452",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김진혁|19": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201903012784",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "마주혁|12": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "201704002423",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박시우|32": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901001319",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "박현서|3": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202204083286",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "방선웅|25": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202202003292",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "배수인|44": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "201901001304",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "배창렬|8": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201802000138",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백아인|37": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102004148",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "송지환|24": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202007001852",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안지후|34": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001001552",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유상연|22": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202108000507",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "유승주|29": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201802001741",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "유원석|11": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201910001349",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유지승|35": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202002002582",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤정후|5": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201708001119",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "이동형|41": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202102003629",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "이서준|47": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202402005273",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이수빈|17": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202202003691",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이주원|51": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201601001757",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이지우|10": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201902003192",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이지원|21": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802003755",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이태성|1": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201809000359",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이하민|50": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202002002667",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임도훈|4": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202002002126",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "정연후|45": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202101001409",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정윤호|28": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202102000575",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조지후|33": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202106000326",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "진건언|18": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802003158",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최유준|2": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202202003815",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최현성|7": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "2루수",
+      "personNo": "201801002627",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한동연|27": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201802000051",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "홍성욱|9": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102000474",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황재원|31": [
+    {
+      "team": "경기항공고",
+      "region": "경기",
+      "clubIdx": "916",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201907002829",
       "throws": "우",
       "bats": "우"
     }
@@ -5711,6 +5711,514 @@
       "bats": "우"
     }
   ],
+  "강건우|29": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202002001865",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김동영|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201702001488",
+      "throws": "우",
+      "bats": "우"
+    },
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "미지정",
+      "personNo": "202101001264"
+    }
+  ],
+  "김동찬|21": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202002002791",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김민준|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202002004975",
+      "throws": "우",
+      "bats": "좌"
+    },
+    {
+      "team": "군산상일고",
+      "region": "전북",
+      "clubIdx": "1552",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202002002058",
+      "throws": "우",
+      "bats": "우"
+    },
+    {
+      "team": "서울아이티고BC",
+      "region": "서울",
+      "clubIdx": "1826",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201901003182",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김영준|18": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202001001015",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김영준|19": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201807002547",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김준서|6": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201809000192",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김준우|14": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202301002750",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김찬주|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201903002630",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김태윤|45": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202002004626"
+    },
+    {
+      "team": "청담고",
+      "region": "경기",
+      "clubIdx": "815",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201905003256",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김택현|35": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202106003579",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "문유찬|16": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201902007304",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박명균|8": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202003000032",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박성훈|50": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202105000700",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박시후|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201903003208"
+    }
+  ],
+  "서관우|1": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201702002914",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "서은재|40": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202006002589",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "석지훈|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202112000259",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "성시후|59": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102000038",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "성우석|51": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201702000409",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "손승현|": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202205000354",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신재영|11": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202203000481"
+    }
+  ],
+  "안희수|20": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202204086497",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "양지원|25": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201603003515",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "엄태영|23": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202001001082",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "오승덕|27": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201907003025",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이강희|17": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202002004708",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이상협|22": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901001955"
+    }
+  ],
+  "이안우|5": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201801001015",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이일화|15": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "201903004686",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장준영|43": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102002168",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "조상욱|2": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201805002011",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최동현|9": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "2",
+      "position": "미지정",
+      "personNo": "201802000384",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "최은택|13": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202001001041",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "최준서|3": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201903004597",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최지율|41": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201903005011",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최현빈|10": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201809001291",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황선우|36": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102004467",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황인철|26": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202001001954",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황재훈|44": [
+    {
+      "team": "공주고",
+      "region": "충남",
+      "clubIdx": "141",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202105000752"
+    }
+  ],
   "강규민|62": [
     {
       "team": "경북고",
@@ -6499,514 +7007,6 @@
       "personNo": "201701001240",
       "throws": "우",
       "bats": "우"
-    }
-  ],
-  "강건우|29": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202002001865",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김동영|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201702001488",
-      "throws": "우",
-      "bats": "우"
-    },
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "미지정",
-      "personNo": "202101001264"
-    }
-  ],
-  "김동찬|21": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202002002791",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김민준|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202002004975",
-      "throws": "우",
-      "bats": "좌"
-    },
-    {
-      "team": "군산상일고",
-      "region": "전북",
-      "clubIdx": "1552",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202002002058",
-      "throws": "우",
-      "bats": "우"
-    },
-    {
-      "team": "서울아이티고BC",
-      "region": "서울",
-      "clubIdx": "1826",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201901003182",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김영준|18": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202001001015",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김영준|19": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201807002547",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김준서|6": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201809000192",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김준우|14": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202301002750",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김찬주|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201903002630",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김태윤|45": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202002004626"
-    },
-    {
-      "team": "청담고",
-      "region": "경기",
-      "clubIdx": "815",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201905003256",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김택현|35": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202106003579",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "문유찬|16": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201902007304",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박명균|8": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202003000032",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박성훈|50": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202105000700",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박시후|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201903003208"
-    }
-  ],
-  "서관우|1": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201702002914",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "서은재|40": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202006002589",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "석지훈|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202112000259",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "성시후|59": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102000038",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "성우석|51": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201702000409",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "손승현|": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202205000354",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "신재영|11": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202203000481"
-    }
-  ],
-  "안희수|20": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "202204086497",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "양지원|25": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201603003515",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "엄태영|23": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202001001082",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "오승덕|27": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201907003025",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이강희|17": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202002004708",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이상협|22": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901001955"
-    }
-  ],
-  "이안우|5": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201801001015",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이일화|15": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "201903004686",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장준영|43": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102002168",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "조상욱|2": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201805002011",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최동현|9": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "2",
-      "position": "미지정",
-      "personNo": "201802000384",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "최은택|13": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202001001041",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "최준서|3": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201903004597",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최지율|41": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201903005011",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최현빈|10": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201809001291",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황선우|36": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202102004467",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황인철|26": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202001001954",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황재훈|44": [
-    {
-      "team": "공주고",
-      "region": "충남",
-      "clubIdx": "141",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202105000752"
     }
   ],
   "김건우|16": [
@@ -9481,6 +9481,710 @@
       "personNo": "202402006022"
     }
   ],
+  "강경태|38": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001000380",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "강규민|41": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202102004159",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "강민수|14": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201802003235",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "강정겸|16": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201903001393",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "권성준|19": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202202001544",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "권해빈|28": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201903000275",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김대욱|51": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201803002451",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민찬|27": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201902002978",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민현|9": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201903002838",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김유준|49": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201803002884",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김장우|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202202001539",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김지헌|31": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202101000746",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "마진혁|1": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201903003980",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "문찬희|65": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202301003276",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박도윤|26": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102001928",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "박세준|56": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202202003461",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박승찬|2": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201802000859",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박시후|43": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201902006096",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박재현|4": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202007002645",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박찬웅|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102002571",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "배용준|47": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201903002881",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "서동완|52": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201802005687",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "손홍률|53": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201803000672",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안시후|58": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201801002564",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "양태화|13": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201903003039",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유우택|22": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202001000164",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤선준|5": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "미지정",
+      "personNo": "201906002158",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤주영|46": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "201902004664",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤해성|34": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102003034",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이건희|50": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201808000993",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이도헌|3": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202002004506",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이재서|24": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202102002767",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이지헌|67": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201703002738",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이채훈|35": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202009001013",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이현민|17": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802003315",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "임휘윤|29": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201903002585",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "장성호|39": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "201903002940",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전민우|23": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201907001520",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "전종현|18": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202102002156",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정시온|15": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201802003727",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정영진|30": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202203001339",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정우열|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202001000069",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정원|20": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201702008076",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정일|21": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201702007691",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정정훈|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102002912",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조민제|36": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201803002390",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조성민|62": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "미지정",
+      "personNo": "202102002438",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조영제|7": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201803002851",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조용준|10": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802000958",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조우성|8": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201703001828",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조현준|42": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "201901001223",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조현찬|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "201909001533",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "주은혁|48": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202002004710"
+    }
+  ],
+  "최영민|54": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202012002690",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "최진우|12": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201902005946",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최혜성|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "미지정",
+      "personNo": "201902001519"
+    }
+  ],
+  "황대호|44": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "201903009572",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황동현|": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201902002416",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황준우|33": [
+    {
+      "team": "대구고",
+      "region": "대구",
+      "clubIdx": "180",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201802007393",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "강동훈|3": [
     {
       "team": "김포과학기술고",
@@ -10611,710 +11315,6 @@
       "personNo": "202602001849"
     }
   ],
-  "강경태|38": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001000380",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "강규민|41": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202102004159",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "강민수|14": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201802003235",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "강정겸|16": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201903001393",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "권성준|19": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202202001544",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "권해빈|28": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201903000275",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김대욱|51": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201803002451",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김민찬|27": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201902002978",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김민현|9": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201903002838",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김유준|49": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201803002884",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김장우|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202202001539",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김지헌|31": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202101000746",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "마진혁|1": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201903003980",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "문찬희|65": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202301003276",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박도윤|26": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202102001928",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "박세준|56": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202202003461",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박승찬|2": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201802000859",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박시후|43": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201902006096",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박재현|4": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202007002645",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박찬웅|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202102002571",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "배용준|47": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201903002881",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "서동완|52": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201802005687",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "손홍률|53": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201803000672",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안시후|58": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201801002564",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "양태화|13": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201903003039",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유우택|22": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "202001000164",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤선준|5": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "미지정",
-      "personNo": "201906002158",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤주영|46": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "201902004664",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤해성|34": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102003034",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이건희|50": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201808000993",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이도헌|3": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202002004506",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이재서|24": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202102002767",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이지헌|67": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201703002738",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이채훈|35": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202009001013",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이현민|17": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802003315",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "임휘윤|29": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201903002585",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "장성호|39": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "201903002940",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전민우|23": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201907001520",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "전종현|18": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202102002156",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정시온|15": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201802003727",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정영진|30": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202203001339",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정우열|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202001000069",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정원|20": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201702008076",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정일|21": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201702007691",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정정훈|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102002912",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조민제|36": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201803002390",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조성민|62": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "미지정",
-      "personNo": "202102002438",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조영제|7": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201803002851",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조용준|10": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802000958",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조우성|8": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201703001828",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조현준|42": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "201901001223",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조현찬|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201909001533",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "주은혁|48": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202002004710"
-    }
-  ],
-  "최영민|54": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202012002690",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "최진우|12": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201902005946",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최혜성|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "미지정",
-      "personNo": "201902001519"
-    }
-  ],
-  "황대호|44": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "201903009572",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황동현|": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201902002416",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황준우|33": [
-    {
-      "team": "대구고",
-      "region": "대구",
-      "clubIdx": "180",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201802007393",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "강건우|52": [
     {
       "team": "대구상원고",
@@ -12065,6 +12065,438 @@
       "bats": "우"
     }
   ],
+  "강민준|50": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202302002504",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "강시호|25": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "미지정",
+      "personNo": "202102002472",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "강태건|37": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202103000099",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김광희|34": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202302002489"
+    }
+  ],
+  "김동현|9": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "미지정",
+      "personNo": "202003000315",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김민성|17": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202102001229",
+      "throws": "좌",
+      "bats": "좌"
+    },
+    {
+      "team": "예일메디텍고",
+      "region": "경북",
+      "clubIdx": "818",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202001001208",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김승윤|5": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202301001611",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김시율|4": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "201901001503",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김하민|10": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202302002493",
+      "throws": "우",
+      "bats": "양"
+    }
+  ],
+  "김현준|12": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201606002098"
+    }
+  ],
+  "박지후|26": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "1루수",
+      "personNo": "202302002419",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백민석|7": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201901000529",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "서경준|30": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202302008407",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "송시후|24": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202501005090",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "송이안|16": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202001000172",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신지호|1": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202003003239",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신태호|22": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "미지정",
+      "personNo": "201901002173",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안수민|33": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202501001737",
+      "throws": "좌",
+      "bats": "우"
+    }
+  ],
+  "오성훈|8": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202103000106"
+    }
+  ],
+  "유현진|11": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001001069",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤영규|18": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202003000340",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이도윤|2": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "201903016483",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이병현|53": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201904001401",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이정호|51": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202001002241",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이현주|31": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202105000245",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이황규|0": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "202102001210",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임준형|15": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201707003691",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장현민|52": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "3루수",
+      "personNo": "201902000811"
+    }
+  ],
+  "조의현|20": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202102002994",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조현민|29": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202302008069"
+    }
+  ],
+  "최예준|38": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "유격수",
+      "personNo": "202103000136",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최유준|13": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "중견수",
+      "personNo": "201901002717",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최현성|14": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201807001555",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한강희|47": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202408015522",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한태정|35": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202601018981",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "홍은기|44": [
+    {
+      "team": "대전제일고",
+      "region": "대전",
+      "clubIdx": "821",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202105002850",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "김경린|33": [
     {
       "team": "대전고",
@@ -12635,714 +13067,6 @@
       "bats": "우"
     }
   ],
-  "강민준|50": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202302002504",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "강시호|25": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "미지정",
-      "personNo": "202102002472",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "강태건|37": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202103000099",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김광희|34": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202302002489"
-    }
-  ],
-  "김동현|9": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "미지정",
-      "personNo": "202003000315",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김민성|17": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202102001229",
-      "throws": "좌",
-      "bats": "좌"
-    },
-    {
-      "team": "예일메디텍고",
-      "region": "경북",
-      "clubIdx": "818",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202001001208",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김승윤|5": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202301001611",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김시율|4": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "201901001503",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김하민|10": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202302002493",
-      "throws": "우",
-      "bats": "양"
-    }
-  ],
-  "김현준|12": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201606002098"
-    }
-  ],
-  "박지후|26": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "1루수",
-      "personNo": "202302002419",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백민석|7": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201901000529",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "서경준|30": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202302008407",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "송시후|24": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202501005090",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "송이안|16": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202001000172",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "신지호|1": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202003003239",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "신태호|22": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "미지정",
-      "personNo": "201901002173",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안수민|33": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202501001737",
-      "throws": "좌",
-      "bats": "우"
-    }
-  ],
-  "오성훈|8": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202103000106"
-    }
-  ],
-  "유현진|11": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001001069",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤영규|18": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202003000340",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이도윤|2": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201903016483",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이병현|53": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201904001401",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이정호|51": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202001002241",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이현주|31": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202105000245",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이황규|0": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "202102001210",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임준형|15": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201707003691",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장현민|52": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "3루수",
-      "personNo": "201902000811"
-    }
-  ],
-  "조의현|20": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202102002994",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조현민|29": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202302008069"
-    }
-  ],
-  "최예준|38": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "유격수",
-      "personNo": "202103000136",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최유준|13": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "중견수",
-      "personNo": "201901002717",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최현성|14": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201807001555",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한강희|47": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202408015522",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한태정|35": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202601018981",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "홍은기|44": [
-    {
-      "team": "대전제일고",
-      "region": "대전",
-      "clubIdx": "821",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202105002850",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "고준서|20": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201801002225",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "권민혁|7": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802002637",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "권오성|21": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "201909000515",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김동림|31": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001003182",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박민준|16": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001003123",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박봉균|17": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202102000568",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박태민|6": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202103002832",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "방호진|": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202105003082",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "석교준|2": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201802002155",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유경탁|18": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201902004501",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유예준|22": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "202002004898",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유지호|15": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202102002391",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "윤동환|1": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201801000154",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이건우|9": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202102001266",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이동건|": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201901002925",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이동국|25": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201901002951",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이은구|47": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202002004889",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임유빈|11": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201804000506",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "전우주|39": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201904000937",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정우진|12": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202102002070",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정하민|23": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201901000302",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "제갈영|8": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202210002443",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최진우|10": [
-    {
-      "team": "도개고",
-      "region": "경북",
-      "clubIdx": "816",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202007001216",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "권혁준|45": [
     {
       "team": "덕수고",
@@ -13871,6 +13595,282 @@
       "grade": "3",
       "position": "외야수",
       "personNo": "201903007164",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "고준서|20": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201801002225",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "권민혁|7": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802002637",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "권오성|21": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "201909000515",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김동림|31": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001003182",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박민준|16": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001003123",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박봉균|17": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202102000568",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박태민|6": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202103002832",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "방호진|": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202105003082",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "석교준|2": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201802002155",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유경탁|18": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201902004501",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유예준|22": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202002004898",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유지호|15": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202102002391",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "윤동환|1": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201801000154",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이건우|9": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202102001266",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이동건|": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201901002925",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이동국|25": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201901002951",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이은구|47": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202002004889",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임유빈|11": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201804000506",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "전우주|39": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201904000937",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정우진|12": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202102002070",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정하민|23": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201901000302",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "제갈영|8": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202210002443",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최진우|10": [
+    {
+      "team": "도개고",
+      "region": "경북",
+      "clubIdx": "816",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202007001216",
       "throws": "우",
       "bats": "우"
     }
@@ -20371,470 +20371,6 @@
       "bats": "우"
     }
   ],
-  "곽민준|11": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202102002407",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "곽해찬|22": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201901001933",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "권대경|19": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201801000261",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김건우|14": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201801003027",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김동현|51": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202105001918",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김병선|24": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202102004080",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김보현|12": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202202004044",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김승유|43": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202011000617",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김찬희|5": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202001003112",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김형준|47": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202308010560",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "남건욱|10": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202001000842",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박규정|27": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202201001961",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박도영|53": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202202002463",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박진우|1": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901001949",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박태건|40": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202202002101",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "방진영|20": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201903002582",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "배종일|17": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201903000876",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백승우|41": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202302005899"
-    }
-  ],
-  "서한울|33": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202408016378",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "송민준|2": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201803004803",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "송지우|3": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201904004081",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유승수|4": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202102001976",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유지석|35": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202103010215",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "유하랑|49": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202407008680",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이윤서|31": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202409000898"
-    }
-  ],
-  "이제우|37": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202304006948",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "이주안|29": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202202003344",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "이진호|42": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202301003699",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이찬희|25": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "1루수",
-      "personNo": "202006004007",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이현서|52": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202101001084",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장지혁|49": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202403077437",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전지후|55": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202101001020",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정승우|39": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202306005321",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최서윤|7": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202002002948",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최준영|8": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201907000523",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "최현우|18": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202001002007",
-      "throws": "좌",
-      "bats": "우"
-    }
-  ],
-  "최훈|21": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202006002877",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한예준|16": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202103011958",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "허웅|13": [
-    {
-      "team": "비봉고",
-      "region": "경기",
-      "clubIdx": "927",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201804002298",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "곽준우|2": [
     {
       "team": "북일고",
@@ -21769,224 +21305,468 @@
       "bats": "우"
     }
   ],
-  "권금채|19": [
+  "곽민준|11": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "2",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
       "position": "투수",
-      "personNo": "202507026467",
+      "personNo": "202102002407",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "김성준|27": [
+  "곽해찬|22": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "2",
-      "position": "2루수",
-      "personNo": "202602000272"
-    }
-  ],
-  "김예찬|": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "2",
-      "position": "미지정",
-      "personNo": "202203000090"
-    }
-  ],
-  "김유은|12": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "2",
       "position": "포수",
-      "personNo": "202501004962",
+      "personNo": "201901001933",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "노시훈|3": [
+  "권대경|19": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202601015158",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백경민|11": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "3",
       "position": "투수",
-      "personNo": "202410003709",
+      "personNo": "201801000261",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "범재원|22": [
+  "김건우|14": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201802002181",
-      "throws": "우",
-      "bats": "양"
-    }
-  ],
-  "서요한|20": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201801000231",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "송병희|5": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202102001050",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "오성민|": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "2",
       "position": "투수",
-      "personNo": "202501003263",
+      "personNo": "201801003027",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "유민규|": [
+  "김동현|51": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201703002643",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202105001918",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "이건호|16": [
+  "김병선|24": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "1",
       "position": "내야수",
-      "personNo": "202602006669"
-    }
-  ],
-  "이주헌|17": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202406001851",
+      "personNo": "202102004080",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "전용주|23": [
+  "김보현|12": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "2",
-      "position": "외야수",
-      "personNo": "202602008328"
-    }
-  ],
-  "정성준|18": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
       "position": "투수",
-      "personNo": "202108001491",
+      "personNo": "202202004044",
       "throws": "우",
       "bats": "우"
     }
   ],
-  "태한결|9": [
+  "김승유|43": [
     {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202011000617",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김찬희|5": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202001003112",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김형준|47": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
       "grade": "1",
-      "position": "외야수",
-      "personNo": "202502000159",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "한선유|7": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202301003018",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "한예준|": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202501005047",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한우진|24": [
-    {
-      "team": "서울HG야구단(U-18)",
-      "region": "서울",
-      "clubIdx": "1761",
-      "grade": "3",
       "position": "투수",
-      "personNo": "202602006753",
+      "personNo": "202308010560",
       "throws": "좌",
       "bats": "좌"
+    }
+  ],
+  "남건욱|10": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202001000842",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박규정|27": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202201001961",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박도영|53": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202202002463",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박진우|1": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901001949",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박태건|40": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202202002101",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "방진영|20": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201903002582",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "배종일|17": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201903000876",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백승우|41": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202302005899"
+    }
+  ],
+  "서한울|33": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202408016378",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "송민준|2": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201803004803",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "송지우|3": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201904004081",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유승수|4": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202102001976",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유지석|35": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202103010215",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유하랑|49": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202407008680",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이윤서|31": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202409000898"
+    }
+  ],
+  "이제우|37": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202304006948",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "이주안|29": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202202003344",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "이진호|42": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202301003699",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이찬희|25": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "1루수",
+      "personNo": "202006004007",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이현서|52": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202101001084",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장지혁|49": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202403077437",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전지후|55": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202101001020",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정승우|39": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202306005321",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최서윤|7": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202002002948",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최준영|8": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201907000523",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "최현우|18": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202001002007",
+      "throws": "좌",
+      "bats": "우"
+    }
+  ],
+  "최훈|21": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202006002877",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한예준|16": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202103011958",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "허웅|13": [
+    {
+      "team": "비봉고",
+      "region": "경기",
+      "clubIdx": "927",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201804002298",
+      "throws": "우",
+      "bats": "우"
     }
   ],
   "강성광|37": [
@@ -22321,6 +22101,226 @@
       "personNo": "202010002079",
       "throws": "우",
       "bats": "우"
+    }
+  ],
+  "권금채|19": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202507026467",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김성준|27": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "2루수",
+      "personNo": "202602000272"
+    }
+  ],
+  "김예찬|": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "미지정",
+      "personNo": "202203000090"
+    }
+  ],
+  "김유은|12": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202501004962",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "노시훈|3": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202601015158",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백경민|11": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202410003709",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "범재원|22": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201802002181",
+      "throws": "우",
+      "bats": "양"
+    }
+  ],
+  "서요한|20": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201801000231",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "송병희|5": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202102001050",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "오성민|": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202501003263",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "유민규|": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201703002643",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이건호|16": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202602006669"
+    }
+  ],
+  "이주헌|17": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202406001851",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전용주|23": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202602008328"
+    }
+  ],
+  "정성준|18": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202108001491",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "태한결|9": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202502000159",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "한선유|7": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202301003018",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "한예준|": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202501005047",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한우진|24": [
+    {
+      "team": "서울HG야구단(U-18)",
+      "region": "서울",
+      "clubIdx": "1761",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202602006753",
+      "throws": "좌",
+      "bats": "좌"
     }
   ],
   "고민석|27": [
@@ -28045,6 +28045,222 @@
       "bats": "좌"
     }
   ],
+  "구종현|63": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202506001632",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김권오|49": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202602006636",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민창|38": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202603011698",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박은수|1": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001000229",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안도현|31": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202506001542",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "오승현|58": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202506001560",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤지후|37": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202601019759",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이동빈|41": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202507004989",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이동주|6": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202509005279",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이윤찬|4": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202301002886",
+      "throws": "우",
+      "bats": "양"
+    }
+  ],
+  "이제혁|5": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202002000632",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이준호|11": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202601019755",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임우현|57": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "202506001827",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전선호|59": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202602005152",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한건희|46": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202507006255",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한준범|17": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202103003237",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "홍기찬|7": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202103002114",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "황시우|10": [
+    {
+      "team": "세종BC(U-18)",
+      "region": "세종",
+      "clubIdx": "1854",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202003002861",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "강지환|25": [
     {
       "team": "세원고",
@@ -28402,222 +28618,6 @@
       "position": "투수",
       "personNo": "202202004011",
       "throws": "좌",
-      "bats": "우"
-    }
-  ],
-  "구종현|63": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202506001632",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김권오|49": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202602006636",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김민창|38": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202603011698",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박은수|1": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001000229",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안도현|31": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202506001542",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "오승현|58": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202506001560",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤지후|37": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202601019759",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이동빈|41": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202507004989",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이동주|6": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202509005279",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이윤찬|4": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202301002886",
-      "throws": "우",
-      "bats": "양"
-    }
-  ],
-  "이제혁|5": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202002000632",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이준호|11": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202601019755",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임우현|57": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "202506001827",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전선호|59": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202602005152",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한건희|46": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202507006255",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한준범|17": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202103003237",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "홍기찬|7": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202103002114",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "황시우|10": [
-    {
-      "team": "세종BC(U-18)",
-      "region": "세종",
-      "clubIdx": "1854",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202003002861",
-      "throws": "우",
       "bats": "우"
     }
   ],
@@ -30349,222 +30349,6 @@
       "bats": "좌"
     }
   ],
-  "권기윤|30": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202405001633",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김용현|1": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202202003199",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김용화|15": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202510004275",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김태양|47": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202602007746",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "김호진|26": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202602009992",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "류혜성|41": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202010000500",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박상범|28": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202602010001",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤지후|27": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202602009996",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이강민|11": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202602000888",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이남영|2": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "201802000809",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이윤성|3": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202602007766",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이은찬|": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202001002963",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "이재범|": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202401002758",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장현수|6": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202303005068",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "최형욱|19": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "3루수",
-      "personNo": "202503008674",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "추서식|7": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "201902006797",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "추식원|44": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201802005807",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "현석운|14": [
-    {
-      "team": "아산BC(U-18)",
-      "region": "충남",
-      "clubIdx": "1542",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202602000883",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "권상균|14": [
     {
       "team": "신흥고",
@@ -30905,6 +30689,222 @@
       "grade": "1",
       "position": "투수",
       "personNo": "201902003994"
+    }
+  ],
+  "권기윤|30": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202405001633",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김용현|1": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202202003199",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김용화|15": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202510004275",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김태양|47": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202602007746",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "김호진|26": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202602009992",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "류혜성|41": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202010000500",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박상범|28": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202602010001",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤지후|27": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202602009996",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이강민|11": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202602000888",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이남영|2": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "201802000809",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이윤성|3": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202602007766",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이은찬|": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202001002963",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "이재범|": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202401002758",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장현수|6": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202303005068",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "최형욱|19": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "3루수",
+      "personNo": "202503008674",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "추서식|7": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "201902006797",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "추식원|44": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201802005807",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "현석운|14": [
+    {
+      "team": "아산BC(U-18)",
+      "region": "충남",
+      "clubIdx": "1542",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202602000883",
+      "throws": "우",
+      "bats": "우"
     }
   ],
   "강윤재|3": [
@@ -34457,330 +34457,6 @@
       "bats": "우"
     }
   ],
-  "강원석|3": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202102000734",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김도경|25": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802006053",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김명선|15": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202103000523",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김영욱|0": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202103000446",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김예찬|11": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202203000090",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김정연|16": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202002003871",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김채윤|21": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201601006083",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "민경훈|61": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201902000436",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박하성|26": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202102001222",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백태호|50": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201901001187",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "성태준|17": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202002002412",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "손서준|12": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201503007227",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안우빈|4": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202101000429",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "안우진|39": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202001001027",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "양우혁|44": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202008003505",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "양준수|7": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201902000604",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "이정완|51": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802001946",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장민성|18": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202103000221",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "정시온|23": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202102000858",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "정지원|6": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201802001574",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정지윤|5": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201808000368",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조수혁|49": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202208023884",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "지민혁|11": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202102001338",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "지민호|27": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202301001574",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "차현빈|28": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202208022931",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한현진|53": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202001001144",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "홍승찬|1": [
-    {
-      "team": "인상고",
-      "region": "전북",
-      "clubIdx": "521",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201803002194",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
   "강민석|28": [
     {
       "team": "의성고",
@@ -35595,6 +35271,330 @@
       "personNo": "201908001007"
     }
   ],
+  "강원석|3": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202102000734",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김도경|25": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802006053",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김명선|15": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202103000523",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김영욱|0": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202103000446",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김예찬|11": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202203000090",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김정연|16": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202002003871",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김채윤|21": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201601006083",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "민경훈|61": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201902000436",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박하성|26": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202102001222",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백태호|50": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201901001187",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "성태준|17": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202002002412",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "손서준|12": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201503007227",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안우빈|4": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202101000429",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "안우진|39": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202001001027",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "양우혁|44": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202008003505",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "양준수|7": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201902000604",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "이정완|51": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802001946",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장민성|18": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202103000221",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "정시온|23": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202102000858",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "정지원|6": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201802001574",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정지윤|5": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201808000368",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조수혁|49": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202208023884",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "지민혁|11": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202102001338",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "지민호|27": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202301001574",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "차현빈|28": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202208022931",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한현진|53": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202001001144",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "홍승찬|1": [
+    {
+      "team": "인상고",
+      "region": "전북",
+      "clubIdx": "521",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201803002194",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
   "강지호|1": [
     {
       "team": "인창고",
@@ -35903,7 +35903,7 @@
       "bats": "우"
     }
   ],
-  "조하민|": [
+  "조하민|21": [
     {
       "team": "인창고",
       "region": "경기",
@@ -36987,6 +36987,330 @@
       "bats": "우"
     }
   ],
+  "김강래|7": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202004002666",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김보람|54": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202001001902",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김성래|59": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201903000254",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김주혁|3": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "1루수",
+      "personNo": "202102004205",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김현우|15": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201802001714",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "남정연|2": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202002002751",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박지호|24": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201902005883",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "백겸|27": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201901003336",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "변경민|25": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202002005053",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "서장원|16": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201902006461",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "송승준|21": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202502003690",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신관영|4": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "내야수",
+      "personNo": "202102001601",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "연제빈|50": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202203000752",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "윤대호|35": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202308010943",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이산|23": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202208022708",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이하람|11": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202103004005",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임준혁|33": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202502009494",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장현우|37": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202103005607",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전기현|52": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "1루수",
+      "personNo": "202202003468",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정재모|13": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "포수",
+      "personNo": "202102000678",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조성준|12": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202402006966",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "조준웅|30": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201801002675",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조현신|10": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "202501001811",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "주지훈|1": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201706001721",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "최해준|9": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202411004517",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "한우주|17": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202202003430",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "홍준서|8": [
+    {
+      "team": "전북인공지능고",
+      "region": "전북",
+      "clubIdx": "1828",
+      "grade": "2",
+      "position": "좌익수",
+      "personNo": "202101001411",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
   "강승원|9": [
     {
       "team": "장충고",
@@ -37565,330 +37889,6 @@
       "personNo": "202009000620",
       "throws": "우",
       "bats": "좌"
-    }
-  ],
-  "김강래|7": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202004002666",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김보람|54": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202001001902",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김성래|59": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201903000254",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김주혁|3": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "1루수",
-      "personNo": "202102004205",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김현우|15": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201802001714",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "남정연|2": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202002002751",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박지호|24": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201902005883",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "백겸|27": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201901003336",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "변경민|25": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202002005053",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "서장원|16": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201902006461",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "송승준|21": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202502003690",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "신관영|4": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "내야수",
-      "personNo": "202102001601",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "연제빈|50": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202203000752",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "윤대호|35": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202308010943",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이산|23": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202208022708",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이하람|11": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202103004005",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임준혁|33": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202502009494",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장현우|37": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202103005607",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전기현|52": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "1루수",
-      "personNo": "202202003468",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정재모|13": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "포수",
-      "personNo": "202102000678",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조성준|12": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202402006966",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "조준웅|30": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201801002675",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조현신|10": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "202501001811",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "주지훈|1": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201706001721",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "최해준|9": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202411004517",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "한우주|17": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202202003430",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "홍준서|8": [
-    {
-      "team": "전북인공지능고",
-      "region": "전북",
-      "clubIdx": "1828",
-      "grade": "2",
-      "position": "좌익수",
-      "personNo": "202101001411",
-      "throws": "우",
-      "bats": "우"
     }
   ],
   "강성훈|18": [
@@ -40269,244 +40269,6 @@
       "bats": "우"
     }
   ],
-  "김민찬|16": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202103001447",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김성진|37": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201902005399",
-      "throws": "좌",
-      "bats": "우"
-    }
-  ],
-  "김성태|8": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202102001267",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김지훈|5": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202601013348",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "김호진|15": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201802000845",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박태현|46": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "202601013361",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "배주한|7": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "201903005058",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "서오승|21": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "202601013439",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "손주성|4": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "포수",
-      "personNo": "202601013484",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "신찬|42": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "202601013307",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "신현승|11": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201902000185",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "여민준|6": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "1",
-      "position": "미지정",
-      "personNo": "202605012025"
-    }
-  ],
-  "오승원|35": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201902007688",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이상형|36": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901002385",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이현준|17": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "외야수",
-      "personNo": "201902006410",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "임주환|33": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "1",
-      "position": "외야수",
-      "personNo": "202405001040",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "채상빈|3": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "내야수",
-      "personNo": "201902000187",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "최장건|18": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201801002195",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "탁기태|1": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202103000943",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "허재욱|39": [
-    {
-      "team": "천안CSBC(U-18)",
-      "region": "충남",
-      "clubIdx": "1697",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "202601012496",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
   "김건하|14": [
     {
       "team": "창원공고야구단",
@@ -40923,6 +40685,244 @@
       "grade": "2",
       "position": "투수",
       "personNo": "202304011306",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김민찬|16": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202103001447",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김성진|37": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201902005399",
+      "throws": "좌",
+      "bats": "우"
+    }
+  ],
+  "김성태|8": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202102001267",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김지훈|5": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202601013348",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "김호진|15": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201802000845",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박태현|46": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "202601013361",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "배주한|7": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "201903005058",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "서오승|21": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "202601013439",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "손주성|4": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "포수",
+      "personNo": "202601013484",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "신찬|42": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "202601013307",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "신현승|11": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201902000185",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "여민준|6": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "1",
+      "position": "미지정",
+      "personNo": "202605012025"
+    }
+  ],
+  "오승원|35": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201902007688",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이상형|36": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901002385",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이현준|17": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "외야수",
+      "personNo": "201902006410",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "임주환|33": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "1",
+      "position": "외야수",
+      "personNo": "202405001040",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "채상빈|3": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "내야수",
+      "personNo": "201902000187",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "최장건|18": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201801002195",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "탁기태|1": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202103000943",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "허재욱|39": [
+    {
+      "team": "천안CSBC(U-18)",
+      "region": "충남",
+      "clubIdx": "1697",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "202601012496",
       "throws": "우",
       "bats": "우"
     }
@@ -44001,6 +44001,222 @@
       "bats": "우"
     }
   ],
+  "김윤환|7": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "202103001479",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김찬영|9": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201801003650",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "김하율|16": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202001002115",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박성준|10": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "포수",
+      "personNo": "202106001578",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박세언|3": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "1",
+      "position": "투수",
+      "personNo": "202107000183",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "박정수|17": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201703004561",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "손수빈|15": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "202402008560",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "양승비|5": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201702003063",
+      "throws": "좌",
+      "bats": "우"
+    }
+  ],
+  "유진우|47": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201603005546",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
+  "윤종현|8": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201901003082",
+      "throws": "우",
+      "bats": "좌"
+    }
+  ],
+  "윤준수|11": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201806001830",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이승리|38": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "201709001156",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "이정현|12": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "2",
+      "position": "투수",
+      "personNo": "202208022599",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "장이준|13": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "내야수",
+      "personNo": "201901002504",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "전은성|21": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201901002073",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정태성|34": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "투수",
+      "personNo": "201702003137",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "정택훈|33": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201909000955",
+      "throws": "우",
+      "bats": "우"
+    }
+  ],
+  "조진규|51": [
+    {
+      "team": "한광BC(U-18)",
+      "region": "서울",
+      "clubIdx": "1637",
+      "grade": "3",
+      "position": "외야수",
+      "personNo": "201703002320",
+      "throws": "좌",
+      "bats": "좌"
+    }
+  ],
   "김도건|4": [
     {
       "team": "한국마사고BC",
@@ -44273,222 +44489,6 @@
       "personNo": "202002004640",
       "throws": "우",
       "bats": "우"
-    }
-  ],
-  "김윤환|7": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "202103001479",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김찬영|9": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201801003650",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "김하율|16": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202001002115",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박성준|10": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "포수",
-      "personNo": "202106001578",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박세언|3": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "1",
-      "position": "투수",
-      "personNo": "202107000183",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "박정수|17": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201703004561",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "손수빈|15": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "202402008560",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "양승비|5": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201702003063",
-      "throws": "좌",
-      "bats": "우"
-    }
-  ],
-  "유진우|47": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201603005546",
-      "throws": "좌",
-      "bats": "좌"
-    }
-  ],
-  "윤종현|8": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201901003082",
-      "throws": "우",
-      "bats": "좌"
-    }
-  ],
-  "윤준수|11": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201806001830",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이승리|38": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "201709001156",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "이정현|12": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "2",
-      "position": "투수",
-      "personNo": "202208022599",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "장이준|13": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "내야수",
-      "personNo": "201901002504",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "전은성|21": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201901002073",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정태성|34": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "투수",
-      "personNo": "201702003137",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "정택훈|33": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201909000955",
-      "throws": "우",
-      "bats": "우"
-    }
-  ],
-  "조진규|51": [
-    {
-      "team": "한광BC(U-18)",
-      "region": "서울",
-      "clubIdx": "1637",
-      "grade": "3",
-      "position": "외야수",
-      "personNo": "201703002320",
-      "throws": "좌",
-      "bats": "좌"
     }
   ],
   "공이준|3": [
