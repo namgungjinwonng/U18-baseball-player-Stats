@@ -122,29 +122,54 @@ async function updateOfficialFor(year: number, newGameFiles: string[]) {
   console.log(`✓ 공식기록 병합: 신규 ${Object.keys(fresh).length}명 (총 ${Object.keys(merged).length})`);
 }
 
-// 신규 경기에 등장한 선수(+아직 프로필 없는 선수) 프로필 증분 수집.
-// 출신학교 연도별 이력·수상내역을 data/profiles/ 에 축적하고
-// roster-history 병합으로 이적 선수 기록 합산을 가능하게 한다.
+// 프로필 증분 수집 — "변동사항이 있는 선수만" 수집해 실행 시간을 최소화한다.
+// 수집 대상: ① 프로필 파일이 없는 선수 ② 현행 로스터 소속 ≠ 프로필의 당해연도 학교(=이적 신호).
+// 20시간 이내 수집분은 무조건 스킵(재수집 루프 방지). 수상내역 같은 저빈도 변동은
+// 전체 수집 워크플로(scrape-full 의 npm run profiles)가 주기적으로 갱신한다.
 async function updateProfilesFor(
-  games: GameBoxScore[], newGameFiles: string[], years: number[]
+  games: GameBoxScore[], _newGameFiles: string[], years: number[]
 ) {
   const roster = readRoster(DATA_DIR);
   const have = existingProfileIds(DATA_DIR);
-  const newSet = new Set(newGameFiles);
+  const season = Math.max(...years);
+  const FRESH_MS = 20 * 60 * 60 * 1000;
+
+  const needsUpdate = (pn: string, rosterTeam?: string): boolean => {
+    if (!have.has(pn)) return true; // 프로필 미보유 → 수집
+    try {
+      const prof = JSON.parse(
+        fs.readFileSync(path.join(DATA_DIR, "profiles", `${pn}.json`), "utf8")
+      ) as { updatedAt?: string; schools?: { year: number; school: string }[] };
+      // 방금 수집한 프로필은 스킵 (팀명 표기차로 인한 매일 재수집 루프 방지)
+      if (prof.updatedAt && Date.now() - Date.parse(prof.updatedAt) < FRESH_MS) return false;
+      if (!rosterTeam) return false;
+      const curSchools = (prof.schools ?? []).filter((s) => s.year === season);
+      if (curSchools.length === 0) return true; // 당해연도 이력 없음 → 갱신
+      // 현행 로스터 소속이 프로필 당해연도 학교에 없으면 = 이적 → 재수집
+      return !curSchools.some((s) => s.school === rosterTeam);
+    } catch {
+      return true; // 손상된 프로필 → 재수집
+    }
+  };
+
   const personNos = new Set<string>();
+  const checked = new Set<string>();
   for (const g of games) {
-    const isNew = newSet.has(`${g.id}.json`);
     const mark = (name: string, id: string, team: string) => {
-      const number = id.split("_").pop() ?? "";
-      const pn = lookupRoster(roster, name, number, team)?.personNo;
-      if (!pn) return;
-      // 신규 경기 출전자는 항상 갱신(이적·수상 반영), 그 외엔 프로필 미보유자만.
-      if (isNew || !have.has(pn)) personNos.add(pn);
+      const ros = lookupRoster(roster, name, id.split("_").pop() ?? "", team);
+      if (!ros?.personNo || checked.has(ros.personNo)) return;
+      checked.add(ros.personNo);
+      if (needsUpdate(ros.personNo, ros.team)) personNos.add(ros.personNo);
     };
     for (const b of g.batters) mark(b.name, b.playerId, b.team);
     for (const p of g.pitchers) mark(p.name, p.playerId, p.team);
   }
-  if (personNos.size) await collectProfiles(DATA_DIR, [...personNos], years);
+  if (personNos.size) {
+    console.log(`프로필 변동 감지 ${personNos.size}명 (검사 ${checked.size}명)`);
+    await collectProfiles(DATA_DIR, [...personNos], years);
+  } else {
+    console.log(`프로필 변동 없음 (검사 ${checked.size}명) — 수집 스킵`);
+  }
 }
 
 async function main() {

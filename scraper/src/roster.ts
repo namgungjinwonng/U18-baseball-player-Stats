@@ -167,17 +167,23 @@ async function main() {
   console.log(`팀 ${teams.length}개 발견. 로스터 수집…`);
   const roster: Roster = {};
   let done = 0;
-  for (const t of teams) {
-    if (done >= limit) break;
-    try {
-      const n = await fetchTeamRoster(t.clubIdx, t.name, t.region, roster);
-      done++;
-      if (done % 20 === 0) console.log(`  …${done}팀 (${Object.keys(roster).length}명)`);
-      void n;
-    } catch (e) {
-      console.warn(`  ⚠ ${t.name}(${t.clubIdx}) 실패: ${(e as Error).message}`);
+  // 동시 3팀 병렬 (KBSA 스로틀 한도 내에서 실행 시간 단축 — get() 이 재시도 담당)
+  const targets = Number.isFinite(limit) ? teams.slice(0, limit as number) : teams;
+  let idx = 0;
+  const worker = async (): Promise<void> => {
+    for (;;) {
+      const t = targets[idx++];
+      if (!t) return;
+      try {
+        await fetchTeamRoster(t.clubIdx, t.name, t.region, roster);
+        done++;
+        if (done % 20 === 0) console.log(`  …${done}팀 (${Object.keys(roster).length}명)`);
+      } catch (e) {
+        console.warn(`  ⚠ ${t.name}(${t.clubIdx}) 실패: ${(e as Error).message}`);
+      }
     }
-  }
+  };
+  await Promise.all(Array.from({ length: Math.min(3, targets.length) }, worker));
   fs.mkdirSync(DATA_DIR, { recursive: true });
   fs.writeFileSync(path.join(DATA_DIR, "roster.json"), JSON.stringify(roster, null, 2) + "\n");
   const total = Object.values(roster).reduce((n, arr) => n + arr.length, 0);
