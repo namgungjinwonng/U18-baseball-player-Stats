@@ -5,7 +5,7 @@ import {
   useTournamentMatchups, useTournaments,
 } from "../../shared/data";
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
-import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
+import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
 import { filterPlayerStats } from "../../shared/playerStats";
@@ -38,7 +38,8 @@ function BattingStrip({ b }: { b: BattingStats }) {
   const n = (v: number | undefined) => (v == null ? "-" : String(v));
   return (
     <div className="stat-strip stat-strip--compact">
-      <Stat k="타율" v={rate(b.avg)} />
+      {/* 타율도 클릭 시 공식·리그평균 모달 (세이버 항목과 동일 UX) */}
+      <SaberStat abbr="AVG" label="타율" v={rate(b.avg)} />
       <Stat k="경기" v={n(b.g)} />
       <Stat k="타석" v={n(b.pa)} />
       <Stat k="타수" v={n(b.ab)} />
@@ -72,6 +73,7 @@ function BattingSaber({ b, lg }: { b: BattingStats; lg?: LeagueRates | null }) {
       <SaberStat abbr="K%" v={pct(a.kPct)} />
       <SaberStat abbr="BB/K" v={dec2(a.bbK)} />
       <SaberStat abbr="wOBA" v={rate(a.woba)} />
+      {a.wraa != null && <SaberStat abbr="wRAA" v={signed1(a.wraa)} />}
       {a.wrcPlus != null && <SaberStat abbr="wRC+" v={int(a.wrcPlus)} />}
       {a.war != null && <SaberStat abbr="WAR_BAT" label="WAR" v={dec1(a.war)} />}
     </div>
@@ -97,7 +99,8 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
   const n = (v: number | undefined) => (v == null ? "-" : String(v));
   return (
     <div className="stat-strip stat-strip--compact">
-      <Stat k="평균자책" v={dec2(p.era)} />
+      {/* 평균자책도 클릭 시 공식·리그평균 모달 (세이버 항목과 동일 UX) */}
+      <SaberStat abbr="ERA" label="평균자책" v={dec2(p.era)} />
       <Stat k="경기" v={n(p.g)} />
       <Stat k="승" v={n(p.w)} />
       <Stat k="패" v={n(p.l)} />

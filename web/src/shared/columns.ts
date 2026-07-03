@@ -5,7 +5,7 @@
 import type { Column } from "./StatTable";
 import type { LeagueRates, Player } from "./types";
 import { dec2, inn, rate } from "./format";
-import { battingAdvanced, pitchingAdvanced, pct, dec1, woba } from "./sabermetrics";
+import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1, woba } from "./sabermetrics";
 
 const name: Column<Player> = {
   key: "name",
@@ -89,6 +89,15 @@ export function battingDetailColumns(lg?: LeagueRates | null): Column<Player>[] 
       label: "wOBA",
       value: (p) => (p.batting ? woba(p.batting) : 0),
       render: (p) => (p.batting ? rate(woba(p.batting)) : "-"),
+    },
+    {
+      key: "wraa",
+      label: "wRAA",
+      value: (p) => (p.batting ? battingAdvanced(p.batting, lg).wraa ?? 0 : 0),
+      render: (p) => {
+        const v = p.batting ? battingAdvanced(p.batting, lg).wraa : undefined;
+        return v != null ? signed1(v) : "-";
+      },
     },
     {
       key: "wrc",

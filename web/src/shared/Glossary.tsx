@@ -10,6 +10,7 @@ export interface Term {
   statKey?: keyof LeagueRates; // 리그평균 표시용 (averages.json 필드)
   statFmt?: "rate" | "dec2" | "pct" | "dec1"; // 리그평균 표기 형식
   avgNote?: string; // 리그평균 대신/함께 보여줄 안내 (wRC+=100 등)
+  avgLabel?: string; // 평균 표의 제목 (기본 "리그 평균 (abbr)" — wRC+/WAR 는 "계산 기준값: 리그 wOBA" 처럼 구분)
 }
 
 export const BATTING: Term[] = [
@@ -24,17 +25,27 @@ export const BATTING: Term[] = [
   { abbr: "BB/K", name: "볼넷/삼진", formula: "볼넷 ÷ 삼진", desc: "삼진 대비 볼넷 비율. 1 이상이면 매우 우수한 선구안.", statKey: "bbK", statFmt: "dec2" },
   { abbr: "wOBA", name: "가중 출루율", formula: "(0.69·볼넷 + 0.72·사구 + 0.89·단타 + 1.27·2루타 + 1.62·3루타 + 2.10·홈런) ÷ (타수+볼넷+사구+희비)", desc: "출루 사건별 득점 가치를 가중해 합친 타격 종합 지표. OPS 보다 정밀함. (가중치는 MLB 관례값 근사)", statKey: "woba", statFmt: "rate" },
   {
+    abbr: "wRAA", name: "평균 대비 득점 기여",
+    formula: "(wOBA − 리그wOBA) ÷ 1.15 × 타석",
+    desc: "리그 평균 타자와 비교해 몇 점(런)을 더 만들어냈는지. 0이 리그 평균이며, +10이면 평균 타자보다 10점 더 기여, 음수면 평균 이하. wRC+ 와 타자 WAR 계산의 재료가 되는 지표.",
+    avgNote: "wRAA 의 리그 평균은 정의상 항상 0 입니다(평균 타자 = 0점 기여). 값이 없는 게 아니라 '평균과의 차이' 자체를 재는 지표이기 때문입니다. 아래 표는 계산의 기준이 되는 리그 wOBA 값입니다 (wOBA 항목의 리그 평균과 동일).",
+    avgLabel: "계산 기준값 — 리그 wOBA",
+    statKey: "woba", statFmt: "rate",
+  },
+  {
     abbr: "wRC+", name: "조정 득점 생산력",
-    formula: "( wRAA/타석 + 리그득점/타석 ) ÷ (리그득점/타석) × 100  [wRAA = (wOBA − 리그wOBA) ÷ 1.15 × 타석]",
-    desc: "리그 평균 대비 득점 생산력. 100이 리그 평균, 150이면 평균보다 50% 더 생산적. 리그 평균은 데이터 갱신 시점마다 재계산됨.",
-    avgNote: "리그 평균 = 100 (정의상 고정). 아래는 기준이 되는 리그 wOBA.",
+    formula: "( wRAA/타석 + 리그득점/타석 ) ÷ (리그득점/타석) × 100",
+    desc: "리그 평균 대비 득점 생산력. 100이 리그 평균, 150이면 평균보다 50% 더 생산적. wRAA(평균 대비 득점 기여)를 타석당 비율로 바꿔 100 기준으로 환산한 지표. 리그 평균은 데이터 갱신 시점마다 재계산됨.",
+    avgNote: "wRC+ 의 리그 평균은 정의상 항상 100 입니다. 아래 표는 계산의 기준이 되는 리그 wOBA 값입니다 (wOBA 항목의 리그 평균과 동일).",
+    avgLabel: "계산 기준값 — 리그 wOBA",
     statKey: "woba", statFmt: "rate",
   },
   {
     abbr: "WAR", key: "WAR_BAT", name: "대체선수 대비 승수 (타자)",
-    formula: "( wRAA + 20런 × 타석/600 ) ÷ 10런  [wRAA = (wOBA − 리그wOBA) ÷ 1.15 × 타석]",
-    desc: "대체 수준 선수 대비 몇 승을 더 만들었는지의 간이 추정치. 타격 기여만 반영(수비·주루 제외). 대체수준 −20런/600타석, 10런=1승 관례값 사용.",
-    avgNote: "기준이 되는 리그 wOBA (갱신 시점마다 재계산).",
+    formula: "( wRAA + 20런 × 타석/600 ) ÷ 10런",
+    desc: "대체 수준 선수 대비 몇 승을 더 만들었는지의 간이 추정치. wRAA(평균 대비 득점 기여)에 대체수준 보정(−20런/600타석)을 더해 10런=1승으로 환산. 타격 기여만 반영(수비·주루 제외).",
+    avgNote: "WAR 는 대체선수 대비 누적 승수라 '리그 평균 WAR' 는 표시하지 않습니다(0 승 근처가 대체수준, 규모에 따라 달라짐). 아래 표는 계산의 기준이 되는 리그 wOBA 값입니다.",
+    avgLabel: "계산 기준값 — 리그 wOBA",
     statKey: "woba", statFmt: "rate",
   },
 ];
@@ -51,7 +62,8 @@ export const PITCHING: Term[] = [
     abbr: "WAR", key: "WAR_PIT", name: "대체선수 대비 승수 (투수)",
     formula: "( (리그ERA − ERA) + 0.6 ) × 이닝/9 ÷ 10런",
     desc: "대체 수준 투수 대비 몇 승을 더 만들었는지의 간이 추정치(ERA 기반). 대체수준 +0.6런/9이닝, 10런=1승 관례값 사용. 리그 ERA 는 데이터 갱신 시점마다 재계산됨.",
-    avgNote: "기준이 되는 리그 ERA (갱신 시점마다 재계산).",
+    avgNote: "WAR 는 대체선수 대비 누적 승수라 '리그 평균 WAR' 는 표시하지 않습니다. 아래 표는 계산의 기준이 되는 리그 ERA 값입니다 (ERA 항목의 리그 평균과 동일).",
+    avgLabel: "계산 기준값 — 리그 ERA",
     statKey: "era", statFmt: "dec2",
   },
 ];

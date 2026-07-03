@@ -27,6 +27,7 @@ export function woba(b: BattingStats): number {
 export interface BattingAdvanced {
   ops: number; iso: number; babip: number; bbPct: number; kPct: number; bbK: number;
   woba: number;
+  wraa?: number;    // 리그 평균 타자 대비 득점 기여(런 단위, 0 = 평균) — 리그 평균 필요
   wrcPlus?: number; // 리그 평균 대비 득점 생산력 (100 = 평균) — 리그 평균 필요
   war?: number;     // 대체선수 대비 승수(간이 계산) — 리그 평균 필요
 }
@@ -34,15 +35,17 @@ export function battingAdvanced(b: BattingStats, lg?: LeagueRates | null): Batti
   const pa = b.pa || b.ab + b.bb + b.hbp;
   const babipDen = b.ab - b.so - b.hr; // 희생플라이 미보유 → 근사
   const wobaV = woba(b);
+  let wraa: number | undefined;
   let wrcPlus: number | undefined;
   let war: number | undefined;
   if (lg && lg.rPerPa > 0 && pa > 0) {
     // wRAA = (wOBA − 리그wOBA) ÷ wOBA스케일 × 타석
-    const wraa = ((wobaV - lg.woba) / WOBA_SCALE) * pa;
+    const wraaRaw = ((wobaV - lg.woba) / WOBA_SCALE) * pa;
+    wraa = Number(wraaRaw.toFixed(1));
     // wRC+ = ( wRAA/타석 + 리그득점/타석 ) ÷ (리그득점/타석) × 100
-    wrcPlus = Math.round(((wraa / pa + lg.rPerPa) / lg.rPerPa) * 100);
+    wrcPlus = Math.round(((wraaRaw / pa + lg.rPerPa) / lg.rPerPa) * 100);
     // WAR(타자) = ( wRAA + 대체수준 20런×타석/600 ) ÷ 10런
-    war = Number(((wraa + (BAT_REPL_PER_600PA * pa) / 600) / RUNS_PER_WIN).toFixed(1));
+    war = Number(((wraaRaw + (BAT_REPL_PER_600PA * pa) / 600) / RUNS_PER_WIN).toFixed(1));
   }
   return {
     ops: b.obp + b.slg,
@@ -52,6 +55,7 @@ export function battingAdvanced(b: BattingStats, lg?: LeagueRates | null): Batti
     kPct: pa ? b.so / pa : 0,
     bbK: b.so ? b.bb / b.so : b.bb,
     woba: wobaV,
+    wraa,
     wrcPlus,
     war,
   };
@@ -86,3 +90,5 @@ export function pitchingAdvanced(p: PitchingStats, lg?: LeagueRates | null): Pit
 
 export const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 export const dec1 = (v: number) => v.toFixed(1);
+// 부호 표기(0 기준 지표 — wRAA 등): +3.2 / -1.4 / 0.0
+export const signed1 = (v: number) => (v > 0 ? `+${v.toFixed(1)}` : v.toFixed(1));

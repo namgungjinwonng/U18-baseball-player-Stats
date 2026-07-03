@@ -5,7 +5,7 @@ import {
   useTournamentMatchups, useTournaments,
 } from "../../shared/data";
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
-import { battingAdvanced, pitchingAdvanced, pct, dec1 } from "../../shared/sabermetrics";
+import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
 import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
 import { filterPlayerStats } from "../../shared/playerStats";
@@ -197,9 +197,14 @@ export function MPlayer() {
             <section className="player-section">
               <h3>타자 기록</h3>
               <div className="m-strip">
+                {/* 타율도 클릭 시 공식·리그평균 모달 (세이버 항목과 동일 UX) */}
+                <div className="cell">
+                  <div className="k"><SaberTerm abbr="AVG">타율</SaberTerm></div>
+                  <div className="v">{rate(v.batting.avg)}</div>
+                </div>
                 {/* 비율/계산 지표(OBP·SLG·OPS) 는 세이버메트릭스 섹션에서만 노출 — 중복 제거. */}
                 {([
-                  ["타율", rate(v.batting.avg)], ["경기", n(v.batting.g)], ["타석", n(v.batting.pa)],
+                  ["경기", n(v.batting.g)], ["타석", n(v.batting.pa)],
                   ["타수", n(v.batting.ab)], ["안타", n(v.batting.h)], ["2루타", n(v.batting.b2)],
                   ["3루타", n(v.batting.b3)], ["홈런", n(v.batting.hr)], ["타점", n(v.batting.rbi)],
                   ["득점", n(v.batting.r)], ["도루", n(v.batting.sb)], ["볼넷", n(v.batting.bb)],
@@ -220,6 +225,7 @@ export function MPlayer() {
                 <div className="cell"><div className="k"><SaberTerm abbr="K%" /></div><div className="v">{pct(a.kPct)}</div></div>
                 <div className="cell"><div className="k"><SaberTerm abbr="BB/K" /></div><div className="v">{dec2(a.bbK)}</div></div>
                 <div className="cell"><div className="k"><SaberTerm abbr="wOBA" /></div><div className="v">{rate(a.woba)}</div></div>
+                {a.wraa != null && <div className="cell"><div className="k"><SaberTerm abbr="wRAA" /></div><div className="v">{signed1(a.wraa)}</div></div>}
                 {a.wrcPlus != null && <div className="cell"><div className="k"><SaberTerm abbr="wRC+" /></div><div className="v">{int(a.wrcPlus)}</div></div>}
                 {a.war != null && <div className="cell"><div className="k"><SaberTerm abbr="WAR_BAT">WAR</SaberTerm></div><div className="v">{dec1(a.war)}</div></div>}
               </div>
@@ -238,9 +244,14 @@ export function MPlayer() {
             <section className="player-section">
               <h3>투수 기록</h3>
               <div className="m-strip">
+                {/* 평균자책도 클릭 시 공식·리그평균 모달 (세이버 항목과 동일 UX) */}
+                <div className="cell">
+                  <div className="k"><SaberTerm abbr="ERA">평균자책</SaberTerm></div>
+                  <div className="v">{dec2(v.pitching.era)}</div>
+                </div>
                 {/* 비율/계산 지표(WHIP) 는 세이버메트릭스 섹션에서만 노출. */}
                 {([
-                  ["평균자책", dec2(v.pitching.era)], ["경기", n(v.pitching.g)], ["승", n(v.pitching.w)],
+                  ["경기", n(v.pitching.g)], ["승", n(v.pitching.w)],
                   ["패", n(v.pitching.l)], ["이닝", inn(v.pitching.ip)], ["상대타자", n(v.pitching.bf)],
                   ["투구수", n(v.pitching.np)], ["피안타", n(v.pitching.h)], ["피홈런", n(v.pitching.hr)],
                   ["볼넷", n(v.pitching.bb)], ["탈삼진", n(v.pitching.so)], ["실점", n(v.pitching.r)],

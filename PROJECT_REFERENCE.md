@@ -252,6 +252,7 @@ npx playwright install chromium && npm run discover -- "<URL>"
   - **WAR·wRC+ (#4)**: `sabermetrics.ts` 에 wOBA/wRC+/WAR(타자·투수 구분, 간이 계산 — 상수: wOBA스케일 1.15, 10런=1승, 대체수준 타자 −20런/600PA·투수 +0.6런/9IP). 리그평균은 스크레이퍼 `leagueAverages.ts` 가 갱신 시마다 재계산해 `data/{year}/averages.json`(전체+시합별) 기록. 용어 모달(`SaberTerm`)에 전체/리그별(주말리그)/시합별(전국대회) 리그평균 표시. Glossary 에 wOBA/wRC+/WAR(타자·투수) 계산식 추가(TERM_MAP 키: `WAR_BAT`/`WAR_PIT`).
   - **상대전적 표에 투타 컬럼** (MatchupPage/MMatchup).
   - **랭킹·기록 세부에도 확장**: `leaders.ts` 카테고리에 wOBA/wRC+/WAR(타자)·WAR(투수) 추가(id: `woba`/`wrc`/`war-bat`/`war-pit`, wRC+·wOBA 는 규정타석, WAR 는 누적). `columns.ts` 세부 탭이 lg(LeagueRates)를 받는 팩토리로 변경 — `recordTabs(lg)` 호출로 바뀜(RecordsPage/MRecords/LeadersView 가 averages.json 의 스코프별 rates 주입).
+  - **wRAA 지표 추가 + 모달 라벨 정리**: battingAdvanced 에 wraa(부호 표기 `signed1`), 타자 세부 컬럼·선수 상세 세이버·Glossary·랭킹(id `wraa`, 누적) 에 wRAA 추가. 타율(AVG)·평균자책(ERA)도 선수 상세에서 클릭형 모달로. wRC+/WAR/wRAA 모달은 "리그 평균" 대신 `avgLabel`("계산 기준값 — 리그 wOBA/ERA") + avgNote(정의상 평균=100/0, WAR 는 평균 없음)로 오해 방지.
   - scrape-full.yml 에 `npm run profiles`(전체 프로필 재수집) 스텝 추가. 증분 scrape 는 신규 경기 출전자만 프로필 갱신(`updateProfilesFor`).
 - 2026-06-27: 초판 작성 (구조 분석 기준 커밋 `f0948e6`).
 - 2026-06-27: `VITE_BASE` 를 실제 리포명(`U18-baseball-player-Stats`)에 맞춰 정정. (이전 값 `U18-baseball-player-records` 는 리포명과 불일치하여 배포 시 자산 경로 404 유발.)

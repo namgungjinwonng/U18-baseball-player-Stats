@@ -68,12 +68,11 @@ function LeagueAvgSection({ term }: { term: Term }) {
   if (!term.statKey) return null;
   if (!groups) return null;
 
-  const statLabel = term.avgNote ? undefined : term.abbr;
+  // wRC+/WAR 처럼 자체 리그평균이 아닌 "계산 기준값"을 보여주는 항목은 avgLabel 로 구분 표기.
+  const title = term.avgLabel ?? `리그 평균 (${term.abbr})`;
   return (
     <div className="modal-averages">
-      <h4 className="modal-averages__title">
-        리그 평균{statLabel ? ` (${statLabel})` : ""}
-      </h4>
+      <h4 className="modal-averages__title">{title}</h4>
       {term.avgNote && <p className="caption" style={{ margin: "0 0 6px" }}>{term.avgNote}</p>}
       <div className="modal-averages__row modal-averages__row--overall">
         <span>전체 시즌</span>

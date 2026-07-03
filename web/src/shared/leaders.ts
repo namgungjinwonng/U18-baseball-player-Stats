@@ -2,7 +2,7 @@
 // 규정타석/규정이닝은 "스코프(전체 시즌 / 주말리그 / 전국대회)" 별로 다르게 적용한다.
 // wOBA·wRC+·WAR 카테고리는 리그평균(LeagueRates)이 있어야 계산된다(pick 의 lg 인자).
 import type { LeagueRates, Player } from "./types";
-import { battingAdvanced, pitchingAdvanced, woba } from "./sabermetrics";
+import { battingAdvanced, pitchingAdvanced, signed1, woba } from "./sabermetrics";
 
 export interface LeaderItem {
   id: string;
@@ -121,7 +121,7 @@ export function describeQualify(ctx: QualifyContext, kind: "batting" | "pitching
 // ─────────────────────────────────────────────────────────────────────────
 export type LeaderCategoryId =
   | "avg" | "hr" | "rbi" | "r" | "h" | "sb" | "obp" | "slg" | "ops"
-  | "woba" | "wrc" | "war-bat"
+  | "woba" | "wraa" | "wrc" | "war-bat"
   | "era" | "so" | "w" | "sv" | "ip" | "whip" | "war-pit";
 
 export interface LeaderCategory {
@@ -147,6 +147,7 @@ export const CATEGORIES: LeaderCategory[] = [
   { id: "slg", title: "장타율 (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => p.batting?.slg, fmt: rateFmt },
   { id: "ops", title: "OPS (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => (p.batting ? p.batting.obp + p.batting.slg : undefined), fmt: rateFmt },
   { id: "woba", title: "wOBA (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p) => (p.batting ? woba(p.batting) : undefined), fmt: rateFmt },
+  { id: "wraa", title: "wRAA (타자)", kind: "batting", needsQualify: false, asc: false, pick: (p, lg) => (p.batting ? battingAdvanced(p.batting, lg).wraa : undefined), fmt: signed1 },
   { id: "wrc", title: "wRC+ (규정타석)", kind: "batting", needsQualify: true, asc: false, pick: (p, lg) => (p.batting ? battingAdvanced(p.batting, lg).wrcPlus : undefined), fmt: intFmt },
   { id: "war-bat", title: "WAR (타자)", kind: "batting", needsQualify: false, asc: false, pick: (p, lg) => (p.batting ? battingAdvanced(p.batting, lg).war : undefined), fmt: (n) => n.toFixed(1) },
   // 투수
