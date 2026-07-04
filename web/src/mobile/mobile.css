@@ -252,10 +252,24 @@
   flex: 1 1 0;
   min-width: 0;
 }
-/* 아래 줄: 지역/학교는 넓게, 학년은 좁게 한 줄 배치 */
-.filter-bar__row--3col > .m-select {
-  flex: 2 1 calc(37% - 6px);
+/* 아래 줄: 지역/학교/학년 3칸 균등 — 한 줄 고정.
+   좁은 화면에서 텍스트가 잘리지 않도록 3칸 줄만 패딩·화살표 여백 축소. */
+.filter-bar__row--3col {
+  flex-wrap: nowrap;
 }
-.filter-bar__row--3col > .m-select:last-child {
-  flex: 1 1 calc(24% - 6px);
+.filter-bar__row--3col > .m-select {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-left: 10px;
+  padding-right: 24px;
+  background-position: right 8px center;
+}
+/* 초협소 화면(320px 등): 패딩·글자 더 축소해 "지역 선택" 등이 잘리지 않게 */
+@media (max-width: 360px) {
+  .filter-bar__row--3col > .m-select {
+    padding-left: 8px;
+    padding-right: 20px;
+    background-position: right 6px center;
+    font-size: 12px;
+  }
 }

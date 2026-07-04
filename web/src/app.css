@@ -362,8 +362,10 @@
   max-width: 280px;
   margin-bottom: 0;
 }
+/* 지역/학교/학년 3칸 균등 폭 — 선택값 길이와 무관하게 동일 너비 유지 */
 .filter-bar__row--3col > .m-select {
-  flex: 0 0 auto;
+  flex: 0 0 200px;
+  width: 200px;
 }
 
 /* 자동완성 드롭다운 */
