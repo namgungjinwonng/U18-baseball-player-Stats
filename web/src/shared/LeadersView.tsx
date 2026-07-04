@@ -1,6 +1,6 @@
 // 항목별 전체 랭킹 페이지 본문 (데스크탑/모바일 공용).
 // 상단: 타자/투수 탭 + 각 항목 칩 (선택 시 해당 항목 랭킹으로 이동).
-// 필터(시합·지역·학교) 그대로 사용.
+// 필터(시합·지역·학교·학년) 그대로 사용.
 import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLeagueAverages, useTournamentRecords } from "./data";
@@ -44,7 +44,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
     <div className={wrapClass}>
       <h2 className="heading-xl" style={{ marginBottom: 8 }}>랭킹</h2>
 
-      {/* 상단: 타자/투수 탭 + 항목 chip. 현재 필터(시합/지역/학교)는 URL query 로 유지. */}
+      {/* 상단: 타자/투수 탭 + 항목 chip. 현재 필터(시합/지역/학교/학년)는 URL query 로 유지. */}
       <div className="tabs" style={{ marginBottom: 8 }}>
         <Link
           to={`/leaders/${activeKind === "batting" ? id ?? "avg" : "avg"}${filterToQuery(filter)}`}

@@ -343,7 +343,7 @@
   line-height: 1.5;
 }
 
-/* 지역/학교 필터 바 — 위 줄(시합 cascade) + 아래 줄(지역/학교 2칸) 고정 */
+/* 지역/학교/학년 필터 바 — 위 줄(시합 cascade) + 아래 줄(지역/학교/학년 3칸) 고정 */
 .filter-bar {
   display: flex;
   flex-direction: column;
@@ -362,7 +362,7 @@
   max-width: 280px;
   margin-bottom: 0;
 }
-.filter-bar__row--2col > .m-select {
+.filter-bar__row--3col > .m-select {
   flex: 0 0 auto;
 }
 

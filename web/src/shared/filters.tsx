@@ -1,4 +1,4 @@
-// 지역/학교/시합 필터 — 선수 기록·시즌 리더 공용 (데스크탑·모바일).
+// 지역/학교/학년/시합 필터 — 선수 기록·시즌 리더 공용 (데스크탑·모바일).
 import { useEffect, useMemo, useState } from "react";
 import { useMeta, useTournamentMeta, useTournaments } from "./data";
 import { useYear } from "./year";
@@ -8,9 +8,10 @@ import { buildTree, categorize, type Kind, type Phase } from "./tournamentTree";
 export interface RecordFilter {
   region: string;
   team: string;
+  grade: string; // "1"/"2"/"3" ("" = 전체 학년)
   tournament: string; // tournament slug ("" = 시즌 전체)
 }
-export const emptyFilter: RecordFilter = { region: "", team: "", tournament: "" };
+export const emptyFilter: RecordFilter = { region: "", team: "", grade: "", tournament: "" };
 
 // URL ↔ RecordFilter 직렬화 (홈/랭킹 페이지 사이 필터 전파에 사용).
 export function filterToQuery(f: RecordFilter): string {
@@ -18,6 +19,7 @@ export function filterToQuery(f: RecordFilter): string {
   if (f.tournament) p.set("t", f.tournament);
   if (f.region) p.set("r", f.region);
   if (f.team) p.set("s", f.team);
+  if (f.grade) p.set("g", f.grade);
   const s = p.toString();
   return s ? `?${s}` : "";
 }
@@ -27,6 +29,7 @@ export function filterFromQuery(search: string): RecordFilter {
     tournament: p.get("t") ?? "",
     region: p.get("r") ?? "",
     team: p.get("s") ?? "",
+    grade: p.get("g") ?? "",
   };
 }
 
@@ -52,13 +55,17 @@ export function useQualifyContext(filter: RecordFilter): QualifyContext {
 interface HasTeam {
   team: string;
   region?: string;
+  grade?: string;
 }
 
 // 시합 필터는 상위(useTournamentRecords)에서 다른 records 파일을 로드해 적용하므로,
-// 여기서는 지역/학교 만 클라이언트 측에서 필터링.
+// 여기서는 지역/학교/학년 만 클라이언트 측에서 필터링.
 export function applyFilter<T extends HasTeam>(rows: T[], f: RecordFilter): T[] {
   return rows.filter(
-    (p) => (!f.region || p.region === f.region) && (!f.team || p.team === f.team)
+    (p) =>
+      (!f.region || p.region === f.region) &&
+      (!f.team || p.team === f.team) &&
+      (!f.grade || p.grade === f.grade)
   );
 }
 
@@ -197,6 +204,17 @@ export function FilterBar({
       ),
     [rows, value.region]
   );
+  // 학년은 선택된 지역/학교로 한정(캐스케이드)
+  const grades = useMemo(
+    () =>
+      [...new Set(
+        rows
+          .filter((r) => (!value.region || r.region === value.region) && (!value.team || r.team === value.team))
+          .map((r) => r.grade)
+          .filter(Boolean) as string[]
+      )].sort(),
+    [rows, value.region, value.team]
+  );
 
   return (
     <div className="filter-bar">
@@ -208,7 +226,7 @@ export function FilterBar({
           />
         </div>
       )}
-      <div className="filter-bar__row filter-bar__row--2col">
+      <div className="filter-bar__row filter-bar__row--3col">
         <select
           className="m-select"
           value={value.region}
@@ -229,6 +247,17 @@ export function FilterBar({
           <option value="">학교 선택</option>
           {teams.map((t) => (
             <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+        <select
+          className="m-select"
+          value={value.grade}
+          onChange={(e) => onChange({ ...value, grade: e.target.value })}
+          aria-label="학년 선택"
+        >
+          <option value="">학년 선택</option>
+          {grades.map((g) => (
+            <option key={g} value={g}>{g}학년</option>
           ))}
         </select>
       </div>

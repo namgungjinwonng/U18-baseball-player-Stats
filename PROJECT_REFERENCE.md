@@ -244,6 +244,8 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-04: **선수 기록 페이지 규정 미달 토글**: RecordsPage/MRecords 가 `useQualifyContext` + `isQualifiedBat/Pit` 로 규정 미달 선수를 기본 제외, 랭킹 페이지와 동일한 `qual-toggle` 체크박스("규정 미달 포함 — 규정타석/이닝 설명")로 포함 가능. 탭 kind(타자/투수)에 따라 규정타석/규정이닝 기준 자동 전환.
+- 2026-07-04: **학년 필터 추가**: `RecordFilter` 에 `grade`("1"/"2"/"3") — `FilterBar` 하단 줄이 지역+학교+학년 3칸(`filter-bar__row--2col` → `--3col`, 모바일은 학년 칸만 좁게). `applyFilter` 가 학년도 클라이언트 필터링, URL query `g` 로 홈↔랭킹 전파(`filterToQuery`/`filterFromQuery`). 학년 옵션은 지역/학교 캐스케이드로 rows 에서 유도. 적용 위치: 홈 시즌리더(Desktop/Mobile)·선수 기록(Desktop/Mobile)·랭킹(`LeadersView`) — 규정 충족자 수·순위 모두 학년 필터 반영. wRC+/WAR 리그평균 기준값은 기존 지역/학교 필터와 동일하게 리그 전체(시즌/시합) 기준 유지.
 - 2026-07-02: 상대전적 메타 누락/로스터 총원/이적 병합/WAR·wRC+/선수 상세 탭 일괄 개선:
   - **매치업 id 재매핑 버그 수정 (#1·#5)**: reslug 비충돌 브랜치에서 `reslugRemap` 미기록 → 매치업 886건이 옛 축약팀 슬러그(`GD챌린_…`)로 남아 상대 (학교·학년·투타) 메타·링크·상대전적 샤드가 깨지던 문제. 한 줄 수정 + 재집계.
   - **로스터 총원 일치 (#2)**: `roster.ts` 가 등번호 미배정 선수도 수집(키 `이름|`), 이름은 `<a>` 없을 때 span 폴백. 수집 후 `/info/current/current_list` 의 18세 이하부 총계와 자동 대조(±1% 초과 시 경고). 3,667 → 3,859명(공식 3,860).

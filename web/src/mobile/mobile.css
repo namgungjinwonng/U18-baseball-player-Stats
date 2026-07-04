@@ -235,8 +235,8 @@
   background-repeat: no-repeat;
   background-position: right 16px center;
 }
-/* 필터 바: 2줄 고정 (위 = 시합구분 cascade, 아래 = 지역+학교 2칸).
-   리그 선택이 추가돼도 region/team 줄은 항상 보이도록 row 마다 별도 컨테이너. */
+/* 필터 바: 2줄 고정 (위 = 시합구분 cascade, 아래 = 지역+학교+학년 3칸).
+   리그 선택이 추가돼도 region/team/grade 줄은 항상 보이도록 row 마다 별도 컨테이너. */
 .filter-bar {
   display: flex;
   flex-direction: column;
@@ -252,7 +252,10 @@
   flex: 1 1 0;
   min-width: 0;
 }
-/* 아래 줄: 항상 2열(지역/학교) */
-.filter-bar__row--2col > .m-select {
-  flex: 1 1 calc(50% - 4px);
+/* 아래 줄: 지역/학교는 넓게, 학년은 좁게 한 줄 배치 */
+.filter-bar__row--3col > .m-select {
+  flex: 2 1 calc(37% - 6px);
+}
+.filter-bar__row--3col > .m-select:last-child {
+  flex: 1 1 calc(24% - 6px);
 }
