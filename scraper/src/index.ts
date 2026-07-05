@@ -19,6 +19,7 @@ import { parseRecordDetail } from "./parseRecord.js";
 import { collectOfficial } from "./officialStats.js";
 import { collectProfiles, existingProfileIds } from "./playerProfiles.js";
 import { computeLeagueRates } from "./leagueAverages.js";
+import { buildStrength } from "./strength.js";
 import type { GameBoxScore, LeagueAverages, Meta } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -204,13 +205,18 @@ async function main() {
     writeYear(DATA_DIR, year, agg);
     if (latest === undefined) latest = agg.meta;
 
-    // 리그 평균 (전체 시즌) — 시합별은 아래 루프에서 채움. 갱신 시점마다 재계산.
+    // 리그 평균 (전체 시즌 + 학년별) — 시합별은 아래 루프에서 채움. 갱신 시점마다 재계산.
     const averages: LeagueAverages = {
       season: year,
       updatedAt: new Date().toISOString(),
       overall: computeLeagueRates(agg.players),
+      grades: {},
       tournaments: {},
     };
+    for (const g of ["1", "2", "3"]) {
+      const rows = agg.players.filter((p) => p.grade === g);
+      if (rows.length) averages.grades![g] = computeLeagueRates(rows);
+    }
 
     // 시즌 personNo → 정규 player.id 맵 (시합별 player.id 재매핑용).
     const personNoToCanonId = new Map<string, string>();
@@ -287,6 +293,8 @@ async function main() {
     );
   }
   if (latest) writeYearsIndex(DATA_DIR, years, latest);
+  // 상대 강도 지수(가중치 랭킹용) — records/개별 선수 파일 갱신 후 매 수집마다 재계산.
+  buildStrength(DATA_DIR);
   console.log(`✓ 연도 ${years.join(", ")} · 신규 ${newGameFiles.length}경기`);
 }
 

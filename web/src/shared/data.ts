@@ -1,6 +1,6 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
 import { useEffect, useState } from "react";
-import type { LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile } from "./types";
+import type { LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile, StrengthData } from "./types";
 import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
@@ -153,6 +153,15 @@ export const useLeagueAverages = () => {
   const { year } = useYear();
   return useAsync<LeagueAverages | null>(
     () => getJSON<LeagueAverages>(`${year}/averages.json`).catch(() => null),
+    [year]
+  );
+};
+
+// 상대 강도 지수 (가중치 랭킹용 — 데이터 갱신 시점마다 재계산). 없으면 null.
+export const useStrength = () => {
+  const { year } = useYear();
+  return useAsync<StrengthData | null>(
+    () => getJSON<StrengthData>(`${year}/strength.json`).catch(() => null),
     [year]
   );
 };

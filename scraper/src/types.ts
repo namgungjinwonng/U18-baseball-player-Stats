@@ -144,5 +144,6 @@ export interface LeagueAverages {
   season: number;
   updatedAt: string; // ISO — 데이터 갱신 시점
   overall: LeagueRates; // 시즌 전체
+  grades?: Record<string, LeagueRates>; // 학년("1"/"2"/"3") → 학년별 (시즌 기준)
   tournaments: Record<string, { title: string; rates: LeagueRates }>; // slug → 시합별
 }

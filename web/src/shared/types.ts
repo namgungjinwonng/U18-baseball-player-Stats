@@ -148,5 +148,19 @@ export interface LeagueAverages {
   season: number;
   updatedAt: string; // ISO — 데이터 갱신 시점
   overall: LeagueRates; // 시즌 전체
+  grades?: Record<string, LeagueRates>; // 학년("1"/"2"/"3") → 학년별 (시즌 기준)
   tournaments: Record<string, { title: string; rates: LeagueRates }>; // slug → 시합별
+}
+
+// --- 상대 강도 (scraper/src/strength.ts 산출 — data/{year}/strength.json) ---
+export interface TeamStrength { bat: number; pit: number; g: number; region?: string }
+// ob = 타자가 상대한 투수진 난이도, op = 투수가 상대한 타선 난이도 (1.0 = 리그 평균)
+export interface PlayerOppIdx { ob?: number; op?: number }
+export interface StrengthData {
+  season: number;
+  updatedAt: string;
+  params: { shrinkK: number; clamp: [number, number] };
+  teams: Record<string, TeamStrength>;
+  players: Record<string, PlayerOppIdx>; // 시즌 스코프
+  tournaments: Record<string, Record<string, PlayerOppIdx>>; // slug → id → 지수
 }

@@ -5,15 +5,21 @@ import { describeQualify, leaderboards } from "../../shared/leaders";
 import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
+import { WeightToggle, useStrengthMap } from "../../shared/weights";
 
 export function MHome() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  const [weightOn, setWeightOn] = useState(false);
   const { data: players } = useTournamentRecords(filter.tournament);
   const { data: meta } = useMeta();
+  const strengthMap = useStrengthMap(filter);
   const ctx = useQualifyContext(filter);
   const boards = useMemo(
-    () => (players ? leaderboards(applyFilter(players, filter), ctx, 9) : []),
-    [players, filter, ctx]
+    () =>
+      players
+        ? leaderboards(applyFilter(players, filter), ctx, 9, weightOn ? strengthMap : undefined)
+        : [],
+    [players, filter, ctx, weightOn, strengthMap]
   );
 
   return (
@@ -51,6 +57,12 @@ export function MHome() {
           {describeQualify(ctx, "batting")}
         </p>
         <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
+        {strengthMap && <WeightToggle checked={weightOn} onChange={setWeightOn} />}
+        {weightOn && strengthMap && (
+          <p className="caption-sm wt-note">
+            비율 지표에 상대 가중치 적용 — 괄호 = 원값, ▲▼ = 순위 변동. 누적 지표는 미적용.
+          </p>
+        )}
         {boards.map((b) => (
           <div className="m-leader" key={b.id}>
             <h3>
@@ -66,10 +78,22 @@ export function MHome() {
               b.items.map((it) => (
                 <Link to={`/player/${it.id}`} key={it.id} className="leader-row">
                   <span>
-                    <span className="nm">{it.name}</span>
+                    <span className="nm">
+                      {it.name}
+                      {it.delta != null && it.delta !== 0 && (
+                        <span className={`wt-delta ${it.delta > 0 ? "wt-delta--up" : "wt-delta--down"}`}>
+                          {it.delta > 0 ? `▲${it.delta}` : `▼${-it.delta}`}
+                        </span>
+                      )}
+                    </span>
                     <span className="tm">{it.team}</span>
                   </span>
-                  <span className="val">{it.value}</span>
+                  <span className="val">
+                    {it.value}
+                    {it.origValue != null && (
+                      <span className="wt-orig">({it.origValue})</span>
+                    )}
+                  </span>
                 </Link>
               ))
             )}

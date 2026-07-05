@@ -10,6 +10,7 @@
     "profiles": "tsx src/playerProfiles.ts",
     "scrape": "tsx src/index.ts",
     "backfill-titles": "tsx src/backfillTitles.ts",
+    "strength": "tsx src/strength.ts",
     "fill-from-ref": "tsx src/fillFromReference.ts",
     "test": "tsx src/accumulate.test.ts"
   },

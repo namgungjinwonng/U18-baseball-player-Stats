@@ -40,7 +40,7 @@ function fmtStat(term: Term, v: number | undefined): string {
   }
 }
 
-// 리그평균 섹션: 전체 시즌 + 주말리그(리그별) + 전국대회(시합별).
+// 리그평균 섹션: 전체 시즌 + 학년별 + 주말리그(리그별) + 전국대회(시합별).
 function LeagueAvgSection({ term }: { term: Term }) {
   const { data: averages } = useLeagueAverages();
   const groups = useMemo(() => {
@@ -57,8 +57,12 @@ function LeagueAvgSection({ term }: { term: Term }) {
       (c.kind === "주말리그" ? weekend : national).push(row);
     }
     weekend.sort((a, b) => a.label.localeCompare(b.label, "ko"));
+    const grades = Object.entries(averages.grades ?? {})
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([g, r]) => ({ label: `${g}학년`, value: fmtStat(term, pick(r)) }));
     return {
       overall: fmtStat(term, pick(averages.overall)),
+      grades,
       weekend,
       national,
       updatedAt: averages.updatedAt,
@@ -78,6 +82,17 @@ function LeagueAvgSection({ term }: { term: Term }) {
         <span>전체 시즌</span>
         <b>{groups.overall}</b>
       </div>
+      {groups.grades.length > 0 && (
+        <details className="modal-averages__group">
+          <summary>학년별 ({groups.grades.length}개)</summary>
+          {groups.grades.map((g) => (
+            <div className="modal-averages__row" key={g.label}>
+              <span>{g.label}</span>
+              <b>{g.value}</b>
+            </div>
+          ))}
+        </details>
+      )}
       {groups.weekend.length > 0 && (
         <details className="modal-averages__group">
           <summary>리그별 (주말리그 {groups.weekend.length}개)</summary>

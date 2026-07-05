@@ -8,6 +8,7 @@ import { CATEGORIES, describeQualify, findCategory, rankByCategory } from "./lea
 import {
   FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter,
 } from "./filters";
+import { WeightToggle, useStrengthMap } from "./weights";
 
 export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const { id } = useParams();
@@ -17,8 +18,10 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
   // 메인에서 들어올 때 URL query 에 담겨온 필터 그대로 사용.
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(loc.search));
   const [includeUnqualified, setIncludeUnqualified] = useState(false);
+  const [weightOn, setWeightOn] = useState(false);
   const { data: players, loading } = useTournamentRecords(filter.tournament);
   const { data: averages } = useLeagueAverages();
+  const strengthMap = useStrengthMap(filter);
   const ctx = useQualifyContext(filter);
   // wRC+/WAR 기준 리그평균: 시합 필터 시 그 시합, 아니면 시즌 전체.
   const lg = useMemo(() => {
@@ -27,11 +30,16 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
     return averages.overall;
   }, [averages, filter.tournament]);
 
+  // 가중치 모드: 해당 카테고리가 보정 대상이고 strength 데이터가 있을 때만 실제 적용.
+  const weightsActive = weightOn && !!cat?.weight && !!strengthMap;
   const ranked = useMemo(() => {
     if (!players || !cat) return [];
     const filtered = applyFilter(players, filter);
-    return rankByCategory(filtered, cat, ctx, Infinity, includeUnqualified, lg);
-  }, [players, filter, ctx, cat, includeUnqualified, lg]);
+    return rankByCategory(
+      filtered, cat, ctx, Infinity, includeUnqualified, lg,
+      weightsActive ? strengthMap : undefined
+    );
+  }, [players, filter, ctx, cat, includeUnqualified, lg, weightsActive, strengthMap]);
   const qualifiedCount = useMemo(() => ranked.filter((r) => r.qualified).length, [ranked]);
 
   // 상단 탭: 현재 카테고리의 kind 우선, 없으면 타자.
@@ -95,6 +103,19 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
               규정 미달 포함 (확인용)
             </label>
           )}
+          {strengthMap && (
+            <WeightToggle
+              checked={weightOn}
+              onChange={setWeightOn}
+              disabled={!cat.weight}
+              disabledNote="누적 지표는 가중치 미적용"
+            />
+          )}
+          {weightsActive && (
+            <p className="caption-sm wt-note">
+              보정값 기준 순위 · 괄호 안 = 원값, ▲▼ = 원 순위 대비 변동
+            </p>
+          )}
 
           {loading && <div className="state">불러오는 중…</div>}
           {!loading && ranked.length === 0 && (
@@ -118,9 +139,19 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
                     <span className="rank-name">
                       {it.name}
                       {!it.qualified && <span className="qual-badge">규정 미달</span>}
+                      {it.delta != null && it.delta !== 0 && (
+                        <span className={`wt-delta ${it.delta > 0 ? "wt-delta--up" : "wt-delta--down"}`}>
+                          {it.delta > 0 ? `▲${it.delta}` : `▼${-it.delta}`}
+                        </span>
+                      )}
                     </span>
                     <span className="rank-team">{it.team}</span>
-                    <span className="rank-val">{it.value}</span>
+                    <span className="rank-val">
+                      {it.value}
+                      {it.origValue != null && (
+                        <span className="wt-orig">({it.origValue})</span>
+                      )}
+                    </span>
                   </li>
                 );
               });

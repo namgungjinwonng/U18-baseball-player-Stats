@@ -368,6 +368,53 @@
   width: 200px;
 }
 
+/* 상대 가중치 모드 — as-is/to-be 비교 표시 */
+.wt-delta {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+.wt-delta--up { color: #c8102e; }   /* 순위 상승 */
+.wt-delta--down { color: #1d4ed8; } /* 순위 하락 */
+.wt-orig {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-charcoal);
+  opacity: 0.7;
+}
+.wt-note { margin: -4px 0 10px; }
+.wt-info-btn {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  color: var(--color-charcoal);
+}
+.qual-toggle--disabled { opacity: 0.55; }
+.wt-modal-sec { margin-top: 10px; }
+.wt-modal-sec h4 {
+  margin: 0 0 2px;
+  font-size: 13px;
+}
+.wt-modal-sec p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-charcoal);
+}
+.wt-modal-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  gap: 8px;
+}
+
 /* 자동완성 드롭다운 */
 .ac {
   position: relative;

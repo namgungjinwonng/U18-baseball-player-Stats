@@ -244,6 +244,9 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-05: **용어 모달 학년별 리그평균**: `LeagueAverages.grades`("1"/"2"/"3" → LeagueRates) 추가 — index.ts 가 시즌 집계에서 학년별 `computeLeagueRates` 를 매 수집마다 재계산. `SaberTerm` 리그평균 섹션에 "학년별 (3개)" 접이식 그룹(전체 시즌 아래, 리그별 위).
+- 2026-07-05: **상대 가중치 랭킹**: `scraper/src/strength.ts`(`buildStrength` — 수집 파이프라인 `index.ts` 가 집계 후 매번 자동 호출, 단독 재계산은 `npm run strength`)가 경기 원본에서 팀 강도(타격 wOBA/피wOBA 리그 대비 지수, 상대 강도 1회 재조정 + 지역 shrinkage K=6 + 클램프 0.85~1.15)와 선수별 상대 난이도(ob=타자 상대투수진, op=투수 상대타선 — gameLog 노출량 가중, 시즌+시합별)를 계산해 `data/{year}/strength.json` 생성. 프론트: `useStrength`/`weights.tsx`(WeightToggle+설명 모달 — "하루 동안 보지 않기" localStorage `weightInfoHideDate`), `leaders.ts` 에 `WeightKind`(bat-rate=×ob, pit-rate=÷op, bat-adv/pit-adv=리그평균 치환 재계산)·`weightedPick`·rankByCategory weights 인자(origValue/delta = as-is 대비 원값·순위변동). 적용: 홈 리더보드(D/M)+랭킹(LeadersView). 누적 지표는 미보정(토글 비활성). accumulate `buildTeamNormalizer` export.
+
 - 2026-07-04: **선수 기록 페이지 규정 미달 토글**: RecordsPage/MRecords 가 `useQualifyContext` + `isQualifiedBat/Pit` 로 규정 미달 선수를 기본 제외, 랭킹 페이지와 동일한 `qual-toggle` 체크박스("규정 미달 포함 — 규정타석/이닝 설명")로 포함 가능. 탭 kind(타자/투수)에 따라 규정타석/규정이닝 기준 자동 전환.
 - 2026-07-04: **학년 필터 추가**: `RecordFilter` 에 `grade`("1"/"2"/"3") — `FilterBar` 하단 줄이 지역+학교+학년 3칸(`filter-bar__row--2col` → `--3col`, 모바일은 학년 칸만 좁게). `applyFilter` 가 학년도 클라이언트 필터링, URL query `g` 로 홈↔랭킹 전파(`filterToQuery`/`filterFromQuery`). 학년 옵션은 지역/학교 캐스케이드로 rows 에서 유도. 적용 위치: 홈 시즌리더(Desktop/Mobile)·선수 기록(Desktop/Mobile)·랭킹(`LeadersView`) — 규정 충족자 수·순위 모두 학년 필터 반영. wRC+/WAR 리그평균 기준값은 기존 지역/학교 필터와 동일하게 리그 전체(시즌/시합) 기준 유지.
 - 2026-07-02: 상대전적 메타 누락/로스터 총원/이적 병합/WAR·wRC+/선수 상세 탭 일괄 개선:

@@ -91,7 +91,7 @@ function teamCore(s: string): string {
   for (const suf of TEAM_SUFFIXES) out = out.split(suf).join("");
   return out.trim();
 }
-function buildTeamNormalizer(roster: Roster): (name: string) => string {
+export function buildTeamNormalizer(roster: Roster): (name: string) => string {
   const rosterTeams = new Set<string>();
   for (const arr of Object.values(roster)) for (const ros of arr) if (ros.team) rosterTeams.add(ros.team);
   const officials = [...rosterTeams];
