@@ -10,6 +10,14 @@ import {
 } from "./filters";
 import { WeightToggle, useStrengthMap } from "./weights";
 
+// 이름 옆 보조 표기: (학교/학년/투타) 축약형 — 예: (유신고/3/우우). 없는 항목은 생략.
+// 투타는 투(throws)·타(bats) 첫 글자만: 우투좌타 → 우좌.
+function rankMeta(it: { team: string; grade?: string; bats?: string; throws?: string }): string {
+  return [it.team, it.grade ?? "", `${it.throws ?? ""}${it.bats ?? ""}`]
+    .filter(Boolean)
+    .join("/");
+}
+
 export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const { id } = useParams();
   const nav = useNavigate();
@@ -138,6 +146,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
                     <span className="rank-num">{it.qualified ? r : "–"}</span>
                     <span className="rank-name">
                       {it.name}
+                      <span className="rank-meta">({rankMeta(it)})</span>
                       {!it.qualified && <span className="qual-badge">규정 미달</span>}
                       {it.delta != null && it.delta !== 0 && (
                         <span className={`wt-delta ${it.delta > 0 ? "wt-delta--up" : "wt-delta--down"}`}>
@@ -145,7 +154,6 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
                         </span>
                       )}
                     </span>
-                    <span className="rank-team">{it.team}</span>
                     <span className="rank-val">
                       {it.value}
                       {it.origValue != null && (

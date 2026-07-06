@@ -485,11 +485,16 @@
 }
 .rank-row {
   display: grid;
-  grid-template-columns: 36px 1fr auto 90px;
+  grid-template-columns: 36px 1fr 90px;
   align-items: baseline;
   gap: var(--space-md);
+  column-gap: var(--space-sm); /* 등락 표시(오른쪽 끝)와 기록값 사이 간격 축소 */
   padding: var(--space-md) 0;
   border-bottom: 1px solid var(--color-hairline);
+}
+/* 랭킹 행의 ▲▼ 는 이름칸 오른쪽 끝(기록값 옆)에 정렬 */
+.rank-name .wt-delta {
+  margin-left: auto;
 }
 .rank-num {
   font-variant-numeric: tabular-nums;
@@ -498,10 +503,21 @@
 }
 .rank-name {
   font-weight: 500;
+  /* 이름·▲▼·배지는 줄바꿈 없이 유지, 공간 부족 시 메타만 말줄임 */
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  white-space: nowrap;
 }
-.rank-team {
+/* 이름 뒤 (학교/학년/투타) — 기존 팀 표기(--type-caption)보다 1pt 작게 */
+.rank-meta {
   color: var(--color-mute);
-  font-size: var(--type-caption);
+  font-size: calc(var(--type-caption) - 1pt);
+  font-weight: 400;
+  margin-left: 3px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .rank-val {
   font-variant-numeric: tabular-nums;

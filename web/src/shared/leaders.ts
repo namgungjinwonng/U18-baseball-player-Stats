@@ -8,6 +8,9 @@ export interface LeaderItem {
   id: string;
   name: string;
   team: string;
+  grade?: string;  // 1/2/3 학년 — 랭킹 행 "이름(학교/학년/투타)" 표기용
+  bats?: string;   // 좌/우/양
+  throws?: string;
   value: string;
   raw: number;
   qualified: boolean; // 규정 충족 여부 (규정 미달 포함 토글 시 표기용)
@@ -235,6 +238,7 @@ export function rankByCategory(
     .filter((x) => x.raw != null && !Number.isNaN(x.raw) && x.adj != null && !Number.isNaN(x.adj))
     .map((x) => ({
       id: x.p.id, name: x.p.name, team: x.p.team,
+      grade: x.p.grade, bats: x.p.bats, throws: x.p.throws,
       raw: x.adj as number, origRaw: x.raw as number, qualified: qualifies(x.p),
     }))
     .filter((x) => includeUnqualified || x.qualified)
@@ -254,7 +258,8 @@ export function rankByCategory(
   return sliced.map((x) => {
     if (x.qualified) rank += 1;
     const item: LeaderItem = {
-      id: x.id, name: x.name, team: x.team, raw: x.raw, value: cat.fmt(x.raw), qualified: x.qualified,
+      id: x.id, name: x.name, team: x.team, grade: x.grade, bats: x.bats, throws: x.throws,
+      raw: x.raw, value: cat.fmt(x.raw), qualified: x.qualified,
     };
     if (weighted) {
       item.origValue = cat.fmt(x.origRaw);
