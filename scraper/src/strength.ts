@@ -4,7 +4,8 @@
 //  - 팀 강도: 경기 원본(박스스코어)에서 팀별 wOBA(타격) / 피wOBA(투수) → 리그 대비 지수(1.0 = 평균).
 //    · 순환 보정 1회: 상대한 팀들의 강도로 자기 지수를 재조정 (iterative SOS 1-pass).
 //    · 지역 shrinkage: 경기수가 적은 팀은 소속 지역 평균 쪽으로 축소 (표본 안정화).
-//    · 클램프 [0.85, 1.15]: 콜드게임·대량득점으로 인한 극단값 방지.
+//    · 소프트 클램프: 0.85~1.15 는 원값, 초과분은 tanh 압축으로 0.7~1.3 에 점근 — 극단값을
+//      누르되 경계 동률 없이 서열 보존 (콜드게임·대량득점 왜곡 방지).
 //  - 선수 난이도: 개별 선수 gameLog 를 순회, 경기별 노출량(타자=타석, 투수=상대타자수 근사)으로
 //    상대팀 강도를 가중 평균 → ob(타자가 상대한 투수진 난이도) / op(투수가 상대한 타선 난이도).
 //    시합별 지수도 같은 방식(팀 강도는 시즌 기준 고정 — 시합 내 소표본 왜곡 방지).
@@ -28,9 +29,19 @@ function tournamentSlug(title: string): string {
 }
 
 const SHRINK_K = 6; // 지역 shrinkage 의 사전 가중(경기수 환산) — 팀 경기 6개 = 지역:팀 반반
-const CLAMP_MIN = 0.85;
-const CLAMP_MAX = 1.15;
-const clamp = (v: number) => Math.min(CLAMP_MAX, Math.max(CLAMP_MIN, v));
+// 소프트 클램프: 1±CORE(0.85~1.15) 구간은 원값 유지, 초과분은 tanh 로 점진 압축해
+// 1±(CORE+TAIL) = 0.7~1.3 에 점근. 하드 클램프는 경계값(0.85/1.15)에 팀 30개가 눌려
+// 상·하위권 내부 서열이 사라졌음 — 순단조 함수라 동률 없이 서열 보존.
+const CORE = 0.15;
+const TAIL = 0.15;
+const CLAMP_MIN = 0.7; // = 1 - CORE - TAIL (점근 하한)
+const CLAMP_MAX = 1.3; // = 1 + CORE + TAIL (점근 상한)
+const clamp = (v: number) => {
+  const d = v - 1;
+  const a = Math.abs(d);
+  if (a <= CORE) return v;
+  return 1 + Math.sign(d) * (CORE + TAIL * Math.tanh((a - CORE) / TAIL));
+};
 const r3 = (v: number) => Number(v.toFixed(3));
 
 interface WobaAcc { num: number; den: number }

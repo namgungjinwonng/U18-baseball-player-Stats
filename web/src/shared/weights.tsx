@@ -115,7 +115,8 @@ export function WeightInfoModal({ onClose }: { onClose: () => void }) {
           <p>
             경기 원본에서 팀별 타격 wOBA(타선 강도)와 피wOBA(투수진 강도)를 계산하고, 상대한
             팀들의 강도로 1회 재조정합니다. 경기 수가 적은 팀은 소속 <b>지역 평균</b> 쪽으로
-            축소(shrinkage)하고, 극단값은 0.85~1.15 로 제한합니다.
+            축소(shrinkage)하고, 0.85~1.15 를 벗어나는 극단값은 점진 압축해 0.7~1.3 범위로
+            제한합니다(팀 간 서열은 유지).
           </p>
         </div>
         <div className="wt-modal-sec">
