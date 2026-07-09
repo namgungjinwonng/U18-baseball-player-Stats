@@ -27,8 +27,8 @@ export function SearchPage() {
             setQ(e.target.value);
             setParams(e.target.value ? { q: e.target.value } : {});
           }}
-          placeholder="선수 이름 또는 팀"
-          aria-label="선수 이름 또는 팀 검색"
+          placeholder="선수 이름·팀 또는 등번호 (예: 충암 45)"
+          aria-label="선수 이름·팀 또는 등번호 검색"
         />
       </div>
 
@@ -47,6 +47,7 @@ export function SearchPage() {
             <span className="tm" style={{ color: "var(--color-mute)", marginLeft: 8 }}>
               {p.team}
               {p.grade && ` · ${p.grade}학년`}
+              {p.number && ` · ${p.number}번`}
             </span>
           </span>
           <span className="pos">{p.position}</span>

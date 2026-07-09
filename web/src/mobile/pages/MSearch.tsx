@@ -23,8 +23,8 @@ export function MSearch() {
             setQ(e.target.value);
             setParams(e.target.value ? { q: e.target.value } : {});
           }}
-          placeholder="선수 이름 또는 팀"
-          aria-label="선수 검색"
+          placeholder="선수 이름·팀 또는 등번호"
+          aria-label="선수 이름·팀 또는 등번호 검색"
         />
       </div>
       {loading && <div className="state">불러오는 중…</div>}
@@ -39,6 +39,7 @@ export function MSearch() {
             <span className="tm" style={{ color: "var(--color-mute)", marginLeft: 8 }}>
               {p.team}
               {p.grade && ` · ${p.grade}학년`}
+              {p.number && ` · ${p.number}번`}
             </span>
           </span>
           <span className="pos">{p.position}</span>

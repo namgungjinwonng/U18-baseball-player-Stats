@@ -166,15 +166,20 @@ export const useStrength = () => {
   );
 };
 
-// 이름 부분 일치 검색 (초성/대소문자 무시 정도의 단순 매칭).
+// 이름/팀 부분 일치 + 등번호(백넘버) 검색.
+// 공백으로 나눈 토큰을 전부 만족(AND) — 예: "충암 45" = 충암고 45번.
+// 숫자만인 토큰은 등번호 정확 일치로만 매칭 (부분 일치 시 4 → 14·40·45 등 노이즈 방지).
 export function searchPlayers(
   index: PlayerIndexEntry[],
   query: string
 ): PlayerIndexEntry[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-  return index.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)
+  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (!tokens.length) return [];
+  return index.filter((p) =>
+    tokens.every((t) =>
+      /^\d+$/.test(t)
+        ? p.number === t
+        : p.name.toLowerCase().includes(t) || p.team.toLowerCase().includes(t)
+    )
   );
 }
