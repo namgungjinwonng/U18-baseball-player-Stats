@@ -86,6 +86,26 @@ export function facedSchools(
     .sort((a, b) => a.team.localeCompare(b.team, "ko"));
 }
 
+// 상대전적 행을 상대 학교별로 그룹화 — 학교명 가나다순, 학교 미상("기타")은 맨 뒤.
+// 선수 상세의 접이식(학교별) 표시용.
+export function groupMatchupsByTeam(
+  rows: Matchup[],
+  oppIdOf: (m: Matchup) => string,
+  byId: Map<string, PlayerIndexEntry> | null
+): { team: string; rows: Matchup[] }[] {
+  const byTeam = new Map<string, Matchup[]>();
+  for (const m of rows) {
+    const team = byId?.get(oppIdOf(m))?.team ?? "기타";
+    if (!byTeam.has(team)) byTeam.set(team, []);
+    byTeam.get(team)!.push(m);
+  }
+  return [...byTeam.entries()]
+    .map(([team, rows]) => ({ team, rows }))
+    .sort((a, b) =>
+      a.team === "기타" ? 1 : b.team === "기타" ? -1 : a.team.localeCompare(b.team, "ko")
+    );
+}
+
 // 상대전적 합계(특정 학교 또는 전체)
 export function sumMatchups(items: { matchup: Matchup }[]): Matchup | null {
   if (items.length === 0) return null;

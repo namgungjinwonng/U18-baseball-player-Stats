@@ -560,6 +560,39 @@
   vertical-align: middle;
 }
 
+/* 접이식 그룹 (선수 상세 — 경기 로그 시합별 · 상대전적 학교별) */
+.fold {
+  border-bottom: 1px solid var(--color-hairline);
+}
+.fold__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 2px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 500;
+}
+.fold__head::-webkit-details-marker {
+  display: none;
+}
+.fold__head::before {
+  content: "▸";
+  color: var(--color-mute);
+  font-size: 12px;
+}
+.fold[open] > .fold__head::before {
+  content: "▾";
+}
+.fold__sub {
+  color: var(--color-mute);
+  font-size: var(--type-caption-sm);
+  font-weight: 400;
+}
+.fold__body {
+  padding: 0 0 10px;
+}
+
 /* PWA 설치 버튼 / 인앱 안내 배너 */
 .install-wrap {
   position: relative;

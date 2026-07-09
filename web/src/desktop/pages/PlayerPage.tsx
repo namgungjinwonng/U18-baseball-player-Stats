@@ -7,8 +7,9 @@ import {
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
-import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
-import { filterPlayerStats } from "../../shared/playerStats";
+import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
+import { Fold } from "../../shared/Fold";
 import { TournamentPicker } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import type { BattingStats, GameLogEntry, LeagueRates, Matchup, PitchingStats, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
@@ -118,37 +119,50 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
   );
 }
 
+// 경기 로그 — 시합별 접이식 그룹. 가장 최근 경기가 속한 그룹만 기본으로 펼친다.
 function GameLogTable({ log }: { log: GameLogEntry[] }) {
+  const groups = groupLogByTitle(log);
+  const latestTitle = log.reduce(
+    (acc, g) => (g.date > acc.date ? { date: g.date, title: g.title ?? "기타" } : acc),
+    { date: "", title: "" }
+  ).title;
   return (
     <section className="player-section">
       <h3>경기 로그</h3>
-      <div className="stat-table__scroll">
-        <table className="stat-table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left" }}>날짜</th>
-              <th style={{ textAlign: "left" }}>시합</th>
-              <th style={{ textAlign: "left" }}>상대</th>
-              <th style={{ textAlign: "left" }}>기록</th>
-            </tr>
-          </thead>
-          <tbody>
-            {log.map((g, i) => (
-              <tr key={`${g.gameId}-${i}`}>
-                <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
-                <td style={{ textAlign: "left" }} className="muted">{g.title ?? "-"}</td>
-                <td style={{ textAlign: "left" }}>{g.opponent}</td>
-                <td style={{ textAlign: "left" }}>{g.line}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {groups.map((grp) => (
+        <Fold
+          key={grp.title}
+          title={grp.title}
+          sub={`${grp.entries.length}경기`}
+          defaultOpen={groups.length === 1 || grp.title === latestTitle}
+        >
+          <div className="stat-table__scroll">
+            <table className="stat-table">
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left" }}>날짜</th>
+                  <th style={{ textAlign: "left" }}>상대</th>
+                  <th style={{ textAlign: "left" }}>기록</th>
+                </tr>
+              </thead>
+              <tbody>
+                {grp.entries.map((g, i) => (
+                  <tr key={`${g.gameId}-${i}`}>
+                    <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
+                    <td style={{ textAlign: "left" }}>{g.opponent}</td>
+                    <td style={{ textAlign: "left" }}>{g.line}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Fold>
+      ))}
     </section>
   );
 }
 
-// 상대전적 테이블 (내가 투수 → 상대 타자 / 내가 타자 → 상대 투수)
+// 상대전적 (내가 투수 → 상대 타자 / 내가 타자 → 상대 투수) — 상대 학교별 접이식 그룹.
 function MatchupTable({
   title, rows, oppLabel, oppIdOf, oppNameOf, byId,
 }: {
@@ -160,49 +174,60 @@ function MatchupTable({
   byId: Map<string, PlayerIndexEntry> | null;
 }) {
   if (rows.length === 0) return null;
+  const groups = groupMatchupsByTeam(rows, oppIdOf, byId);
   return (
     <section className="player-section">
       <h3>{title}</h3>
-      <div className="stat-table__scroll">
-        <table className="stat-table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left" }}>vs {oppLabel}</th>
-              <th>타율</th>
-              <th>타수</th>
-              <th>안타</th>
-              <th>홈런</th>
-              <th>볼넷</th>
-              <th>삼진</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((m) => {
-              const oppId = oppIdOf(m);
-              const opp = byId?.get(oppId);
-              return (
-                <tr key={`${m.batterId}-${m.pitcherId}`}>
-                  <td style={{ textAlign: "left" }}>
-                    <span className="muted">vs </span>
-                    <Link to={`/player/${oppId}`}>{oppNameOf(m)}</Link>
-                    {opp && (
-                      <span className="muted" style={{ marginLeft: 6 }}>
-                        {matchupOpponentMeta(opp)}
-                      </span>
-                    )}
-                  </td>
-                  <td className="num">{rate(m.avg)}</td>
-                  <td className="num">{m.ab}</td>
-                  <td className="num">{m.h}</td>
-                  <td className="num">{m.hr}</td>
-                  <td className="num">{m.bb}</td>
-                  <td className="num">{m.so}</td>
+      {groups.map((grp) => (
+        <Fold
+          key={grp.team}
+          title={grp.team}
+          sub={`${grp.rows.length}명`}
+          defaultOpen={groups.length === 1}
+        >
+          <div className="stat-table__scroll">
+            <table className="stat-table">
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left" }}>vs {oppLabel}</th>
+                  <th>타율</th>
+                  <th>타수</th>
+                  <th>안타</th>
+                  <th>홈런</th>
+                  <th>볼넷</th>
+                  <th>삼진</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {grp.rows.map((m) => {
+                  const oppId = oppIdOf(m);
+                  const opp = byId?.get(oppId);
+                  return (
+                    <tr key={`${m.batterId}-${m.pitcherId}`}>
+                      <td style={{ textAlign: "left" }}>
+                        <span className="muted">vs </span>
+                        <Link to={`/player/${oppId}`}>{oppNameOf(m)}</Link>
+                        {opp && (
+                          <span className="muted" style={{ marginLeft: 6 }}>
+                            {/* 학교는 그룹 헤더에 있으므로 학년·투타만 */}
+                            {matchupOpponentMeta({ grade: opp.grade, bats: opp.bats, throws: opp.throws })}
+                          </span>
+                        )}
+                      </td>
+                      <td className="num">{rate(m.avg)}</td>
+                      <td className="num">{m.ab}</td>
+                      <td className="num">{m.h}</td>
+                      <td className="num">{m.hr}</td>
+                      <td className="num">{m.bb}</td>
+                      <td className="num">{m.so}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Fold>
+      ))}
     </section>
   );
 }

@@ -7,8 +7,9 @@ import {
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
-import { batsThrowsLabel, indexById, matchupOpponentMeta } from "../../shared/matchup";
-import { filterPlayerStats } from "../../shared/playerStats";
+import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
+import { Fold } from "../../shared/Fold";
 import { TournamentPicker } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import type { Matchup, PlayerProfile } from "../../shared/types";
@@ -109,51 +110,82 @@ export function MPlayer() {
     return withRaw.length ? withRaw : v.gameLog;
   };
 
-  const gameLogSection = (kind: "batting" | "pitching") => (
-    <section className="player-section">
-      <h3>경기 로그</h3>
-      {logFor(kind).map((g, i) => (
-        <div
-          key={`${g.gameId}-${i}`}
-          className="m-result"
-          style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
-        >
-          <span className="caption">
-            {formatDate(g.date)} · {g.opponent}
-            {g.title && <span className="muted"> · {g.title}</span>}
-          </span>
-          <span>{g.line}</span>
-        </div>
-      ))}
-    </section>
-  );
-
-  const matchupSection = (title: string, rows: Matchup[], oppIdOf: (m: Matchup) => string, oppNameOf: (m: Matchup) => string) =>
-    rows.length > 0 && (
+  // 경기 로그 — 시합별 접이식 그룹. 가장 최근 경기가 속한 그룹만 기본으로 펼친다.
+  const gameLogSection = (kind: "batting" | "pitching") => {
+    const log = logFor(kind);
+    const groups = groupLogByTitle(log);
+    const latestTitle = log.reduce(
+      (acc, g) => (g.date > acc.date ? { date: g.date, title: g.title ?? "기타" } : acc),
+      { date: "", title: "" }
+    ).title;
+    return (
       <section className="player-section">
-        <h3>{title}</h3>
-        {rows.map((m) => {
-          const oppId = oppIdOf(m);
-          const opp = byId?.get(oppId);
-          return (
-            <div key={`${m.batterId}-${m.pitcherId}`} className="m-result">
-              <span>
-                <span className="muted">vs </span>
-                <Link to={`/player/${oppId}`}>{oppNameOf(m)}</Link>
-                {opp && (
-                  <span className="muted" style={{ marginLeft: 6 }}>
-                    {matchupOpponentMeta(opp)}
-                  </span>
-                )}
-              </span>
-              <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                {rate(m.avg)} ({m.ab}-{m.h})
-              </span>
-            </div>
-          );
-        })}
+        <h3>경기 로그</h3>
+        {groups.map((grp) => (
+          <Fold
+            key={grp.title}
+            title={grp.title}
+            sub={`${grp.entries.length}경기`}
+            defaultOpen={groups.length === 1 || grp.title === latestTitle}
+          >
+            {grp.entries.map((g, i) => (
+              <div
+                key={`${g.gameId}-${i}`}
+                className="m-result"
+                style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
+              >
+                <span className="caption">
+                  {formatDate(g.date)} · {g.opponent}
+                </span>
+                <span>{g.line}</span>
+              </div>
+            ))}
+          </Fold>
+        ))}
       </section>
     );
+  };
+
+  // 상대전적 — 상대 학교별 접이식 그룹.
+  const matchupSection = (title: string, rows: Matchup[], oppIdOf: (m: Matchup) => string, oppNameOf: (m: Matchup) => string) => {
+    if (rows.length === 0) return null;
+    const groups = groupMatchupsByTeam(rows, oppIdOf, byId);
+    return (
+      <section className="player-section">
+        <h3>{title}</h3>
+        {groups.map((grp) => (
+          <Fold
+            key={grp.team}
+            title={grp.team}
+            sub={`${grp.rows.length}명`}
+            defaultOpen={groups.length === 1}
+          >
+            {grp.rows.map((m) => {
+              const oppId = oppIdOf(m);
+              const opp = byId?.get(oppId);
+              return (
+                <div key={`${m.batterId}-${m.pitcherId}`} className="m-result">
+                  <span>
+                    <span className="muted">vs </span>
+                    <Link to={`/player/${oppId}`}>{oppNameOf(m)}</Link>
+                    {opp && (
+                      <span className="muted" style={{ marginLeft: 6 }}>
+                        {/* 학교는 그룹 헤더에 있으므로 학년·투타만 */}
+                        {matchupOpponentMeta({ grade: opp.grade, bats: opp.bats, throws: opp.throws })}
+                      </span>
+                    )}
+                  </span>
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                    {rate(m.avg)} ({m.ab}-{m.h})
+                  </span>
+                </div>
+              );
+            })}
+          </Fold>
+        ))}
+      </section>
+    );
+  };
 
   return (
     <div className="m-page">

@@ -62,3 +62,21 @@ export function filterPlayerStats(
     gameLog: filtered,
   };
 }
+
+// 경기 로그를 시합(title)별로 그룹화 — 로그의 원래 순서를 유지하고, title 없는 경기는 "기타"로.
+// 선수 상세의 접이식(시합별) 표시용.
+export function groupLogByTitle(
+  log: GameLogEntry[]
+): { title: string; entries: GameLogEntry[] }[] {
+  const order: string[] = [];
+  const byTitle = new Map<string, GameLogEntry[]>();
+  for (const g of log) {
+    const t = g.title ?? "기타";
+    if (!byTitle.has(t)) {
+      byTitle.set(t, []);
+      order.push(t);
+    }
+    byTitle.get(t)!.push(g);
+  }
+  return order.map((title) => ({ title, entries: byTitle.get(title)! }));
+}
