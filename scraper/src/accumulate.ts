@@ -501,7 +501,7 @@ export function aggregate(
   const index: PlayerIndexEntry[] = playerList.map((p) => ({
     id: p.id, name: p.name, team: p.team, position: p.position,
     number: p.number, grade: p.grade, region: p.region,
-    bats: p.bats, throws: p.throws,
+    bats: p.bats, throws: p.throws, personNo: p.personNo,
   }));
 
   // 팀별 경기수(규정타석/이닝 기준) — 선수 gameLog 의 distinct 경기 합집합.

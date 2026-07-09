@@ -39,6 +39,17 @@ jobs:
         working-directory: scraper
         run: npm run profiles
 
+      - name: Refresh teams (선수현황 — 팀/지도자/신장·체중)
+        working-directory: scraper
+        run: npm run teams
+
+      # 전체 스캔 시에는 일정도 전체 재수집 (완료 경기 정정 반영)
+      - name: Refresh schedule (경기일정 — 전체 재수집)
+        working-directory: scraper
+        env:
+          SCHEDULE_FULL: "1"
+        run: npm run schedule
+
       - name: Scrape (3~12월 전체 스캔) & re-aggregate
         working-directory: scraper
         env:

@@ -37,6 +37,16 @@ jobs:
         working-directory: scraper
         run: npm run roster
 
+      # 선수현황 페이지용 팀·선수 데이터 (data/{year}/teams.json)
+      - name: Refresh teams (선수현황 — 팀/지도자/신장·체중)
+        working-directory: scraper
+        run: npm run teams
+
+      # 경기일정 페이지용 일정/결과 데이터 (data/{year}/schedule.json — 증분)
+      - name: Refresh schedule (경기일정 — 증분)
+        working-directory: scraper
+        run: npm run schedule
+
       # 신규 경기 수집 → 신규 선수 공식기록 증분 수집 → 재집계 (마지막 갱신 이후만)
       - name: Scrape new games & re-aggregate
         working-directory: scraper

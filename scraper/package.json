@@ -6,6 +6,8 @@
   "scripts": {
     "discover": "tsx src/discover.ts",
     "roster": "tsx src/roster.ts",
+    "teams": "tsx src/teams.ts",
+    "schedule": "tsx src/schedule.ts",
     "official": "tsx src/officialStats.ts",
     "profiles": "tsx src/playerProfiles.ts",
     "scrape": "tsx src/index.ts",
