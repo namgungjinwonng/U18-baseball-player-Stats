@@ -12,6 +12,7 @@ import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
 import { Fold } from "../../shared/Fold";
 import { TournamentPicker } from "../../shared/filters";
 import { Chip } from "../../design/ui";
+import { KbsaLink } from "../../shared/KbsaLink";
 import type { Matchup, PlayerProfile } from "../../shared/types";
 
 type TabId = "batting" | "pitching" | "schools" | "awards";
@@ -201,6 +202,11 @@ export function MPlayer() {
         {profile?.birth && <span>{profile.birth}</span>}
         {profile?.height && profile?.weight && <span>{profile.height}cm·{profile.weight}kg</span>}
       </div>
+      {p.personNo && (
+        <div style={{ margin: "0 0 12px" }}>
+          <KbsaLink personNo={p.personNo} />
+        </div>
+      )}
 
       <div className="filter-bar" style={{ marginBottom: 12 }}>
         <div className="filter-bar__row filter-bar__row--tournament">

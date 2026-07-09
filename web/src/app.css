@@ -648,6 +648,324 @@
   cursor: pointer;
 }
 
+/* ============================================================
+   경기일정 (ScheduleView) — 달력/학교 카드/경기 카드/모달
+   ============================================================ */
+.sch-monthnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+.sch-monthnav__cur {
+  font-size: var(--type-heading-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.sch-cal {
+  border: 1px solid var(--color-hairline);
+  padding: var(--space-md);
+}
+.sch-cal__wd {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+  text-align: center;
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+}
+.sch-cal__wd .sun { color: var(--color-sale); }
+.sch-cal__wd .sat { color: var(--color-info); }
+.sch-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  grid-auto-rows: 48px;
+}
+.sch-cal__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--type-caption);
+  font-weight: 500;
+  color: var(--color-stone);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-ui);
+}
+.sch-cal__day--empty { visibility: hidden; }
+.sch-cal__day--has {
+  color: var(--color-ink);
+  border-color: var(--color-hairline);
+  cursor: pointer;
+}
+.sch-cal__day--has:hover { border-color: var(--color-ink); }
+.sch-cal__day--has .cnt {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-sale);
+  margin-top: 1px;
+}
+
+/* 학교/팀 카드 그리드 (경기일정 학교별 + 선수현황 공용) */
+.sch-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+.sch-team-card {
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas);
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.sch-team-card:hover { border-color: var(--color-ink); }
+.sch-team-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-hairline-soft);
+}
+.sch-team-card__head h3 {
+  margin: 0;
+  font-size: var(--type-caption);
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sch-badge {
+  flex-shrink: 0;
+  font-size: var(--type-utility-xs);
+  font-weight: 700;
+  color: var(--color-mute);
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.sch-team-card__body {
+  display: flex;
+  gap: 6px;
+  padding: var(--space-md);
+}
+.sch-team-card__body .rc,
+.sch-rec .rc {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.sch-team-card__body .rc b,
+.sch-rec .rc b {
+  font-size: var(--type-heading-md);
+  font-variant-numeric: tabular-nums;
+}
+.sch-team-card__body .rc span,
+.sch-rec .rc span {
+  font-size: var(--type-utility-xs);
+  color: var(--color-mute);
+  font-weight: 700;
+}
+.wv { color: var(--color-success); }
+.lv { color: var(--color-sale); }
+
+/* 경기 카드 */
+.sch-game {
+  display: block;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+}
+.sch-game:hover { border-color: var(--color-ink); }
+.sch-game__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  min-height: 14px;
+}
+.sch-game__comp {
+  font-size: var(--type-caption-sm);
+  font-weight: 500;
+  color: var(--color-mute);
+  line-height: 1.35;
+}
+.sch-game__stage {
+  flex-shrink: 0;
+  font-size: var(--type-utility-xs);
+  font-weight: 700;
+  color: var(--color-mute);
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.sch-game__score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sch-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sch-side .nm { font-size: var(--type-caption); }
+.sch-side .sc {
+  font-size: var(--type-heading-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.sch-side.win .nm,
+.sch-side.win .sc { font-weight: 800; color: var(--color-ink); }
+.sch-side.lose .nm,
+.sch-side.lose .sc { color: var(--color-stone); }
+.sch-side .rb {
+  font-size: var(--type-utility-xs);
+  font-weight: 700;
+  color: var(--color-on-primary);
+  background: var(--color-stone);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+}
+.sch-side.win .rb { background: var(--color-success); }
+.sch-side.lose .rb { background: var(--color-sale); }
+.sch-game__colon {
+  font-weight: 800;
+  color: var(--color-mute);
+}
+.sch-game__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding-top: 6px;
+  border-top: 1px solid var(--color-hairline-soft);
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+}
+
+/* 그룹 헤더 (날짜/대회) + 전적 요약 + 넓은 모달 */
+.sch-group {
+  font-size: var(--type-caption-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+  border-left: 3px solid var(--color-ink);
+  padding-left: 8px;
+  margin: 14px 0 8px;
+}
+.sch-group--strong {
+  border-left: none;
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+}
+.sch-rec {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+.sch-rec .rc {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+}
+.modal-card--wide {
+  max-width: 640px;
+}
+.sch-modal-body {
+  overflow-y: auto;
+}
+
+/* ============================================================
+   선수현황 (TeamsView) — 통계 밴드/팀 카드 정보행/지도자 칩
+   ============================================================ */
+.tv-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--color-hairline);
+  border: 1px solid var(--color-hairline);
+  margin-bottom: var(--space-lg);
+}
+.tv-stats .cell {
+  background: var(--color-canvas);
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.tv-stats .cell b {
+  font-size: var(--type-heading-lg);
+  font-variant-numeric: tabular-nums;
+}
+.tv-stats .cell span {
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+  font-weight: 500;
+}
+@media (min-width: 720px) {
+  .tv-stats { grid-template-columns: repeat(8, 1fr); }
+}
+.tv-team-card__body {
+  padding: var(--space-md);
+}
+.tv-team-card__body .row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 3px 0;
+  font-size: var(--type-caption-sm);
+  border-bottom: 1px solid var(--color-hairline-soft);
+}
+.tv-team-card__body .row:last-child { border-bottom: none; }
+.tv-team-card__body .row span { color: var(--color-mute); }
+.tv-sec-title {
+  margin: 0 0 8px;
+  font-size: var(--type-caption);
+  font-weight: 700;
+  border-left: 3px solid var(--color-ink);
+  padding-left: 8px;
+}
+.tv-staff {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tv-staff__chip {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: var(--type-caption-sm);
+}
+.tv-staff__chip a { text-decoration: underline; }
+
+/* 선수 상세 → KBSA 링크 버튼 */
+.kbsa-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  min-height: 32px;
+  padding: 4px 12px;
+  font-size: var(--type-caption-sm);
+}
+
 /* 저작권/비상업 고지 푸터 */
 .site-footer {
   border-top: 1px solid var(--color-hairline);

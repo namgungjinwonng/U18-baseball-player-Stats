@@ -10,6 +10,7 @@ export interface PlayerIndexEntry {
   region?: string; // 지역
   bats?: string; // 좌/우/양 — 상대전적 보조 라벨용
   throws?: string; // 좌/우/양
+  personNo?: string; // KBSA 선수 고유번호 — 선수현황(teams.json) ↔ 선수 상세 연결용
 }
 
 export interface BattingStats {
@@ -150,6 +151,64 @@ export interface LeagueAverages {
   overall: LeagueRates; // 시즌 전체
   grades?: Record<string, LeagueRates>; // 학년("1"/"2"/"3") → 학년별 (시즌 기준)
   tournaments: Record<string, { title: string; rates: LeagueRates }>; // slug → 시합별
+}
+
+// --- 경기 일정 (scraper/src/schedule.ts 수집 — data/{year}/schedule.json) ---
+// 이식 원본: u81-baseball/fetch_u18_schedule.py 의 u18_schedule.json 스키마 그대로.
+export interface ScheduleSide {
+  name: string;          // 팀명 (teams.json 정식명으로 정규화됨)
+  result: string;        // 승/패/무, 예정이면 ""
+  score: number | null;  // 예정이면 null
+}
+export interface ScheduleGame {
+  game_idx: string;
+  title: string;  // 대회명 (예: "2026 고교야구 주말리그 후반기(서울권B)")
+  date: string;   // YYYY-MM-DD
+  time: string;   // HH:MM
+  venue: string;  // 구장
+  round: string;  // 리그전/예선전/8강전 등
+  status: string; // 완료 / 예정 / 취소
+  away: ScheduleSide;
+  home: ScheduleSide;
+}
+export interface ScheduleData {
+  year: number;
+  updated: string; // "YYYY-MM-DD HH:MM" (KST)
+  games: ScheduleGame[];
+  // 주말리그 권역명 → 협회 공식 순위(전적표 표시 순서의 팀명 배열)
+  official_ranks?: Record<string, string[]>;
+}
+
+// --- 선수현황 (scraper/src/teams.ts 수집 — data/{year}/teams.json) ---
+// 이식 원본: u81-baseball/fetch_u18_rosters.py 의 u18_data.json 스키마 그대로.
+export interface TeamPlayerEntry {
+  type: "player";
+  number: string;        // 등번호 (미배정이면 "")
+  name: string;
+  position: string;      // 투수/포수/내야수/외야수/미지정 (5분류 정규화)
+  grade: string;         // 1/2/3
+  height_weight: string; // "182cm / 80kg"
+  throw_bat: string;     // "우투우타"
+  person_no: string;
+  team: string;
+  team_idx: string;
+  region: string;
+}
+export interface TeamStaffEntry {
+  type: "staff";
+  name: string;
+  role: string; // 감독/코치 등
+  person_no: string;
+}
+export interface TeamRosterEntry {
+  team: string;
+  club_idx: string;
+  region: string;
+  manager: string;
+  staff: TeamStaffEntry[];
+  players: TeamPlayerEntry[];
+  player_count: number;
+  error?: string; // 최종 수집 실패 시 "failed" (구조 보존용 빈 항목)
 }
 
 // --- 상대 강도 (scraper/src/strength.ts 산출 — data/{year}/strength.json) ---

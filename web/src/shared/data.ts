@@ -1,6 +1,9 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
 import { useEffect, useState } from "react";
-import type { LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile, StrengthData } from "./types";
+import type {
+  LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile,
+  ScheduleData, StrengthData, TeamRosterEntry,
+} from "./types";
 import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
@@ -162,6 +165,24 @@ export const useStrength = () => {
   const { year } = useYear();
   return useAsync<StrengthData | null>(
     () => getJSON<StrengthData>(`${year}/strength.json`).catch(() => null),
+    [year]
+  );
+};
+
+// 경기 일정 (scraper/src/schedule.ts 수집 — 경기일정 페이지용). 없으면 null.
+export const useSchedule = () => {
+  const { year } = useYear();
+  return useAsync<ScheduleData | null>(
+    () => getJSON<ScheduleData>(`${year}/schedule.json`).catch(() => null),
+    [year]
+  );
+};
+
+// 팀·선수현황 (scraper/src/teams.ts 수집 — 선수현황 페이지용). 없으면 null.
+export const useTeams = () => {
+  const { year } = useYear();
+  return useAsync<TeamRosterEntry[] | null>(
+    () => getJSON<TeamRosterEntry[]>(`${year}/teams.json`).catch(() => null),
     [year]
   );
 };

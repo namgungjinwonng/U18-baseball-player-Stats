@@ -12,6 +12,7 @@ import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
 import { Fold } from "../../shared/Fold";
 import { TournamentPicker } from "../../shared/filters";
 import { Chip } from "../../design/ui";
+import { KbsaLink } from "../../shared/KbsaLink";
 import type { BattingStats, GameLogEntry, LeagueRates, Matchup, PitchingStats, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
 
 function Stat({ k, v }: { k: string; v: string }) {
@@ -386,6 +387,7 @@ export function PlayerPage() {
             <span>{profile.height}cm·{profile.weight}kg</span>
           )}
         </div>
+        <KbsaLink personNo={player.personNo} />
       </div>
 
       <div className="filter-bar" style={{ marginBottom: 16 }}>

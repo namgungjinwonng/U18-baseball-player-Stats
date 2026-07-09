@@ -8,6 +8,9 @@ import { PlayerPage } from "./pages/PlayerPage";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
 import { LeadersView } from "../shared/LeadersView";
+import { ScheduleView } from "../shared/ScheduleView";
+import { TeamsView } from "../shared/TeamsView";
+import { PersonView } from "../shared/PersonView";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -62,6 +65,8 @@ export function DesktopApp() {
             U18 BASEBALL
           </Link>
           <div className="nav-links">
+            <NavLink to="/schedule">경기일정</NavLink>
+            <NavLink to="/players">선수현황</NavLink>
             <NavLink to="/records">선수 기록 상세</NavLink>
             <NavLink to="/leaders/avg">항목별 랭킹</NavLink>
             <NavLink to="/matchup">상대전적</NavLink>
@@ -76,6 +81,8 @@ export function DesktopApp() {
         </div>
         {menuOpen && (
           <div className="nav-drawer">
+            <NavLink to="/schedule" onClick={() => setMenuOpen(false)}>경기일정</NavLink>
+            <NavLink to="/players" onClick={() => setMenuOpen(false)}>선수현황</NavLink>
             <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록 상세</NavLink>
             <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}>항목별 랭킹</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}>상대전적</NavLink>
@@ -87,6 +94,9 @@ export function DesktopApp() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/schedule" element={<ScheduleView wrapClass="container page" />} />
+          <Route path="/players" element={<TeamsView wrapClass="container page" />} />
+          <Route path="/person/:personNo" element={<PersonView wrapClass="container page" />} />
           <Route path="/records" element={<RecordsPage />} />
           <Route path="/matchup" element={<MatchupPage />} />
           <Route path="/search" element={<SearchPage />} />

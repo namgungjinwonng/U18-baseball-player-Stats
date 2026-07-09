@@ -9,6 +9,9 @@ import { MPlayer } from "./pages/MPlayer";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
 import { LeadersView } from "../shared/LeadersView";
+import { ScheduleView } from "../shared/ScheduleView";
+import { TeamsView } from "../shared/TeamsView";
+import { PersonView } from "../shared/PersonView";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -21,6 +24,12 @@ function Drawer({ onClose }: { onClose: () => void }) {
         <Link to="/" onClick={onClose} className="brand" style={{ marginBottom: 12 }}>
           U18 BASEBALL
         </Link>
+        <NavLink to="/schedule" onClick={onClose}>
+          경기일정
+        </NavLink>
+        <NavLink to="/players" onClick={onClose}>
+          선수현황
+        </NavLink>
         <NavLink to="/records" onClick={onClose}>
           선수 기록 상세
         </NavLink>
@@ -109,6 +118,9 @@ export function MobileApp() {
       <main>
         <Routes>
           <Route path="/" element={<MHome />} />
+          <Route path="/schedule" element={<ScheduleView wrapClass="m-page" />} />
+          <Route path="/players" element={<TeamsView wrapClass="m-page" />} />
+          <Route path="/person/:personNo" element={<PersonView wrapClass="m-page" />} />
           <Route path="/records" element={<MRecords />} />
           <Route path="/matchup" element={<MMatchup />} />
           <Route path="/search" element={<MSearch />} />

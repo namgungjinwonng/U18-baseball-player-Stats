@@ -33,9 +33,15 @@ export function HomePage() {
           <p className="hero__sub">
             선수 이름으로 타격·투구 기록을 조회하고, 타자 vs 투수 상대전적까지 한눈에.
           </p>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link to="/schedule">
+              <Button variant="on-image">경기일정</Button>
+            </Link>
+            <Link to="/players">
+              <Button variant="secondary">선수현황</Button>
+            </Link>
             <Link to="/records">
-              <Button variant="on-image">선수 기록 보기</Button>
+              <Button variant="secondary">선수기록</Button>
             </Link>
             <Link to="/matchup">
               <Button variant="secondary">상대전적</Button>

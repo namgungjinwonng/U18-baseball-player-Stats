@@ -50,6 +50,10 @@
 │     │   ├─ matchup.ts      Role/playerLabel/facedOpponents/facedSchools/sumMatchups + batsThrowsLabel/matchupOpponentMeta
 │     │   ├─ Glossary.tsx    TERM_MAP export (약어→설명) — SaberTerm 모달에서 참조
 │     │   ├─ SaberTerm.tsx   클릭형 세이버 용어 라벨 + 설명 모달
+│     │   ├─ ScheduleView.tsx  경기일정 화면(월별 달력/학교별/시합별 순위·대진 — D/M 공용, u81-baseball 이식)
+│     │   ├─ TeamsView.tsx     선수현황 화면(팀 카드/팀 상세 모달/이름·백넘버 검색 — D/M 공용, u81-baseball 이식)
+│     │   ├─ PersonView.tsx    무기록 선수 폴백 상세(/person/:personNo — teams.json+프로필 기반)
+│     │   ├─ KbsaLink.tsx, kbsa.ts  KBSA 외부 링크 버튼/URL 헬퍼 (선수 상세·경기 카드)
 │     │   ├─ filters.tsx, StatTable.tsx, Footer.tsx
 │     ├─ desktop/  DesktopApp.tsx + pages/{Home,Records,Matchup,Search,Player}Page.tsx
 │     └─ mobile/   MobileApp.tsx + mobile.css + pages/{MHome,MRecords,MMatchup,MSearch,MPlayer}.tsx
@@ -64,6 +68,8 @@
 │     ├─ accumulate.ts       ★ 집계 순수함수(aggregate(games,source,roster,official,history)) + readGames/readRoster/readRosterHistory/writeYear/writeYearsIndex/groupBySeason + outsToIp + personNo 중복 슬러그 병합(현행 소속 우선 대표)
 │     ├─ officialStats.ts    /record/record/player_record 공식기록 수집 (개별 선수 batting/pitching) — 박스스코어 파생 덮어쓰기
 │     ├─ roster.ts           /info/team/team_list + /info/team/team_player → data/roster.json(키: `이름|등번호`, 등번호 미배정은 `이름|`) + roster-history.json 누적 + 선수등록현황(current_list) 총원 대조
+│     ├─ teams.ts            선수현황 뷰 모델 수집(팀 목록(감독)+선수/지도자·신장·체중) → data/{year}/teams.json (u81-baseball fetch_u18_rosters.py 이식, `npm run teams`)
+│     ├─ schedule.ts         경기 일정/결과 수집(calendar→box_score, 취소 감지, 증분 병합, 주말리그 공식 순위 match_table) → data/{year}/schedule.json (u81-baseball fetch_u18_schedule.py 이식, `npm run schedule`, 전체 재수집 `SCHEDULE_FULL=1`)
 │     ├─ playerProfiles.ts   /info/player/player_view 프로필 수집(출신학교 연도별·수상내역·생년월일·키/몸무게) → data/profiles/{personNo}.json + 시즌 내 이적 이력 roster-history 병합. `npm run profiles` = 전체 재수집.
 │     ├─ leagueAverages.ts   리그 평균(computeLeagueRates) — 집계 결과 합산으로 AVG~wOBA·ERA~K/BB 산출 (averages.json 용, 갱신 시마다 재계산)
 │     ├─ types.ts            ← web/src/shared/types.ts 와 호환 유지 필수
@@ -83,6 +89,8 @@
 │      ├─ players/index.json       PlayerIndexEntry[]  (검색·매치업 후보용 슬림)
 │      ├─ players/{id}.json        Player (gameLog 포함)
 │      ├─ records/players.json     Player[] (gameLog 제외 슬림본 — 리더보드/테이블용)
+│      ├─ schedule.json            ScheduleData (경기일정 페이지 — games[]+official_ranks, u18_schedule.json 스키마)
+│      ├─ teams.json               TeamRosterEntry[] (선수현황 페이지 — 팀+선수+지도자, u18_data.json 스키마)
 │      └─ matchups/{playerId}.json Matchup[] (한 매치업이 양쪽 샤드에 중복 포함)
 │
 └─ .github/workflows/{scrape,deploy}.yml
@@ -123,6 +131,8 @@
 | 팀 로스터 | GET | `/info/team/team_player?club_idx=X&kind_cd=31` | `<dt>학년</dt>` 있는 항목만 = 선수 |
 | 선수 공식기록 | GET | `/record/record/player_record?kind_cd=31&club_idx=&person_no=&record_type=1|2&begin_year=Y&end_year=Y` | `record_type` 1=타격 2=투구 |
 | 선수 프로필 | GET | `/info/player/player_view?person_no=N&gubun=P` | `summary_team` 표(선수명/백넘버/생년월일/포지션/키·몸무게/투타) + `<h4>출신학교` ul(지역/소속/연도/포지션 — **같은 연도 2개 학교 = 시즌 중 이적**) + `<h4>수상내역` ul(연도/대회명/수상명) |
+| 경기 요약(일정용) | GET | `/game/box_score?game_idx=N` | `dl.game_name`(dt=대회명, dd="날짜 시간 / 구장 / 라운드") + `dl.team`×2("팀명 승/패 점수") + `dt.font_red`("취소") — schedule.ts |
+| 주말리그 공식 순위 | GET | `/game/match_table?kind_cd=31&season=Y&lig_idx=N` | `<option lig_idx>` 로 권역 목록, `div.match-club > span.team` 행 순서 = 공식 순위 — schedule.ts |
 | 선수등록현황 | GET | `/info/current/current_list` | 지역×부별 팀/선수 총계 표. `총계` 행(25칸)의 18세 이하부 팀[12]·계[16] 로 로스터 수집 검증 |
 
 **`kind_cd`**: 41=대학부, **31=U18(고교)**, 51=일반부.
@@ -151,6 +161,9 @@
 - `PlayerProfile`: personNo/name/birth/height/weight/투타 + `schools[]`(연도별 초·중·고) + `awards[]` — `data/profiles/{personNo}.json`.
 - `LeagueAverages`: `{ season, updatedAt, overall: LeagueRates, tournaments: {slug: {title, rates}} }` — `data/{year}/averages.json`. `LeagueRates` = avg~woba·rPerPa(타자) + era~kbb(투수). wOBA 가중치는 scraper `leagueAverages.WOBA_WEIGHTS` ↔ web `sabermetrics.W` **동일 유지**.
 - 선수 `id` 슬러그: `${team}_${name}_${number}` (공백 제거). 안정 ID 후보 = `personNo`.
+- `PlayerIndexEntry.personNo`: 선수현황(teams.json person_no) ↔ 기록 상세(/player/:id) 연결 키.
+- `ScheduleData/ScheduleGame`: `data/{year}/schedule.json` — u81-baseball u18_schedule.json 스키마 그대로 (status 완료/예정/취소, official_ranks 권역→팀명 순서).
+- `TeamRosterEntry/TeamPlayerEntry/TeamStaffEntry`: `data/{year}/teams.json` — u81-baseball u18_data.json 스키마 그대로.
 
 ---
 
@@ -245,6 +258,7 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-09: **u81-baseball(경기일정·선수현황) 병합**: ① 수집기 TS 이식 — `teams.ts`(팀 목록(감독)+선수/지도자/신장·체중 → `data/{year}/teams.json`), `schedule.ts`(calendar→box_score 일정/결과+취소, 증분 병합(완료·취소 보존, 예정+신규+최근3일 재수집), match_table 주말리그 공식 순위 → `data/{year}/schedule.json`) — 원본 Python(fetch_u18_rosters/schedule.py)과 산출물 동일함을 전수 비교로 검증. scrape.yml 에 `npm run teams`/`npm run schedule` 스텝, scrape-full.yml 은 `SCHEDULE_FULL=1` 전체 재수집. ② 프론트 — 공용 `ScheduleView`(/schedule: 월별 달력·학교별 전적·시합별 순위표/대진, 모달)·`TeamsView`(/players: 통계 밴드·팀 카드·팀 상세 모달·이름/백넘버 검색)·`PersonView`(/person/:personNo: 무기록 선수 폴백 상세) — 구성은 u81-baseball 페이지 동일, 스타일은 Nike.md 토큰. 선수 행 클릭 → 기록 보유 시 `/player/:id`(PlayerIndexEntry 에 `personNo` 추가로 조인), 무기록 시 폴백. 선수 상세(D/M/폴백)에 `KbsaLink`(player_view 새 탭) 버튼. 메인 히어로 버튼 = 경기일정→선수현황→선수기록→상대전적, 내비/드로어 7항목(경기일정·선수현황·선수 기록 상세·항목별 랭킹·상대전적·선수 검색·지표 설명).
 - 2026-07-09: **수집 누락 원인 해소 — 취소·미래 경기**: 빈 박스스코어 51건의 정체 = ① 우천취소 경기 33건(캘린더 `<strike>`+"(취소)" — 팀명 파싱 실패로 빈 파일 저장 후 매 실행 재수집 루프) ② 캘린더 선등록 미래 경기 ③ 몰수경기(38759, 9:0 — 선수 기록 원본 부재). `koreaBaseball.fetchGameRefs` 가 취소 감지(`GameRef.canceled`) + strike 안 팀명 파싱, `index.collectNewGames` 가 취소 마커 저장·미래 경기 스킵·요청 간 250ms 지연, `readEmptyGames` 취소 제외, `readGames` 빈/취소 경기 집계 제외(경기 854→823 정확화). 부수 효과: 3·4월 캘린더 상시 재스캔 소멸, 실행당 낭비 요청 ~50건 제거.
 - 2026-07-09: **선수 검색 백넘버 지원**: `searchPlayers` 가 공백 토큰 AND 매칭 — 숫자 토큰은 등번호 정확 일치(예: "충암 45"), 그 외 이름/팀 부분 일치. 검색 결과에 `N번` 표기 추가 (SearchPage/MSearch).
 - 2026-07-09: **선수 상세 접이식 그룹**: 경기 로그를 시합(title)별, 상대전적을 상대 학교별 `<details>` 접이식(`shared/Fold.tsx`, `.fold` CSS)으로 — 경기 로그는 최근 경기가 속한 그룹만 기본 펼침, 그룹 1개면 자동 펼침. `groupLogByTitle`(playerStats)·`groupMatchupsByTeam`(matchup, 가나다순) 헬퍼. 학교 그룹 내 행은 학년·투타만 표기(학교 중복 제거). PlayerPage/MPlayer 공통.
