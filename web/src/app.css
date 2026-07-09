@@ -28,6 +28,7 @@
   background: var(--color-canvas);
   border-bottom: 1px solid var(--color-hairline-soft);
   height: 64px;
+  position: relative; /* nav-drawer 오버레이 기준점 */
 }
 .primary-nav .container {
   display: flex;
@@ -50,6 +51,7 @@
   font-weight: 500;
   padding: 4px 0;
   border-bottom: 2px solid transparent;
+  white-space: nowrap; /* 링크가 7개로 늘어 좁은 폭에서 글자가 두 줄로 꺾이는 것 방지 */
 }
 .nav-links a.active {
   border-bottom-color: var(--color-ink);
@@ -79,8 +81,9 @@
   background: var(--color-soft-cloud);
 }
 
-/* 데스크탑 네비가 비좁아지는 폭부터 햄버거로 전환 */
-@media (max-width: 980px) {
+/* 데스크탑 네비가 비좁아지는 폭부터 햄버거로 전환
+   (링크 7개 + 우측 검색영역이 한 줄에 들어가려면 약 1310px 필요 — 여유 포함 1360) */
+@media (max-width: 1360px) {
   .nav-links {
     display: none;
   }
@@ -93,7 +96,13 @@
     justify-content: flex-end;
   }
   .nav-drawer {
+    /* 64px 고정 높이 내비 아래로 펼치는 오버레이 — 뒤따르는 히어로에 가려지지 않게 z-index */
     display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 40;
     background: var(--color-canvas);
     border-bottom: 1px solid var(--color-hairline);
   }
