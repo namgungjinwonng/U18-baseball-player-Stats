@@ -240,9 +240,14 @@ npx playwright install chromium && npm run discover -- "<URL>"
   3. **(이름,정규팀) 유일 폴백**: `nameTeamFallback`(현행 로스터 + history) — 번호변경/임시번호로 (이름,번호)가 안 맞아도 같은 학교 동명 1명뿐이면 personNo 부여.
   4. **번호 미상(`0`/빈) 병합**: 같은 이름·팀에 실번호 형제가 유일하면 거기로 병합.
   - 매치업 id 는 `canon()` = reslug → personNo 순으로 재매핑. **잔여 중복은 KBSA personNo 가 다른 실제 동명이인뿐**.
-- **빈 박스스코어 재수집**: `fetchGames.emptyGameIds/emptyGameMonths` — 타자 0명 게임(수집 당시 record_detail 이 일시적으로 비어있던 경기)을 game_idx 가 있어도 매 증분마다 재fetch. `index.collectNewGames` 가 빈 게임 월을 스캔 월에 포함. **단, record_detail 자체에 선수 행이 없는 게임(KBSA 미게시, "합계 0.000")은 원본 부재라 복구 불가** — 게시되면 자동 채워짐.
+- **빈 박스스코어 재수집**: `fetchGames.emptyGameIds/emptyGameMonths` — 타자 0명 게임(수집 당시 record_detail 이 일시적으로 비어있던 경기)을 game_idx 가 있어도 매 증분마다 재fetch. `index.collectNewGames` 가 빈 게임 월을 스캔 월에 포함. **단, record_detail 자체에 선수 행이 없는 게임(KBSA 미게시·몰수 등 "합계 0.000")은 원본 부재라 복구 불가** — 게시되면 자동 채워짐.
+- **취소·미래 경기 처리**: 캘린더에 `<strike>팀명</strike>` + "(취소)" 로 표시되는 우천취소 경기는 `GameRef.canceled` 로 감지 → record_detail fetch 없이 `canceled: true` 마커 파일 저장(재수집 루프 종료, `readEmptyGames` 제외). 캘린더 선등록된 미래 경기(`date > today`)는 수집 스킵 — 경기일이 지나면 자동 수집. `accumulate.readGames` 는 취소·빈 경기를 집계에서 제외(gameCount 정확화).
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
+
+- 2026-07-09: **수집 누락 원인 해소 — 취소·미래 경기**: 빈 박스스코어 51건의 정체 = ① 우천취소 경기 33건(캘린더 `<strike>`+"(취소)" — 팀명 파싱 실패로 빈 파일 저장 후 매 실행 재수집 루프) ② 캘린더 선등록 미래 경기 ③ 몰수경기(38759, 9:0 — 선수 기록 원본 부재). `koreaBaseball.fetchGameRefs` 가 취소 감지(`GameRef.canceled`) + strike 안 팀명 파싱, `index.collectNewGames` 가 취소 마커 저장·미래 경기 스킵·요청 간 250ms 지연, `readEmptyGames` 취소 제외, `readGames` 빈/취소 경기 집계 제외(경기 854→823 정확화). 부수 효과: 3·4월 캘린더 상시 재스캔 소멸, 실행당 낭비 요청 ~50건 제거.
+- 2026-07-09: **선수 검색 백넘버 지원**: `searchPlayers` 가 공백 토큰 AND 매칭 — 숫자 토큰은 등번호 정확 일치(예: "충암 45"), 그 외 이름/팀 부분 일치. 검색 결과에 `N번` 표기 추가 (SearchPage/MSearch).
+- 2026-07-09: **선수 상세 접이식 그룹**: 경기 로그를 시합(title)별, 상대전적을 상대 학교별 `<details>` 접이식(`shared/Fold.tsx`, `.fold` CSS)으로 — 경기 로그는 최근 경기가 속한 그룹만 기본 펼침, 그룹 1개면 자동 펼침. `groupLogByTitle`(playerStats)·`groupMatchupsByTeam`(matchup, 가나다순) 헬퍼. 학교 그룹 내 행은 학년·투타만 표기(학교 중복 제거). PlayerPage/MPlayer 공통.
 
 - 2026-07-06: **랭킹 행 표기 개편**: `LeadersView` 행을 "이름(학교/학년/투타) 기록" 축약형(예: `박지율(유신고/3/우우)` — 학년 숫자만, 투타는 투·타 첫 글자)으로 — 별도 팀 컬럼(`rank-team`, 이름과 간격 멀던 문제) 제거, `LeaderItem` 에 grade/bats/throws 추가, `rankMeta()` 가 없는 항목 생략 조합. `.rank-meta` 폰트 = `calc(var(--type-caption) - 1pt)`, grid `36px 1fr auto 90px` → `36px 1fr 90px`(column-gap 8px). `.rank-name` 은 flex+nowrap — ▲▼ 는 `margin-left:auto` 로 기록값 옆 정렬, 모바일 가중치 모드에서 줄바꿈 없이 공간 부족 시 메타만 말줄임(ellipsis).
 - 2026-07-06: **팀 강도 소프트 클램프**: `strength.ts` 하드 클램프(0.85~1.15 — 경계값에 30팀이 눌려 상·하위권 내부 서열 소실)를 소프트 클램프로 교체 — 1±0.15 구간은 원값, 초과분은 tanh 압축으로 0.7~1.3 점근(CORE=TAIL=0.15, 순단조라 동률 없음). `params.clamp` = [0.7, 1.3]. 가중치 설명 모달(weights.tsx) 문구 동기화.

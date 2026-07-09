@@ -555,13 +555,16 @@ function pitcherLineText(p: { outs: number; er: number; so: number; w: number; l
 }
 
 // --- 파일 입출력 ---
+// 취소 경기·선수 행 미게시(빈 박스스코어)·미래 경기는 집계 대상에서 제외 —
+// gameCount 과다 계상 방지 (파일은 재수집/멱등 판단용으로 유지).
 export function readGames(dataDir: string): GameBoxScore[] {
   const dir = path.join(dataDir, "games");
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
-    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as GameBoxScore);
+    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as GameBoxScore)
+    .filter((g) => !g.canceled && (g.batters?.length ?? 0) > 0);
 }
 
 function writeAgg(baseDir: string, agg: Aggregated): void {

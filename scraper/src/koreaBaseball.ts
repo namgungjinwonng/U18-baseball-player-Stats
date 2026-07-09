@@ -32,6 +32,7 @@ export interface GameRef {
   away: string;
   homeScore: number;
   awayScore: number;
+  canceled?: boolean; // 캘린더에 <strike>팀명</strike> + "(취소)" 로 표시된 취소 경기
 }
 
 export async function fetchGameRefs(
@@ -47,8 +48,11 @@ export async function fetchGameRefs(
       const [, y, mo, d, inner] = m;
       const idMatch = inner.match(/game_idx=(\d+)/);
       if (!idMatch) continue;
-      const teams = [...inner.matchAll(/class="name"[^>]*>([^<]+)</gi)].map((x) =>
-        x[1].trim()
+      // 취소 경기: 팀명이 <strike> 로 감싸이고 점수 자리에 "(취" "소)" 가 표시됨.
+      const canceled = /<strike/i.test(inner) || /\(취/.test(inner);
+      // 팀명은 <strike> 안에 있을 수 있어 옵션으로 통과시킨다.
+      const teams = [...inner.matchAll(/class="name"[^>]*>\s*(?:<strike[^>]*>)?([^<]+)</gi)].map(
+        (x) => x[1].trim()
       );
       const scores = [...inner.matchAll(/class="(?:score|num)[^"]*"[^>]*>\s*(\d+)\s*</gi)].map(
         (x) => parseInt(x[1], 10)
@@ -60,6 +64,7 @@ export async function fetchGameRefs(
         home: teams[1] ?? "",
         awayScore: scores[0] ?? 0,
         homeScore: scores[1] ?? 0,
+        ...(canceled ? { canceled } : {}),
       });
     }
   }

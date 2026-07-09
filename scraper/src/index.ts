@@ -40,6 +40,10 @@ const MONTHS = process.env.MONTHS
   ? process.env.MONTHS.split(",").map((s) => parseInt(s, 10))
   : undefined;
 
+// record_detail 연속 요청 간 지연 — KBSA 는 대량 요청 시 스로틀링하므로 예방적 간격.
+const FETCH_DELAY_MS = 250;
+const politeDelay = () => new Promise((r) => setTimeout(r, FETCH_DELAY_MS));
+
 async function collectNewGames(): Promise<string[]> {
   const newFiles: string[] = [];
   const fetchOne = async (ref: { id: string; date: string }): Promise<"ok" | "gone" | "fail"> => {
@@ -55,6 +59,36 @@ async function collectNewGames(): Promise<string[]> {
       // 410 Gone = 영구 실패(재시도 제외). 그 외는 일시 실패로 재시도 대상.
       return /410/.test((e as Error).message) ? "gone" : "fail";
     }
+  };
+  // 취소 경기(캘린더 <strike>·"(취소)") — record_detail 이 빈 껍데기이므로 fetch 대신
+  // 취소 마커 파일을 저장해 재수집 루프를 끊는다. 이미 마커가 있으면 no-op.
+  const writeCanceled = (ref: { id: string; date: string; home: string; away: string }): boolean => {
+    const fp = path.join(DATA_DIR, "games", `${ref.id}.json`);
+    let prevTitle: string | undefined;
+    if (fs.existsSync(fp)) {
+      try {
+        const prev = JSON.parse(fs.readFileSync(fp, "utf8")) as GameBoxScore;
+        if (prev.canceled) return false;
+        prevTitle = prev.title;
+      } catch { /* 손상 파일 → 새로 씀 */ }
+    }
+    const box: GameBoxScore = {
+      id: ref.id,
+      date: ref.date,
+      season: parseInt(ref.date.slice(0, 4), 10),
+      home: ref.home,
+      away: ref.away,
+      score: { home: 0, away: 0 },
+      ...(prevTitle ? { title: prevTitle } : {}),
+      canceled: true,
+      batters: [],
+      pitchers: [],
+      matchups: [],
+    };
+    fs.mkdirSync(path.dirname(fp), { recursive: true });
+    fs.writeFileSync(fp, JSON.stringify(box, null, 2) + "\n");
+    console.log(`× 취소 경기 마킹: ${ref.id} (${ref.date} ${ref.away} vs ${ref.home})`);
+    return true;
   };
   try {
     // 증분: env 미지정 시 마지막 수집 경기의 월부터만 스캔(시간 절약).
@@ -88,13 +122,19 @@ async function collectNewGames(): Promise<string[]> {
     const eligible = refs.filter(
       (r) =>
         (!have.has(r.id) || recentDays.has(r.date) || emptyIds.has(r.id)) &&
-        isAfterSeasonStart(r.date)
+        isAfterSeasonStart(r.date) &&
+        // 미래 경기(캘린더 선등록)는 기록이 없으므로 스킵 — 경기일이 지나면 자동 수집.
+        r.date <= todayISO
     );
     if (recentRefs.length) console.log(`  ↻ 최근 3일치 ${recentRefs.length}경기 재수집 대상`);
     if (emptyRefs.length) console.log(`  ↻ 빈 박스스코어 ${emptyRefs.length}경기 재수집 대상`);
     const todo = GAME_LIMIT === Infinity ? eligible : eligible.slice(0, GAME_LIMIT);
     let failed: typeof todo = [];
-    for (const ref of todo) if ((await fetchOne(ref)) === "fail") failed.push(ref);
+    for (const ref of todo) {
+      if (ref.canceled) { writeCanceled(ref); continue; } // fetch 없이 마커만
+      if ((await fetchOne(ref)) === "fail") failed.push(ref);
+      await politeDelay();
+    }
     // 누락(일시 실패) 재시도: 지수 백오프 최대 5회
     for (let attempt = 1; attempt <= 5 && failed.length; attempt++) {
       const retry = failed;
@@ -102,7 +142,10 @@ async function collectNewGames(): Promise<string[]> {
       const wait = Math.min(5000 * 2 ** (attempt - 1), 40000);
       console.log(`  [경기 재시도 ${attempt}] 누락 ${retry.length}건, ${wait / 1000}s 대기`);
       await new Promise((r) => setTimeout(r, wait));
-      for (const ref of retry) if ((await fetchOne(ref)) === "fail") failed.push(ref);
+      for (const ref of retry) {
+        if ((await fetchOne(ref)) === "fail") failed.push(ref);
+        await politeDelay();
+      }
     }
     if (failed.length) console.warn(`  ⚠ 최종 누락 ${failed.length}경기(일시실패)`);
   } catch (e) {

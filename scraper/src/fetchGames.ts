@@ -30,6 +30,7 @@ export function existingGameIds(dataDir: string): Set<string> {
 
 // 박스스코어가 비어있는(타자 0명) 경기 정보 → 수집 당시 record_detail 이 일시적으로
 // 비어있던 경기. game_idx 가 있어 증분이 건너뛰므로 재수집 대상으로 별도 표시한다.
+// 취소 경기(canceled 마커)는 기록 없음이 확정이므로 재수집 대상에서 제외.
 function readEmptyGames(dataDir: string): { id: string; date: string }[] {
   const dir = path.join(dataDir, "games");
   if (!fs.existsSync(dir)) return [];
@@ -38,9 +39,10 @@ function readEmptyGames(dataDir: string): { id: string; date: string }[] {
     if (!f.endsWith(".json")) continue;
     try {
       const g = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as {
-        id?: string; date?: string; batters?: unknown[];
+        id?: string; date?: string; canceled?: boolean; batters?: unknown[];
       };
-      if (g.id && (!g.batters || g.batters.length === 0)) out.push({ id: g.id, date: g.date ?? "" });
+      if (g.id && !g.canceled && (!g.batters || g.batters.length === 0))
+        out.push({ id: g.id, date: g.date ?? "" });
     } catch {
       /* 무시 */
     }

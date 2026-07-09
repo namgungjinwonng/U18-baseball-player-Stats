@@ -54,6 +54,7 @@ export interface GameBoxScore {
   away: string;
   score: { home: number; away: number };
   title?: string; // 시합/대회명 (예: "주말리그 후반기(서울권B)", "황금사자기") — record_detail.dl.game_name
+  canceled?: boolean; // 취소 경기(캘린더 <strike>·"(취소)" 표시) — 기록 없음 확정, 재수집 제외 마커
   batters: BatterLine[];
   pitchers: PitcherLine[];
   matchups: MatchupLine[];
