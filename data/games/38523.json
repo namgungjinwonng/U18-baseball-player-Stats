@@ -2,13 +2,14 @@
   "id": "38523",
   "date": "2026-06-20",
   "season": 2026,
-  "home": "",
-  "away": "",
+  "home": "의왕BC(",
+  "away": "인창고",
   "score": {
     "home": 0,
     "away": 0
   },
   "title": "2026 고교야구 주말리그 후반기(경기·인천권)",
+  "canceled": true,
   "batters": [],
   "pitchers": [],
   "matchups": []

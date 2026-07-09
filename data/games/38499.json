@@ -2,13 +2,14 @@
   "id": "38499",
   "date": "2026-06-20",
   "season": 2026,
-  "home": "",
-  "away": "",
+  "home": "청원고",
+  "away": "서울HG야",
   "score": {
     "home": 0,
     "away": 0
   },
   "title": "2026 고교야구 주말리그 후반기(서울권C)",
+  "canceled": true,
   "batters": [],
   "pitchers": [],
   "matchups": []

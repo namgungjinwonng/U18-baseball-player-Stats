@@ -2,13 +2,14 @@
   "id": "38504",
   "date": "2026-06-20",
   "season": 2026,
-  "home": "",
-  "away": "",
+  "home": "세광고",
+  "away": "북일고",
   "score": {
     "home": 0,
     "away": 0
   },
   "title": "2026 고교야구 주말리그 후반기(충청권)",
+  "canceled": true,
   "batters": [],
   "pitchers": [],
   "matchups": []
