@@ -588,6 +588,8 @@
   color: var(--color-mute);
   font-size: var(--type-caption-sm);
   font-weight: 400;
+  white-space: nowrap; /* "6경기"가 좁은 화면에서 중간 줄바꿈되지 않도록 */
+  flex-shrink: 0;
 }
 .fold__body {
   padding: 0 0 10px;
