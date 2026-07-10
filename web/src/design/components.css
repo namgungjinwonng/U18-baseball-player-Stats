@@ -104,6 +104,7 @@
   cursor: pointer;
   font-family: var(--font-ui);
   text-align: left;
+  min-width: 0; /* flex 항목 기본 min-width:auto 해제 — 내비 링크에 폭을 양보하고 문구는 말줄임 */
 }
 .search-pill--link:hover {
   outline: 1px solid var(--color-hairline);

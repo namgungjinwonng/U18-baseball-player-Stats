@@ -1139,6 +1139,40 @@
 }
 
 /* 저작권/비상업 고지 푸터 */
+/* 알리는 글 — 읽기 위주 본문(측정 폭 제한 + 섹션 리듬) */
+.notice {
+  max-width: 680px;
+}
+.notice section {
+  padding-bottom: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-hairline-soft);
+}
+.notice section:last-child {
+  border-bottom: none;
+}
+.notice h3 {
+  font-size: var(--type-heading-md);
+  font-weight: 700;
+  margin: 0 0 var(--space-sm);
+}
+.notice p {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-charcoal);
+  line-height: 1.7;
+}
+.notice p:last-child {
+  margin-bottom: 0;
+}
+.notice a {
+  text-decoration: underline;
+}
+.notice__meta {
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+  font-weight: 700;
+}
+
 .site-footer {
   border-top: 1px solid var(--color-hairline);
   color: var(--color-mute);

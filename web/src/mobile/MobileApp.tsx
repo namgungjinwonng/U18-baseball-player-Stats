@@ -12,6 +12,7 @@ import { LeadersView } from "../shared/LeadersView";
 import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
+import { Notice } from "../shared/Notice";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -44,6 +45,9 @@ function Drawer({ onClose }: { onClose: () => void }) {
         </NavLink>
         <NavLink to="/glossary" onClick={onClose}>
           지표 설명
+        </NavLink>
+        <NavLink to="/notice" onClick={onClose}>
+          알리는 글
         </NavLink>
       </nav>
     </>
@@ -93,6 +97,7 @@ export function MobileApp() {
           <Route path="/player/:id" element={<MPlayer />} />
           <Route path="/leaders/:id" element={<LeadersView wrapClass="m-page" />} />
           <Route path="/glossary" element={<div className="m-page"><Glossary /></div>} />
+          <Route path="/notice" element={<Notice wrapClass="m-page" />} />
         </Routes>
       </main>
       <Footer />

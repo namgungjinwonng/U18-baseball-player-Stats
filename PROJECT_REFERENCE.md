@@ -258,6 +258,8 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-10: **알리는 글 페이지 추가**: `shared/Notice.tsx` → `/notice`, 데스크탑 nav-links·nav-drawer + 모바일 Drawer 에 "알리는 글"(8번째) 등록. 4개 섹션(서비스 성격 / 데이터 출처+KBSA 링크 / 기록은 참고용 / 저작권과 문의) — 비상업·출처 귀속·무단 수집 금지·정확성 무보증·권리자 요청 시 중단 고지. 갱신 주기는 최소치 보장 표현("하루 1회 이상")으로 표기(실제는 선수현황 2회·일정 5회). 스타일 `.notice*`(app.css, max-width 680px). 내비 링크 8개로 늘며 1440px 컨테이너에서 26px 오버플로 → `.search-pill--link` 에 `min-width: 0`(flex 기본 min-width:auto 해제)로 해소, 햄버거 전환 1360px 유지.
+
 - 2026-07-10: **증분 수집 분리(ci)**: scrape.yml = 일정·기록 증분 전용(schedule+scrape, 하루 5회 — 12/15/18/21/24시 KST), 신규 teams.yml = 선수현황 전용(roster+teams+`MONTHS=0` 재집계, 하루 2회 — 10/18시 KST). 둘 다 `concurrency: scrape` 그룹으로 순차 실행, deploy.yml workflow_run 이름 3종으로 갱신. u81 동기화도 소스별 분리 — 일정 워크플로는 `--generate-schedule`(u18_schedule_data.js/u18_schedule.html 만), 선수현황 워크플로는 `--generate-players`(u18_app_data.js/u18_players.html/index.html 만) — u81 build_all.py 신규 모드, 실데이터 해시 비교로 상호 불간섭 검증. 유의: 기록 증분이 로스터보다 자주 돌므로 당일 새로 등장한 선수의 personNo 조인은 다음 선수현황 실행 때 채워짐.
 
 - 2026-07-10: **UI 피드백 반영(경기일정·선수현황·선수 상세·검색)**: ① 팀/학교 카드 = 소프트 클라우드 헤더(#f5f5f5)+볼드 학교명+지역 회색 텍스트(`.sch-team-card__reg`) — 컬러 지역 배지 제거(badgeColors 는 POS/GRADE 만 유지), 승 초록·패 빨강 유지. ② 달력 년월 라인 블랙 채움(`.sch-monthnav`), 화살표는 데이터 유무로 활성/30% 흐림 구분(`.sch-monthnav__btn`). ③ 선수 상세 접이식 기본 모두 접힘 + 펼침 시 블랙 헤더·테두리 박스(`.fold[open]`). ④ 카드 내 시합명 볼드+한 줄 말줄임(`.sch-game__comp`). ⑤ 시합 탭 세그먼트 균등 폭(`.sch-seg`). ⑥ 리그 순위표 = `tv-table sch-stand` 고정 레이아웃(가로 스크롤 없음). ⑦ 팀 모달 필터 칩 테두리 1.5px. ⑧ 브랜드 로고 = 홈 링크 인지(호버 밑줄/눌림/title). ⑨ 검색 통일 — 상단바 검색(데스크탑 pill `.search-pill--link`·모바일 ⌕)은 /search 로 바로 이동(모바일 SearchOverlay 삭제), placeholder "선수 검색 (이름 또는 팀+등번호 가능)", 실존 선수 예시 문구 금지.
