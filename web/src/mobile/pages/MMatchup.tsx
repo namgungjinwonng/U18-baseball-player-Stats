@@ -7,6 +7,7 @@ import {
   batsThrowsLabel, facedOpponents, facedSchools, indexById, opposite, playerLabel,
   searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
+import { Ico } from "../../shared/navIcons";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 
 export function MMatchup() {
@@ -38,7 +39,7 @@ export function MMatchup() {
 
   return (
     <div className="m-page">
-      <h2 className="heading-xl">상대전적</h2>
+      <h2 className="heading-xl"><Ico name="matchup" variant="title" />상대전적</h2>
       <p className="caption" style={{ marginTop: -8, marginBottom: 16 }}>타자 vs 투수</p>
 
       <div className="filter-bar">

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePlayerIndex, searchPlayers } from "../../shared/data";
+import { Ico } from "../../shared/navIcons";
 
 export function MSearch() {
   const [params, setParams] = useSearchParams();
@@ -13,7 +14,7 @@ export function MSearch() {
 
   return (
     <div className="m-page">
-      <h2 className="heading-xl">선수 검색</h2>
+      <h2 className="heading-xl"><Ico name="search" variant="title" />선수 검색</h2>
       <div className="search-pill" style={{ marginBottom: 16 }}>
         <span aria-hidden>⌕</span>
         <input

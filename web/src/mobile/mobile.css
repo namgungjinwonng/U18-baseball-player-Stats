@@ -111,15 +111,15 @@
 .m-drawer a {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 20px;
   font-weight: 500;
   padding: 18px 0;
   border-bottom: 1px solid var(--color-hairline);
 }
-.m-drawer .home-icon {
-  width: 19px;
-  height: 19px;
+.m-drawer .nav-ico {
+  width: 22px;
+  height: 22px;
 }
 
 /* Mobile hero */

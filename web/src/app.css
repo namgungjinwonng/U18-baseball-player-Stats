@@ -95,14 +95,26 @@
 .nav-drawer a {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   padding: var(--space-lg) 40px;
   font-weight: 500;
   border-top: 1px solid var(--color-hairline);
 }
-.nav-drawer .home-icon {
-  width: 18px;
-  height: 18px;
+/* 메뉴/제목 아이콘 (navIcons.tsx — 투명배경 PNG) */
+.nav-ico {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+/* 페이지 제목 옆 아이콘 — 글자 크기에 맞춰 따라간다 */
+.title-ico {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+  vertical-align: -0.08em;
+  margin-right: 0.4em;
 }
 .nav-drawer a.active {
   background: var(--color-soft-cloud);

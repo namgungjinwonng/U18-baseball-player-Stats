@@ -14,6 +14,7 @@ import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
 import { HomeIcon } from "../shared/HomeIcon";
+import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -24,34 +25,39 @@ function Drawer({ onClose }: { onClose: () => void }) {
       <div className="m-drawer-backdrop" onClick={onClose} />
       <nav className="m-drawer">
         <Link to="/" onClick={onClose} className="brand" style={{ marginBottom: 12 }}>
-          U18 BASEBALL
-        </Link>
-        <NavLink to="/" end onClick={onClose}>
           <HomeIcon />
-          홈
-        </NavLink>
+          <span>U18 BASEBALL</span>
+        </Link>
         <NavLink to="/schedule" onClick={onClose}>
+          <Ico name="schedule" />
           경기일정
         </NavLink>
         <NavLink to="/players" onClick={onClose}>
+          <Ico name="players" />
           선수현황
         </NavLink>
         <NavLink to="/records" onClick={onClose}>
+          <Ico name="records" />
           선수 기록 상세
         </NavLink>
         <NavLink to="/leaders/avg" onClick={onClose}>
+          <Ico name="leaders" />
           항목별 랭킹
         </NavLink>
         <NavLink to="/matchup" onClick={onClose}>
+          <Ico name="matchup" />
           상대전적
         </NavLink>
         <NavLink to="/search" onClick={onClose}>
+          <Ico name="search" />
           선수 검색
         </NavLink>
         <NavLink to="/glossary" onClick={onClose}>
+          <Ico name="glossary" />
           지표 설명
         </NavLink>
         <NavLink to="/notice" onClick={onClose}>
+          <Ico name="notice" />
           알리는 글
         </NavLink>
       </nav>

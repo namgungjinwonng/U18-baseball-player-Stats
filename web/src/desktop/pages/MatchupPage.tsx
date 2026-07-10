@@ -7,6 +7,7 @@ import {
   batsThrowsLabel, facedOpponents, facedSchools, indexById, opposite, playerLabel,
   searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
+import { Ico } from "../../shared/navIcons";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 
 function Stat({ k, v }: { k: string; v: string }) {
@@ -70,7 +71,9 @@ export function MatchupPage() {
 
   return (
     <div className="container page">
-      <div className="section-head"><h2 className="heading-xl">상대전적 · 타자 vs 투수</h2></div>
+      <div className="section-head">
+        <h2 className="heading-xl"><Ico name="matchup" variant="title" />상대전적 · 타자 vs 투수</h2>
+      </div>
 
       {/* 시합 필터 (선택) — 시합 범위 안에서만 매치업 집계 */}
       <div className="filter-bar">

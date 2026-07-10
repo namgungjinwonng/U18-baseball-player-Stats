@@ -6,6 +6,7 @@ import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
+import { Ico } from "../../shared/navIcons";
 import type { Player } from "../../shared/types";
 
 export function RecordsPage() {
@@ -37,7 +38,7 @@ export function RecordsPage() {
   return (
     <div className="container page">
       <div className="section-head">
-        <h2 className="heading-xl">선수 기록</h2>
+        <h2 className="heading-xl"><Ico name="records" variant="title" />선수 기록</h2>
       </div>
       <div className="tabs">
         {tabs.map((t) => (

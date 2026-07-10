@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSchedule, useTeams } from "./data";
 import { Chip } from "../design/ui";
 import { kbsaBoxScoreUrl } from "./kbsa";
+import { Ico } from "./navIcons";
 import type { ScheduleGame, ScheduleSide } from "./types";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
@@ -332,7 +333,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   if (!sched) {
     return (
       <div className={wrapClass}>
-        <h2 className="heading-xl">경기일정</h2>
+        <h2 className="heading-xl"><Ico name="schedule" variant="title" />경기일정</h2>
         <div className="state">일정 데이터가 아직 없습니다.</div>
       </div>
     );
@@ -479,7 +480,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   return (
     <div className={wrapClass}>
       <div className="section-head">
-        <h2 className="heading-xl">경기일정</h2>
+        <h2 className="heading-xl"><Ico name="schedule" variant="title" />경기일정</h2>
         <span className="caption">갱신 {sched.updated}</span>
       </div>
 

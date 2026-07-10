@@ -9,6 +9,7 @@ import {
   FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter,
 } from "./filters";
 import { WeightToggle, useStrengthMap } from "./weights";
+import { Ico } from "./navIcons";
 
 // 이름 옆 보조 표기: (학교/학년/투타) 축약형 — 예: (유신고/3/우우). 없는 항목은 생략.
 // 투타는 투(throws)·타(bats) 첫 글자만: 우투좌타 → 우좌.
@@ -58,7 +59,10 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
 
   return (
     <div className={wrapClass}>
-      <h2 className="heading-xl" style={{ marginBottom: 8 }}>랭킹</h2>
+      <h2 className="heading-xl" style={{ marginBottom: 8 }}>
+        <Ico name="leaders" variant="title" />
+        랭킹
+      </h2>
 
       {/* 상단: 타자/투수 탭 + 항목 chip. 현재 필터(시합/지역/학교/학년)는 URL query 로 유지. */}
       <div className="tabs" style={{ marginBottom: 8 }}>

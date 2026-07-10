@@ -1,4 +1,5 @@
 // 세이버메트릭스 지표 설명(부록) — 데스크탑/모바일 공용.
+import { Ico } from "./navIcons";
 import type { LeagueRates } from "./types";
 
 export interface Term {
@@ -94,7 +95,10 @@ function Section({ title, terms }: { title: string; terms: Term[] }) {
 export function Glossary() {
   return (
     <>
-      <h1 className="heading-xl" style={{ marginBottom: "var(--space-xs)" }}>지표 설명 (부록)</h1>
+      <h1 className="heading-xl" style={{ marginBottom: "var(--space-xs)" }}>
+        <Ico name="glossary" variant="title" />
+        지표 설명 (부록)
+      </h1>
       <p className="caption" style={{ marginBottom: "var(--space-xl)" }}>
         선수 상세에 표시되는 세이버메트릭스 지표의 정의와 계산식입니다. (MLB 주요 지표 기준)
       </p>

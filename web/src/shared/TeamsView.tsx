@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { usePlayerIndex, useTeams } from "./data";
 import { kbsaPlayerUrl } from "./kbsa";
 import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
+import { Ico } from "./navIcons";
 import type { TeamPlayerEntry } from "./types";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
@@ -194,7 +195,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   if (!teams) {
     return (
       <div className={wrapClass}>
-        <h2 className="heading-xl">선수현황</h2>
+        <h2 className="heading-xl"><Ico name="players" variant="title" />선수현황</h2>
         <div className="state">선수현황 데이터가 아직 없습니다.</div>
       </div>
     );
@@ -219,7 +220,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
 
   return (
     <div className={wrapClass}>
-      <h2 className="heading-xl">선수현황</h2>
+      <h2 className="heading-xl"><Ico name="players" variant="title" />선수현황</h2>
       <p className="caption" style={{ margin: "4px 0 16px" }}>
         18세 이하부 전체 등록 선수 · 출처 korea-baseball.com (KBSA)
       </p>

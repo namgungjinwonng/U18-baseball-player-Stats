@@ -13,6 +13,7 @@ import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
 import { HomeIcon } from "../shared/HomeIcon";
+import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -76,18 +77,14 @@ export function DesktopApp() {
         </div>
         {menuOpen && (
           <div className="nav-drawer">
-            <NavLink to="/" end onClick={() => setMenuOpen(false)}>
-              <HomeIcon />
-              홈
-            </NavLink>
-            <NavLink to="/schedule" onClick={() => setMenuOpen(false)}>경기일정</NavLink>
-            <NavLink to="/players" onClick={() => setMenuOpen(false)}>선수현황</NavLink>
-            <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록 상세</NavLink>
-            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}>항목별 랭킹</NavLink>
-            <NavLink to="/matchup" onClick={() => setMenuOpen(false)}>상대전적</NavLink>
-            <NavLink to="/search" onClick={() => setMenuOpen(false)}>선수 검색</NavLink>
-            <NavLink to="/glossary" onClick={() => setMenuOpen(false)}>지표 설명</NavLink>
-            <NavLink to="/notice" onClick={() => setMenuOpen(false)}>알리는 글</NavLink>
+            <NavLink to="/schedule" onClick={() => setMenuOpen(false)}><Ico name="schedule" />경기일정</NavLink>
+            <NavLink to="/players" onClick={() => setMenuOpen(false)}><Ico name="players" />선수현황</NavLink>
+            <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록 상세</NavLink>
+            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />항목별 랭킹</NavLink>
+            <NavLink to="/matchup" onClick={() => setMenuOpen(false)}><Ico name="matchup" />상대전적</NavLink>
+            <NavLink to="/search" onClick={() => setMenuOpen(false)}><Ico name="search" />선수 검색</NavLink>
+            <NavLink to="/glossary" onClick={() => setMenuOpen(false)}><Ico name="glossary" />지표 설명</NavLink>
+            <NavLink to="/notice" onClick={() => setMenuOpen(false)}><Ico name="notice" />알리는 글</NavLink>
           </div>
         )}
       </nav>

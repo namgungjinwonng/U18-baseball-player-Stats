@@ -1,11 +1,12 @@
 // 알리는 글 — 서비스 성격·데이터 출처·기록 정확성·저작권 고지 (데스크탑/모바일 공용).
 import { KBSA_BASE } from "./kbsa";
+import { Ico } from "./navIcons";
 
 export function Notice({ wrapClass }: { wrapClass: string }) {
   return (
     <div className={wrapClass}>
       <div className="section-head">
-        <h2 className="heading-xl">알리는 글</h2>
+        <h2 className="heading-xl"><Ico name="notice" variant="title" />알리는 글</h2>
       </div>
 
       <div className="notice">
