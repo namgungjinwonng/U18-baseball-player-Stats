@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import {
   useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
@@ -7,10 +7,10 @@ import {
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
-import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta, matchupsVsSchool, sameSchool } from "../../shared/matchup";
 import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
 import { Fold } from "../../shared/Fold";
-import { TournamentPicker } from "../../shared/filters";
+import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
 import type { BattingStats, GameLogEntry, LeagueRates, Matchup, PitchingStats, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
@@ -120,8 +120,88 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
   );
 }
 
-// 경기 로그 — 시합별 접이식 그룹 (기본 모두 접힘).
-function GameLogTable({ log }: { log: GameLogEntry[] }) {
+// 경기 로그 한 행을 펼치면 그 시합 상대 학교의 상대전적(상대 선수별 기록)을 보여준다.
+function GameLogRow({
+  g, role, matchups, byId,
+}: {
+  g: GameLogEntry;
+  role: "batter" | "pitcher";
+  matchups: Matchup[];
+  byId: Map<string, PlayerIndexEntry> | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const oppIdOf = (m: Matchup) => (role === "batter" ? m.pitcherId : m.batterId);
+  const oppNameOf = (m: Matchup) => (role === "batter" ? m.pitcherName : m.batterName);
+  const oppLabel = role === "batter" ? "투수" : "타자";
+  const vs = useMemo(
+    () => matchupsVsSchool(matchups, oppIdOf, byId, g.opponent),
+    [matchups, byId, g.opponent, role]
+  );
+  const canOpen = vs.length > 0;
+  return (
+    <>
+      <tr
+        style={{ cursor: canOpen ? "pointer" : "default" }}
+        onClick={() => canOpen && setOpen((o) => !o)}
+      >
+        <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
+        <td style={{ textAlign: "left" }}>
+          {g.opponent}
+          {canOpen && <span className="muted" aria-hidden> {open ? "▾" : "▸"}</span>}
+        </td>
+        <td style={{ textAlign: "left" }}>{g.line}</td>
+      </tr>
+      {open && (
+        <tr className="gamelog-vs">
+          <td colSpan={3}>
+            <table className="stat-table stat-table--nested">
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left" }}>vs {oppLabel}</th>
+                  <th>타율</th><th>타수</th><th>안타</th><th>홈런</th><th>볼넷</th><th>삼진</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vs.map((m) => {
+                  const opp = byId?.get(oppIdOf(m));
+                  return (
+                    <tr key={`${m.batterId}-${m.pitcherId}`}>
+                      <td style={{ textAlign: "left" }}>
+                        <span className="muted">vs </span>
+                        <Link to={`/player/${oppIdOf(m)}`}>{oppNameOf(m)}</Link>
+                        {opp && (
+                          <span className="muted" style={{ marginLeft: 6 }}>
+                            {matchupOpponentMeta({ grade: opp.grade, bats: opp.bats, throws: opp.throws })}
+                          </span>
+                        )}
+                      </td>
+                      <td className="num">{rate(m.avg)}</td>
+                      <td className="num">{m.ab}</td>
+                      <td className="num">{m.h}</td>
+                      <td className="num">{m.hr}</td>
+                      <td className="num">{m.bb}</td>
+                      <td className="num">{m.so}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+// 경기 로그 — 시합별 접이식 그룹 (기본 모두 접힘). 각 경기 행 클릭 → 그 시합 상대전적 펼침.
+function GameLogTable({
+  log, role, matchups, byId,
+}: {
+  log: GameLogEntry[];
+  role: "batter" | "pitcher";
+  matchups: Matchup[];
+  byId: Map<string, PlayerIndexEntry> | null;
+}) {
   const groups = groupLogByTitle(log);
   return (
     <section className="player-section">
@@ -139,11 +219,13 @@ function GameLogTable({ log }: { log: GameLogEntry[] }) {
               </thead>
               <tbody>
                 {grp.entries.map((g, i) => (
-                  <tr key={`${g.gameId}-${i}`}>
-                    <td style={{ textAlign: "left" }}>{formatDate(g.date)}</td>
-                    <td style={{ textAlign: "left" }}>{g.opponent}</td>
-                    <td style={{ textAlign: "left" }}>{g.line}</td>
-                  </tr>
+                  <GameLogRow
+                    key={`${g.gameId}-${i}`}
+                    g={g}
+                    role={role}
+                    matchups={matchups}
+                    byId={byId}
+                  />
                 ))}
               </tbody>
             </table>
@@ -155,8 +237,9 @@ function GameLogTable({ log }: { log: GameLogEntry[] }) {
 }
 
 // 상대전적 (내가 투수 → 상대 타자 / 내가 타자 → 상대 투수) — 상대 학교별 접이식 그룹.
+// 경기 로그 드릴다운에서 이미 보이는 학교는 제외하고, 로그에 없는 상대만 남긴다(중복 방지).
 function MatchupTable({
-  title, rows, oppLabel, oppIdOf, oppNameOf, byId,
+  title, rows, oppLabel, oppIdOf, oppNameOf, byId, excludeSchools,
 }: {
   title: string;
   rows: Matchup[];
@@ -164,12 +247,19 @@ function MatchupTable({
   oppIdOf: (m: Matchup) => string;
   oppNameOf: (m: Matchup) => string;
   byId: Map<string, PlayerIndexEntry> | null;
+  excludeSchools: string[];
 }) {
   if (rows.length === 0) return null;
-  const groups = groupMatchupsByTeam(rows, oppIdOf, byId);
+  const groups = groupMatchupsByTeam(rows, oppIdOf, byId).filter(
+    (grp) => !excludeSchools.some((s) => sameSchool(grp.team, s))
+  );
+  if (groups.length === 0) return null;
   return (
     <section className="player-section">
       <h3>{title}</h3>
+      <p className="caption-sm" style={{ margin: "0 0 8px", color: "var(--color-mute)" }}>
+        경기 로그에 없는 상대만 표시됩니다.
+      </p>
       {groups.map((grp) => (
         <Fold key={grp.team} title={grp.team} sub={`${grp.rows.length}명`}>
           <div className="stat-table__scroll">
@@ -291,13 +381,15 @@ type TabId = "batting" | "pitching" | "schools" | "awards";
 
 export function PlayerPage() {
   const { id } = useParams();
+  const location = useLocation();
   const { data: player, loading, error } = usePlayer(id);
   const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
   const { data: profile } = usePlayerProfile(player?.personNo);
   const { data: averages } = useLeagueAverages();
-  const [tournamentSlug, setTournamentSlug] = useState("");
+  // 기록·랭킹 목록에서 시합 필터를 건 채 넘어오면 URL(?t=slug)로 그 필터를 이어받는다.
+  const [tournamentSlug, setTournamentSlug] = useState(() => filterFromQuery(location.search).tournament);
   const [tab, setTab] = useState<TabId | null>(null); // null = 자동(타자→투수)
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
 
@@ -408,7 +500,7 @@ export function PlayerPage() {
             <h3>세이버메트릭스 (타자)</h3>
             <BattingSaber b={v.batting} lg={lg} />
           </section>
-          <GameLogTable log={logFor("batting")} />
+          <GameLogTable log={logFor("batting")} role="batter" matchups={asBatter} byId={byId} />
           <MatchupTable
             title="상대전적 — 상대 투수"
             rows={asBatter}
@@ -416,6 +508,7 @@ export function PlayerPage() {
             oppIdOf={(m) => m.pitcherId}
             oppNameOf={(m) => m.pitcherName}
             byId={byId}
+            excludeSchools={logFor("batting").map((g) => g.opponent)}
           />
         </>
       )}
@@ -430,7 +523,7 @@ export function PlayerPage() {
             <h3>세이버메트릭스 (투수)</h3>
             <PitchingSaber p={v.pitching} lg={lg} />
           </section>
-          <GameLogTable log={logFor("pitching")} />
+          <GameLogTable log={logFor("pitching")} role="pitcher" matchups={asPitcher} byId={byId} />
           <MatchupTable
             title="상대전적 — 상대 타자"
             rows={asPitcher}
@@ -438,6 +531,7 @@ export function PlayerPage() {
             oppIdOf={(m) => m.batterId}
             oppNameOf={(m) => m.batterName}
             byId={byId}
+            excludeSchools={logFor("pitching").map((g) => g.opponent)}
           />
         </>
       )}

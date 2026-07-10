@@ -106,6 +106,28 @@ export function groupMatchupsByTeam(
     );
 }
 
+// 두 학교명이 같은 학교인지 — gameLog.opponent 는 박스스코어 축약명("서울컨벤"),
+// 인덱스 team 은 정식명("서울컨벤션고")이라 공백 제거 후 접두 매칭한다.
+export function sameSchool(a: string, b: string): boolean {
+  const na = a.replace(/\s/g, "");
+  const nb = b.replace(/\s/g, "");
+  if (!na || !nb) return false;
+  return na === nb || na.startsWith(nb) || nb.startsWith(na);
+}
+
+// 경기 로그 한 행(상대 = 박스스코어 축약명일 수 있음)에 해당하는 상대전적 행 추출.
+export function matchupsVsSchool(
+  rows: Matchup[],
+  oppIdOf: (m: Matchup) => string,
+  byId: Map<string, PlayerIndexEntry> | null,
+  school: string
+): Matchup[] {
+  return rows.filter((m) => {
+    const t = byId?.get(oppIdOf(m))?.team;
+    return t ? sameSchool(t, school) : false;
+  });
+}
+
 // 상대전적 합계(특정 학교 또는 전체)
 export function sumMatchups(items: { matchup: Matchup }[]): Matchup | null {
   if (items.length === 0) return null;

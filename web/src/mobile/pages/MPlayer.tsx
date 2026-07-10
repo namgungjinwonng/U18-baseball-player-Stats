@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
   useTournamentMatchups, useTournaments,
@@ -7,13 +7,13 @@ import {
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
-import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta } from "../../shared/matchup";
+import { batsThrowsLabel, groupMatchupsByTeam, indexById, matchupOpponentMeta, matchupsVsSchool, sameSchool } from "../../shared/matchup";
 import { filterPlayerStats, groupLogByTitle } from "../../shared/playerStats";
 import { Fold } from "../../shared/Fold";
-import { TournamentPicker } from "../../shared/filters";
+import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
-import type { Matchup, PlayerProfile } from "../../shared/types";
+import type { GameLogEntry, Matchup, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
 
 type TabId = "batting" | "pitching" | "schools" | "awards";
 
@@ -54,15 +54,74 @@ function MAwards({ profile }: { profile: PlayerProfile | null }) {
   );
 }
 
+// 경기 로그 한 경기 카드 — 클릭 시 그 시합 상대 학교의 상대전적(상대 선수별 기록)을 펼친다.
+function MGameLogEntry({
+  g, role, matchups, byId,
+}: {
+  g: GameLogEntry;
+  role: "batter" | "pitcher";
+  matchups: Matchup[];
+  byId: Map<string, PlayerIndexEntry> | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const oppIdOf = (m: Matchup) => (role === "batter" ? m.pitcherId : m.batterId);
+  const oppNameOf = (m: Matchup) => (role === "batter" ? m.pitcherName : m.batterName);
+  const vs = useMemo(
+    () => matchupsVsSchool(matchups, oppIdOf, byId, g.opponent),
+    [matchups, byId, g.opponent, role]
+  );
+  const canOpen = vs.length > 0;
+  return (
+    <>
+      <div
+        className="m-result"
+        style={{ flexDirection: "column", alignItems: "flex-start", gap: 4, cursor: canOpen ? "pointer" : "default" }}
+        onClick={() => canOpen && setOpen((o) => !o)}
+      >
+        <span className="caption">
+          {formatDate(g.date)} · {g.opponent}
+          {canOpen && <span aria-hidden> {open ? "▾" : "▸"}</span>}
+        </span>
+        <span>{g.line}</span>
+      </div>
+      {open && (
+        <div className="m-gamelog-vs">
+          {vs.map((m) => {
+            const opp = byId?.get(oppIdOf(m));
+            return (
+              <div key={`${m.batterId}-${m.pitcherId}`} className="m-result">
+                <span>
+                  <span className="muted">vs </span>
+                  <Link to={`/player/${oppIdOf(m)}`}>{oppNameOf(m)}</Link>
+                  {opp && (
+                    <span className="muted" style={{ marginLeft: 6 }}>
+                      {matchupOpponentMeta({ grade: opp.grade, bats: opp.bats, throws: opp.throws })}
+                    </span>
+                  )}
+                </span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                  {rate(m.avg)} ({m.ab}-{m.h})
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function MPlayer() {
   const { id } = useParams();
+  const location = useLocation();
   const { data: p, loading, error } = usePlayer(id);
   const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
   const { data: profile } = usePlayerProfile(p?.personNo);
   const { data: averages } = useLeagueAverages();
-  const [tournamentSlug, setTournamentSlug] = useState("");
+  // 기록·랭킹 목록에서 시합 필터를 건 채 넘어오면 URL(?t=slug)로 그 필터를 이어받는다.
+  const [tournamentSlug, setTournamentSlug] = useState(() => filterFromQuery(location.search).tournament);
   const [tab, setTab] = useState<TabId | null>(null); // null = 자동(타자→투수)
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
   const tournamentTitle = useMemo(
@@ -121,16 +180,13 @@ export function MPlayer() {
         {groups.map((grp) => (
           <Fold key={grp.title} title={grp.title} sub={`${grp.entries.length}경기`}>
             {grp.entries.map((g, i) => (
-              <div
+              <MGameLogEntry
                 key={`${g.gameId}-${i}`}
-                className="m-result"
-                style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
-              >
-                <span className="caption">
-                  {formatDate(g.date)} · {g.opponent}
-                </span>
-                <span>{g.line}</span>
-              </div>
+                g={g}
+                role={kind === "batting" ? "batter" : "pitcher"}
+                matchups={kind === "batting" ? asBatter : asPitcher}
+                byId={byId}
+              />
             ))}
           </Fold>
         ))}
@@ -138,13 +194,22 @@ export function MPlayer() {
     );
   };
 
-  // 상대전적 — 상대 학교별 접이식 그룹.
-  const matchupSection = (title: string, rows: Matchup[], oppIdOf: (m: Matchup) => string, oppNameOf: (m: Matchup) => string) => {
+  // 상대전적 — 상대 학교별 접이식 그룹. 경기 로그 드릴다운에 이미 보이는 학교는 제외(중복 방지).
+  const matchupSection = (
+    title: string, rows: Matchup[], oppIdOf: (m: Matchup) => string, oppNameOf: (m: Matchup) => string,
+    excludeSchools: string[]
+  ) => {
     if (rows.length === 0) return null;
-    const groups = groupMatchupsByTeam(rows, oppIdOf, byId);
+    const groups = groupMatchupsByTeam(rows, oppIdOf, byId).filter(
+      (grp) => !excludeSchools.some((s) => sameSchool(grp.team, s))
+    );
+    if (groups.length === 0) return null;
     return (
       <section className="player-section">
         <h3>{title}</h3>
+        <p className="caption-sm" style={{ margin: "0 0 8px", color: "var(--color-mute)" }}>
+          경기 로그에 없는 상대만 표시됩니다.
+        </p>
         {groups.map((grp) => (
           <Fold key={grp.team} title={grp.team} sub={`${grp.rows.length}명`}>
             {grp.rows.map((m) => {
@@ -255,7 +320,7 @@ export function MPlayer() {
               </div>
             </section>
             {gameLogSection("batting")}
-            {matchupSection("상대전적 — 상대 투수", asBatter, (m) => m.pitcherId, (m) => m.pitcherName)}
+            {matchupSection("상대전적 — 상대 투수", asBatter, (m) => m.pitcherId, (m) => m.pitcherName, logFor("batting").map((g) => g.opponent))}
           </>
         );
       })()}
@@ -298,7 +363,7 @@ export function MPlayer() {
               </div>
             </section>
             {gameLogSection("pitching")}
-            {matchupSection("상대전적 — 상대 타자", asPitcher, (m) => m.batterId, (m) => m.batterName)}
+            {matchupSection("상대전적 — 상대 타자", asPitcher, (m) => m.batterId, (m) => m.batterName, logFor("pitching").map((g) => g.opponent))}
           </>
         );
       })()}
