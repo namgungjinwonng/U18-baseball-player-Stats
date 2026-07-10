@@ -12,7 +12,8 @@ on:
   # 워크플로 name 과 정확히 일치해야 함.
   workflow_run:
     workflows:
-      - "데이터 수집·집계 (증분)"
+      - "데이터 수집·집계 (일정·기록 증분)"
+      - "데이터 수집 (선수현황)"
       - "데이터 수집·집계 (전체 월 스캔)"
     types: [completed]
     branches: [main]

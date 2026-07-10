@@ -1,24 +1,24 @@
-name: 데이터 수집·집계 (일정·기록 증분)
+name: 데이터 수집 (선수현황)
 
-# 일정 증분 + 신규 경기 기록만 — 하루 여러 번 가볍게 돈다.
-# 선수현황(로스터/팀)은 별도 워크플로(teams.yml, 하루 2회)로 분리.
-# 전체 월 재스캔은 scrape-full.yml (수동 전용).
+# 로스터(학년/person_no) + 선수현황(팀/지도자/신장·체중) — 하루 2회면 충분.
+# 갱신 후 재집계 전용(MONTHS=0)으로 선수 인덱스에 반영한다(수집 없음, 빠름).
+# 일정·기록 증분은 scrape.yml(하루 여러 번), 전체 재스캔은 scrape-full.yml.
 
 on:
   schedule:
-    # UTC 기준 (KST = UTC+9): 12:00 / 15:00 / 18:00 / 21:00 / 24:00 KST
-    - cron: "0 3,6,9,12,15 * * *"
+    # UTC 기준 (KST = UTC+9): 10:00 / 18:00 KST
+    - cron: "0 1,9 * * *"
   workflow_dispatch: # 수동 실행
 
 permissions:
   contents: write # data/ 커밋용
 
 concurrency:
-  group: scrape
+  group: scrape # 일정·기록/전체 스캔과 동시 실행 방지 (순차 대기)
   cancel-in-progress: false
 
 jobs:
-  scrape:
+  teams:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.commit.outputs.changed }}
@@ -35,14 +35,19 @@ jobs:
         working-directory: scraper
         run: npm ci
 
-      # 경기일정 페이지용 일정/결과 데이터 (data/{year}/schedule.json — 증분)
-      - name: Refresh schedule (경기일정 — 증분)
+      - name: Refresh rosters (학년/person_no/지역/club_idx)
         working-directory: scraper
-        run: npm run schedule
+        run: npm run roster
 
-      # 신규 경기 수집 → 신규 선수 공식기록 증분 수집 → 재집계 (마지막 갱신 이후만)
-      - name: Scrape new games & re-aggregate
+      - name: Refresh teams (선수현황 — 팀/지도자/신장·체중)
         working-directory: scraper
+        run: npm run teams
+
+      # 로스터 변경(학년/이적/personNo)을 선수 인덱스·집계에 반영 — 캘린더 스캔 없음
+      - name: Re-aggregate (재집계 전용)
+        working-directory: scraper
+        env:
+          MONTHS: "0"
         run: npm run scrape
 
       - name: Commit data changes
@@ -55,16 +60,16 @@ jobs:
             echo "변경 없음 — 커밋 생략"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore(data): 일정·기록 증분 $(date -u +%Y-%m-%dT%H:%MZ)"
+            git commit -m "chore(data): 선수현황 갱신 $(date -u +%Y-%m-%dT%H:%MZ)"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-  # u81-baseball(정적 HTML 앱) 일정 페이지 동기화 — 일정 데이터만 반영.
+  # u81-baseball(정적 HTML 앱) 선수 페이지 동기화 — 선수현황 데이터만 반영.
   # secrets.MERGE_REPO_TOKEN: u81-baseball 저장소 contents write 권한 PAT 필요.
   sync-merge:
-    needs: scrape
-    if: needs.scrape.outputs.changed == 'true'
+    needs: teams
+    if: needs.teams.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: 토큰 확인 (미설정 시 스킵)
@@ -82,7 +87,7 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.token.outputs.ok == 'true'
         with:
-          ref: main # scrape 잡이 방금 푸시한 최신 데이터 기준
+          ref: main # teams 잡이 방금 푸시한 최신 데이터 기준
 
       - uses: actions/checkout@v4
         if: steps.token.outputs.ok == 'true'
@@ -97,13 +102,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      # 스키마 동일(u18_schedule.json = schedule.json)이라 복사 후 일정 페이지만 재생성.
-      - name: 일정 데이터 반영 + docs 재생성 (일정만)
+      # 스키마 동일(u18_data.json = teams.json)이라 복사 후 선수 페이지만 재생성.
+      - name: 선수현황 데이터 반영 + docs 재생성 (선수만)
         if: steps.token.outputs.ok == 'true'
         run: |
-          cp data/2026/schedule.json u81/u18_schedule.json
+          cp data/2026/teams.json u81/u18_data.json
           cd u81
-          python build_all.py --generate-schedule
+          python build_all.py --generate-players
 
       - name: u81-baseball 커밋 & 푸시
         if: steps.token.outputs.ok == 'true'
@@ -111,11 +116,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/u18_schedule.html docs/u18_schedule_data.js u18_schedule.json u18_schedule.html u18_schedule_data.js
+          git add docs/index.html docs/u18_players.html docs/u18_app_data.js u18_data.json u18_players.html u18_app_data.js
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else
-            git commit -m "일정 동기화 — U18-baseball-player-Stats ($(TZ='Asia/Seoul' date +'%Y-%m-%d %H:%M KST'))"
+            git commit -m "선수현황 동기화 — U18-baseball-player-Stats ($(TZ='Asia/Seoul' date +'%Y-%m-%d %H:%M KST'))"
             git pull --rebase origin main
             git push
           fi
