@@ -258,6 +258,8 @@ npx playwright install chromium && npm run discover -- "<URL>"
 
 ## 변경 이력 (이 문서에 한함 — 코드 변경 시 한 줄씩 추가)
 
+- 2026-07-10: **홈 이동 아이콘**: `shared/HomeIcon.tsx`(인라인 SVG, currentColor 24px 뷰박스) — 상단바 브랜드 로고 왼쪽(데스크탑·모바일)과 드로어 첫 항목 "홈"(데스크탑 nav-drawer + 모바일 m-drawer, `NavLink to="/" end`)에 사용. 앱의 다른 아이콘은 텍스트 글리프(⌕ ☰ ✕ ⟳)지만 집 글리프 U+2302 는 모바일 폰트 지원이 불안정해 SVG 로 대체. `.brand` 를 inline-flex 로 바꿔 아이콘·텍스트 정렬(디스플레이 폰트 라인 보정 margin-top -2px), `.nav-drawer a`/`.m-drawer a` 를 flex 로. 모바일 드로어 상단 브랜드는 제목 역할이라 아이콘 미부착(홈 항목과 중복 방지).
+
 - 2026-07-10: **알리는 글 페이지 추가**: `shared/Notice.tsx` → `/notice`, 데스크탑 nav-links·nav-drawer + 모바일 Drawer 에 "알리는 글"(8번째) 등록. 4개 섹션(서비스 성격 / 데이터 출처+KBSA 링크 / 기록은 참고용 / 저작권과 문의) — 비상업·출처 귀속·무단 수집 금지·정확성 무보증·권리자 요청 시 중단 고지. 갱신 주기는 최소치 보장 표현("하루 1회 이상")으로 표기(실제는 선수현황 2회·일정 5회). 스타일 `.notice*`(app.css, max-width 680px). 내비 링크 8개로 늘며 1440px 컨테이너에서 26px 오버플로 → `.search-pill--link` 에 `min-width: 0`(flex 기본 min-width:auto 해제)로 해소, 햄버거 전환 1360px 유지.
 
 - 2026-07-10: **증분 수집 분리(ci)**: scrape.yml = 일정·기록 증분 전용(schedule+scrape, 하루 5회 — 12/15/18/21/24시 KST), 신규 teams.yml = 선수현황 전용(roster+teams+`MONTHS=0` 재집계, 하루 2회 — 10/18시 KST). 둘 다 `concurrency: scrape` 그룹으로 순차 실행, deploy.yml workflow_run 이름 3종으로 갱신. u81 동기화도 소스별 분리 — 일정 워크플로는 `--generate-schedule`(u18_schedule_data.js/u18_schedule.html 만), 선수현황 워크플로는 `--generate-players`(u18_app_data.js/u18_players.html/index.html 만) — u81 build_all.py 신규 모드, 실데이터 해시 비교로 상호 불간섭 검증. 유의: 기록 증분이 로스터보다 자주 돌므로 당일 새로 등장한 선수의 personNo 조인은 다음 선수현황 실행 때 채워짐.

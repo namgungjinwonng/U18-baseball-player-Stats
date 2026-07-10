@@ -12,6 +12,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
+import { HomeIcon } from "../shared/HomeIcon";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -54,7 +55,8 @@ export function DesktopApp() {
             ☰
           </button>
           <Link to="/" className="brand" title="홈으로 이동" onClick={() => setMenuOpen(false)}>
-            U18 BASEBALL
+            <HomeIcon />
+            <span>U18 BASEBALL</span>
           </Link>
           <div className="nav-links">
             <NavLink to="/schedule">경기일정</NavLink>
@@ -74,6 +76,10 @@ export function DesktopApp() {
         </div>
         {menuOpen && (
           <div className="nav-drawer">
+            <NavLink to="/" end onClick={() => setMenuOpen(false)}>
+              <HomeIcon />
+              홈
+            </NavLink>
             <NavLink to="/schedule" onClick={() => setMenuOpen(false)}>경기일정</NavLink>
             <NavLink to="/players" onClick={() => setMenuOpen(false)}>선수현황</NavLink>
             <NavLink to="/records" onClick={() => setMenuOpen(false)}>선수 기록 상세</NavLink>

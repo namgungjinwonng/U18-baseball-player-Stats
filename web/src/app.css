@@ -42,6 +42,19 @@
   letter-spacing: 0.5px;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+/* 홈 아이콘 — 글리프처럼 보이도록 본문 색을 따르고 크기만 고정 */
+.home-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.brand .home-icon {
+  /* Bebas Neue 대문자 라인과 시각 중심을 맞춘다 */
+  margin-top: -2px;
 }
 /* 로고 = 홈 버튼임을 인지시키는 상호작용 (호버 밑줄 + 탭 시 눌림) */
 .brand:hover {
@@ -80,10 +93,16 @@
   display: none;
 }
 .nav-drawer a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   padding: var(--space-lg) 40px;
   font-weight: 500;
   border-top: 1px solid var(--color-hairline);
+}
+.nav-drawer .home-icon {
+  width: 18px;
+  height: 18px;
 }
 .nav-drawer a.active {
   background: var(--color-soft-cloud);

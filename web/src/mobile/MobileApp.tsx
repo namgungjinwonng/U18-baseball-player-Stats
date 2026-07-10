@@ -13,6 +13,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
+import { HomeIcon } from "../shared/HomeIcon";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -25,6 +26,10 @@ function Drawer({ onClose }: { onClose: () => void }) {
         <Link to="/" onClick={onClose} className="brand" style={{ marginBottom: 12 }}>
           U18 BASEBALL
         </Link>
+        <NavLink to="/" end onClick={onClose}>
+          <HomeIcon />
+          홈
+        </NavLink>
         <NavLink to="/schedule" onClick={onClose}>
           경기일정
         </NavLink>
@@ -66,7 +71,8 @@ export function MobileApp() {
             ☰
           </button>
           <Link to="/" className="brand" title="홈으로 이동">
-            U18 BASEBALL
+            <HomeIcon />
+            <span>U18 BASEBALL</span>
           </Link>
           <div className="m-topbar__group">
             <InstallButton />
