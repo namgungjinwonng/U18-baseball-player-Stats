@@ -17,6 +17,8 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
 
@@ -57,13 +59,77 @@ jobs:
         run: npm run scrape
 
       - name: Commit data changes
+        id: commit
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(data): 전체 월 스캔 $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  # u81-baseball(정적 HTML 앱) docs/ 동기화 — 같은 데이터를 쓰는 구 앱도 함께 갱신.
+  # secrets.MERGE_REPO_TOKEN: u81-baseball 저장소 contents write 권한 PAT 필요.
+  sync-merge:
+    needs: scrape
+    if: needs.scrape.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 토큰 확인 (미설정 시 스킵)
+        id: token
+        env:
+          T: ${{ secrets.MERGE_REPO_TOKEN }}
+        run: |
+          if [ -n "$T" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::MERGE_REPO_TOKEN 미설정 — u81-baseball 동기화 스킵"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.token.outputs.ok == 'true'
+        with:
+          ref: main # scrape 잡이 방금 푸시한 최신 데이터 기준
+
+      - uses: actions/checkout@v4
+        if: steps.token.outputs.ok == 'true'
+        with:
+          repository: namgungjinwonng/u81-baseball
+          token: ${{ secrets.MERGE_REPO_TOKEN }}
+          path: u81
+          ref: main
+
+      - uses: actions/setup-python@v5
+        if: steps.token.outputs.ok == 'true'
+        with:
+          python-version: "3.11"
+
+      # 스키마 동일(u18_data.json = teams.json, u18_schedule.json = schedule.json)이라 복사 후 재생성만.
+      - name: 데이터 반영 + docs 재생성
+        if: steps.token.outputs.ok == 'true'
+        run: |
+          cp data/2026/teams.json u81/u18_data.json
+          cp data/2026/schedule.json u81/u18_schedule.json
+          cd u81
+          python build_all.py --generate-only
+
+      - name: u81-baseball 커밋 & 푸시
+        if: steps.token.outputs.ok == 'true'
+        working-directory: u81
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/ u18_data.json u18_schedule.json u18_players.html u18_schedule.html u18_app_data.js u18_schedule_data.js
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "데이터 동기화 — U18-baseball-player-Stats ($(TZ='Asia/Seoul' date +'%Y-%m-%d %H:%M KST'))"
+            git pull --rebase origin main
             git push
           fi
