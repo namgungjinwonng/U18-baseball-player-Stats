@@ -21,6 +21,8 @@ jobs:
       changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main # 큐잉 시점 커밋이 아닌 실행 시점의 최신 main (연달아 실행 시 push 충돌 방지)
 
       - uses: actions/setup-node@v4
         with:
@@ -69,6 +71,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(data): 전체 월 스캔 $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase origin main # 수집 중 다른 push가 있었으면 그 위로 재적용
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
