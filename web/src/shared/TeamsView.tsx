@@ -318,7 +318,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
           onClick={(e) => e.target === e.currentTarget && setModalTeam(null)}
         >
           <div className="modal-card modal-card--wide">
-            <div className="modal-head">
+            <div className="modal-head modal-head--team">
               <h3>
                 <span className="modal-abbr" style={{ fontSize: 18 }}>{modalInfo.team}</span>
                 {modalInfo.region && <span className="modal-name">{modalInfo.region}</span>}

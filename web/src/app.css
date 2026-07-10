@@ -1019,6 +1019,20 @@
 .sch-modal-body {
   overflow-y: auto;
 }
+/* 팀 상세 모달 헤더 — 학교 카드 헤더처럼 소프트 클라우드 밴드로 타이틀 구분 (풀블리드) */
+.modal-head--team {
+  margin: -24px -24px 16px;
+  padding: 16px 24px;
+  background: var(--color-soft-cloud);
+  border-bottom: 1px solid var(--color-hairline-soft);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+@media (max-width: 480px) {
+  .modal-head--team {
+    margin: -16px -10px 12px;
+    padding: 12px 14px;
+  }
+}
 
 /* ============================================================
    선수현황 (TeamsView) — 통계 밴드/팀 카드 정보행/지도자 칩
@@ -1105,9 +1119,9 @@
 }
 .tv-table .tv-name { font-weight: 700; }
 .tv-table tbody tr:active { background: var(--color-soft-cloud); }
-/* 팀 모달: 표 영역만 세로 스크롤(필터해도 모달 크기 유지 — 원본 46vh) */
+/* 팀 모달: 표 영역만 세로 스크롤(필터해도 모달 크기 유지 — 원본 46vh 고정 높이) */
 .tv-table-wrap {
-  max-height: 46vh;
+  height: 46vh;
   overflow-y: auto;
 }
 .tv-table-wrap .tv-table thead th {
