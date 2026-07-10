@@ -144,7 +144,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
                   <li
                     key={it.id}
                     className={`rank-row ${it.qualified ? "" : "rank-row--unqual"}`}
-                    onClick={() => nav(`/player/${it.id}`)}
+                    onClick={() => nav(`/player/${it.id}${filterToQuery(filter)}`)}
                     style={{ cursor: "pointer" }}
                   >
                     <span className="rank-num">{it.qualified ? r : "–"}</span>

@@ -86,7 +86,7 @@ export function MHome() {
               </div>
             ) : (
               b.items.map((it) => (
-                <Link to={`/player/${it.id}`} key={it.id} className="leader-row">
+                <Link to={`/player/${it.id}${filterToQuery(filter)}`} key={it.id} className="leader-row">
                   <span>
                     <span className="nm">
                       {it.name}

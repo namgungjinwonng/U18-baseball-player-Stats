@@ -4,7 +4,7 @@ import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
-import { FilterBar, applyFilter, emptyFilter, useQualifyContext, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
 import { Ico } from "../../shared/navIcons";
 import type { Player } from "../../shared/types";
@@ -66,7 +66,7 @@ export function RecordsPage() {
           rows={rows}
           initialSort={tab.initialSort}
           rowKey={(p) => p.id}
-          onRowClick={(p) => nav(`/player/${p.id}`)}
+          onRowClick={(p) => nav(`/player/${p.id}${filterToQuery(filter)}`)}
         />
       )}
     </div>
