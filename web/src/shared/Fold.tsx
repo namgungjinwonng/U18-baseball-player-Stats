@@ -4,16 +4,14 @@ import type { ReactNode } from "react";
 export function Fold({
   title,
   sub,
-  defaultOpen,
   children,
 }: {
   title: string;
   sub?: string; // 건수 등 보조 표기 (예: "4경기", "3명")
-  defaultOpen?: boolean;
   children: ReactNode;
 }) {
   return (
-    <details className="fold" open={defaultOpen}>
+    <details className="fold">
       <summary className="fold__head">
         <span className="fold__title">{title}</span>
         {sub && <span className="fold__sub">{sub}</span>}

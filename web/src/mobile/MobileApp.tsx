@@ -50,42 +50,9 @@ function Drawer({ onClose }: { onClose: () => void }) {
   );
 }
 
-function SearchOverlay({ onClose }: { onClose: () => void }) {
-  const [q, setQ] = useState("");
-  const nav = useNavigate();
-  return (
-    <div className="m-search-overlay">
-      <div className="m-search-overlay__top">
-        <form
-          className="search-pill"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (q.trim()) {
-              nav(`/search?q=${encodeURIComponent(q.trim())}`);
-              onClose();
-            }
-          }}
-        >
-          <span aria-hidden>⌕</span>
-          <input
-            autoFocus
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="선수 이름 검색"
-            aria-label="선수 이름 검색"
-          />
-        </form>
-        <button className="icon-btn" onClick={onClose} aria-label="닫기">
-          ✕
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export function MobileApp() {
   const [drawer, setDrawer] = useState(false);
-  const [search, setSearch] = useState(false);
+  const nav = useNavigate();
   return (
     <div className="m-shell">
       <InAppBanner />
@@ -94,7 +61,7 @@ export function MobileApp() {
           <button className="icon-btn" onClick={() => setDrawer(true)} aria-label="메뉴">
             ☰
           </button>
-          <Link to="/" className="brand">
+          <Link to="/" className="brand" title="홈으로 이동">
             U18 BASEBALL
           </Link>
           <div className="m-topbar__group">
@@ -103,8 +70,8 @@ export function MobileApp() {
             <YearSelect />
             <button
               className="icon-btn"
-              onClick={() => setSearch(true)}
-              aria-label="검색"
+              onClick={() => nav("/search")}
+              aria-label="선수 검색"
             >
               ⌕
             </button>
@@ -113,7 +80,6 @@ export function MobileApp() {
       </header>
 
       {drawer && <Drawer onClose={() => setDrawer(false)} />}
-      {search && <SearchOverlay onClose={() => setSearch(false)} />}
 
       <main>
         <Routes>

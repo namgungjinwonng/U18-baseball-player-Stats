@@ -15,29 +15,20 @@ import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
 
+// 상단바 검색 = 선수 검색 페이지로 바로 이동 (검색 UI 를 /search 하나로 통일)
 function DesktopSearch() {
-  const [q, setQ] = useState("");
-  const [focused, setFocused] = useState(false);
   const nav = useNavigate();
   return (
-    <form
-      className={`search-pill ${focused ? "search-pill--focused" : ""}`}
+    <button
+      type="button"
+      className="search-pill search-pill--link"
       style={{ flex: 1 }}
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (q.trim()) nav(`/search?q=${encodeURIComponent(q.trim())}`);
-      }}
+      onClick={() => nav("/search")}
+      aria-label="선수 검색 열기"
     >
       <span aria-hidden>⌕</span>
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder="선수 이름 검색"
-        aria-label="선수 이름 검색"
-      />
-    </form>
+      <span className="search-pill__ph">선수 검색 (이름 또는 팀+등번호 가능)</span>
+    </button>
   );
 }
 
@@ -61,7 +52,7 @@ export function DesktopApp() {
           >
             ☰
           </button>
-          <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="brand" title="홈으로 이동" onClick={() => setMenuOpen(false)}>
             U18 BASEBALL
           </Link>
           <div className="nav-links">

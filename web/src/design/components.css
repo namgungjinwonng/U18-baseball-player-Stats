@@ -98,11 +98,22 @@
   width: 100%;
   color: var(--color-ink);
 }
-.search-pill--focused {
-  background: var(--color-canvas);
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 12px var(--color-soft-cloud);
+/* 검색 페이지로 이동하는 버튼형 pill (상단바) */
+.search-pill--link {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-align: left;
+}
+.search-pill--link:hover {
+  outline: 1px solid var(--color-hairline);
+}
+.search-pill__ph {
+  font-size: var(--type-body);
+  color: var(--color-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* --- Flat card --- */

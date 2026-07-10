@@ -120,23 +120,14 @@ function PitchingStrip({ p }: { p: PitchingStats }) {
   );
 }
 
-// 경기 로그 — 시합별 접이식 그룹. 가장 최근 경기가 속한 그룹만 기본으로 펼친다.
+// 경기 로그 — 시합별 접이식 그룹 (기본 모두 접힘).
 function GameLogTable({ log }: { log: GameLogEntry[] }) {
   const groups = groupLogByTitle(log);
-  const latestTitle = log.reduce(
-    (acc, g) => (g.date > acc.date ? { date: g.date, title: g.title ?? "기타" } : acc),
-    { date: "", title: "" }
-  ).title;
   return (
     <section className="player-section">
       <h3>경기 로그</h3>
       {groups.map((grp) => (
-        <Fold
-          key={grp.title}
-          title={grp.title}
-          sub={`${grp.entries.length}경기`}
-          defaultOpen={groups.length === 1 || grp.title === latestTitle}
-        >
+        <Fold key={grp.title} title={grp.title} sub={`${grp.entries.length}경기`}>
           <div className="stat-table__scroll">
             <table className="stat-table">
               <thead>
@@ -180,12 +171,7 @@ function MatchupTable({
     <section className="player-section">
       <h3>{title}</h3>
       {groups.map((grp) => (
-        <Fold
-          key={grp.team}
-          title={grp.team}
-          sub={`${grp.rows.length}명`}
-          defaultOpen={groups.length === 1}
-        >
+        <Fold key={grp.team} title={grp.team} sub={`${grp.rows.length}명`}>
           <div className="stat-table__scroll">
             <table className="stat-table">
               <thead>

@@ -5,29 +5,60 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePlayerIndex, useTeams } from "./data";
-import { Chip } from "../design/ui";
 import { kbsaPlayerUrl } from "./kbsa";
+import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import type { TeamPlayerEntry } from "./types";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
 const getPos = (p: TeamPlayerEntry) => p.position || "미지정";
 const getGrade = (p: TeamPlayerEntry) => p.grade || "미지정";
 
+// 색상 아웃라인 필터 칩 (선택 시 해당 색으로 반전 — 원본 pos/grade-filter-btn 이식)
+function ColorChip({
+  color, active, onClick, children,
+}: {
+  color: string; active: boolean; onClick: () => void; children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      className="chip tv-color-chip"
+      style={{
+        borderColor: color,
+        color: active ? "#fff" : color,
+        background: active ? color : "var(--color-canvas)",
+      }}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+// 선수 테이블 — 가로 스크롤 없이 한 화면(고정 레이아웃 + % 폭, 원본 모달/검색 테이블 이식)
 function PlayerTable({
-  rows, showTeam, onOpen,
+  rows, showTeam, scrollY, onOpen,
 }: {
   rows: TeamPlayerEntry[];
   showTeam?: boolean;
+  scrollY?: boolean; // 팀 모달: 표 영역만 세로 스크롤 (모달 크기 유지)
   onOpen: (p: TeamPlayerEntry) => void;
 }) {
+  // 원본 % 폭: 모달(6칸) 10/21/18/11/22/18, 검색(7칸) 16/9/17/15/9/22/12
+  const widths = showTeam ? [16, 9, 17, 15, 9, 22, 12] : [10, 21, 18, 11, 22, 18];
   return (
-    <div className="stat-table__scroll">
-      <table className="stat-table">
+    <div className={scrollY ? "tv-table-wrap" : undefined}>
+      <table className="tv-table">
+        <colgroup>
+          {widths.map((w, i) => (
+            <col key={i} style={{ width: `${w}%` }} />
+          ))}
+        </colgroup>
         <thead>
           <tr>
-            {showTeam && <th style={{ textAlign: "left" }}>소속</th>}
+            {showTeam && <th>소속</th>}
             <th>번호</th>
-            <th style={{ textAlign: "left" }}>선수명</th>
+            <th>선수명</th>
             <th>포지션</th>
             <th>학년</th>
             <th>신장/체중</th>
@@ -35,24 +66,39 @@ function PlayerTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((p, i) => (
-            <tr
-              key={`${p.person_no || p.name}-${i}`}
-              style={{ cursor: p.person_no ? "pointer" : "default" }}
-              onClick={() => p.person_no && onOpen(p)}
-            >
-              {showTeam && <td style={{ textAlign: "left" }}>{p.team}</td>}
-              <td className="num">{p.number || "-"}</td>
-              <td style={{ textAlign: "left" }}>
-                <b>{p.name}</b>
-                {p.person_no && <span className="muted" aria-hidden> ›</span>}
-              </td>
-              <td>{getPos(p)}</td>
-              <td className="num">{p.grade || "-"}</td>
-              <td>{p.height_weight || "-"}</td>
-              <td>{p.throw_bat || "-"}</td>
-            </tr>
-          ))}
+          {rows.map((p, i) => {
+            const pos = getPos(p);
+            return (
+              <tr
+                key={`${p.person_no || p.name}-${i}`}
+                style={{ cursor: p.person_no ? "pointer" : "default" }}
+                onClick={() => p.person_no && onOpen(p)}
+              >
+                {showTeam && <td>{p.team}</td>}
+                <td>{p.number || "-"}</td>
+                <td className="tv-name">
+                  {p.name}
+                  {p.person_no && <span className="muted" aria-hidden> ›</span>}
+                </td>
+                <td>
+                  <span className="pos-badge" style={{ background: POS_COLORS[pos] ?? "#9AA0A6" }}>
+                    {pos}
+                  </span>
+                </td>
+                <td>
+                  {p.grade ? (
+                    <span className="grade-badge" style={{ background: GRADE_COLORS[p.grade] ?? "#9AA0A6" }}>
+                      {p.grade}
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td>{p.height_weight || "-"}</td>
+                <td>{p.throw_bat || "-"}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -250,7 +296,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
               <button key={t.club_idx} className="sch-team-card" onClick={() => openTeam(t.team)}>
                 <div className="sch-team-card__head">
                   <h3>{t.team}</h3>
-                  {t.region && <span className="sch-badge">{t.region}</span>}
+                  {t.region && <span className="sch-team-card__reg">{t.region}</span>}
                 </div>
                 <div className="tv-team-card__body">
                   <div className="row"><span>감독</span><b>{t.manager || "-"}</b></div>
@@ -299,22 +345,38 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                 </section>
               )}
 
-              {/* 포지션/학년 필터 (클릭 토글) */}
-              <div className="tabs" style={{ marginBottom: 8 }}>
+              {/* 포지션/학년 필터 (클릭 토글 — 원본 색상 아웃라인 버튼, 한 줄 균등 배치) */}
+              <div className="tv-filter-row">
                 {modalPosCounts.map(([pos, cnt]) => (
-                  <Chip key={pos} active={modalPos === pos} onClick={() => setModalPos(modalPos === pos ? "" : pos)}>
-                    {pos} {cnt}
-                  </Chip>
+                  <ColorChip
+                    key={pos}
+                    color={POS_COLORS[pos] ?? "#9AA0A6"}
+                    active={modalPos === pos}
+                    onClick={() => setModalPos(modalPos === pos ? "" : pos)}
+                  >
+                    {pos} <span className="cnt">{cnt}명</span>
+                  </ColorChip>
                 ))}
               </div>
-              <div className="tabs" style={{ marginBottom: 8 }}>
+              <div className="tv-filter-row">
                 {modalGradeCounts.map(([g, cnt]) => (
-                  <Chip key={g} active={modalGrade === g} onClick={() => setModalGrade(modalGrade === g ? "" : g)}>
-                    {g === "미지정" ? "미지정" : `${g}학년`} {cnt}
-                  </Chip>
+                  <ColorChip
+                    key={g}
+                    color={GRADE_COLORS[g] ?? "#9AA0A6"}
+                    active={modalGrade === g}
+                    onClick={() => setModalGrade(modalGrade === g ? "" : g)}
+                  >
+                    {g === "미지정" ? "미지정" : `${g}학년`} <span className="cnt">{cnt}명</span>
+                  </ColorChip>
                 ))}
                 {(modalPos || modalGrade) && (
-                  <Chip onClick={() => { setModalPos(""); setModalGrade(""); }}>초기화</Chip>
+                  <button
+                    type="button"
+                    className="chip tv-color-chip"
+                    onClick={() => { setModalPos(""); setModalGrade(""); }}
+                  >
+                    초기화
+                  </button>
                 )}
               </div>
               <p className="caption-sm" style={{ margin: "0 0 8px" }}>
@@ -323,7 +385,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                   : `전체 ${modalPlayers.length}명`}
               </p>
 
-              <PlayerTable rows={modalPlayers} onOpen={openPlayer} />
+              <PlayerTable rows={modalPlayers} scrollY onOpen={openPlayer} />
             </div>
           </div>
         </div>

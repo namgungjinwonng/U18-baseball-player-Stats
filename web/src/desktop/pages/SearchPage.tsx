@@ -27,8 +27,8 @@ export function SearchPage() {
             setQ(e.target.value);
             setParams(e.target.value ? { q: e.target.value } : {});
           }}
-          placeholder="선수 이름·팀 또는 등번호 (예: 충암 45)"
-          aria-label="선수 이름·팀 또는 등번호 검색"
+          placeholder="선수 검색 (이름 또는 팀+등번호 가능)"
+          aria-label="선수 검색 — 이름 또는 팀+등번호"
         />
       </div>
 

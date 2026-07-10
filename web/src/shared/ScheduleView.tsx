@@ -134,6 +134,10 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
   const cls = (side: ScheduleSide) =>
     side.result === "승" ? "win" : done ? "lose" : "";
   const stage = g.round || (g.status === "예정" ? "예정" : g.status === "취소" ? "취소" : "");
+  // 단계 칩 색: 토너먼트(결승/강 등)=cup, 리그/예선=league, 예정=sched (원본 stageCls 이식)
+  const stageCls = g.round
+    ? /결승|준결|[0-9]+강|왕중왕|플레이오프|토너/.test(g.round) ? "cup" : "league"
+    : g.status === "취소" ? "cup" : "sched";
   const metaLeft = [
     g.status === "예정" ? "예정" : g.status === "취소" ? "취소" : "",
     g.time,
@@ -143,7 +147,7 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
     <a className="sch-game" href={kbsaBoxScoreUrl(g.game_idx)} target="_blank" rel="noreferrer">
       <div className="sch-game__top">
         <span className="sch-game__comp">{!hideComp && g.title ? shortTitle(g.title) : ""}</span>
-        {stage && <span className="sch-game__stage">{stage}</span>}
+        {stage && <span className={`sch-game__stage sch-game__stage--${stageCls}`}>{stage}</span>}
       </div>
       <div className="sch-game__score">
         <span className={`sch-side ${cls(a)}`}>
@@ -363,9 +367,9 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
     return (
       <>
         <div className="sch-monthnav">
-          <button className="icon-btn" disabled={curMonthIdx <= 0} onClick={() => setMonthIdx(curMonthIdx - 1)} aria-label="이전 달">‹</button>
+          <button className="sch-monthnav__btn" disabled={curMonthIdx <= 0} onClick={() => setMonthIdx(curMonthIdx - 1)} aria-label="이전 달">‹</button>
           <span className="sch-monthnav__cur">{ym.replace("-", ". ")}</span>
-          <button className="icon-btn" disabled={curMonthIdx >= months.length - 1} onClick={() => setMonthIdx(curMonthIdx + 1)} aria-label="다음 달">›</button>
+          <button className="sch-monthnav__btn" disabled={curMonthIdx >= months.length - 1} onClick={() => setMonthIdx(curMonthIdx + 1)} aria-label="다음 달">›</button>
         </div>
         <div className="sch-cal">
           <div className="sch-cal__wd">
@@ -386,7 +390,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
       <button key={name} className="sch-team-card" onClick={() => setModal({ type: "team", name })}>
         <div className="sch-team-card__head">
           <h3>{name}</h3>
-          {reg && <span className="sch-badge">{reg}</span>}
+          {reg && <span className="sch-team-card__reg">{reg}</span>}
         </div>
         <div className="sch-team-card__body">
           <div className="rc"><b>{r.played}</b><span>경기</span></div>
@@ -518,12 +522,12 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
 
       {view === "comp" && (
         <>
-          <div className="tabs" style={{ marginBottom: 8 }}>
+          <div className="tabs sch-seg" style={{ marginBottom: 8 }}>
             <Chip active={compType === "league"} onClick={() => setCompType("league")}>주말리그</Chip>
             <Chip active={compType === "cup"} onClick={() => setCompType("cup")}>전국대회</Chip>
           </div>
           {compType === "league" && (
-            <div className="tabs" style={{ marginBottom: 8 }}>
+            <div className="tabs sch-seg" style={{ marginBottom: 8 }}>
               <Chip active={phase === "전반기"} onClick={() => setPhase("전반기")}>전반기</Chip>
               <Chip active={phase === "후반기"} onClick={() => setPhase("후반기")}>후반기</Chip>
             </div>
@@ -564,42 +568,44 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
               {standings.rows.length === 0 ? (
                 <div className="state">완료된 경기가 없습니다.</div>
               ) : (
-                <div className="stat-table__scroll">
-                  <table className="stat-table">
-                    <thead>
-                      <tr>
-                        <th style={{ textAlign: "left" }}>순위</th>
-                        <th style={{ textAlign: "left" }}>학교</th>
-                        <th>경기</th>
-                        <th>승</th>
-                        <th>패</th>
-                        {hasD && <th>무</th>}
-                        <th>승점</th>
-                        <th>실점</th>
-                        <th>득점</th>
+                <table className="tv-table sch-stand">
+                  <colgroup>
+                    <col style={{ width: "9%" }} />
+                    <col style={{ width: "25%" }} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>순위</th>
+                      <th style={{ textAlign: "left" }}>학교</th>
+                      <th>경기</th>
+                      <th>승</th>
+                      <th>패</th>
+                      {hasD && <th>무</th>}
+                      <th>승점</th>
+                      <th>실점</th>
+                      <th>득점</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {standings.rows.map((r, i) => (
+                      <tr
+                        key={r.name}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setModal({ type: "team", name: r.name, compTitle: comp })}
+                      >
+                        <td className="num">{i + 1}</td>
+                        <td className="nm-cell"><b>{r.name}</b></td>
+                        <td className="num">{r.played}</td>
+                        <td className="num">{r.w}</td>
+                        <td className="num">{r.l}</td>
+                        {hasD && <td className="num">{r.d}</td>}
+                        <td className="num"><b>{r.pts}</b></td>
+                        <td className="num">{r.ra}</td>
+                        <td className="num">{r.rf}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {standings.rows.map((r, i) => (
-                        <tr
-                          key={r.name}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => setModal({ type: "team", name: r.name, compTitle: comp })}
-                        >
-                          <td style={{ textAlign: "left" }} className="num">{i + 1}</td>
-                          <td style={{ textAlign: "left" }}><b>{r.name}</b></td>
-                          <td className="num">{r.played}</td>
-                          <td className="num">{r.w}</td>
-                          <td className="num">{r.l}</td>
-                          {hasD && <td className="num">{r.d}</td>}
-                          <td className="num"><b>{r.pts}</b></td>
-                          <td className="num">{r.ra}</td>
-                          <td className="num">{r.rf}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
               )}
               <p className="caption-sm" style={{ marginTop: 8 }}>
                 ※ 조별 편성학교는 각 학교별 1게임이 편성되어야 반영됩니다.

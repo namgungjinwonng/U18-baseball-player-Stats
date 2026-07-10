@@ -115,23 +115,6 @@
   border-bottom: 1px solid var(--color-hairline);
 }
 
-/* Search overlay */
-.m-search-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--color-canvas);
-  z-index: 40;
-  padding: 16px;
-}
-.m-search-overlay__top {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.m-search-overlay .search-pill {
-  flex: 1;
-}
-
 /* Mobile hero */
 .m-hero {
   background: linear-gradient(135deg, #111 0%, #2a2a2a 100%);

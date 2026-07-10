@@ -41,6 +41,14 @@
   font-size: 28px;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+/* 로고 = 홈 버튼임을 인지시키는 상호작용 (호버 밑줄 + 탭 시 눌림) */
+.brand:hover {
+  border-bottom-color: var(--color-ink);
+}
+.brand:active {
+  opacity: 0.55;
 }
 .nav-links {
   display: flex;
@@ -592,6 +600,24 @@
 }
 .fold[open] > .fold__head::before {
   content: "▾";
+  color: var(--color-on-primary);
+}
+/* 펼친 그룹: 헤더 블랙 채움 + 테두리로 이웃 라인과 확실히 구분 */
+.fold[open] {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+.fold[open] > .fold__head {
+  background: var(--color-ink);
+  color: var(--color-on-primary);
+  padding: 10px 10px;
+}
+.fold[open] > .fold__head .fold__sub {
+  color: rgba(255, 255, 255, 0.7);
+}
+.fold[open] > .fold__body {
+  padding: 8px 10px 10px;
 }
 .fold__sub {
   color: var(--color-mute);
@@ -660,16 +686,45 @@
 /* ============================================================
    경기일정 (ScheduleView) — 달력/학교 카드/경기 카드/모달
    ============================================================ */
+/* 년월 표시 라인: 블랙 채움 바 (원본 month-nav 네이비 → 기준 토큰) */
 .sch-monthnav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--space-md);
+  background: var(--color-ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
 }
 .sch-monthnav__cur {
   font-size: var(--type-heading-md);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  color: var(--color-on-primary);
+}
+/* 이동 화살표: 데이터 있는 방향은 흰색, 없는 방향은 흐리게 (disabled 구분) */
+.sch-monthnav__btn {
+  background: none;
+  border: none;
+  padding: 4px 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-on-primary);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+.sch-monthnav__btn:disabled {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+/* 시합 탭 세그먼트: 버튼 폭 균등 + 화면 폭 채움 (원본 .seg 이식) */
+.sch-seg {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.sch-seg .chip {
+  flex: 1;
+  text-align: center;
 }
 .sch-cal {
   border: 1px solid var(--color-hairline);
@@ -725,6 +780,13 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: var(--space-sm);
 }
+/* 모바일: 한 줄에 2개 고정 (원본 team-grid 이식) */
+@media (max-width: 768px) {
+  .sch-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+}
 .sch-team-card {
   border: 1px solid var(--color-hairline);
   background: var(--color-canvas);
@@ -736,30 +798,30 @@
   overflow: hidden;
 }
 .sch-team-card:hover { border-color: var(--color-ink); }
+/* 학교명 라인: 소프트 클라우드 헤더 (Nike.md 무대색) + 볼드 학교명 */
 .sch-team-card__head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-sm);
   padding: var(--space-md);
+  background: var(--color-soft-cloud);
   border-bottom: 1px solid var(--color-hairline-soft);
 }
 .sch-team-card__head h3 {
   margin: 0;
   font-size: var(--type-caption);
   font-weight: 700;
+  color: var(--color-ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.sch-badge {
+.sch-team-card__reg {
   flex-shrink: 0;
   font-size: var(--type-utility-xs);
   font-weight: 700;
   color: var(--color-mute);
-  background: var(--color-soft-cloud);
-  border-radius: var(--radius-sm);
-  padding: 2px 8px;
   white-space: nowrap;
 }
 .sch-team-card__body {
@@ -806,11 +868,16 @@
   margin-bottom: var(--space-sm);
   min-height: 14px;
 }
+/* 시합명: 학교별 일정 카드에서도 또렷하게 (볼드 + 한 줄 말줄임) */
 .sch-game__comp {
   font-size: var(--type-caption-sm);
-  font-weight: 500;
-  color: var(--color-mute);
+  font-weight: 700;
+  color: var(--color-ink);
   line-height: 1.35;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sch-game__stage {
   flex-shrink: 0;
@@ -822,6 +889,10 @@
   padding: 2px 7px;
   white-space: nowrap;
 }
+/* 단계 칩 색상 (원본 .stage.league/.cup/.sched 이식) — 리그/예선 vs 토너먼트 vs 예정 구분 */
+.sch-game__stage--league { background: #eef1f4; color: #44586b; }
+.sch-game__stage--cup { background: #fbe9ec; color: #a8344b; }
+.sch-game__stage--sched { background: #eef1f4; color: #9aa0a6; }
 .sch-game__score {
   display: flex;
   justify-content: center;
@@ -869,6 +940,16 @@
   color: var(--color-mute);
 }
 
+/* 리그 순위표: 가로 스크롤 없이 화면 폭에 맞춤 (팀 모달 tv-table 방식) */
+.sch-stand {
+  margin-bottom: var(--space-sm);
+}
+.sch-stand .nm-cell {
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 /* 그룹 헤더 (날짜/대회) + 전적 요약 + 넓은 모달 */
 .sch-group {
   font-size: var(--type-caption-sm);
@@ -897,6 +978,12 @@
 }
 .modal-card--wide {
   max-width: 640px;
+}
+/* 좁은 화면: 모달 안쪽 여백 축소 — 선수 테이블이 잘리지 않게 (원본 mobile modal-body 이식) */
+@media (max-width: 480px) {
+  .modal-card--wide {
+    padding: 16px 10px;
+  }
 }
 .sch-modal-body {
   overflow-y: auto;
@@ -964,6 +1051,82 @@
   font-size: var(--type-caption-sm);
 }
 .tv-staff__chip a { text-decoration: underline; }
+
+/* 선수현황 선수 테이블 — 가로 스크롤 없이 한 화면 (고정 레이아웃 + % 폭, 가운데 정렬 — 원본 이식) */
+.tv-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--type-caption-sm);
+}
+.tv-table th,
+.tv-table td {
+  padding: 8px 2px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-hairline);
+  overflow: hidden;
+  word-break: keep-all;
+}
+.tv-table th {
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-ink);
+  white-space: nowrap;
+}
+.tv-table .tv-name { font-weight: 700; }
+.tv-table tbody tr:active { background: var(--color-soft-cloud); }
+/* 팀 모달: 표 영역만 세로 스크롤(필터해도 모달 크기 유지 — 원본 46vh) */
+.tv-table-wrap {
+  max-height: 46vh;
+  overflow-y: auto;
+}
+.tv-table-wrap .tv-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-canvas);
+  z-index: 2;
+}
+
+/* 포지션/학년 배지 (원본 pos-badge/grade-badge 이식 — 색상은 badgeColors.ts 인라인) */
+.pos-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.grade-badge {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* 팀 모달 포지션/학년 필터 줄 — 한 줄 균등 배치 + 색상 아웃라인 칩 */
+.tv-filter-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.tv-filter-row .tv-color-chip {
+  flex: 1 1 auto;
+  min-height: 32px;
+  padding: 5px 8px;
+  font-size: var(--type-caption-sm);
+  font-weight: 700;
+  border-width: 1.5px;
+  border-style: solid;
+  text-align: center;
+}
+.tv-filter-row .tv-color-chip .cnt {
+  opacity: 0.7;
+  font-weight: 600;
+}
 
 /* 선수 상세 → KBSA 링크 버튼 */
 .kbsa-link {
