@@ -10,9 +10,11 @@ import { useDevice } from "./shared/useDevice";
 import { YearProvider } from "./shared/year";
 import { initPwa } from "./shared/pwa";
 import { useAutoSync } from "./shared/autoSync";
+import { preloadNavIcons } from "./shared/navIcons";
 import { DesktopApp } from "./desktop/DesktopApp";
 import { MobileApp } from "./mobile/MobileApp";
 
+preloadNavIcons(); // 드로어 PNG 아이콘을 미리 요청·디코딩해 첫 클릭 지연을 줄인다.
 initPwa(); // manifest 주입 + 서비스워커 등록
 
 // 데스크탑/모바일은 완전히 분리된 컴포넌트 트리(별도 운영 코드).

@@ -21,6 +21,23 @@ const SRC = {
   notice: announcementPng, // 알리는 글
 } as const;
 
+// 드로어 첫 클릭 전에 PNG 요청과 디코딩을 끝내도록 이미지 객체를 모듈 수명 동안 유지한다.
+const preloadedNavImages = new Set<HTMLImageElement>();
+let preloadStarted = false;
+
+export function preloadNavIcons() {
+  if (preloadStarted || typeof Image === "undefined") return;
+  preloadStarted = true;
+
+  for (const src of Object.values(SRC)) {
+    const image = new Image();
+    image.decoding = "async";
+    preloadedNavImages.add(image);
+    image.src = src;
+    void image.decode().catch(() => {}).finally(() => preloadedNavImages.delete(image));
+  }
+}
+
 export type IconName = keyof typeof SRC;
 
 // variant: "nav" = 드로어 항목, "title" = 페이지 제목 옆(글자 높이에 맞춤)
