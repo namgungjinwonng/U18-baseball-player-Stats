@@ -78,30 +78,28 @@ jobs:
 
   # u81-baseball(정적 HTML 앱) docs/ 동기화 — 같은 데이터를 쓰는 구 앱도 함께 갱신.
   # secrets.MERGE_REPO_TOKEN: u81-baseball 저장소 contents write 권한 PAT 필요.
+  # 전체 스캔은 수동 전용 — 데이터 변경이 없어도 항상 동기화(양쪽 페이지 재생성).
   sync-merge:
     needs: scrape
-    if: needs.scrape.outputs.changed == 'true'
+    if: always() && needs.scrape.result == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: 토큰 확인 (미설정 시 스킵)
-        id: token
+      # 토큰이 없으면 조용히 넘어가지 말고 실패시킨다(PAT 만료·시크릿 누락을 즉시 인지).
+      - name: 토큰 확인
         env:
           T: ${{ secrets.MERGE_REPO_TOKEN }}
         run: |
-          if [ -n "$T" ]; then
-            echo "ok=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::MERGE_REPO_TOKEN 미설정 — u81-baseball 동기화 스킵"
-            echo "ok=false" >> "$GITHUB_OUTPUT"
+          if [ -z "$T" ]; then
+            echo "::error::MERGE_REPO_TOKEN 시크릿이 없습니다 (base 저장소 Settings → Secrets and variables → Actions → Repository secrets)"
+            exit 1
           fi
+          echo "토큰 확인됨"
 
       - uses: actions/checkout@v4
-        if: steps.token.outputs.ok == 'true'
         with:
           ref: main # scrape 잡이 방금 푸시한 최신 데이터 기준
 
       - uses: actions/checkout@v4
-        if: steps.token.outputs.ok == 'true'
         with:
           repository: namgungjinwonng/u81-baseball
           token: ${{ secrets.MERGE_REPO_TOKEN }}
@@ -109,13 +107,11 @@ jobs:
           ref: main
 
       - uses: actions/setup-python@v5
-        if: steps.token.outputs.ok == 'true'
         with:
           python-version: "3.11"
 
       # 스키마 동일(u18_data.json = teams.json, u18_schedule.json = schedule.json)이라 복사 후 재생성만.
       - name: 데이터 반영 + docs 재생성
-        if: steps.token.outputs.ok == 'true'
         run: |
           cp data/2026/teams.json u81/u18_data.json
           cp data/2026/schedule.json u81/u18_schedule.json
@@ -123,7 +119,6 @@ jobs:
           python build_all.py --generate-only
 
       - name: u81-baseball 커밋 & 푸시
-        if: steps.token.outputs.ok == 'true'
         working-directory: u81
         run: |
           git config user.name  "github-actions[bot]"
