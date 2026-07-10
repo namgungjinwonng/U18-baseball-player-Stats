@@ -9,6 +9,7 @@ import "./app.css";
 import { useDevice } from "./shared/useDevice";
 import { YearProvider } from "./shared/year";
 import { initPwa } from "./shared/pwa";
+import { useAutoSync } from "./shared/autoSync";
 import { DesktopApp } from "./desktop/DesktopApp";
 import { MobileApp } from "./mobile/MobileApp";
 
@@ -18,6 +19,7 @@ initPwa(); // manifest 주입 + 서비스워커 등록
 // 공통 데이터 계층(shared/)만 공유한다.
 function Root() {
   const device = useDevice();
+  useAutoSync(); // 백그라운드 복귀 시 데이터 갱신 감지 → 자동 반영
   return device === "mobile" ? <MobileApp /> : <DesktopApp />;
 }
 

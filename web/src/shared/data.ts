@@ -1,5 +1,5 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type {
   LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile,
   ScheduleData, StrengthData, TeamRosterEntry,
@@ -20,7 +20,25 @@ export interface AsyncState<T> {
   error: string | null;
 }
 
+// 데이터 버전 — 갱신 감지(autoSync) 시 +1 하면 마운트된 모든 훅이 재조회한다.
+let dataVersion = 0;
+const versionListeners = new Set<() => void>();
+export function bumpDataVersion() {
+  dataVersion++;
+  versionListeners.forEach((l) => l());
+}
+function useDataVersion() {
+  return useSyncExternalStore(
+    (cb) => {
+      versionListeners.add(cb);
+      return () => versionListeners.delete(cb);
+    },
+    () => dataVersion
+  );
+}
+
 function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
+  const version = useDataVersion();
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
     loading: true,
@@ -40,7 +58,7 @@ function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [...deps, version]);
   return state;
 }
 
