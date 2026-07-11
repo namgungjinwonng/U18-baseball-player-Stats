@@ -18,7 +18,7 @@ export function MHome() {
   // 타율·평균자책 외 세이버메트릭스(출루율/OPS/wOBA/wRC+/WAR/WHIP 등)는 제외 — 랭킹 페이지에서.
   const [group, setGroup] = useState<"batting" | "pitching">("batting");
   const groupIds = useMemo<LeaderCategoryId[]>(
-    () => (group === "batting" ? ["avg", "hr", "rbi", "h", "r", "sb"] : ["era", "so", "w", "sv", "ip"]),
+    () => (group === "batting" ? ["avg", "hr", "rbi", "h", "r", "sb"] : ["era", "so", "w", "ip"]),
     [group]
   );
   const boards = useMemo(

@@ -219,6 +219,7 @@
   flex: 0 0 100%;
   min-width: 0;
   scroll-snap-align: start;
+  scroll-snap-stop: always; /* 플릭 관성으로 2~3장 건너뛰지 않고 한 장씩만 */
 }
 /* 슬라이드 사이 간격은 카드 오른쪽 여백으로 (clientWidth 기반 인덱스 계산 유지) */
 .m-lead-slide .m-leader {
