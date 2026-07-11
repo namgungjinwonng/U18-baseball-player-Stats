@@ -22,7 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.commit.outputs.changed }}
+      sunset: ${{ steps.sunset.outputs.sunset }}
     steps:
+      # u81-baseball 서비스 종료(2026-07-31) — 2026-08-01(KST)부터 sync-merge 중단.
+      - name: u81 동기화 종료 게이트
+        id: sunset
+        run: echo "sunset=$([ "$(TZ=Asia/Seoul date +%Y%m%d)" -ge 20260801 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
         with:
           ref: main # 큐잉 시점 커밋이 아닌 실행 시점의 최신 main (연달아 실행 시 push 충돌 방지)
@@ -73,7 +79,7 @@ jobs:
   # 수동 실행(workflow_dispatch)은 데이터 변경이 없어도 강제 동기화 — u81 밀림 복구/점검용.
   sync-merge:
     needs: teams
-    if: needs.teams.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.teams.outputs.sunset != 'true' && (needs.teams.outputs.changed == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
       # 토큰이 없으면 조용히 넘어가지 말고 실패시킨다(PAT 만료·시크릿 누락을 즉시 인지).
