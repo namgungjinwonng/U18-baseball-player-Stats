@@ -6,6 +6,7 @@ import { MRecords } from "./pages/MRecords";
 import { MMatchup } from "./pages/MMatchup";
 import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
+import { MobileLaunchMotion } from "./MobileLaunchMotion";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
 import { LeadersView } from "../shared/LeadersView";
@@ -18,6 +19,9 @@ import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
+
+// 모듈 메모리는 문서 새로 로드 시 초기화되고, 같은 문서의 화면 이동·백그라운드 복귀에는 유지된다.
+let mobileLaunchCompleted = false;
 
 function Drawer({ onClose }: { onClose: () => void }) {
   return (
@@ -67,9 +71,15 @@ function Drawer({ onClose }: { onClose: () => void }) {
 
 export function MobileApp() {
   const [drawer, setDrawer] = useState(false);
+  const [showLaunch, setShowLaunch] = useState(!mobileLaunchCompleted);
   const nav = useNavigate();
+  const finishLaunch = () => {
+    mobileLaunchCompleted = true;
+    setShowLaunch(false);
+  };
   return (
     <div className="m-shell">
+      {showLaunch && <MobileLaunchMotion onDone={finishLaunch} />}
       <InAppBanner />
       <header className="m-topbar">
         <div className="m-topbar__inner">

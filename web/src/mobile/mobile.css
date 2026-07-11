@@ -4,6 +4,34 @@
 .m-shell {
   padding-bottom: 24px;
 }
+
+/* 콜드 스타트 홈런 아크 — OS 상태바/내비 영역을 제외한 앱 뷰포트만 덮는다. */
+.m-launch {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  opacity: 1;
+  transition: opacity 180ms ease;
+  touch-action: none;
+}
+.m-launch--leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.m-launch__media {
+  display: block;
+  width: clamp(280px, 72vw, 320px);
+  height: auto;
+  background: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-launch {
+    transition: none;
+  }
+}
 .m-topbar {
   position: sticky;
   top: 0;
