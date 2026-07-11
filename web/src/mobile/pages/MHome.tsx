@@ -7,6 +7,9 @@ import { Button, Chip } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { WeightToggle, useStrengthMap } from "../../shared/weights";
 
+const BATTING_IDS: LeaderCategoryId[] = ["avg", "hr", "rbi", "h", "r", "sb"];
+const ALL_LEADER_IDS: LeaderCategoryId[] = [...BATTING_IDS, "era", "whip", "so", "w", "ip"];
+
 export function MHome() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
   const [weightOn, setWeightOn] = useState(false);
@@ -14,19 +17,14 @@ export function MHome() {
   const { data: meta } = useMeta();
   const strengthMap = useStrengthMap(filter);
   const ctx = useQualifyContext(filter);
-  // 모바일 캐러셀 = 타자/투수 그룹 선택 + 누적 기록 위주 TOP10.
+  // 모바일 캐러셀 = 타자 6항목 뒤 투수 5항목이 연속되는 누적 기록 TOP10.
   // 타율·평균자책 외 세이버메트릭스(출루율/OPS/wOBA/wRC+/WAR/WHIP 등)는 제외 — 랭킹 페이지에서.
-  const [group, setGroup] = useState<"batting" | "pitching">("batting");
-  const groupIds = useMemo<LeaderCategoryId[]>(
-    () => (group === "batting" ? ["avg", "hr", "rbi", "h", "r", "sb"] : ["era", "whip", "so", "w", "ip"]),
-    [group]
-  );
   const boards = useMemo(
     () =>
       players
-        ? leaderboards(applyFilter(players, filter), ctx, 10, weightOn ? strengthMap : undefined, groupIds)
+        ? leaderboards(applyFilter(players, filter), ctx, 10, weightOn ? strengthMap : undefined, ALL_LEADER_IDS)
         : [],
-    [players, filter, ctx, weightOn, strengthMap, groupIds]
+    [players, filter, ctx, weightOn, strengthMap]
   );
 
   // 가로 스와이프 캐러셀 — 세로 스크롤을 카드 1장 높이로 최소화, 항목은 좌우 이동.
@@ -38,11 +36,17 @@ export function MHome() {
     const i = Math.round(el.scrollLeft / el.clientWidth);
     if (i !== active) setActive(Math.max(0, Math.min(i, boards.length - 1)));
   };
-  // 타자/투수 전환·필터 변경으로 보드 구성이 바뀌면 첫 항목으로 복귀.
+  const group = active < BATTING_IDS.length ? "batting" : "pitching";
+  const moveToGroup = (next: "batting" | "pitching") => {
+    const index = next === "batting" ? 0 : BATTING_IDS.length;
+    trackRef.current?.scrollTo({ left: index * (trackRef.current?.clientWidth ?? 0) });
+    setActive(index);
+  };
+  // 필터 변경으로 보드 구성이 바뀌면 첫 항목으로 복귀.
   useEffect(() => {
     setActive(0);
     trackRef.current?.scrollTo({ left: 0 });
-  }, [group, filter.tournament, filter.region, filter.team, filter.grade]);
+  }, [filter.tournament, filter.region, filter.team, filter.grade]);
 
   return (
     <>
@@ -99,8 +103,8 @@ export function MHome() {
           <>
             {/* 타자/투수 그룹 선택 — 항목은 스와이프로 이동 */}
             <div className="m-lead-chips" role="tablist" aria-label="시즌 리더 구분">
-              <Chip active={group === "batting"} onClick={() => setGroup("batting")}>타자</Chip>
-              <Chip active={group === "pitching"} onClick={() => setGroup("pitching")}>투수</Chip>
+              <Chip active={group === "batting"} onClick={() => moveToGroup("batting")}>타자</Chip>
+              <Chip active={group === "pitching"} onClick={() => moveToGroup("pitching")}>투수</Chip>
             </div>
             <p className="caption-sm m-lead-hint" aria-hidden>
               ← 옆으로 넘겨 다음 항목 · {active + 1}/{boards.length}

@@ -6,6 +6,7 @@ import { useSchedule, useTeams } from "./data";
 import { Chip } from "../design/ui";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { Ico } from "./navIcons";
+import { PagedCardGrid } from "./PagedCardGrid";
 import type { ScheduleGame, ScheduleSide } from "./types";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
@@ -514,10 +515,11 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
             </div>
           </div>
           <p className="caption-sm" style={{ margin: "0 0 10px" }}>{filteredTeams.length}개 학교</p>
-          <div className="sch-team-grid">
-            {filteredTeams.map(teamCard)}
-            {filteredTeams.length === 0 && <div className="state">검색 결과가 없습니다.</div>}
-          </div>
+          {filteredTeams.length > 0 ? (
+            <PagedCardGrid perPage={10} compact>{filteredTeams.map(teamCard)}</PagedCardGrid>
+          ) : (
+            <div className="state">검색 결과가 없습니다.</div>
+          )}
         </>
       )}
 

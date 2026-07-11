@@ -811,12 +811,40 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: var(--space-sm);
 }
+.paged-grid__track,
+.paged-grid__page { display: contents; }
+.paged-grid__hint { display: none; }
 /* 모바일: 한 줄에 2개 고정 (원본 team-grid 이식) */
 @media (max-width: 768px) {
-  .sch-team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-sm);
+  .sch-team-grid.paged-grid { display: block; }
+  .paged-grid__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .paged-grid__track::-webkit-scrollbar { display: none; }
+  .paged-grid__page {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    flex: 0 0 100%;
+    min-width: 0;
+    align-content: start;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .paged-grid__hint {
+    display: block;
+    margin: 0 0 8px;
+    color: var(--color-mute);
+  }
+  .paged-grid--compact .sch-team-card__head { padding: 8px 10px; }
+  .paged-grid--compact .sch-team-card__body { padding: 7px 8px; }
+  .paged-grid--compact .sch-team-card__body .rc b { font-size: var(--type-heading-sm); }
+  .paged-grid--compact .tv-team-card__body { padding: 6px 10px; }
+  .paged-grid--compact .tv-team-card__body .row { padding: 1px 0; line-height: 1.3; }
 }
 .sch-team-card {
   border: 1px solid var(--color-hairline);

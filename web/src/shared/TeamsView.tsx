@@ -8,6 +8,7 @@ import { usePlayerIndex, useTeams } from "./data";
 import { kbsaPlayerUrl } from "./kbsa";
 import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
+import { PagedCardGrid } from "./PagedCardGrid";
 import type { TeamPlayerEntry } from "./types";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
@@ -292,7 +293,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
             {query && searchType === "team" ? `“${query}” 검색 결과 ` : ""}
             {filteredTeams.length}개 팀
           </p>
-          <div className="sch-team-grid">
+          <PagedCardGrid perPage={8} compact>
             {filteredTeams.map((t) => (
               <button key={t.club_idx} className="sch-team-card" onClick={() => openTeam(t.team)}>
                 <div className="sch-team-card__head">
@@ -306,8 +307,8 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                 </div>
               </button>
             ))}
-            {filteredTeams.length === 0 && <div className="state">검색 결과가 없습니다.</div>}
-          </div>
+          </PagedCardGrid>
+          {filteredTeams.length === 0 && <div className="state">검색 결과가 없습니다.</div>}
         </>
       )}
 
