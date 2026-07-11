@@ -185,6 +185,58 @@
   padding: 18px;
   margin-bottom: 8px;
 }
+/* 시즌 리더 가로 스와이프 캐러셀 — 세로 스크롤을 카드 1장 높이로 최소화 */
+.m-lead-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.m-lead-chips::-webkit-scrollbar {
+  display: none;
+}
+.m-lead-chips .chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.m-lead-hint {
+  margin: 0 0 8px;
+  color: var(--color-mute);
+}
+.m-lead-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.m-lead-track::-webkit-scrollbar {
+  display: none;
+}
+.m-lead-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+/* 슬라이드 사이 간격은 카드 오른쪽 여백으로 (clientWidth 기반 인덱스 계산 유지) */
+.m-lead-slide .m-leader {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+.m-lead-slide:last-child .m-leader {
+  margin-right: 0;
+}
+.leader-row .rank-no {
+  display: inline-block;
+  min-width: 20px;
+  margin-right: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-mute);
+  font-variant-numeric: tabular-nums;
+}
 .m-leader h3 {
   font-size: 13px;
   color: var(--color-mute);

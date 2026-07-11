@@ -269,14 +269,16 @@ export function rankByCategory(
   });
 }
 
-// 홈 카드용 — HOME_CATEGORY_IDS 순서로 TOP N (규정 충족자만).
+// 홈 카드용 — 기본은 HOME_CATEGORY_IDS 순서로 TOP N (규정 충족자만).
+// categoryIds 지정 시 그 목록으로 (모바일 캐러셀 = 전 항목).
 export function leaderboards(
   players: Player[],
   ctx: QualifyContext,
   topN = 9,
   weights?: Record<string, PlayerOppIdx> | null,
+  categoryIds: LeaderCategoryId[] = HOME_CATEGORY_IDS,
 ): { id: LeaderCategoryId; title: string; weighted: boolean; items: LeaderItem[] }[] {
-  return HOME_CATEGORY_IDS.map((id) => {
+  return categoryIds.map((id) => {
     const cat = findCategory(id)!;
     return {
       id: cat.id,
