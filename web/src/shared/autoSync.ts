@@ -1,7 +1,7 @@
 // 앱 새 실행·백그라운드 복귀·사용자 수동 요청 시 최신 메타를 확인하고 전 데이터 훅을 재조회한다.
 import { useEffect } from "react";
 import { setDataRevision } from "./data";
-import { selectRandomRefreshMotion } from "./refreshMotion";
+import { selectNextRefreshMotion } from "./refreshMotion";
 
 const BASE = import.meta.env.BASE_URL;
 let baseline: string | null = null;
@@ -41,7 +41,7 @@ export function refreshDataNow(force = false): Promise<boolean> {
 // "바로 모션" UX). 데이터 최신화는 reload 가 network-first 서비스워커로 다시 받고, 새 문서
 // mount 의 useAutoSync 가 meta 를 재확인하므로 선(先)조회·인위적 지연은 두지 않는다.
 export async function manualRefreshAndReload() {
-  selectRandomRefreshMotion();
+  selectNextRefreshMotion();
   window.location.reload();
 }
 
