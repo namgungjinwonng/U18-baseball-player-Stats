@@ -26,7 +26,8 @@ export function SearchPage() {
           value={q}
           onChange={(e) => {
             setQ(e.target.value);
-            setParams(e.target.value ? { q: e.target.value } : {});
+            // replace — 키 입력마다 히스토리가 쌓이면 뒤로가기가 글자 단위로만 이동
+            setParams(e.target.value ? { q: e.target.value } : {}, { replace: true });
           }}
           placeholder="선수 검색 (이름 또는 팀+등번호 가능)"
           aria-label="선수 검색 — 이름 또는 팀+등번호"
