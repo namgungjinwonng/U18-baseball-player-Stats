@@ -6,8 +6,8 @@ const BASE = import.meta.env.BASE_URL;
 const EXIT_MS = 180;
 const MAX_WAIT_MS = 2200;
 const MOTION_VERSION = "20260712-clean-115";
-// 새로고침 직전 선택값은 한 번만 소비한다. 값이 없으면 일반 앱 실행이므로 홈런 아크 고정.
-const MOTION_FILE = consumeRefreshMotion() ?? "launch-home-run.webm";
+// 새로고침 직전 선택값은 한 번만 소비한다. 값이 없으면 일반 앱 실행이므로 스코어보드 플립 고정.
+const MOTION_FILE = consumeRefreshMotion() ?? "refresh-scoreboard-flip.webm";
 
 export function MobileLaunchMotion({ onDone }: { onDone: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);

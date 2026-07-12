@@ -2,9 +2,9 @@
 const REFRESH_MOTION_KEY = "u18-refresh-motion";
 const LAST_REFRESH_MOTION_KEY = "u18-last-refresh-motion";
 const REFRESH_MOTIONS = [
-  "launch-home-run.webm",
-  "refresh-fast-pitch.webm",
   "refresh-scoreboard-flip.webm",
+  "refresh-fast-pitch.webm",
+  "launch-home-run.webm",
 ] as const;
 
 type RefreshMotion = (typeof REFRESH_MOTIONS)[number];
