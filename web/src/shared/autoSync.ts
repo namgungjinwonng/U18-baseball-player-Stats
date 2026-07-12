@@ -1,6 +1,7 @@
 // 앱 새 실행·백그라운드 복귀·사용자 수동 요청 시 최신 메타를 확인하고 전 데이터 훅을 재조회한다.
 import { useEffect } from "react";
 import { setDataRevision } from "./data";
+import { selectRandomRefreshMotion } from "./refreshMotion";
 
 const BASE = import.meta.env.BASE_URL;
 let baseline: string | null = null;
@@ -43,6 +44,7 @@ export async function manualRefreshAndReload() {
   await refreshDataNow(true);
   const remaining = Math.max(0, 450 - (Date.now() - started));
   if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
+  selectRandomRefreshMotion();
   window.location.reload();
 }
 
