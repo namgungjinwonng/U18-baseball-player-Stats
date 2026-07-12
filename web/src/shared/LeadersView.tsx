@@ -1,7 +1,7 @@
 // 항목별 전체 랭킹 페이지 본문 (데스크탑/모바일 공용).
 // 상단: 타자/투수 탭 + 각 항목 칩 (선택 시 해당 항목 랭킹으로 이동).
 // 필터(시합·지역·학교·학년) 그대로 사용.
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLeagueAverages, useTournamentRecords } from "./data";
 import { CATEGORIES, describeQualify, findCategory, rankByCategory } from "./leaders";
@@ -28,6 +28,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(loc.search));
   const [includeUnqualified, setIncludeUnqualified] = useState(false);
   const [weightOn, setWeightOn] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(100);
   const { data: players, loading } = useTournamentRecords(filter.tournament);
   const { data: averages } = useLeagueAverages();
   const strengthMap = useStrengthMap(filter);
@@ -50,6 +51,11 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
     );
   }, [players, filter, ctx, cat, includeUnqualified, lg, weightsActive, strengthMap]);
   const qualifiedCount = useMemo(() => ranked.filter((r) => r.qualified).length, [ranked]);
+  const visibleRanked = ranked.slice(0, visibleCount);
+
+  useEffect(() => {
+    setVisibleCount(100);
+  }, [ranked]);
 
   // 상단 탭: 현재 카테고리의 kind 우선, 없으면 타자.
   const activeKind: "batting" | "pitching" = cat?.kind ?? "batting";
@@ -145,7 +151,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
           <ol className="rank-list">
             {(() => {
               let rank = 0; // 규정 충족자만 순번 부여
-              return ranked.map((it) => {
+              return visibleRanked.map((it) => {
                 if (it.qualified) rank += 1;
                 const r = rank;
                 return (
@@ -176,6 +182,17 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
                 );
               });
             })()}
+            {ranked.length > visibleRanked.length && (
+              <li className="rank-list-more">
+                <button
+                  type="button"
+                  className="btn btn--secondary btn--sm"
+                  onClick={() => setVisibleCount((count) => Math.min(count + 100, ranked.length))}
+                >
+                  전체 {ranked.length}명 보기 (현재 상위 {visibleRanked.length}명)
+                </button>
+              </li>
+            )}
           </ol>
         </>
       )}

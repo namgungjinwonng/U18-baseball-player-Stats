@@ -1,7 +1,7 @@
 // 정렬 가능한 기록 테이블 — 데스크탑/모바일 공용 (프레젠테이션 전용).
 // 다중 정렬: 최대 3개 키. 헤더 클릭 1회=내림, 2회=오름, 3회=해제.
 // 우선순위는 추가된 순서 (먼저 추가한 키가 1순위).
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export interface Column<T> {
   key: string;
@@ -27,7 +27,7 @@ export function StatTable<T>({
   initialSort,
   onRowClick,
   rowKey,
-  limit = 200,
+  limit = 100,
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -42,7 +42,11 @@ export function StatTable<T>({
   const [sortKeys, setSortKeys] = useState<SortKey[]>(
     initialKey ? [{ key: initialKey, desc: initialDesc }] : []
   );
-  const [showAll, setShowAll] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(limit);
+
+  useEffect(() => {
+    setVisibleCount(limit);
+  }, [rows, limit]);
 
   const sorted = useMemo(() => {
     if (sortKeys.length === 0) return rows;
@@ -69,6 +73,7 @@ export function StatTable<T>({
   }, [rows, columns, sortKeys]);
 
   function clickHeader(col: Column<T>) {
+    setVisibleCount(limit);
     setSortKeys((prev) => {
       const idx = prev.findIndex((s) => s.key === col.key);
       if (idx === -1) {
@@ -88,7 +93,7 @@ export function StatTable<T>({
     });
   }
 
-  const capped = showAll ? sorted : sorted.slice(0, limit);
+  const capped = sorted.slice(0, visibleCount);
 
   return (
     <div className="stat-table__scroll">
@@ -143,9 +148,13 @@ export function StatTable<T>({
           </button>
         </p>
       )}
-      {!showAll && sorted.length > limit && (
-        <button className="btn btn--secondary btn--sm" style={{ margin: "16px auto", display: "flex" }} onClick={() => setShowAll(true)}>
-          전체 {sorted.length}명 보기 (현재 상위 {limit}명)
+      {sorted.length > capped.length && (
+        <button
+          className="btn btn--secondary btn--sm"
+          style={{ margin: "16px auto", display: "flex" }}
+          onClick={() => setVisibleCount((count) => Math.min(count + limit, sorted.length))}
+        >
+          전체 {sorted.length}명 보기 (현재 상위 {capped.length}명)
         </button>
       )}
     </div>

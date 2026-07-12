@@ -535,6 +535,11 @@
   padding: 0;
   margin: var(--space-lg) 0 0;
 }
+.rank-list-more {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-lg) 0;
+}
 .rank-row {
   display: grid;
   grid-template-columns: 36px 1fr 90px;
