@@ -37,13 +37,10 @@ export function refreshDataNow(force = false): Promise<boolean> {
   return checking;
 }
 
-// 사용자 수동 갱신은 기존 UX를 유지한다. 모래시계를 잠시 보여준 뒤 새 문서를 로드해
-// 콜드 스타트 모션과 시작 리비전 캐시 우회를 다시 실행한다.
+// 사용자 수동 갱신: 랜덤 모션을 정한 뒤 곧바로 새 문서를 로드한다(모래시계 대기 없음 —
+// "바로 모션" UX). 데이터 최신화는 reload 가 network-first 서비스워커로 다시 받고, 새 문서
+// mount 의 useAutoSync 가 meta 를 재확인하므로 선(先)조회·인위적 지연은 두지 않는다.
 export async function manualRefreshAndReload() {
-  const started = Date.now();
-  await refreshDataNow(true);
-  const remaining = Math.max(0, 450 - (Date.now() - started));
-  if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
   selectRandomRefreshMotion();
   window.location.reload();
 }
