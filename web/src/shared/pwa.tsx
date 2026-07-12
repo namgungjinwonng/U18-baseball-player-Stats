@@ -14,7 +14,17 @@ export function initPwa() {
   }
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register(`${BASE}sw.js`, { scope: BASE }).catch(() => {});
+      const hadController = !!navigator.serviceWorker.controller;
+      let reloading = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!hadController || reloading) return;
+        reloading = true;
+        window.location.reload();
+      });
+      navigator.serviceWorker
+        .register(`${BASE}sw.js`, { scope: BASE, updateViaCache: "none" })
+        .then((registration) => registration.update())
+        .catch(() => {});
     });
   }
 }

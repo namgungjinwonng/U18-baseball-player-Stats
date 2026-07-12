@@ -1,6 +1,6 @@
 // 서비스 워커 — network-first(데이터 최신 우선), 오프라인 시 캐시 폴백.
 // u81-baseball 방식 참고.
-const CACHE = "u18-baseball-v2";
+const CACHE = "u18-baseball-v3";
 
 self.addEventListener("install", () => self.skipWaiting());
 
@@ -15,8 +15,12 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  // 문서 재로드는 HTTP 10분 캐시를 우회해 최신 해시 번들의 index.html을 받는다.
+  const request = e.request.mode === "navigate"
+    ? new Request(e.request, { cache: "reload" })
+    : e.request;
   e.respondWith(
-    fetch(e.request)
+    fetch(request)
       .then((resp) => {
         const clone = resp.clone();
         caches.open(CACHE).then((c) => c.put(e.request, clone));
