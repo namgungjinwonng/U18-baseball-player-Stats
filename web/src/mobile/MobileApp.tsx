@@ -7,6 +7,7 @@ import { MMatchup } from "./pages/MMatchup";
 import { MSearch } from "./pages/MSearch";
 import { MPlayer } from "./pages/MPlayer";
 import { MobileLaunchMotion } from "./MobileLaunchMotion";
+import { PullToRefresh } from "./PullToRefresh";
 import { Footer } from "../shared/Footer";
 import { Glossary } from "../shared/Glossary";
 import { LeadersView } from "../shared/LeadersView";
@@ -80,6 +81,7 @@ export function MobileApp() {
   return (
     <div className="m-shell">
       {showLaunch && <MobileLaunchMotion onDone={finishLaunch} />}
+      <PullToRefresh />
       <InAppBanner />
       <header className="m-topbar">
         <div className="m-topbar__inner">

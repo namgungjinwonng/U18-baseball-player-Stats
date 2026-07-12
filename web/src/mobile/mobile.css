@@ -3,7 +3,26 @@
    ============================================================ */
 .m-shell {
   padding-bottom: 24px;
+  overscroll-behavior-y: contain;
 }
+
+.m-pull-refresh {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  z-index: 19;
+  padding: 6px 12px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 999px;
+  background: var(--color-canvas);
+  color: var(--color-mute);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(17, 17, 17, 0.12);
+  pointer-events: none;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+.m-pull-refresh.is-refreshing { color: var(--color-ink); }
 
 /* 콜드 스타트 홈런 아크 — OS 상태바/내비 영역을 제외한 앱 뷰포트만 덮는다. */
 .m-launch {

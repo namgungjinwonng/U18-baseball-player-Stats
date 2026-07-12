@@ -8,8 +8,30 @@ import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
 
+// 새 문서 로드마다 고유한 URL로 시작해 GitHub Pages의 10분 HTTP 캐시를 우회한다.
+// 이후 메타 변경 감지 시 lastUpdated 기반 리비전으로 교체되어 모든 훅이 재조회된다.
+let dataRevision = `start-${Date.now()}`;
+const revisionListeners = new Set<() => void>();
+
+export function setDataRevision(revision: string) {
+  if (revision === dataRevision) return;
+  dataRevision = revision;
+  revisionListeners.forEach((listener) => listener());
+}
+
+function useDataRevision() {
+  return useSyncExternalStore(
+    (listener) => {
+      revisionListeners.add(listener);
+      return () => revisionListeners.delete(listener);
+    },
+    () => dataRevision
+  );
+}
+
 async function getJSON<T>(rel: string): Promise<T> {
-  const res = await fetch(`${BASE}data/${rel}`);
+  const join = rel.includes("?") ? "&" : "?";
+  const res = await fetch(`${BASE}data/${rel}${join}v=${encodeURIComponent(dataRevision)}`);
   if (!res.ok) throw new Error(`데이터 로드 실패: ${rel} (${res.status})`);
   return (await res.json()) as T;
 }
@@ -20,25 +42,8 @@ export interface AsyncState<T> {
   error: string | null;
 }
 
-// 데이터 버전 — 갱신 감지(autoSync) 시 +1 하면 마운트된 모든 훅이 재조회한다.
-let dataVersion = 0;
-const versionListeners = new Set<() => void>();
-export function bumpDataVersion() {
-  dataVersion++;
-  versionListeners.forEach((l) => l());
-}
-function useDataVersion() {
-  return useSyncExternalStore(
-    (cb) => {
-      versionListeners.add(cb);
-      return () => versionListeners.delete(cb);
-    },
-    () => dataVersion
-  );
-}
-
 function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
-  const version = useDataVersion();
+  const revision = useDataRevision();
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
     loading: true,
@@ -46,19 +51,24 @@ function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
   });
   useEffect(() => {
     let alive = true;
-    setState({ data: null, loading: true, error: null });
+    // 자동 갱신 중에는 기존 화면을 유지하고, 최초 로드일 때만 loading 상태를 표시한다.
+    setState((prev) => ({ ...prev, loading: prev.data === null, error: null }));
     fn()
       .then((data) => alive && setState({ data, loading: false, error: null }))
       .catch(
         (e) =>
           alive &&
-          setState({ data: null, loading: false, error: String(e?.message ?? e) })
+          setState((prev) => ({
+            data: prev.data,
+            loading: false,
+            error: prev.data === null ? String(e?.message ?? e) : null,
+          }))
       );
     return () => {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, version]);
+  }, [...deps, revision]);
   return state;
 }
 
