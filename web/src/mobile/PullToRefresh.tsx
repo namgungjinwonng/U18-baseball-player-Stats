@@ -18,7 +18,9 @@ export function PullToRefresh() {
     document.documentElement.style.overscrollBehaviorY = "contain";
     document.body.style.overscrollBehaviorY = "contain";
     const onStart = (event: TouchEvent) => {
+      // 모달(.modal-backdrop)이 열려 있으면 모달 내부 스크롤이므로 당겨서 새로고침 비활성.
       if (refreshing || window.scrollY > 0 || event.touches.length !== 1) return;
+      if (document.querySelector(".modal-backdrop")) return;
       startY.current = event.touches[0].clientY;
       pulling.current = true;
     };
