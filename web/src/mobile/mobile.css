@@ -198,6 +198,23 @@
   min-height: 36px;
 }
 
+/* 랭킹·기록 상단 컨트롤 고정 (모바일) — 아래 선수 목록/표만 롤로 스크롤.
+   topbar(56px) 아래에 붙고, 목록은 그 밑으로 지나간다. */
+.m-page .leader-select,
+.m-page .m-records-head {
+  position: sticky;
+  top: 56px;
+  z-index: 10;
+  background: var(--color-canvas);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-hairline-soft);
+}
+.m-page .leader-select .leader-cat-dd {
+  max-width: none;
+}
+
 /* Mobile leader cards stacked */
 .m-leader {
   background: var(--color-soft-cloud);

@@ -38,7 +38,7 @@ export function MRecords() {
   return (
     <div className="m-page">
       <h2 className="heading-xl"><Ico name="records" variant="title" />선수 기록</h2>
-      <div className="m-tabs">
+      <div className="m-tabs m-records-head">
         {tabs.map((t) => (
           <Chip key={t.id} active={t.id === tabId} onClick={() => setTabId(t.id)}>
             {t.label}

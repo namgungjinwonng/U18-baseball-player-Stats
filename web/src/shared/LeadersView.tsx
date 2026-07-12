@@ -64,31 +64,37 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
         랭킹
       </h2>
 
-      {/* 상단: 타자/투수 탭 + 항목 chip. 현재 필터(시합/지역/학교/학년)는 URL query 로 유지. */}
-      <div className="tabs" style={{ marginBottom: 8 }}>
-        <Link
-          to={`/leaders/${activeKind === "batting" ? id ?? "avg" : "avg"}${filterToQuery(filter)}`}
-          className={`chip ${activeKind === "batting" ? "chip--active" : ""}`}
-        >
-          타자
-        </Link>
-        <Link
-          to={`/leaders/${activeKind === "pitching" ? id ?? "era" : "era"}${filterToQuery(filter)}`}
-          className={`chip ${activeKind === "pitching" ? "chip--active" : ""}`}
-        >
-          투수
-        </Link>
-      </div>
-      <div className="leader-cat-grid" style={{ marginBottom: 16 }}>
-        {visibleCats.map((c) => (
+      {/* 상단: 타자/투수 탭 + 항목 드롭다운(칩 그리드 대신 — 한 화면에 선수 더 많이).
+          모바일에선 이 블록이 sticky 로 고정돼 아래 선수 목록만 롤로 스크롤된다.
+          현재 필터(시합/지역/학교/학년)는 URL query 로 유지. */}
+      <div className="leader-select">
+        <div className="tabs">
           <Link
-            key={c.id}
-            to={`/leaders/${c.id}${filterToQuery(filter)}`}
-            className={`chip ${c.id === cat?.id ? "chip--active" : ""}`}
+            to={`/leaders/${activeKind === "batting" ? id ?? "avg" : "avg"}${filterToQuery(filter)}`}
+            className={`chip ${activeKind === "batting" ? "chip--active" : ""}`}
           >
-            {c.title.replace(/\s*\([^)]+\)\s*/, "")}
+            타자
           </Link>
-        ))}
+          <Link
+            to={`/leaders/${activeKind === "pitching" ? id ?? "era" : "era"}${filterToQuery(filter)}`}
+            className={`chip ${activeKind === "pitching" ? "chip--active" : ""}`}
+          >
+            투수
+          </Link>
+        </div>
+        <select
+          className="m-select leader-cat-dd"
+          value={cat?.id ?? ""}
+          onChange={(e) => nav(`/leaders/${e.target.value}${filterToQuery(filter)}`)}
+          aria-label="랭킹 항목 선택"
+        >
+          {!cat && <option value="" disabled>항목 선택</option>}
+          {visibleCats.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.title.replace(/\s*\([^)]+\)\s*/, "")}
+            </option>
+          ))}
+        </select>
       </div>
 
       {!cat ? (

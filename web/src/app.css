@@ -572,14 +572,25 @@
   font-weight: 700;
   text-align: right;
 }
-.leader-cat-grid {
+/* 랭킹 상단: 타자/투수 토글 + 항목 드롭다운 (칩 그리드 대신 — 공간 절약). */
+.leader-select {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  margin-top: var(--space-md);
+  margin: var(--space-md) 0 16px;
 }
-.leader-cat-grid .chip {
+.leader-select .tabs {
+  margin: 0;
+}
+.leader-select .chip {
   text-decoration: none;
+}
+.leader-cat-dd {
+  flex: 1 1 auto;
+  min-width: 160px;
+  max-width: 340px;
+  margin-bottom: 0;
 }
 .qual-toggle {
   display: inline-flex;
