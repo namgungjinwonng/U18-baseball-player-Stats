@@ -2,10 +2,9 @@
 // 페이지 구성은 u81-baseball/generate_html.py 의 u18_players.html 과 동일,
 // 스타일만 이 저장소의 디자인 토큰(Nike.md)을 따른다.
 // 선수 행 클릭 → 앱 내 선수 상세(기록 보유 시 /player/:id, 무기록 시 /person/:personNo).
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePlayerIndex, useTeams } from "./data";
-import { useModalHistory } from "./useModalHistory";
 import { kbsaPlayerUrl } from "./kbsa";
 import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
@@ -112,12 +111,14 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const { data: teams, loading } = useTeams();
   const { data: index } = usePlayerIndex();
   const nav = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [region, setRegion] = useState("");
   const [searchType, setSearchType] = useState<"team" | "name" | "number">("team");
   const [input, setInput] = useState("");
   const [query, setQuery] = useState(""); // 실행된 검색어 (검색 버튼/엔터 시 반영)
-  const [modalTeam, setModalTeam] = useState<string | null>(null);
+  // 팀 모달 = URL 쿼리(?team=)로 구동 — 선수 상세로 이동 후 뒤로가기 시 모달이 그대로 복원된다.
+  const modalTeam = searchParams.get("team");
   const [modalPos, setModalPos] = useState("");
   const [modalGrade, setModalGrade] = useState("");
 
@@ -130,9 +131,8 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const openPlayer = (p: TeamPlayerEntry) => {
     if (!p.person_no) return;
     const id = personToId.get(p.person_no);
-    // 팀 모달에서 이동할 땐 replace — 모달용 히스토리 엔트리를 대체해
-    // 선수 상세에서 뒤로가기 한 번에 목록으로 돌아온다.
-    nav(id ? `/player/${id}` : `/person/${p.person_no}`, { replace: !!modalTeam });
+    // 항상 push — 선수 상세에서 뒤로가기 시 팀 모달(?team=) 상태로 복귀한다.
+    nav(id ? `/player/${id}` : `/person/${p.person_no}`);
   };
 
   const rows = useMemo(() => teams ?? [], [teams]);
@@ -180,12 +180,32 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
     return [...list].sort((a, b) => (parseInt(a.number, 10) || 999) - (parseInt(b.number, 10) || 999));
   }, [modalInfo, modalPos, modalGrade]);
   const openTeam = (team: string) => {
-    setModalTeam(team);
     setModalPos("");
     setModalGrade("");
+    // 히스토리에 엔트리를 쌓아 연다 — 뒤로가기로 닫히고, 선수 상세에서 복귀 시 재오픈된다.
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set("team", team);
+      return p;
+    });
   };
-  // 뒤로가기 = 모달 닫기 (UI 닫기는 closeModal 로 히스토리 엔트리 소거)
-  const closeModal = useModalHistory(!!modalTeam, () => setModalTeam(null));
+  // UI 닫기(X·배경·ESC): 열 때 쌓은 엔트리를 뒤로가기로 소거. 직접 진입 등 뒤로 갈 곳이
+  // 없으면(idx 0) 파라미터만 제거해 사이트 이탈을 막는다.
+  const closeModal = useCallback(() => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) {
+      nav(-1);
+    } else {
+      setSearchParams(
+        (prev) => {
+          const p = new URLSearchParams(prev);
+          p.delete("team");
+          return p;
+        },
+        { replace: true }
+      );
+    }
+  }, [nav, setSearchParams]);
   useEffect(() => {
     if (!modalTeam) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
