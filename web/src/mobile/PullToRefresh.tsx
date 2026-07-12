@@ -1,6 +1,6 @@
 // 모바일 화면 최상단에서 아래로 당기면 전체 데이터 리비전을 갱신하는 제스처 컴포넌트.
 import { useEffect, useRef, useState } from "react";
-import { refreshDataNow } from "../shared/autoSync";
+import { manualRefreshAndReload } from "../shared/autoSync";
 
 const TRIGGER_PX = 64;
 const MAX_PULL_PX = 96;
@@ -44,7 +44,7 @@ export function PullToRefresh() {
       setDistance(0);
       if (shouldRefresh) {
         setRefreshing(true);
-        void refreshDataNow(true).finally(() => setRefreshing(false));
+        void manualRefreshAndReload().catch(() => setRefreshing(false));
       }
     };
     window.addEventListener("touchstart", onStart, { passive: true });
