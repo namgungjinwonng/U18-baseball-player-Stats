@@ -94,6 +94,8 @@ export interface PlayerIndexEntry {
   number?: string; grade?: string; region?: string;
   bats?: string; throws?: string; // 상대전적 보조 라벨용
   personNo?: string; // KBSA 선수 고유번호 — 선수현황(teams.json) ↔ 선수 상세 연결용
+  // 실제 기록 보유 여부 — 상대전적 역할(타자/투수) 검색은 등록 포지션이 아닌 이 값 기준.
+  hasBatting?: boolean; hasPitching?: boolean;
 }
 export interface Matchup {
   batterId: string; batterName: string; pitcherId: string; pitcherName: string;

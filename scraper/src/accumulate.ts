@@ -502,6 +502,8 @@ export function aggregate(
     id: p.id, name: p.name, team: p.team, position: p.position,
     number: p.number, grade: p.grade, region: p.region,
     bats: p.bats, throws: p.throws, personNo: p.personNo,
+    // 등록 포지션과 무관하게 실제 기록 유무로 상대전적 역할 검색 — 투타 겸업 선수 대응.
+    hasBatting: !!p.batting, hasPitching: !!p.pitching,
   }));
 
   // 팀별 경기수(규정타석/이닝 기준) — 선수 gameLog 의 distinct 경기 합집합.
