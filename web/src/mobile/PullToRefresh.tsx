@@ -21,6 +21,9 @@ export function PullToRefresh() {
       // 모달(.modal-backdrop)이 열려 있으면 모달 내부 스크롤이므로 당겨서 새로고침 비활성.
       if (refreshing || window.scrollY > 0 || event.touches.length !== 1) return;
       if (document.querySelector(".modal-backdrop")) return;
+      const target = event.target instanceof Element ? event.target : null;
+      const scrollArea = target?.closest<HTMLElement>(".rank-list, .m-records-page .stat-table__scroll");
+      if (scrollArea && scrollArea.scrollTop > 0) return;
       startY.current = event.touches[0].clientY;
       pulling.current = true;
     };

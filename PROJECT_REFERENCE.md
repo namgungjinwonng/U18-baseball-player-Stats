@@ -321,3 +321,8 @@ npx playwright install chromium && npm run discover -- "<URL>"
   - **PWA (#3)**: `manifest.webmanifest` name="U-18 Player Stats". 아이콘 192/512 교체 (`web/public/icon-*.png`). 512 에 `purpose:"maskable"` 추가해 안드로이드 런처에서 512 사용. `index.html` 에 `apple-touch-icon` 192/512 + `apple-mobile-web-app-title` 추가. `sw.js` 캐시 v1→v2 (새 자산 강제 갱신).
   - **큰 모바일 정렬 (#4)**: `.m-page` 에 `max-width: 560px; margin: 0 auto` + ≥480px·≥720px 미디어쿼리로 양옆 패딩 확장. `.m-hero` 도 동일.
   - **탭 구성 (#5)**: 기본 탭 = 카운팅 스탯(G/타석/타수/안타/2·3루타/홈런/타점/득점/도루/볼넷/사구/삼진 또는 G/승/패/세이브/이닝/피안타/실점/자책/볼넷/탈삼진), 세부 탭 = 비율+세이버(타율/OBP/SLG/OPS/ISO/BABIP/BB%/K%/BB/K 또는 ERA/WHIP/FIP/K9/BB9/H9/KBB).
+# 2026-07-12 모바일 랭킹·선수 기록 스크롤 경계
+
+- 랭킹은 필터 및 옵션 아래의 순위 목록만 세로 스크롤된다.
+- 선수 기록은 필터 및 옵션을 고정하고 열 제목 아래의 데이터 행만 세로 스크롤된다.
+- 내부 목록이 위로 스크롤된 상태에서는 당겨서 새로고침을 시작하지 않는다.

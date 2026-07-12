@@ -198,21 +198,43 @@
   min-height: 36px;
 }
 
-/* 랭킹·기록 상단 컨트롤 고정 (모바일) — 아래 선수 목록/표만 롤로 스크롤.
-   topbar(56px) 아래에 붙고, 목록은 그 밑으로 지나간다. */
-.m-page .leader-select,
-.m-page .m-records-head {
-  position: sticky;
-  top: 56px;
-  z-index: 10;
-  background: var(--color-canvas);
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--color-hairline-soft);
+/* 랭킹·기록은 첨부 시안의 구분선 아래 목록만 세로 스크롤한다. */
+.m-page.leaders-page,
+.m-page.m-records-page {
+  box-sizing: border-box;
+  height: calc(100dvh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
 }
 .m-page .leader-select .leader-cat-dd {
   max-width: none;
+}
+.m-page.leaders-page .rank-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-bottom: 0;
+  border-top: 1px solid var(--color-hairline-soft);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.m-records-page .stat-table__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.m-records-page .stat-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-canvas);
+}
+.m-records-page .stat-table thead th:first-child {
+  z-index: 3;
 }
 
 /* Mobile leader cards stacked */

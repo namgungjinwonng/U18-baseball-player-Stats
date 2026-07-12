@@ -58,7 +58,7 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
   const visibleCats = activeKind === "batting" ? battingCats : pitchingCats;
 
   return (
-    <div className={wrapClass}>
+    <div className={`${wrapClass} leaders-page`}>
       <h2 className="heading-xl" style={{ marginBottom: 8 }}>
         <Ico name="leaders" variant="title" />
         랭킹

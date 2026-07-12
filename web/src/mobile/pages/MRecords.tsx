@@ -36,7 +36,7 @@ export function MRecords() {
   }, [players, tab.kind, filter, includeUnqualified, ctx]);
 
   return (
-    <div className="m-page">
+    <div className="m-page m-records-page">
       <h2 className="heading-xl"><Ico name="records" variant="title" />선수 기록</h2>
       <div className="m-tabs m-records-head">
         {tabs.map((t) => (
