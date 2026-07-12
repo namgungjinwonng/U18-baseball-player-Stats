@@ -220,6 +220,16 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+.m-page.leaders-page .leader-options {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+.m-page.leaders-page .leader-options .qual-toggle {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
 .m-records-page .stat-table__scroll {
   flex: 1 1 auto;
   min-height: 0;

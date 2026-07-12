@@ -111,24 +111,26 @@ export function LeadersView({ wrapClass }: { wrapClass: string }) {
 
           <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
 
-          {cat.needsQualify && (
-            <label className="qual-toggle">
-              <input
-                type="checkbox"
-                checked={includeUnqualified}
-                onChange={(e) => setIncludeUnqualified(e.target.checked)}
+          <div className="leader-options">
+            {cat.needsQualify && (
+              <label className="qual-toggle">
+                <input
+                  type="checkbox"
+                  checked={includeUnqualified}
+                  onChange={(e) => setIncludeUnqualified(e.target.checked)}
+                />
+                규정 미달 포함 (확인용)
+              </label>
+            )}
+            {strengthMap && (
+              <WeightToggle
+                checked={weightOn}
+                onChange={setWeightOn}
+                disabled={!cat.weight}
+                disabledNote="누적 지표는 가중치 미적용"
               />
-              규정 미달 포함 (확인용)
-            </label>
-          )}
-          {strengthMap && (
-            <WeightToggle
-              checked={weightOn}
-              onChange={setWeightOn}
-              disabled={!cat.weight}
-              disabledNote="누적 지표는 가중치 미적용"
-            />
-          )}
+            )}
+          </div>
           {weightsActive && (
             <p className="caption-sm wt-note">
               보정값 기준 순위 · 괄호 안 = 원값, ▲▼ = 원 순위 대비 변동
