@@ -219,6 +219,14 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  /* 시즌 리더 카드(18px 패딩)와 같은 폭으로 행을 인셋 — 값이 화면 끝까지 늘어지지 않게. */
+  padding-left: 18px;
+  padding-right: 18px;
+  box-sizing: border-box;
+}
+/* 값 컬럼을 콘텐츠 폭으로 (기존 90px 고정 → 화면 끝에 붙던 것 방지, 시즌 리더처럼 이름 옆에). */
+.m-page.leaders-page .rank-row {
+  grid-template-columns: 36px 1fr auto;
 }
 .m-page.leaders-page .leader-options {
   display: flex;

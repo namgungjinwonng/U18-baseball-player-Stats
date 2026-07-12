@@ -5,8 +5,12 @@ export type Role = "batter" | "pitcher";
 export const opposite = (r: Role): Role => (r === "batter" ? "pitcher" : "batter");
 export const isPitcher = (p: PlayerIndexEntry) => p.position === "투수";
 
+// 역할 판정은 등록 포지션이 아닌 "실제 기록 유무" 기준 — 타자로 등록됐어도 투구 기록이
+// 있으면 투수 검색에, 투수여도 타격 기록이 있으면 타자 검색에 노출한다(투타 겸업 선수).
+// hasBatting/hasPitching 이 없는 옛 인덱스는 포지션으로 폴백.
 export function inRole(p: PlayerIndexEntry, role: Role): boolean {
-  return role === "pitcher" ? isPitcher(p) : !isPitcher(p);
+  if (role === "pitcher") return p.hasPitching ?? isPitcher(p);
+  return p.hasBatting ?? !isPitcher(p);
 }
 
 // 동명이인 구분 라벨: "이름 (3학년·강원고)" (학년 없으면 "이름 (강원고·7번)")
