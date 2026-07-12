@@ -5,7 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import assert from "node:assert/strict";
-import { aggregate, readGames, writeAggregated, outsToIp, type Roster } from "./accumulate.js";
+import { aggregate, dropSupersededGames, readGames, writeAggregated, outsToIp, type Roster } from "./accumulate.js";
 import type { GameBoxScore } from "./types.js";
 
 // 실데이터 슬러그 형식: `${team}_${name}_${number}` (accumulate 가 정규팀으로 재슬러그하므로 동일해야 함).
@@ -128,6 +128,52 @@ function runTransferMerge() {
   console.log("✓ 이적 선수 병합(기록 합산 + 현재 소속 표시 + 상대전적 재매핑) 통과");
 }
 
+// 서스펜디드(일시중단→재개) 잔재 제거: 부분 경기(이른 날짜)의 타자·투수가 완료 경기의
+// 부분집합이면 부분 경기를 집계에서 제외해 경기수·기록 이중계상을 막는지 검증.
+function runSuspendedGame() {
+  const bl = (id: string, ab: number, h: number) => ({
+    playerId: id, name: id.split("_")[1], team: id.split("_")[0],
+    ab, h, b2: 0, b3: 0, hr: 0, rbi: 0, r: 0, bb: 0, hbp: 0, so: 0, sb: 0,
+  });
+  const pl = (id: string) => ({
+    playerId: id, name: id.split("_")[1], team: id.split("_")[0],
+    outs: 9, h: 3, r: 1, er: 1, bb: 1, so: 4, w: 0, l: 0, sv: 0,
+  });
+  const TITLE = "제81회 청룡기";
+  const A = "세광고_황동민_5", Bb = "세광고_서정휘_7", C = "세광고_이시윤_36";
+  const PX = "세광고_김동유_37", PY = "배명고_박시원_49";
+  // 부분(7/9): 타자 {A,Bb} 투수 {PX}
+  const partial: GameBoxScore = {
+    id: "38853", date: "2026-07-09", season: 2026, home: "배명고", away: "세광고",
+    score: { home: 0, away: 1 }, title: TITLE,
+    batters: [bl(A, 1, 0), bl(Bb, 0, 0)], pitchers: [pl(PX)], matchups: [],
+  };
+  // 완료(7/10): 타자 {A,Bb,C} 투수 {PX,PY} — 부분을 포함하는 상위집합
+  const full: GameBoxScore = {
+    id: "38857", date: "2026-07-10", season: 2026, home: "배명고", away: "세광고",
+    score: { home: 2, away: 10 }, title: TITLE,
+    batters: [bl(A, 6, 1), bl(Bb, 4, 1), bl(C, 3, 1)], pitchers: [pl(PX), pl(PY)], matchups: [],
+  };
+  // 같은 팀쌍의 정상 재대결(다른 선수 D 포함 = 부분집합 아님) — 절대 제외되면 안 됨
+  const D = "세광고_다른선수_99";
+  const rematch: GameBoxScore = {
+    id: "39000", date: "2026-07-20", season: 2026, home: "세광고", away: "배명고",
+    score: { home: 3, away: 1 }, title: TITLE,
+    batters: [bl(A, 4, 2), bl(D, 3, 1)], pitchers: [pl(PX)], matchups: [],
+  };
+
+  const kept = dropSupersededGames([partial, full, rematch]).map((g) => g.id).sort();
+  assert.deepEqual(kept, ["38857", "39000"], "서스펜디드 부분 경기(38853)가 제외되지 않음");
+
+  // 집계: 황동민(A) 경기수는 완료 1 + 재대결 1 = 2 (부분 7/9 은 미포함)
+  const agg = aggregate(dropSupersededGames([partial, full, rematch]), "test");
+  const a = agg.players.find((p) => p.name === "황동민")!;
+  assert.equal(a.batting!.g, 2, "부분 경기가 집계돼 경기수가 과다 계상됨");
+  assert.equal(a.batting!.ab, 10, "타수 이중계상(부분 경기 포함)"); // 6+4, 부분의 1 미포함
+
+  console.log("✓ 서스펜디드 부분 경기 제외(경기수·기록 이중계상 방지) 통과");
+}
+
 // lastUpdated(시각) 필드를 제외한 스냅샷
 function snapshot(dir: string): string {
   const files = [
@@ -141,3 +187,4 @@ function snapshot(dir: string): string {
 
 run();
 runTransferMerge();
+runSuspendedGame();

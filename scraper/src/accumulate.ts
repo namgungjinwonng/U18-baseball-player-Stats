@@ -554,17 +554,59 @@ function pitcherLineText(p: { outs: number; er: number; so: number; w: number; l
   return parts.join(" ");
 }
 
+// 서스펜디드(일시중단 → 다음 경기일 재개) 잔재 제거.
+// KBSA 는 중단 시점의 부분 경기와 재개된 완료 경기를 서로 다른 game_idx 로 게시하고,
+// 완료 경기의 박스스코어가 부분 경기를 그대로 포함한다(재개 후 캘린더에서 부분 경기는 사라짐).
+// data/games 파일은 삭제되지 않으므로 부분 경기가 남아 경기수·기록이 이중 계상된다.
+// 판정: 같은 팀쌍·같은 대회에서 이른 날짜 경기의 타자·투수가 이후 경기의 부분집합이고
+// 타자 수가 더 적으면(= 중단 시점 스냅샷) 그 이른 경기를 집계에서 제외한다.
+// (같은 팀쌍이 대회 내 재대결한 정상 경기는 서로 부분집합이 아니므로 오탐하지 않음 — 실측 검증.)
+export function dropSupersededGames(games: GameBoxScore[]): GameBoxScore[] {
+  const idsOf = (list: { playerId: string }[]) => new Set(list.map((x) => x.playerId));
+  const groups = new Map<string, GameBoxScore[]>();
+  for (const g of games) {
+    const key = `${[g.home, g.away].sort().join("|")}|${g.title ?? ""}`;
+    const arr = groups.get(key);
+    if (arr) arr.push(g);
+    else groups.set(key, [g]);
+  }
+  const superseded = new Set<string>();
+  for (const gs of groups.values()) {
+    if (gs.length < 2) continue;
+    const sorted = [...gs].sort((a, b) =>
+      a.date !== b.date ? (a.date < b.date ? -1 : 1) : a.id.localeCompare(b.id)
+    );
+    for (let i = 0; i < sorted.length; i++) {
+      const e = sorted[i];
+      const eb = idsOf(e.batters);
+      const ep = idsOf(e.pitchers);
+      for (let j = i + 1; j < sorted.length; j++) {
+        const l = sorted[j];
+        const lb = idsOf(l.batters);
+        if (eb.size >= lb.size) continue;
+        const lp = idsOf(l.pitchers);
+        if ([...eb].every((x) => lb.has(x)) && [...ep].every((x) => lp.has(x))) {
+          superseded.add(e.id);
+          break;
+        }
+      }
+    }
+  }
+  return superseded.size ? games.filter((g) => !superseded.has(g.id)) : games;
+}
+
 // --- 파일 입출력 ---
-// 취소 경기·선수 행 미게시(빈 박스스코어)·미래 경기는 집계 대상에서 제외 —
+// 취소 경기·선수 행 미게시(빈 박스스코어)·미래 경기·서스펜디드 잔재는 집계 대상에서 제외 —
 // gameCount 과다 계상 방지 (파일은 재수집/멱등 판단용으로 유지).
 export function readGames(dataDir: string): GameBoxScore[] {
   const dir = path.join(dataDir, "games");
   if (!fs.existsSync(dir)) return [];
-  return fs
+  const valid = fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as GameBoxScore)
     .filter((g) => !g.canceled && (g.batters?.length ?? 0) > 0);
+  return dropSupersededGames(valid);
 }
 
 function writeAgg(baseDir: string, agg: Aggregated): void {
