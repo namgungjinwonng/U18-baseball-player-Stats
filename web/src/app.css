@@ -415,6 +415,10 @@
   flex: 0 0 200px;
   width: 200px;
 }
+.filter-bar__row--tournament > .m-select {
+  flex: 0 0 200px;
+  width: 200px;
+}
 
 /* 상대 가중치 모드 — as-is/to-be 비교 표시 */
 .wt-delta {

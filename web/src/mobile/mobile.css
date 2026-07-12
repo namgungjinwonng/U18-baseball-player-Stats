@@ -406,6 +406,13 @@
   padding-right: 24px;
   background-position: right 8px center;
 }
+.filter-bar__row--tournament > .m-select,
+.m-page .leader-select .leader-cat-dd {
+  flex: 0 0 calc((100% - 16px) / 3);
+  width: calc((100% - 16px) / 3);
+  min-width: 0;
+  max-width: none;
+}
 /* 초협소 화면(320px 등): 패딩·글자 더 축소해 "지역 선택" 등이 잘리지 않게 */
 @media (max-width: 360px) {
   .filter-bar__row--3col > .m-select {
