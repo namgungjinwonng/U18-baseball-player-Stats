@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePlayerIndex, useTeams } from "./data";
+import { useModalHistory } from "./useModalHistory";
 import { kbsaPlayerUrl } from "./kbsa";
 import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
@@ -129,7 +130,9 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const openPlayer = (p: TeamPlayerEntry) => {
     if (!p.person_no) return;
     const id = personToId.get(p.person_no);
-    nav(id ? `/player/${id}` : `/person/${p.person_no}`);
+    // 팀 모달에서 이동할 땐 replace — 모달용 히스토리 엔트리를 대체해
+    // 선수 상세에서 뒤로가기 한 번에 목록으로 돌아온다.
+    nav(id ? `/player/${id}` : `/person/${p.person_no}`, { replace: !!modalTeam });
   };
 
   const rows = useMemo(() => teams ?? [], [teams]);
@@ -181,16 +184,18 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
     setModalPos("");
     setModalGrade("");
   };
+  // 뒤로가기 = 모달 닫기 (UI 닫기는 closeModal 로 히스토리 엔트리 소거)
+  const closeModal = useModalHistory(!!modalTeam, () => setModalTeam(null));
   useEffect(() => {
     if (!modalTeam) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setModalTeam(null);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [modalTeam]);
+  }, [modalTeam, closeModal]);
 
   if (loading) return <div className={wrapClass}><div className="state">불러오는 중…</div></div>;
   if (!teams) {
@@ -316,7 +321,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
       {modalInfo && (
         <div
           className="modal-backdrop"
-          onClick={(e) => e.target === e.currentTarget && setModalTeam(null)}
+          onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
           <div className="modal-card modal-card--wide">
             <div className="modal-head modal-head--team">
@@ -324,7 +329,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                 <span className="modal-abbr" style={{ fontSize: 18 }}>{modalInfo.team}</span>
                 {modalInfo.region && <span className="modal-name">{modalInfo.region}</span>}
               </h3>
-              <button className="icon-btn" onClick={() => setModalTeam(null)} aria-label="닫기">✕</button>
+              <button className="icon-btn" onClick={closeModal} aria-label="닫기">✕</button>
             </div>
             <div className="sch-modal-body">
               {modalInfo.staff.length > 0 && (

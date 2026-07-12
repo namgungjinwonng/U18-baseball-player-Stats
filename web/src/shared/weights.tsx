@@ -3,6 +3,7 @@
 // 오늘 날짜를 저장해 자정(날짜 변경) 전까지 새로고침해도 다시 뜨지 않는다.
 import { useEffect, useState } from "react";
 import { useStrength } from "./data";
+import { useModalHistory } from "./useModalHistory";
 import type { PlayerOppIdx } from "./types";
 import type { RecordFilter } from "./filters";
 
@@ -84,16 +85,16 @@ export function WeightToggle({
 
 export function WeightInfoModal({ onClose }: { onClose: () => void }) {
   const [hideToday, setHideToday] = useState(false);
-  const close = () => {
+  // 뒤로가기 = 모달 닫기 — popstate 경로에서도 "오늘 하루 숨김" 저장을 거친다.
+  const close = useModalHistory(true, () => {
     if (hideToday) hideModalForToday();
     onClose();
-  };
+  });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hideToday]);
+  }, [close]);
   return (
     <div className="modal-backdrop" onClick={close} role="dialog" aria-modal="true">
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>

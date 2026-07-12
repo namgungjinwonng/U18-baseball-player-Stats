@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { TERM_MAP, type Term } from "./Glossary";
 import { useLeagueAverages } from "./data";
+import { useModalHistory } from "./useModalHistory";
 import { categorize } from "./tournamentTree";
 import { rate, dec2 } from "./format";
 import { pct, dec1 } from "./sabermetrics";
@@ -123,21 +124,23 @@ function LeagueAvgSection({ term }: { term: Term }) {
 }
 
 function TermModal({ term, onClose }: { term: Term; onClose: () => void }) {
+  // 뒤로가기 = 모달 닫기 (UI 닫기는 close 로 히스토리 엔트리 소거)
+  const close = useModalHistory(true, onClose);
   // ESC 닫기
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [close]);
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="modal-backdrop" onClick={close} role="dialog" aria-modal="true">
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-head">
           <h3>
             <span className="modal-abbr">{term.abbr}</span>
             <span className="modal-name">{term.name}</span>
           </h3>
-          <button className="icon-btn" onClick={onClose} aria-label="닫기">
+          <button className="icon-btn" onClick={close} aria-label="닫기">
             ✕
           </button>
         </div>

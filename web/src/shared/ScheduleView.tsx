@@ -3,6 +3,7 @@
 // 스타일만 이 저장소의 디자인 토큰(Nike.md)을 따른다.
 import { useEffect, useMemo, useState } from "react";
 import { useSchedule, useTeams } from "./data";
+import { useModalHistory } from "./useModalHistory";
 import { Chip } from "../design/ui";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { Ico } from "./navIcons";
@@ -180,24 +181,26 @@ type ModalState =
 function Modal({ title, sub, onClose, children }: {
   title: string; sub?: string; onClose: () => void; children: React.ReactNode;
 }) {
+  // 뒤로가기 = 모달 닫기 (UI 닫기는 close 로 히스토리 엔트리 소거)
+  const close = useModalHistory(true, onClose);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [close]);
   return (
-    <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && close()}>
       <div className="modal-card modal-card--wide">
         <div className="modal-head">
           <h3>
             <span className="modal-abbr" style={{ fontSize: 18 }}>{title}</span>
             {sub && <span className="modal-name">{sub}</span>}
           </h3>
-          <button className="icon-btn" onClick={onClose} aria-label="닫기">✕</button>
+          <button className="icon-btn" onClick={close} aria-label="닫기">✕</button>
         </div>
         {children}
       </div>
