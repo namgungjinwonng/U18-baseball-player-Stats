@@ -231,12 +231,14 @@ function computePlayerIdx(
   return { players, tournaments };
 }
 
-// 전 시즌 strength.json 재계산 — 수집 파이프라인(index.ts)이 집계 직후 호출한다.
+// 기본 단독 실행은 전 시즌, 수집 파이프라인은 전달받은 실행 연도만 재계산한다.
 // records/players.json 과 개별 선수 파일(gameLog)이 이미 갱신된 상태를 전제.
-export function buildStrength(dataDir: string = DEFAULT_DATA_DIR): void {
+export function buildStrength(dataDir: string = DEFAULT_DATA_DIR, targetYears?: Iterable<number>): void {
   const bySeason = groupBySeason(readGames(dataDir));
+  const targets = targetYears ? new Set(targetYears) : null;
 
   for (const [year, games] of bySeason) {
+    if (targets && !targets.has(year)) continue;
     const normalize = buildTeamNormalizer(readRoster(dataDir, year));
     const recFp = path.join(dataDir, String(year), "records", "players.json");
     if (!fs.existsSync(recFp)) continue;

@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND } from "./koreaBaseball.js";
+import { collectionYear } from "./collectionYear.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
@@ -166,9 +167,7 @@ export function mergeRosterHistory(dataDir: string, current: Roster, season?: nu
 }
 
 async function main() {
-  const season = process.env.YEAR
-    ? parseInt(process.env.YEAR, 10)
-    : new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
+  const season = collectionYear();
   const limit = process.env.TEAM_LIMIT ? parseInt(process.env.TEAM_LIMIT, 10) : Infinity;
   const teams = await fetchTeams(KIND.U18, season);
   console.log(`팀 ${teams.length}개 발견. 로스터 수집…`);

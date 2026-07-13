@@ -15,7 +15,7 @@
     "strength": "tsx src/strength.ts",
     "career-index": "tsx src/syncCareerIndex.ts",
     "fill-from-ref": "tsx src/fillFromReference.ts",
-    "test": "tsx src/accumulate.test.ts && tsx src/fetchGames.test.ts",
+    "test": "tsx src/accumulate.test.ts && tsx src/fetchGames.test.ts && tsx src/collectionYear.test.ts",
     "validate-data": "tsx src/validateData.ts"
   },
   "dependencies": {

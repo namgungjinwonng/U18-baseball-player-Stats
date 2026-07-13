@@ -43,6 +43,12 @@ jobs:
         working-directory: scraper
         run: npm ci
 
+      # 로스터·선수현황과 재집계도 실행 시점 KST 연도만 갱신한다.
+      - name: Set collection year (KST)
+        run: |
+          echo "YEAR=$(TZ=Asia/Seoul date +%Y)" >> "$GITHUB_ENV"
+          echo "수집 연도: $(TZ=Asia/Seoul date +%Y)"
+
       - name: Refresh rosters (학년/person_no/지역/club_idx)
         working-directory: scraper
         run: npm run roster

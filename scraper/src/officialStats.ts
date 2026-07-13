@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND } from "./koreaBaseball.js";
 import { lookupRoster, readRoster } from "./accumulate.js";
+import { collectionYear } from "./collectionYear.js";
 import type { BattingStats, GameBoxScore, PitchingStats } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -188,9 +189,7 @@ export async function collectOfficial(
 }
 
 async function main() {
-  const year = process.env.YEAR
-    ? parseInt(process.env.YEAR, 10)
-    : new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
+  const year = collectionYear();
   const official = await collectOfficial(DATA_DIR, year);
   const fp = path.join(DATA_DIR, String(year), "official.json");
   fs.mkdirSync(path.dirname(fp), { recursive: true });

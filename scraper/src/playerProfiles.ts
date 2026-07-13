@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { BASE } from "./koreaBaseball.js";
 import { readRoster, type Roster, type RosterEntry } from "./accumulate.js";
 import { mergeRosterHistory } from "./roster.js";
+import { collectionYear } from "./collectionYear.js";
 import type { PlayerProfile, SchoolHistoryEntry, AwardEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -205,7 +206,8 @@ export function existingProfileIds(dataDir: string): Set<string> {
 // 전체 수집 모드: 로스터의 모든 personNo (시즌 등록 선수 전체) 대상.
 // SKIP_EXISTING=1 이면 이미 수집된 프로필은 건너뜀(중단 후 이어받기).
 async function main() {
-  const roster = readRoster(DATA_DIR);
+  const season = collectionYear();
+  const roster = readRoster(DATA_DIR, season);
   const personNos = new Set<string>();
   for (const arr of Object.values(roster)) for (const e of arr) if (e.personNo) personNos.add(e.personNo);
   let list = [...personNos];
@@ -215,11 +217,7 @@ async function main() {
     console.log(`이어받기: 기존 ${have.size}명 스킵, 남은 ${list.length}명`);
   }
   if (process.env.PROFILE_LIMIT) list = list.slice(0, parseInt(process.env.PROFILE_LIMIT, 10));
-  const yearsFp = path.join(DATA_DIR, "years.json");
-  const seasons: number[] = fs.existsSync(yearsFp)
-    ? (JSON.parse(fs.readFileSync(yearsFp, "utf8")) as number[])
-    : [new Date().getFullYear()];
-  await collectProfiles(DATA_DIR, list, seasons);
+  await collectProfiles(DATA_DIR, list, [season]);
 }
 
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("playerProfiles.ts")) {

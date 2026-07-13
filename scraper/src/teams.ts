@@ -8,14 +8,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND } from "./koreaBaseball.js";
+import { collectionYear } from "./collectionYear.js";
 import type { TeamPlayerEntry, TeamRosterEntry, TeamStaffEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
-
-// 시즌 = 실행 시점의 KST 연도 (fetch_u18_rosters.py 와 동일 기준)
-export const kstYear = (): number =>
-  new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
 
 // 주석 제거: 정규식 캡처 구간이 주석 중간에서 잘리면 "-->"/"<!--" 파편이 남으므로 함께 제거.
 const stripComments = (s: string) =>
@@ -235,7 +232,7 @@ export async function collectTeams(dataDir: string, season: number): Promise<Tea
 
 // 직접 실행 시에만 main (collectTeams 는 다른 모듈에서 재사용 가능).
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("teams.ts")) {
-  const year = process.env.YEAR ? parseInt(process.env.YEAR, 10) : kstYear();
+  const year = collectionYear();
   collectTeams(DATA_DIR, year).catch((e) => {
     console.error(e);
     process.exit(1);

@@ -1,6 +1,6 @@
 # U18 야구 선수 기록 조회 서비스
 
-아마추어(U18/고교 등) 야구 선수의 기록을 **이름으로 조회**하고, **타자 vs 투수 상대전적**까지 확인하는 웹 서비스입니다. 데이터는 대한야구소프트볼협회(KBSA, `korea-baseball.com`)의 경기 상세에서 수집하며 **2026 시즌부터 누적**합니다.
+아마추어(U18/고교 등) 야구 선수의 기록을 **이름으로 조회**하고, **타자 vs 투수 상대전적**까지 확인하는 웹 서비스입니다. 데이터는 대한야구소프트볼협회(KBSA, `korea-baseball.com`)의 경기 상세에서 수집하며 **2024 시즌부터 누적**합니다.
 
 ## 구조
 
@@ -18,14 +18,16 @@
 ### 다년도 개발 브랜치 검증
 
 이 개발 복제본은 기존 `data/{year}/` 구조와 `data/years.json`을 그대로 사용합니다.
-종료된 시즌은 `YEAR`를 지정해 백필하며, 지정하지 않으면 KST 기준 현재 연도를 수집합니다.
+2024·2025는 불변 아카이브이며 운영 수집은 KST 실행 시점의 연도만 대상으로 합니다.
+`YEAR`를 생략하거나 현재 연도와 같은 값만 사용할 수 있으며 과거 연도 지정은 즉시 실패합니다.
 
 ```powershell
 cd scraper
-$env:YEAR='2025'; npm run roster
-$env:YEAR='2025'; npm run teams
-$env:YEAR='2025'; $env:SCHEDULE_FULL='1'; npm run schedule
-$env:YEAR='2025'; npm run scrape
+npm run roster
+npm run teams
+$env:SCHEDULE_FULL='1'; npm run schedule
+Remove-Item Env:SCHEDULE_FULL
+npm run scrape
 npm test
 npm run validate-data
 ```
@@ -33,7 +35,6 @@ npm run validate-data
 KBSA 저부하 수집 예시:
 
 ```powershell
-$env:YEAR='2024'
 $env:KBSA_DELAY_MS='750'
 $env:KBSA_OFFICIAL_CONCURRENCY='1'
 $env:KBSA_PROFILE_CONCURRENCY='1'
@@ -41,6 +42,9 @@ $env:KBSA_PROFILE_DELAY_MS='750'
 $env:KBSA_TIMEOUT_MS='20000'
 npm run scrape
 ```
+
+증분·전체 수집 모두 현재 연도만 재집계합니다. `data/2024/`, `data/2025/`와 같은
+종료 시즌 폴더는 읽기 전용 아카이브로 유지되며 strength·averages·대회별 파일도 다시 쓰지 않습니다.
 
 공식기록은 50명마다 `official.partial.json` 체크포인트를 기록합니다. 중단되거나
 요청 타임아웃이 발생해도 다음 실행에서 완료된 선수는 건너뛰고 이어받습니다.

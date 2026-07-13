@@ -13,20 +13,20 @@ import {
   writeYear, writeYearsIndex,
 } from "./accumulate.js";
 import {
-  DEFAULT_MONTHS, emptyGameIds, emptyGameMonths, existingGameIds, incrementalMonths, isInSeason, listGameRefs,
+  emptyGameIds, emptyGameMonths, existingGameIds, incrementalMonths, isInSeason, listGameRefs,
 } from "./fetchGames.js";
 import { parseRecordDetail } from "./parseRecord.js";
 import { collectOfficial } from "./officialStats.js";
 import { collectProfiles, existingProfileIds } from "./playerProfiles.js";
 import { computeLeagueRates } from "./leagueAverages.js";
 import { buildStrength } from "./strength.js";
+import { collectionYear, collectionYears } from "./collectionYear.js";
 import type { GameBoxScore, LeagueAverages, Meta } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
 const SOURCE = "korea-baseball.com (KBSA)";
-const kstYear = () => new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
-const TARGET_YEAR = process.env.YEAR ? parseInt(process.env.YEAR, 10) : kstYear();
+const TARGET_YEAR = collectionYear();
 
 // 시합/대회명 → 파일시스템/URL 호환 슬러그(한글 유지).
 function tournamentSlug(title: string): string {
@@ -98,19 +98,18 @@ async function collectNewGames(): Promise<string[]> {
     // 증분: env 미지정 시 마지막 수집 경기의 월부터만 스캔(시간 절약).
     // 단, 최근 3일치(오늘·어제·그제) 캘린더 월은 항상 포함해 진행 중 경기를 따라잡는다.
     // (참고: U-18 Baseball/fetch_u18_schedule.py main_incremental — 최근 N일 무조건 재수집)
-    const historical = TARGET_YEAR !== kstYear();
-    const baseMonths = MONTHS ?? (historical ? DEFAULT_MONTHS : incrementalMonths(DATA_DIR, TARGET_YEAR));
+    const baseMonths = MONTHS ?? incrementalMonths(DATA_DIR, TARGET_YEAR);
     // MONTHS=0 = 재집계 전용(캘린더/박스 호출 스킵).
     if (MONTHS && MONTHS.length === 1 && MONTHS[0] === 0) {
       console.log("MONTHS=0 → 캘린더 스캔 스킵 (재집계 전용 모드)");
       return [];
     }
-    const todayISO = historical ? `${TARGET_YEAR}-12-31` : new Date().toISOString().slice(0, 10);
+    const todayISO = new Date().toISOString().slice(0, 10);
     const recentMonth = parseInt(todayISO.slice(5, 7), 10);
     // 증분 스캔 월 = base + 오늘 월 + 빈 경기가 있는 월(이전 달의 미수집 보강).
     const months = [...new Set([
       ...baseMonths,
-      ...(historical ? [] : [recentMonth]),
+      recentMonth,
       ...emptyGameMonths(DATA_DIR, TARGET_YEAR),
     ])]
       .sort((a, b) => a - b);
@@ -235,8 +234,13 @@ async function main() {
   // 시즌별 누적 집계 → data/{year}/ 에 기록 (연도 선택용).
   const bySeason = groupBySeason(games);
   const years = [...bySeason.keys()].sort((a, b) => b - a);
-  // 신규 경기 선수 공식기록 증분 수집(있을 때만, 시즌별)
-  for (const year of years) {
+  const yearsToUpdate = collectionYears(years, TARGET_YEAR);
+  if (yearsToUpdate.length === 0) {
+    console.log(`실행 연도 ${TARGET_YEAR} 경기 데이터가 없어 집계를 건너뜁니다. 과거 시즌은 변경하지 않습니다.`);
+    return;
+  }
+  // 신규 경기 선수 공식기록 증분 수집 — 실행 시점 KST 연도만.
+  for (const year of yearsToUpdate) {
     const yearGameIds = new Set(bySeason.get(year)!.map((g) => `${g.id}.json`));
     const yearNew = newGameFiles.filter((f) => yearGameIds.has(f));
     await updateOfficialFor(year, yearNew);
@@ -248,7 +252,8 @@ async function main() {
     await updateProfilesFor(bySeason.get(TARGET_YEAR) ?? [], newGameFiles, [TARGET_YEAR]);
   }
   let latest: Meta | undefined;
-  for (const year of years) {
+  // 종료 시즌(2024·2025)은 아카이브로 유지하고 실행 연도만 재집계한다.
+  for (const year of yearsToUpdate) {
     // 공식기록 오버레이(있으면): data/{year}/official.json
     const offFp = path.join(DATA_DIR, String(year), "official.json");
     const official = fs.existsSync(offFp)
@@ -350,8 +355,8 @@ async function main() {
   }
   if (latest) writeYearsIndex(DATA_DIR, years, latest);
   // 상대 강도 지수(가중치 랭킹용) — records/개별 선수 파일 갱신 후 매 수집마다 재계산.
-  buildStrength(DATA_DIR);
-  console.log(`✓ 연도 ${years.join(", ")} · 신규 ${newGameFiles.length}경기`);
+  buildStrength(DATA_DIR, [TARGET_YEAR]);
+  console.log(`✓ 실행 연도 ${TARGET_YEAR}만 집계 · 신규 ${newGameFiles.length}경기 · 아카이브 ${years.filter((year) => year !== TARGET_YEAR).join(", ")} 유지`);
 }
 
 main().catch((e) => {

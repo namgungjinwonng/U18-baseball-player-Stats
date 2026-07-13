@@ -11,7 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND } from "./koreaBaseball.js";
-import { kstYear } from "./teams.js";
+import { collectionYear } from "./collectionYear.js";
 import type { ScheduleData, ScheduleGame, ScheduleSide, TeamRosterEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -357,7 +357,7 @@ export async function collectSchedule(dataDir: string, year: number, full: boole
 
 // 직접 실행 시에만 main.
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("schedule.ts")) {
-  const year = process.env.YEAR ? parseInt(process.env.YEAR, 10) : kstYear();
+  const year = collectionYear();
   collectSchedule(DATA_DIR, year, process.env.SCHEDULE_FULL === "1").catch((e) => {
     console.error(e);
     process.exit(1);

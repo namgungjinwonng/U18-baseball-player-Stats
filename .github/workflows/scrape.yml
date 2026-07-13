@@ -43,6 +43,13 @@ jobs:
         working-directory: scraper
         run: npm ci
 
+      # 모든 증분 수집 명령에 실행 시점 KST 연도를 명시한다.
+      # scraper도 같은 값을 재검증하여 과거 아카이브 오수집을 차단한다.
+      - name: Set collection year (KST)
+        run: |
+          echo "YEAR=$(TZ=Asia/Seoul date +%Y)" >> "$GITHUB_ENV"
+          echo "수집 연도: $(TZ=Asia/Seoul date +%Y)"
+
       # 경기일정 페이지용 일정/결과 데이터 (data/{year}/schedule.json — 증분)
       - name: Refresh schedule (경기일정 — 증분)
         working-directory: scraper
