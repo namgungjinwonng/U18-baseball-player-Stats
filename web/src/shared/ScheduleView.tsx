@@ -491,7 +491,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
       <div className="tabs" style={{ marginBottom: 16 }}>
         <Chip active={view === "month"} onClick={() => setView("month")}>월별 일정</Chip>
         <Chip active={view === "team"} onClick={() => setView("team")}>학교</Chip>
-        <Chip active={view === "comp"} onClick={() => setView("comp")}>시합</Chip>
+        <Chip active={view === "comp"} onClick={() => setView("comp")}>대회</Chip>
       </div>
 
       {view === "month" && renderCalendar()}
@@ -561,7 +561,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
             </div>
           </div>
 
-          {!comp && <div className="state">위에서 시합을 선택하면 순위·경기가 표시됩니다.</div>}
+          {!comp && <div className="state">위에서 대회를 선택하면 순위·경기가 표시됩니다.</div>}
 
           {comp && standings && (
             <>

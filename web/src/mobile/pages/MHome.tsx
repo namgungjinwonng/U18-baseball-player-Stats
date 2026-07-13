@@ -54,7 +54,7 @@ export function MHome() {
         <div className="m-hero__inner">
           <h1 className="display-campaign">RECORDS THAT STACK UP</h1>
           <p className="m-hero__sub">
-            2026 시즌부터 누적되는 고교 야구 기록. 이름으로 조회하고 상대전적까지.
+            2024 시즌부터 누적되는 고교 야구 기록. 이름으로 조회하고 상대전적까지.
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Link to="/schedule">
@@ -89,7 +89,7 @@ export function MHome() {
           </p>
         )}
         <p className="caption-sm" style={{ marginBottom: 12 }}>
-          ※ {ctx.scope === "season" ? "전체 시즌" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} —{" "}
+          ※ {ctx.scope === "season" ? "대회 전체" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} —{" "}
           {describeQualify(ctx, "batting")}
         </p>
         <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />

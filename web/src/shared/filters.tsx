@@ -122,9 +122,9 @@ export function TournamentPicker({
           setPhase("");
           onChange(""); // 구분 바꾸면 leaf 해제 = 시즌 전체
         }}
-        aria-label="시합구분"
+        aria-label="대회구분"
       >
-        <option value="">전체 시즌</option>
+        <option value="">대회 전체</option>
         <option value="주말리그">주말리그</option>
         <option value="전국대회">전국대회</option>
       </select>

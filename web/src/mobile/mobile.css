@@ -124,6 +124,13 @@
 .m-topbar {
   padding: 0 12px;
 }
+@media (max-width: 400px) {
+  .m-topbar { padding: 0 8px; }
+  .m-topbar__inner, .m-topbar__group { gap: 4px; }
+  .m-topbar .brand { font-size: 18px; }
+  .m-topbar .icon-btn { width: 32px; height: 32px; min-width: 32px; }
+  .m-topbar .year-select { min-height: 34px; padding: 5px 7px; font-size: 12px; }
+}
 @media (min-width: 720px) {
   .m-topbar {
     padding: 0 24px;

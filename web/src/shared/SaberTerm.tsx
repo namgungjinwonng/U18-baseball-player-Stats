@@ -80,7 +80,7 @@ function LeagueAvgSection({ term }: { term: Term }) {
       <h4 className="modal-averages__title">{title}</h4>
       {term.avgNote && <p className="caption" style={{ margin: "0 0 6px" }}>{term.avgNote}</p>}
       <div className="modal-averages__row modal-averages__row--overall">
-        <span>전체 시즌</span>
+        <span>대회 전체</span>
         <b>{groups.overall}</b>
       </div>
       {groups.grades.length > 0 && (
@@ -107,7 +107,7 @@ function LeagueAvgSection({ term }: { term: Term }) {
       )}
       {groups.national.length > 0 && (
         <details className="modal-averages__group">
-          <summary>시합별 (전국대회 {groups.national.length}개)</summary>
+          <summary>대회별 (전국대회 {groups.national.length}개)</summary>
           {groups.national.map((g) => (
             <div className="modal-averages__row" key={g.label}>
               <span>{g.label}</span>

@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 const BASE = import.meta.env.BASE_URL;
+const SESSION_YEAR_KEY = "u18-selected-year";
 
 interface YearState {
   year: number;
@@ -19,8 +20,16 @@ export function YearProvider({ children }: { children: ReactNode }) {
       .then((r) => r.json())
       .then((ys: number[]) => {
         setYears(ys);
-        const saved = Number(localStorage.getItem("season"));
-        setYearState(saved && ys.includes(saved) ? saved : ys[0]);
+        const currentYear = new Date().getFullYear();
+        let savedYear = 0;
+        try {
+          savedYear = Number(sessionStorage.getItem(SESSION_YEAR_KEY));
+        } catch {
+          // 저장소가 차단된 환경에서는 현재 연도 기본값만 사용한다.
+        }
+        setYearState(
+          ys.includes(savedYear) ? savedYear : ys.includes(currentYear) ? currentYear : ys[0]
+        );
       })
       .catch(() => {
         setYears([2026]);
@@ -30,7 +39,11 @@ export function YearProvider({ children }: { children: ReactNode }) {
 
   const setYear = (y: number) => {
     setYearState(y);
-    localStorage.setItem("season", String(y));
+    try {
+      sessionStorage.setItem(SESSION_YEAR_KEY, String(y));
+    } catch {
+      // 저장소가 차단돼도 현재 화면의 연도 전환은 계속 동작한다.
+    }
   };
 
   if (!year) return null; // 연도 확정 전 렌더 보류

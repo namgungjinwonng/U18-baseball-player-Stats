@@ -27,7 +27,7 @@ export function HomePage() {
       <section className="hero">
         <div className="container">
           <p className="hero__sub" style={{ marginTop: 0 }}>
-            2026 시즌부터 누적되는 고교 야구 기록
+            2024 시즌부터 누적되는 고교 야구 기록
           </p>
           <h1 className="display-campaign">RECORDS THAT STACK UP</h1>
           <p className="hero__sub">
@@ -60,7 +60,7 @@ export function HomePage() {
           )}
         </div>
         <p className="caption-sm" style={{ marginTop: -8, marginBottom: 12 }}>
-          ※ {ctx.scope === "season" ? "전체 시즌" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} 기준 —{" "}
+          ※ {ctx.scope === "season" ? "대회 전체" : ctx.scope === "weekend" ? "주말리그" : "전국대회"} 기준 —{" "}
           {describeQualify(ctx, "batting")} · {describeQualify(ctx, "pitching")} 충족자만 비율 순위에 노출
         </p>
         {/* players 가 잠깐 null 이어도 FilterBar 는 mount 유지(시합 cascade state 보존) */}

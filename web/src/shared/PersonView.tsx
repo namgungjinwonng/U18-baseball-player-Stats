@@ -1,15 +1,32 @@
 // 무기록 선수 폴백 상세 (데스크탑/모바일 공용) — 경기 기록이 없는 등록 선수용.
 // 선수현황(teams.json) 항목 + 프로필(profiles/{personNo}.json)로 헤더/출신학교/수상내역을
 // 렌더하고, KBSA 선수 페이지 링크 버튼을 제공한다. (기록 보유 선수는 /player/:id 로 감)
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { usePlayerProfile, useTeams } from "./data";
+import { useEffect, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useCareerPlayers, usePlayerProfile, useTeams } from "./data";
 import { KbsaLink } from "./KbsaLink";
+import { useYear } from "./year";
 
 export function PersonView({ wrapClass }: { wrapClass: string }) {
   const { personNo } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { year } = useYear();
   const { data: teams, loading: teamsLoading } = useTeams();
   const { data: profile, loading: profileLoading } = usePlayerProfile(personNo);
+  const { data: careerSeasons, loading: careerLoading } = useCareerPlayers(profile?.careerYears);
+
+  useEffect(() => {
+    if (!personNo || profile?.personNo !== personNo || careerLoading || !careerSeasons) return;
+    if (!careerSeasons.every((season) => season.player.personNo === personNo)) return;
+    const target = careerSeasons.find((season) => season.year === year);
+    if (target) {
+      const params = new URLSearchParams(location.search);
+      params.delete("t");
+      const search = params.toString();
+      navigate(`/player/${target.player.id}${search ? `?${search}` : ""}`, { replace: true });
+    }
+  }, [careerLoading, careerSeasons, location.search, navigate, personNo, profile?.personNo, year]);
 
   // 선수현황에서 해당 personNo 항목 탐색 (소속/등번호/포지션/학년/신장·체중/투타)
   const entry = useMemo(() => {

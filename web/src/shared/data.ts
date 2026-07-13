@@ -29,11 +29,21 @@ function useDataRevision() {
   );
 }
 
+const jsonCache = new Map<string, Promise<unknown>>();
+
 async function getJSON<T>(rel: string): Promise<T> {
   const join = rel.includes("?") ? "&" : "?";
-  const res = await fetch(`${BASE}data/${rel}${join}v=${encodeURIComponent(dataRevision)}`);
-  if (!res.ok) throw new Error(`데이터 로드 실패: ${rel} (${res.status})`);
-  return (await res.json()) as T;
+  const url = `${BASE}data/${rel}${join}v=${encodeURIComponent(dataRevision)}`;
+  let pending = jsonCache.get(url);
+  if (!pending) {
+    pending = fetch(url).then(async (response) => {
+      if (!response.ok) throw new Error(`Data load failed: ${rel} (${response.status})`);
+      return response.json();
+    });
+    jsonCache.set(url, pending);
+    pending.catch(() => jsonCache.delete(url));
+  }
+  return pending as Promise<T>;
 }
 
 export interface AsyncState<T> {
@@ -105,8 +115,42 @@ export const usePlayerIndex = () => {
 export const usePlayer = (id: string | undefined) => {
   const { year } = useYear();
   return useAsync<Player>(
-    () => (id ? getJSON(`${year}/players/${id}.json`) : Promise.reject(new Error("선수 없음"))),
+    () => id ? getJSON<Player>(`${year}/players/${id}.json`) : Promise.reject(new Error("선수 없음")),
     [id, year]
+  );
+};
+
+export type CareerYears = Record<string, string>;
+export const useCareerPlayers = (careerYears: CareerYears | undefined) =>
+  useAsync<{ year: number; player: Player }[]>(
+    async () => {
+      if (!careerYears) return [];
+      const seasons = Object.entries(careerYears)
+        .map(([year, id]) => ({ year: Number(year), id }))
+        .sort((a, b) => a.year - b.year);
+      return Promise.all(
+        seasons.map(async ({ year, id }) => ({
+          year,
+          player: await getJSON<Player>(`${year}/players/${id}.json`),
+        }))
+      );
+    },
+    [careerYears]
+  );
+
+// 통산 비교용 연도별 리그 평균. 일부 연도 파일이 없어도 해당 연도만 null로 둔다.
+export const useCareerAverages = (years: number[]) => {
+  const yearKey = [...new Set(years)].sort((a, b) => a - b).join(",");
+  return useAsync<Record<number, LeagueAverages | null>>(
+    async () => Object.fromEntries(
+      await Promise.all(
+        (yearKey ? yearKey.split(",").map(Number) : []).map(async (year) => [
+          year,
+          await getJSON<LeagueAverages>(`${year}/averages.json`).catch(() => null),
+        ] as const)
+      )
+    ),
+    [yearKey]
   );
 };
 
@@ -114,7 +158,9 @@ export const usePlayer = (id: string | undefined) => {
 export const usePlayerMatchups = (id: string | undefined) => {
   const { year } = useYear();
   return useAsync<Matchup[]>(
-    () => (id ? getJSON<Matchup[]>(`${year}/matchups/${id}.json`).catch(() => []) : Promise.resolve([])),
+    () => id
+      ? getJSON<Player>(`${year}/players/${id}.json`).then((player) => player.matchups ?? [])
+      : Promise.resolve([]),
     [id, year]
   );
 };

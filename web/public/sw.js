@@ -1,6 +1,6 @@
 // 서비스 워커 — network-first(데이터 최신 우선), 오프라인 시 캐시 폴백.
 // u81-baseball 방식 참고.
-const CACHE = "u18-baseball-v3";
+const CACHE = "u18-baseball-v4"; // v4: 다년(2024·2025) 데이터 도입 + matchups 병합 재구성 — 구 캐시 일괄 정리
 
 self.addEventListener("install", () => self.skipWaiting());
 

@@ -85,6 +85,7 @@ export interface Player {
   season: number;
   batting?: BattingStats;
   pitching?: PitchingStats;
+  matchups?: Matchup[];
   gameLog?: GameLogEntry[]; // records/players.json 슬림본에는 생략됨
 }
 
@@ -127,6 +128,7 @@ export interface AwardEntry {
 }
 export interface PlayerProfile {
   personNo: string;    // KBSA 선수 고유번호
+  careerYears?: Record<string, string>; // 연도 → 해당 시즌 선수 ID
   name?: string;
   number?: string;     // 백넘버
   birth?: string;      // 생년월일 (예: 2008.01.19)

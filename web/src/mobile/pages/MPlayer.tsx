@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
-  useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
+  useCareerPlayers, useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
   useTournamentMatchups, useTournaments,
 } from "../../shared/data";
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
@@ -13,6 +13,8 @@ import { Fold } from "../../shared/Fold";
 import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
+import { CareerPanel } from "../../shared/CareerPanel";
+import { useYear } from "../../shared/year";
 import type { GameLogEntry, Matchup, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
 
 type TabId = "batting" | "pitching" | "schools" | "awards";
@@ -114,16 +116,33 @@ function MGameLogEntry({
 export function MPlayer() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { year } = useYear();
   const { data: p, loading, error } = usePlayer(id);
+  const { data: profile } = usePlayerProfile(p?.personNo);
+  const { data: careerSeasons, loading: careerLoading } = useCareerPlayers(profile?.careerYears);
   const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
   const { data: tournaments } = useTournaments();
-  const { data: profile } = usePlayerProfile(p?.personNo);
   const { data: averages } = useLeagueAverages();
   // 기록·랭킹 목록에서 시합 필터를 건 채 넘어오면 URL(?t=slug)로 그 필터를 이어받는다.
   const [tournamentSlug, setTournamentSlug] = useState(() => filterFromQuery(location.search).tournament);
+  const [recordMode, setRecordMode] = useState<"season" | "career">("season");
   const [tab, setTab] = useState<TabId | null>(null); // null = 자동(타자→투수)
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
+  useEffect(() => {
+    if (!p?.personNo || p.id !== id || careerLoading || !careerSeasons) return;
+    if (!careerSeasons.some((season) => season.player.personNo === p.personNo)) return;
+    const target = careerSeasons.find((season) => season.year === year);
+    const pathname = target ? `/player/${target.player.id}` : `/person/${p.personNo}`;
+    if (pathname !== location.pathname) {
+      const params = new URLSearchParams(location.search);
+      params.delete("t");
+      setTournamentSlug("");
+      const search = params.toString();
+      navigate(`${pathname}${search ? `?${search}` : ""}`, { replace: true });
+    }
+  }, [careerLoading, careerSeasons, location.pathname, location.search, navigate, p?.personNo, year]);
   const tournamentTitle = useMemo(
     () => tournaments?.find((t) => t.slug === tournamentSlug)?.title ?? "",
     [tournaments, tournamentSlug]
@@ -150,8 +169,10 @@ export function MPlayer() {
     return averages.overall;
   }, [averages, tournamentSlug]);
 
-  const hasBat = !!view?.batting;
-  const hasPit = !!view?.pitching;
+  const hasCareerBat = !!careerSeasons?.some((season) => season.player.batting);
+  const hasCareerPit = !!careerSeasons?.some((season) => season.player.pitching);
+  const hasBat = recordMode === "career" ? hasCareerBat : !!view?.batting;
+  const hasPit = recordMode === "career" ? hasCareerPit : !!view?.pitching;
   useEffect(() => {
     if (tab === "batting" && !hasBat) setTab(null);
     if (tab === "pitching" && !hasPit) setTab(null);
@@ -259,7 +280,12 @@ export function MPlayer() {
         </div>
       )}
 
-      <div className="filter-bar" style={{ marginBottom: 12 }}>
+      <div className="career-mode-toggle" role="group" aria-label="기록 범위">
+        <button className={recordMode === "season" ? "active" : ""} onClick={() => setRecordMode("season")}>{year} 시즌</button>
+        <button className={recordMode === "career" ? "active" : ""} onClick={() => { setRecordMode("career"); setTournamentSlug(""); }}>통산</button>
+      </div>
+
+      {recordMode === "season" && <div className="filter-bar" style={{ marginBottom: 12 }}>
         <div className="filter-bar__row filter-bar__row--tournament">
           <TournamentPicker
             value={tournamentSlug}
@@ -267,7 +293,7 @@ export function MPlayer() {
             availableSlugs={availableSlugs}
           />
         </div>
-      </div>
+      </div>}
 
       {/* 타자기록 / 투수기록 / 출신학교 / 수상내역 탭 (기록 탭은 해당 기록 보유 시에만) */}
       <div className="m-tabs" style={{ marginBottom: 12 }}>
@@ -277,7 +303,14 @@ export function MPlayer() {
         <Chip active={active === "awards"} onClick={() => setTab("awards")}>수상내역</Chip>
       </div>
 
-      {active === "batting" && v.batting && (() => {
+      {recordMode === "career" && active === "batting" && (
+        careerLoading ? <div className="state">통산 기록을 불러오는 중…</div> : <CareerPanel seasons={careerSeasons ?? []} kind="batting" />
+      )}
+      {recordMode === "career" && active === "pitching" && (
+        careerLoading ? <div className="state">통산 기록을 불러오는 중…</div> : <CareerPanel seasons={careerSeasons ?? []} kind="pitching" />
+      )}
+
+      {recordMode === "season" && active === "batting" && v.batting && (() => {
         // undefined 값은 "-" 로 통일 표기 (시합 필터 재집계 시 sh/sf/ibb/e 등은 측정 불가).
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = battingAdvanced(v.batting, lg);
@@ -325,7 +358,7 @@ export function MPlayer() {
         );
       })()}
 
-      {active === "pitching" && v.pitching && (() => {
+      {recordMode === "season" && active === "pitching" && v.pitching && (() => {
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = pitchingAdvanced(v.pitching, lg);
         return (
