@@ -62,6 +62,11 @@ function run() {
   assert.equal(m.ab, 6);
   assert.equal(m.h, 2);
   assert.equal(m.avg, 0.333);
+  const storedBatter = JSON.parse(
+    fs.readFileSync(path.join(dir, "players", `${B}.json`), "utf8")
+  ) as { matchups?: unknown[] };
+  assert.equal(storedBatter.matchups?.length, 1, "player JSON must embed matchups");
+  assert.equal(fs.existsSync(path.join(dir, "matchups")), false, "separate matchup directory must not remain");
   assert.equal(m.batterName, "김타자");
 
   fs.rmSync(dir, { recursive: true, force: true });
@@ -177,7 +182,7 @@ function runSuspendedGame() {
 // lastUpdated(시각) 필드를 제외한 스냅샷
 function snapshot(dir: string): string {
   const files = [
-    "players/index.json", `matchups/${B}.json`,
+    "players/index.json",
     `players/${B}.json`, `players/${P}.json`,
   ];
   return files

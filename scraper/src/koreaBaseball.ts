@@ -36,12 +36,13 @@ export interface GameRef {
 }
 
 export async function fetchGameRefs(
+  year: number,
   months: number[],
   kindCd: number = KIND.U18
 ): Promise<GameRef[]> {
   const refs: GameRef[] = [];
   for (const month of months) {
-    const html = await get(`${BASE}/game/calendar?kind_cd=${kindCd}&month=${month}`);
+    const html = await get(`${BASE}/game/calendar?kind_cd=${kindCd}&month=${month}&year=${year}`);
     for (const m of html.matchAll(
       /<li date="(\d{4}):(\d{2}):(\d{2})[^"]*">([\s\S]*?)<\/li>/gi
     )) {
@@ -273,8 +274,12 @@ function splitName(raw: string): { name: string; num: string } {
 const n = (s: string | undefined) => parseInt((s ?? "").replace(/[^\d-]/g, ""), 10) || 0;
 
 async function get(url: string): Promise<string> {
+  const timeout = process.env.KBSA_TIMEOUT_MS
+    ? Math.max(5000, parseInt(process.env.KBSA_TIMEOUT_MS, 10))
+    : 20000;
   const res = await fetch(url, {
     headers: { "User-Agent": "Mozilla/5.0 (U18-baseball data sync)" },
+    signal: AbortSignal.timeout(timeout),
   });
   if (!res.ok) throw new Error(`GET ${url} → ${res.status}`);
   return res.text();

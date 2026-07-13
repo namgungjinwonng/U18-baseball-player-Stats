@@ -6,17 +6,15 @@ import { fetchGameRefs, KIND, type GameRef } from "./koreaBaseball.js";
 
 export type { GameRef };
 
-const SEASON_START = "2026-01-01";
-
 // 기본: 3~12월 (빈 달은 자동으로 0건). 환경에 따라 조정 가능.
-const DEFAULT_MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+export const DEFAULT_MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export async function listGameRefs(
-  _season = 2026,
+  season: number,
   months: number[] = DEFAULT_MONTHS
 ): Promise<GameRef[]> {
-  const refs = await fetchGameRefs(months, KIND.U18);
-  return refs.filter((r) => isAfterSeasonStart(r.date));
+  const refs = await fetchGameRefs(season, months, KIND.U18);
+  return refs.filter((r) => isInSeason(r.date, season));
 }
 
 // 이미 수집(커밋)된 경기 ID 집합 → 신규만 추리는 데 사용(멱등 수집).
@@ -53,22 +51,23 @@ export function emptyGameIds(dataDir: string): Set<string> {
   return new Set(readEmptyGames(dataDir).map((g) => g.id));
 }
 // 빈 경기들이 속한 '월' 집합 → 증분 스캔 시 해당 월을 포함해야 재수집된다.
-export function emptyGameMonths(dataDir: string): number[] {
+export function emptyGameMonths(dataDir: string, season?: number): number[] {
   const ms = new Set<number>();
   for (const g of readEmptyGames(dataDir)) {
+    if (season != null && !g.date.startsWith(`${season}-`)) continue;
     const m = parseInt(g.date.slice(5, 7), 10);
     if (m) ms.add(m);
   }
   return [...ms];
 }
 
-export function isAfterSeasonStart(date: string): boolean {
-  return date >= SEASON_START;
+export function isInSeason(date: string, season: number): boolean {
+  return date.startsWith(`${season}-`);
 }
 
 // 증분 수집: 이미 수집된 경기 중 가장 최근 날짜의 '월'부터 12월까지만 스캔.
 // (기존 갱신 시점 이전 달은 다시 훑지 않아 캘린더 요청/시간을 절약)
-export function incrementalMonths(dataDir: string): number[] {
+export function incrementalMonths(dataDir: string, season?: number): number[] {
   const dir = path.join(dataDir, "games");
   if (!fs.existsSync(dir)) return DEFAULT_MONTHS;
   let latest = "";
@@ -76,7 +75,7 @@ export function incrementalMonths(dataDir: string): number[] {
     if (!f.endsWith(".json")) continue;
     try {
       const g = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as { date?: string };
-      if (g.date && g.date > latest) latest = g.date;
+      if (g.date && (season == null || g.date.startsWith(`${season}-`)) && g.date > latest) latest = g.date;
     } catch {
       /* 무시 */
     }

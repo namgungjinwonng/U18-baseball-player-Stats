@@ -357,7 +357,8 @@ export async function collectSchedule(dataDir: string, year: number, full: boole
 
 // 직접 실행 시에만 main.
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("schedule.ts")) {
-  collectSchedule(DATA_DIR, kstYear(), process.env.SCHEDULE_FULL === "1").catch((e) => {
+  const year = process.env.YEAR ? parseInt(process.env.YEAR, 10) : kstYear();
+  collectSchedule(DATA_DIR, year, process.env.SCHEDULE_FULL === "1").catch((e) => {
     console.error(e);
     process.exit(1);
   });

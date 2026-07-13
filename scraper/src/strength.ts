@@ -28,6 +28,15 @@ function tournamentSlug(title: string): string {
   return s || "untitled";
 }
 
+function shardName(id: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < id.length; i++) {
+    hash ^= id.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return ((hash >>> 0) % 64).toString(16).padStart(2, "0");
+}
+
 const SHRINK_K = 6; // 지역 shrinkage 의 사전 가중(경기수 환산) — 팀 경기 6개 = 지역:팀 반반
 // 소프트 클램프: 1±CORE(0.85~1.15) 구간은 원값 유지, 초과분은 tanh 로 점진 압축해
 // 1±(CORE+TAIL) = 0.7~1.3 에 점근. 하드 클램프는 경계값(0.85/1.15)에 팀 30개가 눌려
@@ -171,12 +180,24 @@ function computePlayerIdx(
   const players: Record<string, PlayerOppIdx> = {};
   const tournaments: Record<string, Record<string, PlayerOppIdx>> = {};
   const pDir = path.join(dataDir, String(year), "players");
+  const shardCache = new Map<string, Record<string, Player>>();
   let missing = 0;
 
   for (const id of slimIds) {
-    const fp = path.join(pDir, `${id}.json`);
-    if (!fs.existsSync(fp)) { missing++; continue; }
-    const p = JSON.parse(fs.readFileSync(fp, "utf8")) as Player;
+    const legacyFp = path.join(pDir, `${id}.json`);
+    const shardFp = path.join(pDir, "shards", `${shardName(id)}.json`);
+    let p: Player | undefined;
+    if (fs.existsSync(shardFp)) {
+      let shard = shardCache.get(shardFp);
+      if (!shard) {
+        shard = JSON.parse(fs.readFileSync(shardFp, "utf8")) as Record<string, Player>;
+        shardCache.set(shardFp, shard);
+      }
+      p = shard[id];
+    } else if (fs.existsSync(legacyFp)) {
+      p = JSON.parse(fs.readFileSync(legacyFp, "utf8")) as Player;
+    }
+    if (!p) { missing++; continue; }
     if (!p.gameLog) continue;
     // scope key "" = 시즌 전체, 그 외 = tournament slug
     const scopes = new Map<string, { ob: WobaAcc; op: WobaAcc }>();
@@ -213,11 +234,10 @@ function computePlayerIdx(
 // 전 시즌 strength.json 재계산 — 수집 파이프라인(index.ts)이 집계 직후 호출한다.
 // records/players.json 과 개별 선수 파일(gameLog)이 이미 갱신된 상태를 전제.
 export function buildStrength(dataDir: string = DEFAULT_DATA_DIR): void {
-  const roster = readRoster(dataDir);
-  const normalize = buildTeamNormalizer(roster);
   const bySeason = groupBySeason(readGames(dataDir));
 
   for (const [year, games] of bySeason) {
+    const normalize = buildTeamNormalizer(readRoster(dataDir, year));
     const recFp = path.join(dataDir, String(year), "records", "players.json");
     if (!fs.existsSync(recFp)) continue;
     const slim = JSON.parse(fs.readFileSync(recFp, "utf8")) as Player[];

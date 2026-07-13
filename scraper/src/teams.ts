@@ -44,11 +44,11 @@ async function get(url: string): Promise<string> {
 interface TeamRef { clubIdx: string; name: string; region: string; manager: string }
 
 // 팀 목록(감독 포함) — team_list 페이지를 빈 페이지가 나올 때까지 순회.
-async function fetchTeams(): Promise<TeamRef[]> {
+async function fetchTeams(season: number): Promise<TeamRef[]> {
   const teams: TeamRef[] = [];
   const seen = new Set<string>();
   for (let page = 1; page <= 30; page++) {
-    const html = await get(`${BASE}/info/team/team_list?kind_cd=${KIND.U18}&page=${page}`);
+    const html = await get(`${BASE}/info/team/team_list?kind_cd=${KIND.U18}&season=${season}&page=${page}`);
     const chunks = html.split("team_player?club_idx=").slice(1);
     if (chunks.length === 0) break;
     let added = 0;
@@ -217,7 +217,7 @@ async function fetchAllRosters(teams: TeamRef[], season: number): Promise<TeamRo
 
 export async function collectTeams(dataDir: string, season: number): Promise<TeamRosterEntry[]> {
   console.log("[1/2] 팀 목록 수집 중…");
-  const teams = await fetchTeams();
+  const teams = await fetchTeams(season);
   if (!teams.length) throw new Error("팀을 찾을 수 없습니다");
   console.log(`  총 ${teams.length}개 팀 발견`);
 
@@ -235,7 +235,8 @@ export async function collectTeams(dataDir: string, season: number): Promise<Tea
 
 // 직접 실행 시에만 main (collectTeams 는 다른 모듈에서 재사용 가능).
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("teams.ts")) {
-  collectTeams(DATA_DIR, kstYear()).catch((e) => {
+  const year = process.env.YEAR ? parseInt(process.env.YEAR, 10) : kstYear();
+  collectTeams(DATA_DIR, year).catch((e) => {
     console.error(e);
     process.exit(1);
   });

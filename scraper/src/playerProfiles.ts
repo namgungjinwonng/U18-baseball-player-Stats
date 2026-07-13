@@ -23,7 +23,13 @@ const stripTags = (s: string) =>
   s.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&middot;/g, "·").replace(/\s+/g, " ").trim();
 
 async function get(url: string): Promise<string> {
-  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (U18 profile sync)" } });
+  const timeout = process.env.KBSA_TIMEOUT_MS
+    ? Math.max(5000, parseInt(process.env.KBSA_TIMEOUT_MS, 10))
+    : 20000;
+  const res = await fetch(url, {
+    headers: { "User-Agent": "Mozilla/5.0 (U18 profile sync)" },
+    signal: AbortSignal.timeout(timeout),
+  });
   if (!res.ok) throw new Error(`GET ${url} → ${res.status}`);
   return res.text();
 }
@@ -144,15 +150,26 @@ export async function collectProfiles(
   const work = async (pn: string) => {
     try {
       const prof = await fetchProfile(pn);
-      fs.writeFileSync(path.join(dir, `${pn}.json`), JSON.stringify(prof));
+      const fp = path.join(dir, `${pn}.json`);
+      if (fs.existsSync(fp)) {
+        const existing = JSON.parse(fs.readFileSync(fp, "utf8")) as PlayerProfile;
+        if (existing.careerYears) prof.careerYears = existing.careerYears;
+      }
+      fs.writeFileSync(fp, JSON.stringify(prof));
       collected.push(prof);
       if (++doneCount % 200 === 0) console.log(`  …프로필 ${doneCount}/${targets.length}`);
     } catch {
       failed.push(pn);
     }
-    await new Promise((r) => setTimeout(r, 120 + Math.random() * 130)); // 요청 간격
+    const delay = process.env.KBSA_PROFILE_DELAY_MS
+      ? Math.max(250, parseInt(process.env.KBSA_PROFILE_DELAY_MS, 10))
+      : 500;
+    await new Promise((r) => setTimeout(r, delay + Math.random() * 200));
   };
-  await runPool(targets, work, 3);
+  const concurrency = process.env.KBSA_PROFILE_CONCURRENCY
+    ? Math.max(1, parseInt(process.env.KBSA_PROFILE_CONCURRENCY, 10))
+    : 2;
+  await runPool(targets, work, concurrency);
   for (let attempt = 1; attempt <= 8 && failed.length; attempt++) {
     const retry = failed.splice(0);
     const wait = Math.min(15000 * 2 ** (attempt - 1), 120000);
@@ -167,8 +184,11 @@ export async function collectProfiles(
   const all: PlayerProfile[] = fs.readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as PlayerProfile);
-  const hist = historyFromProfiles(all, new Set(seasons));
-  const added = mergeRosterHistory(dataDir, hist);
+  let added = 0;
+  for (const season of seasons) {
+    const hist = historyFromProfiles(all, new Set([season]));
+    added += mergeRosterHistory(dataDir, hist, season);
+  }
   console.log(`✓ 프로필 ${collected.length}명 수집 (보유 ${all.length}) · 이력 신규 ${added}건 병합`);
   return collected.length;
 }

@@ -50,12 +50,13 @@ async function get(url: string): Promise<string> {
 }
 
 async function fetchTeams(
-  kindCd: number
+  kindCd: number,
+  season: number
 ): Promise<{ clubIdx: string; name: string; region: string }[]> {
   const teams: { clubIdx: string; name: string; region: string }[] = [];
   const seen = new Set<string>();
   for (let page = 1; page <= 30; page++) {
-    const html = await get(`${BASE}/info/team/team_list?kind_cd=${kindCd}&page=${page}`);
+    const html = await get(`${BASE}/info/team/team_list?kind_cd=${kindCd}&season=${season}&page=${page}`);
     // "team_player?club_idx=" 기준으로 팀 블록 분할 후 각 블록에서 추출
     const chunks = html.split("team_player?club_idx=").slice(1);
     if (chunks.length === 0) break;
@@ -83,9 +84,9 @@ function throwBat(t: string): { throws?: string; bats?: string } {
 }
 
 async function fetchTeamRoster(
-  clubIdx: string, teamName: string, region: string, roster: Roster
+  clubIdx: string, teamName: string, region: string, roster: Roster, season: number
 ): Promise<number> {
-  const html = await get(`${BASE}/info/team/team_player?club_idx=${clubIdx}&kind_cd=${KIND.U18}`);
+  const html = await get(`${BASE}/info/team/team_player?club_idx=${clubIdx}&season=${season}&kind_cd=${KIND.U18}`);
   // 선수 항목 단위로 파싱 (dl/dt/dd 구조)
   const items = [...html.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)].map((m) => m[1]);
   let count = 0;
@@ -143,8 +144,11 @@ async function fetchOfficialU18Count(): Promise<{ teams: number; players: number
 
 // 로스터 이력 병합: 현행 스냅샷의 (이름|번호, personNo, 팀) 항목을 누적 보존.
 // 이적 선수의 "옛 소속" 매핑이 남아 시즌 재집계 때 personNo 조인이 가능해진다.
-export function mergeRosterHistory(dataDir: string, current: Roster): number {
-  const fp = path.join(dataDir, "roster-history.json");
+export function mergeRosterHistory(dataDir: string, current: Roster, season?: number): number {
+  const fp = season == null
+    ? path.join(dataDir, "roster-history.json")
+    : path.join(dataDir, String(season), "roster-history.json");
+  fs.mkdirSync(path.dirname(fp), { recursive: true });
   const history: Roster = fs.existsSync(fp)
     ? (JSON.parse(fs.readFileSync(fp, "utf8")) as Roster)
     : {};
@@ -162,8 +166,11 @@ export function mergeRosterHistory(dataDir: string, current: Roster): number {
 }
 
 async function main() {
+  const season = process.env.YEAR
+    ? parseInt(process.env.YEAR, 10)
+    : new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
   const limit = process.env.TEAM_LIMIT ? parseInt(process.env.TEAM_LIMIT, 10) : Infinity;
-  const teams = await fetchTeams(KIND.U18);
+  const teams = await fetchTeams(KIND.U18, season);
   console.log(`팀 ${teams.length}개 발견. 로스터 수집…`);
   const roster: Roster = {};
   let done = 0;
@@ -175,7 +182,7 @@ async function main() {
       const t = targets[idx++];
       if (!t) return;
       try {
-        await fetchTeamRoster(t.clubIdx, t.name, t.region, roster);
+        await fetchTeamRoster(t.clubIdx, t.name, t.region, roster, season);
         done++;
         if (done % 20 === 0) console.log(`  …${done}팀 (${Object.keys(roster).length}명)`);
       } catch (e) {
@@ -185,16 +192,23 @@ async function main() {
   };
   await Promise.all(Array.from({ length: Math.min(3, targets.length) }, worker));
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(path.join(DATA_DIR, "roster.json"), JSON.stringify(roster, null, 2) + "\n");
+  const seasonDir = path.join(DATA_DIR, String(season));
+  fs.mkdirSync(seasonDir, { recursive: true });
+  fs.writeFileSync(path.join(seasonDir, "roster.json"), JSON.stringify(roster, null, 2) + "\n");
+  const currentYear = new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
+  if (season === currentYear) {
+    fs.writeFileSync(path.join(DATA_DIR, "roster.json"), JSON.stringify(roster, null, 2) + "\n");
+  }
   const total = Object.values(roster).reduce((n, arr) => n + arr.length, 0);
-  console.log(`✓ 로스터 ${total}명(키 ${Object.keys(roster).length}) → data/roster.json (${done}팀)`);
+  console.log(`✓ 로스터 ${total}명(키 ${Object.keys(roster).length}) → data/${season}/roster.json (${done}팀)`);
 
   // 이력 누적 (이적 선수 병합용)
-  const added = mergeRosterHistory(DATA_DIR, roster);
-  console.log(`✓ 로스터 이력 병합: 신규 항목 ${added}건 → data/roster-history.json`);
+  const added = mergeRosterHistory(DATA_DIR, roster, season);
+  if (season === currentYear) mergeRosterHistory(DATA_DIR, roster);
+  console.log(`✓ 로스터 이력 병합: 신규 항목 ${added}건 → data/${season}/roster-history.json`);
 
   // 공식 선수등록현황과 대조
-  const off = await fetchOfficialU18Count();
+  const off = season === currentYear ? await fetchOfficialU18Count() : null;
   if (off) {
     const dTeam = done - off.teams, dPl = total - off.players;
     if (dTeam === 0 && Math.abs(dPl) <= off.players * 0.01) {

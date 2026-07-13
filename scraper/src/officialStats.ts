@@ -21,7 +21,13 @@ const ipToOuts = (ip: number) => {
 };
 
 async function get(url: string): Promise<string> {
-  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (U18 official sync)" } });
+  const timeout = process.env.KBSA_TIMEOUT_MS
+    ? Math.max(5000, parseInt(process.env.KBSA_TIMEOUT_MS, 10))
+    : 20000;
+  const res = await fetch(url, {
+    headers: { "User-Agent": "Mozilla/5.0 (U18 official sync)" },
+    signal: AbortSignal.timeout(timeout),
+  });
   if (!res.ok) throw new Error(`${res.status}`);
   return res.text();
 }
@@ -111,7 +117,7 @@ export async function collectOfficial(
   // 특정 경기 파일만 대상으로 제한(증분). 미지정 시 전체 게임.
   onlyGameFiles?: string[]
 ): Promise<Record<string, OfficialRecord>> {
-  const roster = readRoster(dataDir);
+  const roster = readRoster(dataDir, year);
   // 게임에 등장한 (이름,등번호) → 타격/투구 여부
   const gamesDir = path.join(dataDir, "games");
   const need = new Map<string, Job>(); // personNo → job
@@ -132,10 +138,15 @@ export async function collectOfficial(
       for (const p of g.pitchers) mark(p.name, p.playerId, "pit", p.team);
     }
   }
-  const jobs = [...need.values()];
-  console.log(`공식기록 수집 대상 ${jobs.length}명…`);
+  const partialFp = path.join(dataDir, String(year), "official.partial.json");
+  fs.mkdirSync(path.dirname(partialFp), { recursive: true });
+  const out: Record<string, OfficialRecord> = fs.existsSync(partialFp)
+    ? (JSON.parse(fs.readFileSync(partialFp, "utf8")) as Record<string, OfficialRecord>)
+    : {};
+  const jobs = [...need.values()].filter((job) => !out[job.personNo]);
+  console.log(`공식기록 수집 대상 ${jobs.length}명 (체크포인트 ${Object.keys(out).length}명)…`);
 
-  const out: Record<string, OfficialRecord> = {};
+  let savedSinceCheckpoint = 0;
   const failed: Job[] = [];
   const work = async (job: Job) => {
     try {
@@ -143,28 +154,43 @@ export async function collectOfficial(
       if (job.bat) rec.batting = (await fetchOfficial(job.clubIdx, job.personNo, 1, year)) as BattingStats;
       if (job.pit) rec.pitching = (await fetchOfficial(job.clubIdx, job.personNo, 2, year)) as PitchingStats;
       out[job.personNo] = rec;
+      savedSinceCheckpoint++;
+      if (savedSinceCheckpoint >= 50) {
+        fs.writeFileSync(partialFp, JSON.stringify(out));
+        savedSinceCheckpoint = 0;
+      }
     } catch {
       failed.push(job);
     }
   };
-  await runPool(jobs, work, 6);
+  const concurrency = process.env.KBSA_OFFICIAL_CONCURRENCY
+    ? Math.max(1, parseInt(process.env.KBSA_OFFICIAL_CONCURRENCY, 10))
+    : 2;
+  await runPool(jobs, work, concurrency);
 
   // 누락 재시도 (지수 백오프, 후반 동시성↓)
   for (let attempt = 1; attempt <= 8 && failed.length; attempt++) {
     const retry = failed.splice(0);
     const wait = Math.min(5000 * 2 ** (attempt - 1), 40000);
-    const workers = attempt >= 4 ? 1 : 3;
+    const workers = attempt >= 3 ? 1 : Math.min(2, concurrency);
     console.log(`  [재시도 ${attempt}] 누락 ${retry.length}명, ${wait / 1000}s 대기 (worker=${workers})`);
     await new Promise((r) => setTimeout(r, wait));
     await runPool(retry, work, workers);
   }
-  if (failed.length) console.warn(`  ⚠ 최종 누락 ${failed.length}명`);
+  if (failed.length) {
+    fs.writeFileSync(partialFp, JSON.stringify(out));
+    console.warn(`  ⚠ 최종 누락 ${failed.length}명 (다음 실행에서 체크포인트 재개)`);
+  } else if (fs.existsSync(partialFp)) {
+    fs.rmSync(partialFp);
+  }
   console.log(`✓ 공식기록 ${Object.keys(out).length}명 수집`);
   return out;
 }
 
 async function main() {
-  const year = process.env.YEAR ? parseInt(process.env.YEAR, 10) : 2026;
+  const year = process.env.YEAR
+    ? parseInt(process.env.YEAR, 10)
+    : new Date(Date.now() + 9 * 3600 * 1000).getUTCFullYear();
   const official = await collectOfficial(DATA_DIR, year);
   const fp = path.join(DATA_DIR, String(year), "official.json");
   fs.mkdirSync(path.dirname(fp), { recursive: true });

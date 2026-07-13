@@ -15,6 +15,59 @@
 
 ## 개발
 
+### 다년도 개발 브랜치 검증
+
+이 개발 복제본은 기존 `data/{year}/` 구조와 `data/years.json`을 그대로 사용합니다.
+종료된 시즌은 `YEAR`를 지정해 백필하며, 지정하지 않으면 KST 기준 현재 연도를 수집합니다.
+
+```powershell
+cd scraper
+$env:YEAR='2025'; npm run roster
+$env:YEAR='2025'; npm run teams
+$env:YEAR='2025'; $env:SCHEDULE_FULL='1'; npm run schedule
+$env:YEAR='2025'; npm run scrape
+npm test
+npm run validate-data
+```
+
+KBSA 저부하 수집 예시:
+
+```powershell
+$env:YEAR='2024'
+$env:KBSA_DELAY_MS='750'
+$env:KBSA_OFFICIAL_CONCURRENCY='1'
+$env:KBSA_PROFILE_CONCURRENCY='1'
+$env:KBSA_PROFILE_DELAY_MS='750'
+$env:KBSA_TIMEOUT_MS='20000'
+npm run scrape
+```
+
+공식기록은 50명마다 `official.partial.json` 체크포인트를 기록합니다. 중단되거나
+요청 타임아웃이 발생해도 다음 실행에서 완료된 선수는 건너뛰고 이어받습니다.
+
+선수 상세의 상대전적은 별도 `matchups/{id}.json`이 아니라
+`data/{year}/players/{id}.json`의 `matchups` 필드에 포함됩니다. 앱의 선수 상세과
+상대전적 로더는 같은 URL 요청을 공유합니다.
+
+앱 확인:
+
+```powershell
+cd ..\web
+npm run dev -- --port 5174
+```
+
+브라우저에서 `http://localhost:5174`를 열고 시즌 선택기에서 2025를 선택합니다.
+
+### 선수 통산 모드
+
+- 전역 연도 선택기는 시즌만 유지합니다.
+- 모바일/데스크탑 선수 상세의 `시즌별 | 통산` 토글에서 통산 기록을 확인합니다.
+- `data/career-index.json`은 `personNo → {연도: 선수 ID}` 역인덱스이며 scraper 재집계 때 생성됩니다.
+- 통산 타율·OPS·ERA·WHIP는 시즌 비율 평균이 아니라 합산 원자료로 재계산합니다.
+- 연도별 미니바는 각 시즌 선수 JSON의 시즌 집계값을 그대로 사용합니다.
+- 연도마다 리그 환경이 다른 wRC+·WAR 같은 리그 대비 지표는 통산 화면에서 표시하지 않습니다.
+- 별도 차트 라이브러리는 사용하지 않고 인라인 SVG를 사용합니다.
+
 ```bash
 cd web
 npm install

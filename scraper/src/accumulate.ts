@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type {
   BattingStats, GameBoxScore, Matchup, Meta, PitchingStats, Player, PlayerIndexEntry,
+  PlayerProfile,
 } from "./types.js";
 
 // --- 이닝/아웃 변환 ---
@@ -37,8 +38,10 @@ export interface RosterEntry {
 // 키: `${이름}|${등번호}` → 항목 배열(다른 학교 동명·동번호 충돌 보존).
 export type Roster = Record<string, RosterEntry[]>;
 
-export function readRoster(dataDir: string): Roster {
-  const fp = path.join(dataDir, "roster.json");
+export function readRoster(dataDir: string, year?: number): Roster {
+  const scoped = year == null ? "" : path.join(String(year), "roster.json");
+  const scopedFp = scoped ? path.join(dataDir, scoped) : "";
+  const fp = scopedFp && fs.existsSync(scopedFp) ? scopedFp : path.join(dataDir, "roster.json");
   if (!fs.existsSync(fp)) return {};
   const raw = JSON.parse(fs.readFileSync(fp, "utf8")) as Record<string, RosterEntry | RosterEntry[]>;
   // 구버전(단일 객체) 호환: 배열로 정규화.
@@ -50,8 +53,13 @@ export function readRoster(dataDir: string): Roster {
 // 로스터 이력(과거 스냅샷 + 선수 프로필의 연도별 출신학교 누적).
 // 이적 선수의 "옛 소속" 박스스코어 라인을 personNo 로 조인하기 위한 보조 소스.
 // roster.json 과 동일 스키마(키 `이름|번호`, 번호 미상은 `이름|`).
-export function readRosterHistory(dataDir: string): Roster {
-  const fp = path.join(dataDir, "roster-history.json");
+export function readRosterHistory(dataDir: string, year?: number): Roster {
+  const scopedFp = year == null ? "" : path.join(dataDir, String(year), "roster-history.json");
+  const fp = scopedFp && fs.existsSync(scopedFp)
+    ? scopedFp
+    : year == null
+      ? path.join(dataDir, "roster-history.json")
+      : "";
   if (!fs.existsSync(fp)) return {};
   const raw = JSON.parse(fs.readFileSync(fp, "utf8")) as Record<string, RosterEntry | RosterEntry[]>;
   const out: Roster = {};
@@ -71,9 +79,9 @@ export function lookupRoster(
 ): RosterEntry | undefined {
   const arr = roster[`${name}|${number}`];
   if (!arr || arr.length === 0) return undefined;
-  if (arr.length === 1) return teamMatches(arr[0].team, boxTeam) ? arr[0] : undefined;
+  if (arr.length === 1) return arr[0];
   // 다중 후보(동명·동번호 다른 학교): 팀명 일치하는 항목만.
-  const matched = arr.filter((e) => e.team && (e.team.startsWith(boxTeam) || boxTeam.startsWith(e.team)));
+  const matched = arr.filter((e) => teamMatches(e.team, boxTeam));
   return matched.length === 1 ? matched[0] : undefined;
 }
 
@@ -629,8 +637,6 @@ function writeAgg(baseDir: string, agg: Aggregated): void {
     "records/players.json",
     agg.players.map(({ gameLog: _gl, ...rest }) => rest)
   );
-  for (const p of agg.players) w(`players/${p.id}.json`, p);
-
   // 상대전적 선수별 샤드(모바일 로딩 최적화): 6MB 단일 파일 대신 선수당 수KB.
   // 한 매치업은 타자/투수 양쪽 샤드에 포함된다.
   const byPlayer = new Map<string, Matchup[]>();
@@ -641,7 +647,9 @@ function writeAgg(baseDir: string, agg: Aggregated): void {
       byPlayer.set(pid, arr);
     }
   }
-  for (const [pid, ms] of byPlayer) w(`matchups/${pid}.json`, ms);
+  for (const p of agg.players) {
+    w(`players/${p.id}.json`, { ...p, matchups: byPlayer.get(p.id) ?? [] });
+  }
 }
 
 // 단일 디렉터리(루트)에 기록 — 테스트/단순용.
@@ -659,6 +667,42 @@ export function writeYearsIndex(dataDir: string, years: number[], latestMeta: Me
   const sorted = [...years].sort((a, b) => b - a);
   fs.writeFileSync(path.join(dataDir, "years.json"), JSON.stringify(sorted, null, 2) + "\n");
   fs.writeFileSync(path.join(dataDir, "meta.json"), JSON.stringify(latestMeta, null, 2) + "\n");
+  const career: Record<string, Record<string, string>> = {};
+  const playerNames: Record<string, string> = {};
+  for (const year of sorted) {
+    const fp = path.join(dataDir, String(year), "players", "index.json");
+    if (!fs.existsSync(fp)) continue;
+    const index = JSON.parse(fs.readFileSync(fp, "utf8")) as PlayerIndexEntry[];
+    for (const player of index) {
+      if (!player.personNo) continue;
+      (career[player.personNo] ??= {})[String(year)] = player.id;
+      playerNames[player.personNo] ??= player.name;
+    }
+  }
+  fs.writeFileSync(path.join(dataDir, "career-index.json"), JSON.stringify(career));
+
+  // 런타임에서는 전체 career-index를 받지 않도록 personNo별 공용 프로필에 매핑을 넣는다.
+  // 프로필이 누락된 기록 선수도 연도 전환이 끊기지 않도록 최소 프로필을 생성한다.
+  const profilesDir = path.join(dataDir, "profiles");
+  fs.mkdirSync(profilesDir, { recursive: true });
+  let updatedProfiles = 0;
+  for (const [personNo, careerYears] of Object.entries(career)) {
+    const fp = path.join(profilesDir, `${personNo}.json`);
+    const profile: PlayerProfile = fs.existsSync(fp)
+      ? JSON.parse(fs.readFileSync(fp, "utf8")) as PlayerProfile
+      : {
+          personNo,
+          name: playerNames[personNo],
+          schools: [],
+          awards: [],
+          updatedAt: latestMeta.lastUpdated,
+        };
+    if (JSON.stringify(profile.careerYears) === JSON.stringify(careerYears)) continue;
+    profile.careerYears = careerYears;
+    fs.writeFileSync(fp, JSON.stringify(profile));
+    updatedProfiles++;
+  }
+  console.log(`✓ 통산 연도 매핑: ${Object.keys(career).length}명 · 프로필 ${updatedProfiles}건 갱신`);
 }
 
 // 경기들을 시즌별로 그룹.
