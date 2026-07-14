@@ -9,7 +9,7 @@ import { kbsaPlayerUrl } from "./kbsa";
 import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
-import type { TeamPlayerEntry } from "./types";
+import type { TeamPlayerEntry, TeamStaffEntry } from "./types";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
 const getPos = (p: TeamPlayerEntry) => p.position || "미지정";
@@ -107,6 +107,60 @@ function PlayerTable({
   );
 }
 
+const PLAYER_ROWS_PER_PAGE = 5;
+
+function PagedPlayerTable({
+  rows, showTeam, onOpen,
+}: {
+  rows: TeamPlayerEntry[];
+  showTeam?: boolean;
+  onOpen: (p: TeamPlayerEntry) => void;
+}) {
+  const pages = Array.from(
+    { length: Math.ceil(rows.length / PLAYER_ROWS_PER_PAGE) },
+    (_, i) => rows.slice(i * PLAYER_ROWS_PER_PAGE, (i + 1) * PLAYER_ROWS_PER_PAGE)
+  );
+  return (
+    <PagedCardGrid perPage={1} layout="single" hint="← 옆으로 넘겨 다음 선수">
+      {pages.map((page, i) => (
+        <PlayerTable key={i} rows={page} showTeam={showTeam} onOpen={onOpen} />
+      ))}
+    </PagedCardGrid>
+  );
+}
+
+type StaffRow = TeamStaffEntry & { team: string };
+
+function PagedStaffTable({ rows }: { rows: StaffRow[] }) {
+  const pages = Array.from(
+    { length: Math.ceil(rows.length / PLAYER_ROWS_PER_PAGE) },
+    (_, i) => rows.slice(i * PLAYER_ROWS_PER_PAGE, (i + 1) * PLAYER_ROWS_PER_PAGE)
+  );
+  return (
+    <PagedCardGrid perPage={1} layout="single" hint="← 옆으로 넘겨 다음 지도자">
+      {pages.map((page, i) => (
+        <table className="tv-table tv-staff-table" key={i}>
+          <thead><tr><th>소속</th><th>역할</th><th>이름</th></tr></thead>
+          <tbody>
+            {page.map((s, j) => (
+              <tr key={`${s.person_no || s.name}-${j}`}>
+                <td>{s.team}</td><td>{s.role || "지도자"}</td>
+                <td className="tv-name">
+                  {s.person_no ? (
+                    <a href={kbsaPlayerUrl(s.person_no, "T")} target="_blank" rel="noreferrer">{s.name} ↗</a>
+                  ) : s.name}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ))}
+    </PagedCardGrid>
+  );
+}
+
+type StatList = "staff" | "미지정" | "투수" | "포수" | "내야수" | "외야수";
+
 export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const { data: teams, loading } = useTeams();
   const { data: index } = usePlayerIndex();
@@ -114,13 +168,15 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [region, setRegion] = useState("");
+  const [grade, setGrade] = useState("");
   const [searchType, setSearchType] = useState<"team" | "name" | "number">("team");
   const [input, setInput] = useState("");
   const [query, setQuery] = useState(""); // 실행된 검색어 (검색 버튼/엔터 시 반영)
+  const [activeStat, setActiveStat] = useState<StatList | null>(null);
   // 팀 모달 = URL 쿼리(?team=)로 구동 — 선수 상세로 이동 후 뒤로가기 시 모달이 그대로 복원된다.
   const modalTeam = searchParams.get("team");
-  const [modalPos, setModalPos] = useState("");
-  const [modalGrade, setModalGrade] = useState("");
+  const modalPos = searchParams.get("mpos") ?? "";
+  const modalGrade = searchParams.get("mgrade") ?? "";
 
   // 기록 보유 선수: personNo → 정규 player.id (기록 상세 연결용)
   const personToId = useMemo(() => {
@@ -136,39 +192,55 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   };
 
   const rows = useMemo(() => teams ?? [], [teams]);
-  const allPlayers = useMemo(() => rows.flatMap((t) => t.players), [rows]);
   const regions = useMemo(
     () => [...new Set(rows.map((t) => t.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, "ko")),
     [rows]
   );
+  const scopedTeams = useMemo(() => {
+    let list = region ? rows.filter((t) => t.region === region) : rows;
+    if (grade) list = list.filter((t) => t.players.some((p) => getGrade(p) === grade));
+    return list;
+  }, [rows, region, grade]);
+  const scopedPlayers = useMemo(
+    () => scopedTeams.flatMap((t) => grade ? t.players.filter((p) => getGrade(p) === grade) : t.players),
+    [scopedTeams, grade]
+  );
   const posCounts = useMemo(() => {
     const m = new Map<string, number>();
-    for (const p of allPlayers) m.set(getPos(p), (m.get(getPos(p)) ?? 0) + 1);
+    for (const p of scopedPlayers) m.set(getPos(p), (m.get(getPos(p)) ?? 0) + 1);
     return m;
-  }, [allPlayers]);
-  const totalStaff = useMemo(() => rows.reduce((n, t) => n + t.staff.length, 0), [rows]);
+  }, [scopedPlayers]);
+  const staffRows = useMemo<StaffRow[]>(
+    () => scopedTeams.flatMap((t) => t.staff.map((s) => ({ ...s, team: t.team }))),
+    [scopedTeams]
+  );
+  const totalStaff = staffRows.length;
+  const statPlayers = useMemo(
+    () => activeStat && activeStat !== "staff"
+      ? scopedPlayers.filter((p) => getPos(p) === activeStat)
+      : [],
+    [activeStat, scopedPlayers]
+  );
 
   // 팀 카드 필터 (지역 + 팀명 검색)
   const filteredTeams = useMemo(() => {
-    let list = rows;
-    if (region) list = list.filter((t) => t.region === region);
+    let list = scopedTeams;
     if (query && searchType === "team") {
       const q = query.toLowerCase();
       list = list.filter((t) => t.team.toLowerCase().includes(q));
     }
     return list;
-  }, [rows, region, query, searchType]);
+  }, [scopedTeams, query, searchType]);
 
   // 이름/백넘버 검색 결과 (선수 테이블)
   const searchResults = useMemo(() => {
     if (!query || searchType === "team") return null;
     let list =
       searchType === "name"
-        ? allPlayers.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
-        : allPlayers.filter((p) => p.number === query);
-    if (region) list = list.filter((p) => p.region === region);
+        ? scopedPlayers.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
+        : scopedPlayers.filter((p) => p.number === query);
     return list;
-  }, [query, searchType, allPlayers, region]);
+  }, [query, searchType, scopedPlayers]);
 
   // ===== 팀 상세 모달 =====
   const modalInfo = modalTeam ? rows.find((t) => t.team === modalTeam) ?? null : null;
@@ -180,14 +252,22 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
     return [...list].sort((a, b) => (parseInt(a.number, 10) || 999) - (parseInt(b.number, 10) || 999));
   }, [modalInfo, modalPos, modalGrade]);
   const openTeam = (team: string) => {
-    setModalPos("");
-    setModalGrade("");
     // 히스토리에 엔트리를 쌓아 연다 — 뒤로가기로 닫히고, 선수 상세에서 복귀 시 재오픈된다.
     setSearchParams((prev) => {
       const p = new URLSearchParams(prev);
       p.set("team", team);
+      p.delete("mpos");
+      p.delete("mgrade");
       return p;
     });
+  };
+  const replaceModalFilters = (pos: string, modalGradeValue: string) => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      if (pos) p.set("mpos", pos); else p.delete("mpos");
+      if (modalGradeValue) p.set("mgrade", modalGradeValue); else p.delete("mgrade");
+      return p;
+    }, { replace: true });
   };
   // UI 닫기(X·배경·ESC): 열 때 쌓은 엔트리를 뒤로가기로 소거. 직접 진입 등 뒤로 갈 곳이
   // 없으면(idx 0) 파라미터만 제거해 사이트 이탈을 막는다.
@@ -200,6 +280,8 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
         (prev) => {
           const p = new URLSearchParams(prev);
           p.delete("team");
+          p.delete("mpos");
+          p.delete("mgrade");
           return p;
         },
         { replace: true }
@@ -253,24 +335,48 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
 
       {/* 통계 밴드: 팀/선수/지도자/포지션별 인원 */}
       <div className="tv-stats">
-        <div className="cell"><b>{rows.length}</b><span>팀</span></div>
-        <div className="cell"><b>{allPlayers.length.toLocaleString()}</b><span>선수</span></div>
-        <div className="cell"><b>{totalStaff}</b><span>지도자</span></div>
-        <div className="cell"><b>{posCounts.get("미지정") ?? 0}</b><span>미지정</span></div>
-        <div className="cell"><b>{(posCounts.get("투수") ?? 0).toLocaleString()}</b><span>투수</span></div>
-        <div className="cell"><b>{posCounts.get("포수") ?? 0}</b><span>포수</span></div>
-        <div className="cell"><b>{posCounts.get("내야수") ?? 0}</b><span>내야수</span></div>
-        <div className="cell"><b>{posCounts.get("외야수") ?? 0}</b><span>외야수</span></div>
+        <div className="cell"><b>{scopedTeams.length}</b><span>팀</span></div>
+        <div className="cell"><b>{scopedPlayers.length.toLocaleString()}</b><span>선수</span></div>
+        <button type="button" className={`cell tv-stat-button${activeStat === "staff" ? " is-active" : ""}`} onClick={() => setActiveStat(activeStat === "staff" ? null : "staff")}>
+          <b>{totalStaff}</b><span>지도자</span>
+        </button>
+        {(["미지정", "투수", "포수", "내야수", "외야수"] as const).map((pos) => (
+          <button type="button" key={pos} className={`cell tv-stat-button${activeStat === pos ? " is-active" : ""}`} onClick={() => setActiveStat(activeStat === pos ? null : pos)}>
+            <b>{(posCounts.get(pos) ?? 0).toLocaleString()}</b><span>{pos}</span>
+          </button>
+        ))}
       </div>
 
-      {/* 필터: 지역 + 검색(팀명/이름/백넘버) */}
+      {activeStat && (
+        <section className="tv-stat-list" aria-label={`${activeStat === "staff" ? "지도자" : activeStat} 목록`}>
+          <div className="tv-stat-list__head">
+            <h3 className="tv-sec-title">{activeStat === "staff" ? "지도자" : activeStat} 목록</h3>
+            <span className="caption-sm">{activeStat === "staff" ? staffRows.length : statPlayers.length}명</span>
+          </div>
+          {activeStat === "staff" ? (
+            staffRows.length ? <PagedStaffTable rows={staffRows} /> : <div className="state">해당 지도자가 없습니다.</div>
+          ) : statPlayers.length ? (
+            <PagedPlayerTable rows={statPlayers} showTeam onOpen={openPlayer} />
+          ) : (
+            <div className="state">해당 선수가 없습니다.</div>
+          )}
+        </section>
+      )}
+
+      {/* 필터: 지역 + 학년 + 검색(팀명/이름/백넘버) */}
       <div className="filter-bar">
-        <div className="filter-bar__row">
+        <div className="filter-bar__row filter-bar__row--3col">
           <select className="m-select" value={region} onChange={(e) => setRegion(e.target.value)}>
             <option value="">지역 전체</option>
             {regions.map((r) => (
               <option key={r} value={r}>{r}</option>
             ))}
+          </select>
+          <select className="m-select" value={grade} onChange={(e) => setGrade(e.target.value)} aria-label="학년 선택">
+            <option value="">학년 전체</option>
+            <option value="1">1학년</option>
+            <option value="2">2학년</option>
+            <option value="3">3학년</option>
           </select>
           <select
             className="m-select"
@@ -309,7 +415,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
           {searchResults.length === 0 ? (
             <div className="state">검색 결과가 없습니다.</div>
           ) : (
-            <PlayerTable rows={searchResults} showTeam onOpen={openPlayer} />
+            <PagedPlayerTable rows={searchResults} showTeam onOpen={openPlayer} />
           )}
         </>
       ) : (
@@ -327,7 +433,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                 </div>
                 <div className="tv-team-card__body">
                   <div className="row"><span>감독</span><b>{t.manager || "-"}</b></div>
-                  <div className="row"><span>선수</span><b>{t.player_count}명</b></div>
+                  <div className="row"><span>선수</span><b>{(grade ? t.players.filter((p) => getGrade(p) === grade).length : t.players.length)}명</b></div>
                   <div className="row"><span>지도자</span><b>{t.staff.length}명</b></div>
                 </div>
               </button>
@@ -379,7 +485,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                     key={pos}
                     color={POS_COLORS[pos] ?? "#9AA0A6"}
                     active={modalPos === pos}
-                    onClick={() => setModalPos(modalPos === pos ? "" : pos)}
+                    onClick={() => replaceModalFilters(modalPos === pos ? "" : pos, modalGrade)}
                   >
                     {pos} <span className="cnt">{cnt}명</span>
                   </ColorChip>
@@ -391,7 +497,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                     key={g}
                     color={GRADE_COLORS[g] ?? "#9AA0A6"}
                     active={modalGrade === g}
-                    onClick={() => setModalGrade(modalGrade === g ? "" : g)}
+                    onClick={() => replaceModalFilters(modalPos, modalGrade === g ? "" : g)}
                   >
                     {g === "미지정" ? "미지정" : `${g}학년`} <span className="cnt">{cnt}명</span>
                   </ColorChip>
@@ -400,7 +506,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                   <button
                     type="button"
                     className="chip tv-color-chip"
-                    onClick={() => { setModalPos(""); setModalGrade(""); }}
+                    onClick={() => replaceModalFilters("", "")}
                   >
                     초기화
                   </button>

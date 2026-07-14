@@ -1,38 +1,74 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayerIndex, usePlayerMatchups, useTournamentMatchups } from "../../shared/data";
 import { rate } from "../../shared/format";
 import { Chip } from "../../design/ui";
 import { TournamentPicker } from "../../shared/filters";
 import {
   batsThrowsLabel, facedOpponents, facedSchools, indexById, opposite, playerLabel,
-  searchByRole, sumMatchups, type Role,
+  playerInSeason, searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
 import { Ico } from "../../shared/navIcons";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
+import { useYear } from "../../shared/year";
 
 export function MMatchup() {
-  const { data: index } = usePlayerIndex();
+  const { year } = useYear();
+  const indexState = usePlayerIndex();
+  const { data: index } = indexState;
   const [aRole, setARole] = useState<Role>("batter");
   const [query, setQuery] = useState("");
   const [a, setA] = useState<PlayerIndexEntry | null>(null);
   const [school, setSchool] = useState("");
   const [oppId, setOppId] = useState("");
   const [tournamentSlug, setTournamentSlug] = useState("");
-  const { data: matchupsSeason } = usePlayerMatchups(a?.id);
-  const { data: tournamentMatchups } = useTournamentMatchups(tournamentSlug);
+  const indexReady = indexState.scope === String(year);
+  const seasonA = useMemo(
+    () => (a && index && indexReady ? playerInSeason(a, index) : null),
+    [a, index, indexReady]
+  );
+  const matchupState = usePlayerMatchups(seasonA?.id);
+  const tournamentState = useTournamentMatchups(tournamentSlug);
+  const matchupReady = tournamentSlug
+    ? tournamentState.scope === `${year}:${tournamentSlug}`
+    : matchupState.scope === `${year}:${seasonA?.id ?? ""}`;
   const matchups = useMemo<Matchup[]>(() => {
-    if (!tournamentSlug) return matchupsSeason ?? [];
-    if (!a) return [];
-    return (tournamentMatchups ?? []).filter((m) => m.batterId === a.id || m.pitcherId === a.id);
-  }, [tournamentSlug, tournamentMatchups, matchupsSeason, a]);
+    if (!seasonA || !indexReady || !matchupReady) return [];
+    if (!tournamentSlug) return matchupState.data ?? [];
+    return (tournamentState.data ?? []).filter(
+      (m) => m.batterId === seasonA.id || m.pitcherId === seasonA.id
+    );
+  }, [seasonA, indexReady, matchupReady, tournamentSlug, matchupState.data, tournamentState.data]);
 
   const byId = useMemo(() => indexById(index ?? []), [index]);
-  const candidates = useMemo(() => (index ? searchByRole(index, aRole, query) : []), [index, aRole, query]);
-  const faced = useMemo(() => (a && matchups ? facedOpponents(matchups, byId, aRole, a.id) : []), [a, matchups, byId, aRole]);
+  const candidates = useMemo(
+    () => (index && indexReady ? searchByRole(index, aRole, query) : []),
+    [index, indexReady, aRole, query]
+  );
+  const faced = useMemo(
+    () => (seasonA && matchupReady ? facedOpponents(matchups, byId, aRole, seasonA.id) : []),
+    [seasonA, matchupReady, matchups, byId, aRole]
+  );
   const schools = useMemo(() => facedSchools(faced), [faced]);
   const schoolOpps = useMemo(() => faced.filter((f) => f.opponent.team === school), [faced, school]);
   const schoolTotal = useMemo(() => sumMatchups(schoolOpps), [schoolOpps]);
   const sel = schoolOpps.find((f) => f.opponent.id === oppId)?.matchup;
+
+  const previousYear = useRef(year);
+  useEffect(() => {
+    if (previousYear.current === year) return;
+    previousYear.current = year;
+    setTournamentSlug("");
+    setSchool("");
+    setOppId("");
+  }, [year]);
+  useEffect(() => {
+    if (!seasonA || !a || seasonA.id === a.id) return;
+    setA(seasonA);
+  }, [seasonA, a]);
+  useEffect(() => {
+    if (school && !schools.some((s) => s.team === school)) setSchool("");
+    if (oppId && !schoolOpps.some((f) => f.opponent.id === oppId)) setOppId("");
+  }, [school, schools, oppId, schoolOpps]);
 
   function reset(role: Role) { setARole(role); setA(null); setQuery(""); setSchool(""); setOppId(""); }
   const oppRoleLabel = opposite(aRole) === "pitcher" ? "투수" : "타자";
@@ -85,8 +121,12 @@ export function MMatchup() {
           <label className="caption" style={{ display: "block", marginTop: 16 }}>
             ③ 상대한 학교 ({schools.length}개)
           </label>
-          {schools.length === 0 ? (
-            <div className="state muted">맞대결 기록이 있는 상대가 없습니다.</div>
+          {!indexReady || (seasonA && !matchupReady) ? (
+            <div className="state muted">{year} 시즌 상대전적을 불러오는 중…</div>
+          ) : !seasonA ? (
+            <div className="state muted">이 연도에는 맞대결 기록이 없습니다.</div>
+          ) : schools.length === 0 ? (
+            <div className="state muted">이 연도에는 맞대결 기록이 없습니다.</div>
           ) : (
             <select className="m-select" value={school} onChange={(e) => { setSchool(e.target.value); setOppId(""); }}>
               <option value="">학교 선택</option>

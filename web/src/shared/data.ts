@@ -50,21 +50,24 @@ export interface AsyncState<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
+  /** 현재 data가 속한 요청 스코프. 연도 전환 중 유지되는 이전 data와 구분할 때 사용한다. */
+  scope: string | null;
 }
 
-function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
+function useAsync<T>(fn: () => Promise<T>, deps: unknown[], scope: string | null = null): AsyncState<T> {
   const revision = useDataRevision();
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
     loading: true,
     error: null,
+    scope: null,
   });
   useEffect(() => {
     let alive = true;
     // 자동 갱신 중에는 기존 화면을 유지하고, 최초 로드일 때만 loading 상태를 표시한다.
     setState((prev) => ({ ...prev, loading: prev.data === null, error: null }));
     fn()
-      .then((data) => alive && setState({ data, loading: false, error: null }))
+      .then((data) => alive && setState({ data, loading: false, error: null, scope }))
       .catch(
         (e) =>
           alive &&
@@ -72,6 +75,7 @@ function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {
             data: prev.data,
             loading: false,
             error: prev.data === null ? String(e?.message ?? e) : null,
+            scope: prev.scope,
           }))
       );
     return () => {
@@ -108,7 +112,8 @@ export const usePlayerIndex = () => {
   const { year } = useYear();
   return useAsync<PlayerIndexEntry[]>(
     () => getJSON<PlayerIndexEntry[]>(`${year}/players/index.json`).then((rows) => rows.filter(isRealPlayer)),
-    [year]
+    [year],
+    String(year)
   );
 };
 
@@ -161,7 +166,8 @@ export const usePlayerMatchups = (id: string | undefined) => {
     () => id
       ? getJSON<Player>(`${year}/players/${id}.json`).then((player) => player.matchups ?? [])
       : Promise.resolve([]),
-    [id, year]
+    [id, year],
+    `${year}:${id ?? ""}`
   );
 };
 
@@ -211,7 +217,8 @@ export const useTournamentMatchups = (slug: string | "") => {
       slug
         ? getJSON<Matchup[]>(`${year}/by-tournament/${encodeURIComponent(slug)}/matchups.json`).catch(() => [])
         : Promise.resolve([]),
-    [year, slug]
+    [year, slug],
+    `${year}:${slug}`
   );
 };
 

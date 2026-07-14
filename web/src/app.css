@@ -834,6 +834,23 @@
 .paged-grid__track,
 .paged-grid__page { display: contents; }
 .paged-grid__hint { display: none; }
+.paged-grid--single { display: block; }
+.paged-grid--single .paged-grid__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.paged-grid--single .paged-grid__track::-webkit-scrollbar { display: none; }
+.paged-grid--single .paged-grid__page {
+  display: block;
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.paged-grid--single .paged-grid__hint { display: block; margin: 0 0 8px; }
 /* 모바일: 한 줄에 2개 고정 (원본 team-grid 이식) */
 @media (max-width: 768px) {
   .sch-team-grid.paged-grid { display: block; }
@@ -855,6 +872,7 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
+  .paged-grid--single .paged-grid__page { display: block; }
   .paged-grid__hint {
     display: block;
     margin: 0 0 8px;
@@ -1099,7 +1117,20 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-ink);
+  font-family: inherit;
 }
+.tv-stats .tv-stat-button { cursor: pointer; }
+.tv-stats .tv-stat-button:hover,
+.tv-stats .tv-stat-button:focus-visible { background: var(--color-soft-cloud); }
+.tv-stats .tv-stat-button.is-active {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  box-shadow: inset 0 -3px 0 var(--color-sale);
+}
+.tv-stats .tv-stat-button.is-active span { color: inherit; }
 .tv-stats .cell b {
   font-size: var(--type-heading-lg);
   font-variant-numeric: tabular-nums;
@@ -1112,6 +1143,21 @@
 @media (min-width: 720px) {
   .tv-stats { grid-template-columns: repeat(8, 1fr); }
 }
+.tv-stat-list {
+  margin: calc(-1 * var(--space-sm)) 0 var(--space-lg);
+  padding: var(--space-md);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas);
+}
+.tv-stat-list__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: 8px;
+}
+.tv-stat-list__head .tv-sec-title { margin-bottom: 0; }
+.tv-staff-table a { color: inherit; text-decoration: underline; }
 .tv-team-card__body {
   padding: var(--space-md);
 }

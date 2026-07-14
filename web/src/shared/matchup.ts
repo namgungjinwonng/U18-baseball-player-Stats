@@ -79,6 +79,17 @@ export function facedOpponents(
 export const indexById = (index: PlayerIndexEntry[]) =>
   new Map(index.map((p) => [p.id, p]));
 
+// 연도 종속 id 대신 KBSA 고유번호로 선택 선수를 현재 시즌 엔트리에 다시 연결한다.
+export function playerInSeason(
+  selected: PlayerIndexEntry,
+  index: PlayerIndexEntry[]
+): PlayerIndexEntry | null {
+  if (selected.personNo) {
+    return index.find((p) => p.personNo === selected.personNo) ?? null;
+  }
+  return index.find((p) => p.id === selected.id) ?? null;
+}
+
 // 상대한 학교 목록(+상대 인원수). 학교명 가나다순.
 export function facedSchools(
   faced: { opponent: PlayerIndexEntry; matchup: Matchup }[]
