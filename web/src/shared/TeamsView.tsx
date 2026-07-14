@@ -107,7 +107,7 @@ function PlayerTable({
   );
 }
 
-const PLAYER_ROWS_PER_PAGE = 5;
+const PLAYER_ROWS_PER_PAGE = 10;
 
 function PagedPlayerTable({
   rows, showTeam, onOpen,
@@ -309,10 +309,21 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
     );
   }
 
-  const doSearch = () => setQuery(input.trim());
+  const doSearch = () => {
+    setActiveStat(null);
+    setQuery(input.trim());
+  };
   const resetSearch = () => {
     setInput("");
     setQuery("");
+  };
+  const toggleStat = (stat: StatList) => {
+    const next = activeStat === stat ? null : stat;
+    setActiveStat(next);
+    if (next) {
+      setInput("");
+      setQuery("");
+    }
   };
 
   const modalPosCounts = (() => {
@@ -337,31 +348,15 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
       <div className="tv-stats">
         <div className="cell"><b>{scopedTeams.length}</b><span>팀</span></div>
         <div className="cell"><b>{scopedPlayers.length.toLocaleString()}</b><span>선수</span></div>
-        <button type="button" className={`cell tv-stat-button${activeStat === "staff" ? " is-active" : ""}`} onClick={() => setActiveStat(activeStat === "staff" ? null : "staff")}>
+        <button type="button" className={`cell tv-stat-button${activeStat === "staff" ? " is-active" : ""}`} onClick={() => toggleStat("staff")}>
           <b>{totalStaff}</b><span>지도자</span>
         </button>
         {(["미지정", "투수", "포수", "내야수", "외야수"] as const).map((pos) => (
-          <button type="button" key={pos} className={`cell tv-stat-button${activeStat === pos ? " is-active" : ""}`} onClick={() => setActiveStat(activeStat === pos ? null : pos)}>
+          <button type="button" key={pos} className={`cell tv-stat-button${activeStat === pos ? " is-active" : ""}`} onClick={() => toggleStat(pos)}>
             <b>{(posCounts.get(pos) ?? 0).toLocaleString()}</b><span>{pos}</span>
           </button>
         ))}
       </div>
-
-      {activeStat && (
-        <section className="tv-stat-list" aria-label={`${activeStat === "staff" ? "지도자" : activeStat} 목록`}>
-          <div className="tv-stat-list__head">
-            <h3 className="tv-sec-title">{activeStat === "staff" ? "지도자" : activeStat} 목록</h3>
-            <span className="caption-sm">{activeStat === "staff" ? staffRows.length : statPlayers.length}명</span>
-          </div>
-          {activeStat === "staff" ? (
-            staffRows.length ? <PagedStaffTable rows={staffRows} /> : <div className="state">해당 지도자가 없습니다.</div>
-          ) : statPlayers.length ? (
-            <PagedPlayerTable rows={statPlayers} showTeam onOpen={openPlayer} />
-          ) : (
-            <div className="state">해당 선수가 없습니다.</div>
-          )}
-        </section>
-      )}
 
       {/* 필터: 지역 + 학년 + 검색(팀명/이름/백넘버) */}
       <div className="filter-bar">
@@ -407,7 +402,21 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
         </div>
       </div>
 
-      {searchResults ? (
+      {activeStat ? (
+        <section className="tv-stat-list" aria-label={`${activeStat === "staff" ? "지도자" : activeStat} 목록`}>
+          <div className="tv-stat-list__head">
+            <h3 className="tv-sec-title">{activeStat === "staff" ? "지도자" : activeStat} 목록</h3>
+            <span className="caption-sm">{activeStat === "staff" ? staffRows.length : statPlayers.length}명</span>
+          </div>
+          {activeStat === "staff" ? (
+            staffRows.length ? <PagedStaffTable rows={staffRows} /> : <div className="state">해당 지도자가 없습니다.</div>
+          ) : statPlayers.length ? (
+            <PagedPlayerTable rows={statPlayers} showTeam onOpen={openPlayer} />
+          ) : (
+            <div className="state">해당 선수가 없습니다.</div>
+          )}
+        </section>
+      ) : searchResults ? (
         <>
           <p className="caption-sm" style={{ margin: "0 0 10px" }}>
             “{query}” 검색 결과 {searchResults.length}명
