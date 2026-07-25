@@ -45,6 +45,7 @@ export function battingDetailColumns(lg?: LeagueRates | null): Column<Player>[] 
     name,
     team,
     { key: "g", label: "G", value: (p) => p.batting?.g ?? 0 },
+    { key: "pa", label: "타석", value: (p) => p.batting?.pa ?? 0 },
     { key: "avg", label: "타율", value: (p) => p.batting?.avg ?? 0, render: (p) => rate(p.batting?.avg) },
     { key: "obp", label: "출루율", value: (p) => p.batting?.obp ?? 0, render: (p) => rate(p.batting?.obp) },
     { key: "slg", label: "장타율", value: (p) => p.batting?.slg ?? 0, render: (p) => rate(p.batting?.slg) },
@@ -142,6 +143,7 @@ export function pitchingDetailColumns(lg?: LeagueRates | null): Column<Player>[]
     name,
     team,
     { key: "g", label: "G", value: (p) => p.pitching?.g ?? 0 },
+    { key: "ip", label: "이닝", value: (p) => p.pitching?.ip ?? 0, render: (p) => inn(p.pitching?.ip) },
     { key: "era", label: "ERA", value: (p) => p.pitching?.era ?? 99, render: (p) => dec2(p.pitching?.era), defaultDesc: false },
     { key: "whip", label: "WHIP", value: (p) => p.pitching?.whip ?? 99, render: (p) => dec2(p.pitching?.whip), defaultDesc: false },
     {
@@ -201,14 +203,14 @@ export type RecordTab = {
   initialSort: string;
 };
 
-// 기본 정렬은 모두 경기수(g) 내림차순 — 표본이 많은 선수를 위에 노출.
+// 기본 정렬은 타자=타석(pa), 투수=이닝(ip) 내림차순 — 실제 출전량이 많은 선수를 위에 노출.
 // 세부 탭의 wRC+/WAR 는 리그평균이 필요해 lg(스코프에 맞는 LeagueRates)를 받는다.
 export function recordTabs(lg?: LeagueRates | null): RecordTab[] {
   return [
-    { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "g" },
-    { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns(lg), initialSort: "g" },
-    { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "g" },
-    { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns(lg), initialSort: "g" },
+    { id: "hit-basic", label: "타자 기본", kind: "batting", columns: battingBasicColumns, initialSort: "pa" },
+    { id: "hit-detail", label: "타자 세부", kind: "batting", columns: battingDetailColumns(lg), initialSort: "pa" },
+    { id: "pit-basic", label: "투수 기본", kind: "pitching", columns: pitchingBasicColumns, initialSort: "ip" },
+    { id: "pit-detail", label: "투수 세부", kind: "pitching", columns: pitchingDetailColumns(lg), initialSort: "ip" },
   ];
 }
 

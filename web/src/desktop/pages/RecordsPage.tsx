@@ -1,22 +1,27 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
-import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
 import { Ico } from "../../shared/navIcons";
 import type { Player } from "../../shared/types";
 
 export function RecordsPage() {
+  const location = useLocation();
+  const nav = useNavigate();
   const [tabId, setTabId] = useState("hit-basic");
-  const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
+  const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(location.search));
   const [includeUnqualified, setIncludeUnqualified] = useState(false);
   const { data: players, loading, error } = useTournamentRecords(filter.tournament);
   const { data: averages } = useLeagueAverages();
   const ctx = useQualifyContext(filter);
-  const nav = useNavigate();
+  const changeFilter = (next: RecordFilter) => {
+    setFilter(next);
+    nav({ pathname: location.pathname, search: filterToQuery(next) }, { replace: true });
+  };
   // 세부 탭 wRC+/WAR 기준 리그평균: 시합 필터 시 그 시합, 아니면 시즌 전체.
   const lg = useMemo(() => {
     if (!averages) return null;
@@ -47,7 +52,7 @@ export function RecordsPage() {
           </Chip>
         ))}
       </div>
-      <FilterBar rows={players ?? []} value={filter} onChange={setFilter} />
+      <FilterBar rows={players ?? []} value={filter} onChange={changeFilter} />
 
       <label className="qual-toggle">
         <input
@@ -62,6 +67,7 @@ export function RecordsPage() {
       {error && <div className="state">데이터를 불러오지 못했습니다.</div>}
       {players && (
         <StatTable<Player>
+          key={tab.id}
           columns={tab.columns}
           rows={rows}
           initialSort={tab.initialSort}
