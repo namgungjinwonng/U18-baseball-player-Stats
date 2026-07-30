@@ -7,11 +7,13 @@ export function HomeIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M4 4h16v9l-8 8-8-8z" />
+      <path d="M5.5 4.5h13a.5.5 0 0 1 .5.5v7.2c0 .35-.12.64-.35.9l-6 6.55a.88.88 0 0 1-1.3 0l-6-6.55a1.32 1.32 0 0 1-.35-.9V5a.5.5 0 0 1 .5-.5Z" />
     </svg>
   );
 }

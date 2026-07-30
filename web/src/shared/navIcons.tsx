@@ -1,9 +1,9 @@
-// 메뉴/페이지 타이틀용 아이콘 8종 — 제공받은 PNG(256px, 투명배경) 를 그대로 사용.
+// 메뉴/페이지 타이틀용 아이콘 8종 — 항목별로 한 파일을 모든 위치에서 공용한다.
 // 드로어에서는 .nav-ico, 페이지 제목 옆에서는 .title-ico 크기로 렌더한다.
 import calendarPng from "../assets/icons/calendar.png";
 import profilePng from "../assets/icons/profile.png";
-import jerseyPng from "../assets/icons/jersey.png";
-import statisticsPng from "../assets/icons/statistics.png";
+import jerseySvg from "../assets/icons/jersey.svg";
+import trophySvg from "../assets/icons/trophy.svg";
 import sportsPng from "../assets/icons/sports.png";
 import searchPng from "../assets/icons/search.png";
 import chartPng from "../assets/icons/chart.png";
@@ -11,17 +11,17 @@ import announcementPng from "../assets/icons/announcement.png";
 
 // 메뉴명 → 아이콘 파일 (드로어·페이지 제목 공용)
 const SRC = {
-  schedule: calendarPng, // 경기일정
-  players: profilePng, // 선수현황
-  records: jerseyPng, // 선수 기록 상세 (등번호 22)
-  leaders: statisticsPng, // 항목별 랭킹
-  matchup: sportsPng, // 상대전적 (교차 배트)
-  search: searchPng, // 선수 검색
-  glossary: chartPng, // 지표 설명
-  notice: announcementPng, // 알리는 글
+  schedule: calendarPng, // 경기일정 — 기존 달력
+  players: profilePng, // 선수현황 — 기존 선수
+  records: jerseySvg, // 선수 기록 상세·선수 기록 — 등번호 유니폼
+  leaders: trophySvg, // 항목별 랭킹 — C7 트로피
+  matchup: sportsPng, // 상대전적 — 기존 교차 배트
+  search: searchPng, // 선수 검색 — 기존 검색
+  glossary: chartPng, // 지표 설명 — 기존 차트
+  notice: announcementPng, // 알리는 글 — 기존 알림
 } as const;
 
-// 드로어 첫 클릭 전에 PNG 요청과 디코딩을 끝내도록 이미지 객체를 모듈 수명 동안 유지한다.
+// 드로어 첫 클릭 전에 아이콘 요청과 디코딩을 끝내도록 이미지 객체를 모듈 수명 동안 유지한다.
 const preloadedNavImages = new Set<HTMLImageElement>();
 let preloadStarted = false;
 
