@@ -4,7 +4,7 @@ import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
 import { Chip } from "../../design/ui";
-import { FilterBar, applyFilter, filterFromQuery, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
+import { FilterBar, applyFilter, filterFromQuery, filterToQuery, unqualifiedFromQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
 import { Ico } from "../../shared/navIcons";
 import type { Player } from "../../shared/types";
@@ -14,7 +14,8 @@ export function MRecords() {
   const nav = useNavigate();
   const [tabId, setTabId] = useState("hit-basic");
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(location.search));
-  const [includeUnqualified, setIncludeUnqualified] = useState(false);
+  // 학교별 랭킹에서 넘어오면 ?u=1 로 규정 미달 포함이 켜진 채 시작한다.
+  const [includeUnqualified, setIncludeUnqualified] = useState(() => unqualifiedFromQuery(location.search));
   const { data: players, loading } = useTournamentRecords(filter.tournament);
   const { data: averages } = useLeagueAverages();
   const ctx = useQualifyContext(filter);

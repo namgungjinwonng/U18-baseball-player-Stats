@@ -179,6 +179,10 @@
 .stat-table .num {
   font-variant-numeric: tabular-nums;
 }
+/* 긴 텍스트 셀 축약 표기 (예: 학교명 4자 이상) — 열 폭을 최장 항목에 맞추지 않기 위함 */
+.stat-table .cell-compact {
+  font-size: var(--type-caption-sm);
+}
 .stat-table__scroll {
   overflow-x: auto;
 }

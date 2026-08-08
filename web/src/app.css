@@ -581,11 +581,11 @@
   font-weight: 700;
   text-align: right;
 }
-/* 랭킹 상단: 타자/투수 토글 + 항목 드롭다운 (칩 그리드 대신 — 공간 절약). */
+/* 랭킹 상단: 타자/투수 토글 + 이전·현재·다음 항목 선택기. */
 .leader-select {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   margin: var(--space-md) 0 16px;
 }
@@ -595,11 +595,81 @@
 .leader-select .chip {
   text-decoration: none;
 }
-.leader-cat-dd {
-  flex: 1 1 auto;
-  min-width: 160px;
-  max-width: 340px;
-  margin-bottom: 0;
+.leader-cat-picker {
+  flex: 1 1 430px;
+  min-width: 320px;
+  max-width: 620px;
+}
+.leader-cat-stepper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(110px, 1.35fr) minmax(0, 1fr);
+  min-height: 40px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.leader-cat-step,
+.leader-cat-current {
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+.leader-cat-step {
+  color: var(--color-ink);
+  background: var(--color-canvas);
+  text-decoration: none;
+  font-size: var(--type-button-sm);
+  font-weight: 500;
+}
+.leader-cat-step > span:last-child,
+.leader-cat-current strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.leader-cat-current {
+  color: var(--color-ink);
+  background: var(--color-canvas);
+}
+.leader-cat-current strong {
+  font-size: var(--type-body);
+}
+.leader-cat-arrow {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 1;
+}
+.leader-cat-toggle {
+  width: 100%;
+  margin-top: 6px;
+}
+.leader-cat-toggle[aria-expanded="false"] {
+  min-height: 24px;
+  padding: 2px 12px;
+  font-size: var(--type-caption-sm);
+}
+.leader-cat-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+}
+.leader-cat-panel[hidden] {
+  display: none;
+}
+.leader-cat-panel .chip {
+  min-width: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
 }
 .qual-toggle {
   display: inline-flex;

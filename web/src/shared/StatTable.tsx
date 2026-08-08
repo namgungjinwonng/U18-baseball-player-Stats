@@ -1,17 +1,19 @@
 // 정렬 가능한 기록 테이블 — 데스크탑/모바일 공용 (프레젠테이션 전용).
 // 다중 정렬: 최대 3개 키. 헤더 클릭 1회=내림, 2회=오름, 3회=해제.
 // 우선순위는 추가된 순서 (먼저 추가한 키가 1순위).
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 export interface Column<T> {
   key: string;
   label: string;
   // 정렬/표시에 쓸 원시 값
   value: (row: T) => number | string;
-  // 표시 문자열 (생략 시 value 사용)
-  render?: (row: T) => string;
+  // 표시 내용 (생략 시 value 사용). 글자 수에 따라 크기를 줄이는 등 마크업도 가능.
+  render?: (row: T, sortedIndex: number) => ReactNode;
   // 기본 정렬 방향 (숫자 기록은 대개 내림차순)
   defaultDesc?: boolean;
+  // 셀 정렬 (생략 시 표 기본값인 우측 정렬 — 숫자 기록용). 텍스트 열은 left 로.
+  align?: "left" | "center" | "right";
 }
 
 interface SortKey {
@@ -28,6 +30,7 @@ export function StatTable<T>({
   onRowClick,
   rowKey,
   limit = 100,
+  unit = "명",
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -36,6 +39,8 @@ export function StatTable<T>({
   rowKey: (row: T) => string;
   // 순위 테이블이므로 정렬 후 상위 N명만 렌더(대량 행 성능 보호).
   limit?: number;
+  // 더보기 버튼의 행 단위 — 선수 표는 "명", 학교 표는 "팀".
+  unit?: string;
 }) {
   const initialKey = initialSort ?? columns[0]?.key;
   const initialDesc = columns.find((c) => c.key === initialKey)?.defaultDesc ?? true;
@@ -104,7 +109,7 @@ export function StatTable<T>({
               const idx = sortKeys.findIndex((s) => s.key === col.key);
               const cur = idx >= 0 ? sortKeys[idx] : null;
               return (
-                <th key={col.key} onClick={() => clickHeader(col)}>
+                <th key={col.key} onClick={() => clickHeader(col)} style={{ textAlign: col.align }}>
                   {col.label}
                   {cur && (
                     <span className="sort-mark">
@@ -118,15 +123,15 @@ export function StatTable<T>({
           </tr>
         </thead>
         <tbody>
-          {capped.map((row) => (
+          {capped.map((row, sortedIndex) => (
             <tr
               key={rowKey(row)}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
               style={{ cursor: onRowClick ? "pointer" : "default" }}
             >
               {columns.map((col) => (
-                <td key={col.key} className="num">
-                  {col.render ? col.render(row) : String(col.value(row))}
+                <td key={col.key} className="num" style={{ textAlign: col.align }}>
+                  {col.render ? col.render(row, sortedIndex) : String(col.value(row))}
                 </td>
               ))}
             </tr>
@@ -154,7 +159,7 @@ export function StatTable<T>({
           style={{ margin: "16px auto", display: "flex" }}
           onClick={() => setVisibleCount((count) => Math.min(count + limit, sorted.length))}
         >
-          전체 {sorted.length}명 보기 (현재 상위 {capped.length}명)
+          전체 {sorted.length}{unit} 보기 (현재 상위 {capped.length}{unit})
         </button>
       )}
     </div>

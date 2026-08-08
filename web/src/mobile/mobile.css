@@ -215,9 +215,6 @@
   overflow: hidden;
   padding-bottom: 0;
 }
-.m-page .leader-select .leader-cat-dd {
-  max-width: none;
-}
 .m-page.leaders-page .rank-list {
   flex: 1 1 auto;
   min-height: 0;
@@ -424,19 +421,46 @@
 .filter-bar__row--3col {
   flex-wrap: nowrap;
 }
+/* max-width 로 1/3 을 상한으로 고정 — 칸이 3개면 기존과 동일하고,
+   학교별 랭킹처럼 지역 하나만 남을 때 100% 로 늘어나는 것을 막는다. */
 .filter-bar__row--3col > .m-select {
   flex: 1 1 0;
   min-width: 0;
+  max-width: calc((100% - 16px) / 3);
   padding-left: 10px;
   padding-right: 24px;
   background-position: right 8px center;
 }
-.filter-bar__row--tournament > .m-select,
-.m-page .leader-select .leader-cat-dd {
+.filter-bar__row--tournament > .m-select {
   flex: 0 0 calc((100% - 16px) / 3);
   width: calc((100% - 16px) / 3);
   min-width: 0;
   max-width: none;
+}
+/* 모바일 랭킹 항목 선택기는 탭 아래에서 화면 폭 전체를 사용한다. */
+.m-page .leader-cat-picker {
+  flex: 1 1 100%;
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+}
+.m-page .leader-cat-stepper {
+  grid-template-columns: minmax(0, 1fr) minmax(96px, 1.25fr) minmax(0, 1fr);
+}
+.m-page .leader-cat-step,
+.m-page .leader-cat-current {
+  min-height: 40px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.m-page .leader-cat-panel {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.m-page .leader-cat-panel .chip {
+  min-height: 36px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  font-size: 12px;
 }
 /* 초협소 화면(320px 등): 패딩·글자 더 축소해 "지역 선택" 등이 잘리지 않게 */
 @media (max-width: 360px) {

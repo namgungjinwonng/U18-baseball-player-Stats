@@ -4,6 +4,7 @@ import { useMeta, useTournamentMeta, useTournaments } from "./data";
 import { useYear } from "./year";
 import { seasonConfig, type QualifyContext, type ScopeKind } from "./leaders";
 import { buildTree, categorize, type Kind, type Phase } from "./tournamentTree";
+import { teamDisplayName } from "./teamRanking";
 
 export interface RecordFilter {
   region: string;
@@ -32,6 +33,12 @@ export function filterFromQuery(search: string): RecordFilter {
     grade: p.get("g") ?? "",
   };
 }
+
+// 규정 미달 포함 토글은 RecordFilter 가 아니라 표시 옵션이라 따로 실어 나른다.
+// 학교별 랭킹에서 넘어올 때는 팀 전체 선수를 보는 맥락이므로 기본으로 켠다.
+export const unqualifiedToQuery = (query: string) => (query ? `${query}&u=1` : "?u=1");
+export const unqualifiedFromQuery = (search: string) =>
+  new URLSearchParams(search).get("u") === "1";
 
 // 현재 필터(전체 시즌 / 주말리그 / 전국대회)에 맞는 규정 스코프 + 팀별 경기수 컨텍스트.
 // 시합 필터 시 해당 시합 meta 의 teamGames 를, 아니면 시즌 meta 의 teamGames 를 쓴다.
@@ -64,7 +71,7 @@ export function applyFilter<T extends HasTeam>(rows: T[], f: RecordFilter): T[] 
   return rows.filter(
     (p) =>
       (!f.region || p.region === f.region) &&
-      (!f.team || p.team === f.team) &&
+      (!f.team || teamDisplayName(p.team) === teamDisplayName(f.team)) &&
       (!f.grade || p.grade === f.grade)
   );
 }
@@ -186,11 +193,15 @@ export function FilterBar({
   value,
   onChange,
   showTournament = true,
+  showGrade = true,
+  showTeam = true,
 }: {
   rows: HasTeam[];
   value: RecordFilter;
   onChange: (f: RecordFilter) => void;
   showTournament?: boolean;
+  showGrade?: boolean;
+  showTeam?: boolean;
 }) {
   const regions = useMemo(
     () => [...new Set(rows.map((r) => r.region).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, "ko")),
@@ -199,7 +210,11 @@ export function FilterBar({
   // 학교는 선택된 지역으로 한정(캐스케이드)
   const teams = useMemo(
     () =>
-      [...new Set(rows.filter((r) => !value.region || r.region === value.region).map((r) => r.team))].sort(
+      [...new Set(
+        rows
+          .filter((r) => !value.region || r.region === value.region)
+          .map((r) => teamDisplayName(r.team))
+      )].sort(
         (a, b) => a.localeCompare(b, "ko")
       ),
     [rows, value.region]
@@ -209,7 +224,10 @@ export function FilterBar({
     () =>
       [...new Set(
         rows
-          .filter((r) => (!value.region || r.region === value.region) && (!value.team || r.team === value.team))
+          .filter((r) =>
+            (!value.region || r.region === value.region) &&
+            (!value.team || teamDisplayName(r.team) === teamDisplayName(value.team))
+          )
           .map((r) => r.grade)
           .filter(Boolean) as string[]
       )].sort(),
@@ -238,28 +256,32 @@ export function FilterBar({
             <option key={r} value={r}>{r}</option>
           ))}
         </select>
-        <select
-          className="m-select"
-          value={value.team}
-          onChange={(e) => onChange({ ...value, team: e.target.value })}
-          aria-label="학교 선택"
-        >
-          <option value="">학교 선택</option>
-          {teams.map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
-        </select>
-        <select
-          className="m-select"
-          value={value.grade}
-          onChange={(e) => onChange({ ...value, grade: e.target.value })}
-          aria-label="학년 선택"
-        >
-          <option value="">학년 선택</option>
-          {grades.map((g) => (
-            <option key={g} value={g}>{g}학년</option>
-          ))}
-        </select>
+        {showTeam && (
+          <select
+            className="m-select"
+            value={value.team}
+            onChange={(e) => onChange({ ...value, team: e.target.value })}
+            aria-label="학교 선택"
+          >
+            <option value="">학교 선택</option>
+            {teams.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        )}
+        {showGrade && (
+          <select
+            className="m-select"
+            value={value.grade}
+            onChange={(e) => onChange({ ...value, grade: e.target.value })}
+            aria-label="학년 선택"
+          >
+            <option value="">학년 선택</option>
+            {grades.map((g) => (
+              <option key={g} value={g}>{g}학년</option>
+            ))}
+          </select>
+        )}
       </div>
     </div>
   );
