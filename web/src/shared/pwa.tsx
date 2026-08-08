@@ -2,10 +2,22 @@
 import { useEffect, useState } from "react";
 
 const BASE = import.meta.env.BASE_URL;
+const isStandalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  (navigator as { standalone?: boolean }).standalone === true;
+
+function lockPwaOrientation() {
+  const orientation = screen.orientation as ScreenOrientation & {
+    lock?: (value: "portrait-primary") => Promise<void>;
+  } | undefined;
+  if (!isStandalone() || typeof orientation?.lock !== "function") return;
+  orientation.lock("portrait-primary").catch(() => {});
+}
 
 // manifest 링크 주입 + 서비스워커 등록 (base 경로 반영).
 export function initPwa() {
   if (typeof document === "undefined") return;
+  lockPwaOrientation();
   if (!document.querySelector('link[rel="manifest"]')) {
     const link = document.createElement("link");
     link.rel = "manifest";
@@ -31,9 +43,6 @@ export function initPwa() {
 
 const ua = () => navigator.userAgent || "";
 const isIOS = () => /iPhone|iPad|iPod/i.test(ua());
-const isStandalone = () =>
-  window.matchMedia("(display-mode: standalone)").matches ||
-  (navigator as { standalone?: boolean }).standalone === true;
 
 interface BIPEvent extends Event {
   prompt: () => void;

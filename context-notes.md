@@ -55,3 +55,16 @@
 - 현재 저장소의 데이터 수집, `data/` 커밋 및 `origin/main` 푸시 동작은 유지한다.
 - `PROJECT_REFERENCE.md`의 기존 기록은 과거 변경 이력이므로 수정하지 않는다.
 - 세 워크플로 모두 YAML 파싱에 성공했으며 Actions 워크플로 내부에 동기화 전용 참조가 남지 않았다.
+
+## 2026-08-08 설치형 PWA 세로 화면 고정
+
+- 일반 모바일 브라우저에는 회전 안내나 방향 잠금을 적용하지 않는다.
+- 설치형 PWA는 manifest의 기본 방향을 `portrait-primary`로 선언한다.
+- 설치형 실행이 감지될 때 지원되는 환경에서 `screen.orientation.lock("portrait-primary")`을 요청한다.
+- 방향 잠금 API가 없거나 거부되는 환경에서는 오류를 노출하지 않고 manifest 동작만 사용한다.
+- 프로젝트의 TypeScript DOM 정의에는 `ScreenOrientation.lock()`이 없어 호출 지점에서만 선택적 API 타입을 선언한다.
+- `npm.cmd run build`로 TypeScript와 Vite 프로덕션 빌드를 통과했으며 산출물 manifest에도 `portrait-primary`가 반영됐다.
+- 푸시 전 독립 검토용 `claude-review-checklist.md`는 로컬 전용이라 커밋하지 않는다.
+- 클로드 검토 결과 결함은 없었다. `isStandalone`을 `initPwa` 위로 옮긴 것은 필수 변경이다. `main.tsx`가 모듈 평가 시점에 `initPwa()`를 호출하므로 원래 위치의 `const`로 두면 TDZ `ReferenceError`가 난다.
+- 이미 설치된 Android PWA도 재설치가 필요 없다. 런타임 `lock()`이 새 번들 도달 즉시 걸리고, WebAPK manifest는 크롬이 실행 시 비교해 백그라운드로 자동 갱신한다.
+- iOS 홈 화면 앱은 manifest `orientation`을 무시하고 사파리에 `lock()`도 없어 세로 고정이 적용되지 않는다. 안드로이드 설치형 전용 기능이다.
