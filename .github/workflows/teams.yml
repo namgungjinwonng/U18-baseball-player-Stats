@@ -22,13 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.commit.outputs.changed }}
-      sunset: ${{ steps.sunset.outputs.sunset }}
     steps:
-      # u81-baseball 서비스 종료(2026-07-31) — 2026-08-01(KST)부터 sync-merge 중단.
-      - name: u81 동기화 종료 게이트
-        id: sunset
-        run: echo "sunset=$([ "$(TZ=Asia/Seoul date +%Y%m%d)" -ge 20260801 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
-
       - uses: actions/checkout@v4
         with:
           ref: main # 큐잉 시점 커밋이 아닌 실행 시점의 최신 main (연달아 실행 시 push 충돌 방지)
@@ -78,59 +72,4 @@ jobs:
             git pull --rebase origin main # 수집 중 다른 push가 있었으면 그 위로 재적용
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-  # u81-baseball(정적 HTML 앱) 선수 페이지 동기화 — 선수현황 데이터만 반영.
-  # secrets.MERGE_REPO_TOKEN: u81-baseball 저장소 contents write 권한 PAT 필요.
-  # 수동 실행(workflow_dispatch)은 데이터 변경이 없어도 강제 동기화 — u81 밀림 복구/점검용.
-  sync-merge:
-    needs: teams
-    if: needs.teams.outputs.sunset != 'true' && (needs.teams.outputs.changed == 'true' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    steps:
-      # 토큰이 없으면 조용히 넘어가지 말고 실패시킨다(PAT 만료·시크릿 누락을 즉시 인지).
-      - name: 토큰 확인
-        env:
-          T: ${{ secrets.MERGE_REPO_TOKEN }}
-        run: |
-          if [ -z "$T" ]; then
-            echo "::error::MERGE_REPO_TOKEN 시크릿이 없습니다 (base 저장소 Settings → Secrets and variables → Actions → Repository secrets)"
-            exit 1
-          fi
-          echo "토큰 확인됨"
-
-      - uses: actions/checkout@v4
-        with:
-          ref: main # teams 잡이 방금 푸시한 최신 데이터 기준
-
-      - uses: actions/checkout@v4
-        with:
-          repository: namgungjinwonng/u81-baseball
-          token: ${{ secrets.MERGE_REPO_TOKEN }}
-          path: u81
-          ref: main
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      # 스키마 동일(u18_data.json = teams.json)이라 복사 후 선수 페이지만 재생성.
-      - name: 선수현황 데이터 반영 + docs 재생성 (선수만)
-        run: |
-          cp data/2026/teams.json u81/u18_data.json
-          cd u81
-          python build_all.py --generate-players
-
-      - name: u81-baseball 커밋 & 푸시
-        working-directory: u81
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/u18_players.html docs/u18_app_data.js u18_data.json u18_players.html u18_app_data.js
-          if git diff --cached --quiet; then
-            echo "변경 없음 — 커밋 생략"
-          else
-            git commit -m "선수현황 동기화 — U18-baseball-player-Stats ($(TZ='Asia/Seoul' date +'%Y-%m-%d %H:%M KST'))"
-            git pull --rebase origin main
-            git push
           fi
