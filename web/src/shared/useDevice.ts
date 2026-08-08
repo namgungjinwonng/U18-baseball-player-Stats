@@ -2,14 +2,20 @@
 import { useEffect, useState } from "react";
 
 export type Device = "mobile" | "desktop";
-// 폴드6 전개(~900) / 태블릿(768-1024) 까지 모바일 UI 사용. 모바일 트리는 max-width 로 가운데 정렬되어
-// 큰 화면에서도 깔끔하게 보임. 그 이상(랩탑/데스크탑) 만 정식 데스크탑 트리.
+// 일반 화면은 1024px까지 모바일 UI를 사용한다. 폴더블 전개·태블릿처럼 주 입력이 터치인 화면은
+// 가로 viewport가 더 넓으므로 1366px까지 모바일 UI를 유지한다.
 const MOBILE_MAX = 1024;
+const TOUCH_MOBILE_MAX = 1366;
+
+export function deviceForViewport(width: number, touchPrimary: boolean, forced?: string | null): Device {
+  if (forced === "mobile" || forced === "desktop") return forced;
+  return width <= MOBILE_MAX || (touchPrimary && width <= TOUCH_MOBILE_MAX) ? "mobile" : "desktop";
+}
 
 function detect(): Device {
   const forced = new URLSearchParams(window.location.search).get("device");
-  if (forced === "mobile" || forced === "desktop") return forced;
-  return window.innerWidth <= MOBILE_MAX ? "mobile" : "desktop";
+  const touchPrimary = window.matchMedia("(pointer: coarse)").matches;
+  return deviceForViewport(window.innerWidth, touchPrimary, forced);
 }
 
 export function useDevice(): Device {

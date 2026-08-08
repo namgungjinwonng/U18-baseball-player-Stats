@@ -401,29 +401,29 @@
 }
 /* 필터 바: 2줄 고정 (위 = 시합구분 cascade, 아래 = 지역+학교+학년 3칸).
    리그 선택이 추가돼도 region/team/grade 줄은 항상 보이도록 row 마다 별도 컨테이너. */
-.filter-bar {
+.m-shell .filter-bar {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
 }
-.filter-bar__row {
+.m-shell .filter-bar__row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
-.filter-bar__row > .m-select {
+.m-shell .filter-bar__row > .m-select {
   flex: 1 1 0;
   min-width: 0;
 }
 /* 아래 줄: 지역/학교/학년 3칸 균등 — 한 줄 고정.
    좁은 화면에서 텍스트가 잘리지 않도록 3칸 줄만 패딩·화살표 여백 축소. */
-.filter-bar__row--3col {
+.m-shell .filter-bar__row--3col {
   flex-wrap: nowrap;
 }
 /* max-width 로 1/3 을 상한으로 고정 — 칸이 3개면 기존과 동일하고,
    학교별 랭킹처럼 지역 하나만 남을 때 100% 로 늘어나는 것을 막는다. */
-.filter-bar__row--3col > .m-select {
+.m-shell .filter-bar__row--3col > .m-select {
   flex: 1 1 0;
   min-width: 0;
   max-width: calc((100% - 16px) / 3);
@@ -431,7 +431,7 @@
   padding-right: 24px;
   background-position: right 8px center;
 }
-.filter-bar__row--tournament > .m-select {
+.m-shell .filter-bar__row--tournament > .m-select {
   flex: 0 0 calc((100% - 16px) / 3);
   width: calc((100% - 16px) / 3);
   min-width: 0;
@@ -464,7 +464,7 @@
 }
 /* 초협소 화면(320px 등): 패딩·글자 더 축소해 "지역 선택" 등이 잘리지 않게 */
 @media (max-width: 360px) {
-  .filter-bar__row--3col > .m-select {
+  .m-shell .filter-bar__row--3col > .m-select {
     padding-left: 8px;
     padding-right: 20px;
     background-position: right 6px center;
