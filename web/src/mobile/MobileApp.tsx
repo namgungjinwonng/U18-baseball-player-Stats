@@ -43,11 +43,11 @@ function Drawer({ onClose }: { onClose: () => void }) {
         </NavLink>
         <NavLink to="/records" onClick={onClose}>
           <Ico name="records" />
-          선수 기록 상세
+          선수 기록
         </NavLink>
         <NavLink to="/leaders/avg" onClick={onClose}>
           <Ico name="leaders" />
-          항목별 랭킹
+          랭킹
         </NavLink>
         <NavLink to="/matchup" onClick={onClose}>
           <Ico name="matchup" />

@@ -97,7 +97,7 @@ export function Glossary() {
     <>
       <h1 className="heading-xl" style={{ marginBottom: "var(--space-xs)" }}>
         <Ico name="glossary" variant="title" />
-        지표 설명 (부록)
+        지표 설명
       </h1>
       <p className="caption" style={{ marginBottom: "var(--space-xl)" }}>
         선수 상세에 표시되는 세이버메트릭스 지표의 정의와 계산식입니다. (MLB 주요 지표 기준)

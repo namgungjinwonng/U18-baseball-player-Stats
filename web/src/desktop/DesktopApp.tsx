@@ -62,8 +62,8 @@ export function DesktopApp() {
           <div className="nav-links">
             <NavLink to="/schedule">경기일정</NavLink>
             <NavLink to="/players">선수현황</NavLink>
-            <NavLink to="/records">선수 기록 상세</NavLink>
-            <NavLink to="/leaders/avg">항목별 랭킹</NavLink>
+            <NavLink to="/records">선수 기록</NavLink>
+            <NavLink to="/leaders/avg">랭킹</NavLink>
             <NavLink to="/matchup">상대전적</NavLink>
             <NavLink to="/search">선수 검색</NavLink>
             <NavLink to="/glossary">지표 설명</NavLink>
@@ -79,8 +79,8 @@ export function DesktopApp() {
           <div className="nav-drawer">
             <NavLink to="/schedule" onClick={() => setMenuOpen(false)}><Ico name="schedule" />경기일정</NavLink>
             <NavLink to="/players" onClick={() => setMenuOpen(false)}><Ico name="players" />선수현황</NavLink>
-            <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록 상세</NavLink>
-            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />항목별 랭킹</NavLink>
+            <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록</NavLink>
+            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />랭킹</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}><Ico name="matchup" />상대전적</NavLink>
             <NavLink to="/search" onClick={() => setMenuOpen(false)}><Ico name="search" />선수 검색</NavLink>
             <NavLink to="/glossary" onClick={() => setMenuOpen(false)}><Ico name="glossary" />지표 설명</NavLink>
