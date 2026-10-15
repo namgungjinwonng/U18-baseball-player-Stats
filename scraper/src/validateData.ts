@@ -16,6 +16,11 @@ if (!years.length || years.some((year, i) => i > 0 && year >= years[i - 1])) {
 
 for (const year of years) {
   const seasonDir = path.join(dataDir, String(year));
+  // 경기 기록 집계 전 새 시즌(일정·선수현황만 있음)은 기록 검증 대상이 아니다.
+  if (!fs.existsSync(path.join(seasonDir, "meta.json"))) {
+    console.log(`· ${year}: 경기 기록 집계 전 시즌 — 기록 검증 생략`);
+    continue;
+  }
   const index = JSON.parse(
     fs.readFileSync(path.join(seasonDir, "players", "index.json"), "utf8")
   ) as PlayerIndexEntry[];

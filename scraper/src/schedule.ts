@@ -10,8 +10,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { BASE, KIND } from "./koreaBaseball.js";
-import { collectionYear } from "./collectionYear.js";
+import { BASE, KIND, calendarYears, servedSeason } from "./koreaBaseball.js";
+import { collectionYear, registerSeasonYear } from "./collectionYear.js";
 import type { ScheduleData, ScheduleGame, ScheduleSide, TeamRosterEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -54,6 +54,13 @@ async function collectGameIdxs(year: number, months: number[]): Promise<string[]
   for (const m of months) {
     try {
       const html = await get(`${BASE}/game/calendar?month=${m}&year=${year}&kind_cd=${KIND.U18}`);
+      // 아직 없는 연도를 요청하면 최신 시즌 달력이 대신 온다 — 그 경기를 새 시즌 일정으로 넣지 않는다.
+      const shown = calendarYears(html);
+      if (shown.length && !shown.includes(year)) {
+        console.log(`  ${year}.${String(m).padStart(2, "0")}월: KBSA가 ${shown.join(",")} 달력으로 응답 — 건너뜀`);
+        await new Promise((r) => setTimeout(r, 200));
+        continue;
+      }
       let found = 0;
       for (const a of html.matchAll(/box_score[^"']*game_idx=(\d+)/g)) {
         idxs.add(a[1]);
@@ -141,6 +148,11 @@ async function fetchOfficialRanks(year: number): Promise<Record<string, string[]
   let ligs: [string, string][];
   try {
     const html = await get(`${BASE}/game/match_table?kind_cd=${KIND.U18}&season=${year}`);
+    const served = servedSeason(html);
+    if (served != null && served !== year) {
+      console.log(`  KBSA가 ${year} 대신 ${served} 시즌 전적표로 응답 — 공식 순위 생략`);
+      return ranks;
+    }
     ligs = [...html.matchAll(/<option lig_idx="(\d+)"[^>]*>\s*([^<]*주말리그[^<]*?)\s*<\/option>/g)]
       .map((m) => [m[1], m[2].replace(/\s+/g, " ").trim()]);
   } catch (e) {
@@ -282,6 +294,8 @@ function saveSchedule(
   const fp = scheduleFile(dataDir, year);
   fs.mkdirSync(path.dirname(fp), { recursive: true });
   fs.writeFileSync(fp, JSON.stringify(out));
+  // 새 시즌 일정이 첫 경기 기록보다 먼저 잡히면 연도 선택지에 미리 노출한다.
+  if (out.games.length) registerSeasonYear(dataDir, year);
   return out.games;
 }
 

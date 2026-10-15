@@ -9,7 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { BASE, KIND } from "./koreaBaseball.js";
+import { BASE, KIND, servedSeason } from "./koreaBaseball.js";
 import { collectionYear } from "./collectionYear.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -58,6 +58,11 @@ async function fetchTeams(
   const seen = new Set<string>();
   for (let page = 1; page <= 30; page++) {
     const html = await get(`${BASE}/info/team/team_list?kind_cd=${kindCd}&season=${season}&page=${page}`);
+    const served = servedSeason(html);
+    if (served != null && served !== season) {
+      console.warn(`  KBSA가 ${season} 대신 ${served} 시즌 팀 목록으로 응답했습니다.`);
+      return [];
+    }
     // "team_player?club_idx=" 기준으로 팀 블록 분할 후 각 블록에서 추출
     const chunks = html.split("team_player?club_idx=").slice(1);
     if (chunks.length === 0) break;
@@ -170,6 +175,11 @@ async function main() {
   const season = collectionYear();
   const limit = process.env.TEAM_LIMIT ? parseInt(process.env.TEAM_LIMIT, 10) : Infinity;
   const teams = await fetchTeams(KIND.U18, season);
+  // 새 시즌 팀 등록 전에는 빈 로스터로 루트 roster.json(지난 시즌 조인 기준)을 덮어쓰지 않는다.
+  if (!teams.length) {
+    console.warn(`⚠ KBSA에 ${season} 시즌 팀 목록이 아직 없습니다 — 로스터 갱신을 건너뜁니다.`);
+    return;
+  }
   console.log(`팀 ${teams.length}개 발견. 로스터 수집…`);
   const roster: Roster = {};
   let done = 0;
@@ -190,6 +200,10 @@ async function main() {
     }
   };
   await Promise.all(Array.from({ length: Math.min(3, targets.length) }, worker));
+  if (Object.keys(roster).length === 0) {
+    console.warn(`⚠ ${season} 시즌 팀 ${targets.length}개에서 선수를 찾지 못했습니다 — 로스터 갱신을 건너뜁니다.`);
+    return;
+  }
   fs.mkdirSync(DATA_DIR, { recursive: true });
   const seasonDir = path.join(DATA_DIR, String(season));
   fs.mkdirSync(seasonDir, { recursive: true });

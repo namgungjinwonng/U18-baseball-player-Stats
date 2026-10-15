@@ -7,8 +7,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { BASE, KIND } from "./koreaBaseball.js";
-import { collectionYear } from "./collectionYear.js";
+import { BASE, KIND, servedSeason } from "./koreaBaseball.js";
+import { collectionYear, registerSeasonYear } from "./collectionYear.js";
 import type { TeamPlayerEntry, TeamRosterEntry, TeamStaffEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -46,6 +46,11 @@ async function fetchTeams(season: number): Promise<TeamRef[]> {
   const seen = new Set<string>();
   for (let page = 1; page <= 30; page++) {
     const html = await get(`${BASE}/info/team/team_list?kind_cd=${KIND.U18}&season=${season}&page=${page}`);
+    const served = servedSeason(html);
+    if (served != null && served !== season) {
+      console.warn(`  KBSA가 ${season} 대신 ${served} 시즌 팀 목록으로 응답했습니다.`);
+      return [];
+    }
     const chunks = html.split("team_player?club_idx=").slice(1);
     if (chunks.length === 0) break;
     let added = 0;
@@ -215,18 +220,28 @@ async function fetchAllRosters(teams: TeamRef[], season: number): Promise<TeamRo
 export async function collectTeams(dataDir: string, season: number): Promise<TeamRosterEntry[]> {
   console.log("[1/2] 팀 목록 수집 중…");
   const teams = await fetchTeams(season);
-  if (!teams.length) throw new Error("팀을 찾을 수 없습니다");
+  // 새 시즌 초에는 KBSA 팀 등록 전이라 목록이 비어 있다 — 실패 대신 건너뛰어 기존 파일을 보존한다.
+  if (!teams.length) {
+    console.warn(`⚠ KBSA에 ${season} 시즌 팀 목록이 아직 없습니다 — 선수현황 갱신을 건너뜁니다.`);
+    return [];
+  }
   console.log(`  총 ${teams.length}개 팀 발견`);
 
   console.log(`[2/2] ${teams.length}개 팀 로스터 수집 중…`);
   const rosters = await fetchAllRosters(teams, season);
+  const totalPlayers = rosters.reduce((n, r) => n + r.player_count, 0);
+  const totalStaff = rosters.reduce((n, r) => n + r.staff.length, 0);
+  // 팀만 있고 선수가 하나도 없으면 등록 전이거나 전체 수집 실패 — 0명 파일로 덮어쓰지 않는다.
+  if (totalPlayers === 0) {
+    console.warn(`⚠ ${season} 시즌 팀 ${rosters.length}개에 등록 선수가 없습니다 — teams.json 갱신을 건너뜁니다.`);
+    return [];
+  }
 
   const fp = path.join(dataDir, String(season), "teams.json");
   fs.mkdirSync(path.dirname(fp), { recursive: true });
   fs.writeFileSync(fp, JSON.stringify(rosters));
-  const totalPlayers = rosters.reduce((n, r) => n + r.player_count, 0);
-  const totalStaff = rosters.reduce((n, r) => n + r.staff.length, 0);
   console.log(`✓ 팀 ${rosters.length} · 선수 ${totalPlayers} · 지도자 ${totalStaff} → data/${season}/teams.json`);
+  registerSeasonYear(dataDir, season);
   return rosters;
 }
 

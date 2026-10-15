@@ -14,6 +14,19 @@ import type { BatterLine, GameBoxScore, MatchupLine, PitcherLine } from "./types
 export const BASE = "https://www.korea-baseball.com";
 export const KIND = { U18: 31, COLLEGE: 41, GENERAL: 51 } as const;
 
+// KBSA는 아직 열리지 않은 시즌을 요청하면 오류 없이 최신 시즌 페이지로 대신 응답한다.
+// 팀 목록·전적표의 시즌 선택 상자(<select name="season">)에서 실제로 응답한 시즌을 읽는다.
+export function servedSeason(html: string): number | null {
+  const select = (html.match(/<select name="season">([\s\S]*?)<\/select>/i) || [])[1] ?? "";
+  const m = select.match(/<option value="(\d+)"\s+selected/i);
+  return m ? Number(m[1]) : null;
+}
+
+// 경기 달력(<li date="YYYY:MM:DD:HH:MM">)에 실린 연도들. 다른 연도 달력으로 대신 응답했는지 판별용.
+export function calendarYears(html: string): number[] {
+  return [...new Set([...html.matchAll(/<li[^>]*\bdate="(\d{4}):/g)].map((m) => Number(m[1])))];
+}
+
 const stripTags = (s: string) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 const slug = (team: string, name: string, num: string) =>
   `${team}_${name}_${num}`.replace(/\s+/g, "");
