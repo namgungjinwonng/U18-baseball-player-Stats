@@ -11,6 +11,7 @@ import { PagedCardGrid } from "./PagedCardGrid";
 import type { ScheduleGame, ScheduleSide } from "./types";
 import { SearchIcon } from "./LineIcons";
 import { SeasonEmpty } from "./SeasonEmpty";
+import { useYear } from "./year";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 // 기기 로컬 날짜(YYYY-MM-DD). toISOString()은 UTC라 KST 00~09시에 하루 전으로 계산된다.
@@ -229,6 +230,7 @@ function Modal({ title, sub, onClose, children }: {
 export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   const { data: sched, loading } = useSchedule();
   const { data: teamRows } = useTeams();
+  const { year, years, setYear } = useYear();
   const [view, setView] = useState<"month" | "team" | "comp">("month");
   const [monthIdx, setMonthIdx] = useState<number | null>(null);
   const [region, setRegion] = useState("");
@@ -248,12 +250,12 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   }, [teamRows]);
 
   // ===== 월별 달력 =====
-  // 경기가 없는 달(예: 9월)도 건너뛰지 않도록 시즌 연도의 1~12월을 모두 넣는다.
-  const months = useMemo(() => {
-    const year = sched?.year ?? Number(games.find((g) => g.date)?.date.slice(0, 4));
-    if (!year) return [];
-    return Array.from({ length: 12 }, (_, i) => `${year}-${pad2(i + 1)}`);
-  }, [sched, games]);
+  // 경기가 없는 달(예: 9월)도 건너뛰지 않도록 선택 시즌의 1~12월을 모두 넣는다.
+  // 선택 연도 기준이라 시즌 전환 직후(새 일정 로딩 중)에도 달 표시가 먼저 바뀐다.
+  const months = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => `${year}-${pad2(i + 1)}`),
+    [year]
+  );
   // 초기 월 = 오늘이 속한 월(없으면 다음 월, 그것도 없으면 마지막 월)
   const curMonthIdx = useMemo(() => {
     if (monthIdx != null) return Math.max(0, Math.min(months.length - 1, monthIdx));
@@ -263,6 +265,22 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
     if (idx < 0) idx = months.length - 1;
     return Math.max(0, idx);
   }, [monthIdx, months]);
+  // 1월 이전·12월 다음은 years.json 의 인접 시즌으로 이어진다(내림차순 목록).
+  // 새 시즌이 years.json 에 등록되면 별도 작업 없이 12월 → 다음 해 1월로 연결된다.
+  const prevSeason = years.find((y) => y < year);
+  const nextSeason = years.filter((y) => y > year).pop();
+  const goPrevMonth = () => {
+    if (curMonthIdx > 0) return setMonthIdx(curMonthIdx - 1);
+    if (prevSeason == null) return;
+    setMonthIdx(11);
+    setYear(prevSeason);
+  };
+  const goNextMonth = () => {
+    if (curMonthIdx < months.length - 1) return setMonthIdx(curMonthIdx + 1);
+    if (nextSeason == null) return;
+    setMonthIdx(0);
+    setYear(nextSeason);
+  };
 
   // ===== 학교별 =====
   const teams = useMemo(
@@ -407,9 +425,9 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
     return (
       <>
         <div className="sch-monthnav">
-          <button className="sch-monthnav__btn" disabled={curMonthIdx <= 0} onClick={() => setMonthIdx(curMonthIdx - 1)} aria-label="이전 달">‹</button>
+          <button className="sch-monthnav__btn" disabled={curMonthIdx <= 0 && prevSeason == null} onClick={goPrevMonth} aria-label="이전 달">‹</button>
           <span className="sch-monthnav__cur">{ym.replace("-", ". ")}</span>
-          <button className="sch-monthnav__btn" disabled={curMonthIdx >= months.length - 1} onClick={() => setMonthIdx(curMonthIdx + 1)} aria-label="다음 달">›</button>
+          <button className="sch-monthnav__btn" disabled={curMonthIdx >= months.length - 1 && nextSeason == null} onClick={goNextMonth} aria-label="다음 달">›</button>
         </div>
         <div className="sch-cal">
           <div className="sch-cal__wd">
