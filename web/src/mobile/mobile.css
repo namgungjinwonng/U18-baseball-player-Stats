@@ -180,14 +180,28 @@
 .m-hero {
   background: linear-gradient(135deg, #111 0%, #2a2a2a 100%);
   color: var(--color-on-primary);
-  padding: 32px 16px;
+  padding: 20px 16px 22px;
 }
+/* 첫 화면에서 시즌 리더가 보이도록 히어로 높이를 줄인다 */
 .m-hero .display-campaign {
-  font-size: 48px;
+  font-size: 36px;
 }
 .m-hero__sub {
   color: var(--color-stone);
-  margin: 12px 0 18px;
+  font-size: 14px;
+  margin: 8px 0 14px;
+}
+/* 바로가기 4개를 한 줄에 균등 배치 */
+.m-hero__links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.m-hero__links .btn {
+  padding-left: 0;
+  padding-right: 0;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
 }
 
 /* Mobile tabs — 좌우 스크롤 없이 한 화면에 보이도록 wrap + 칩 축소 */
