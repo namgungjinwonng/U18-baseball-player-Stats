@@ -908,6 +908,52 @@
   color: var(--color-sale);
   margin-top: 1px;
 }
+/* 오늘 — 경기 유무와 관계없이 반전 색으로 표시 */
+.sch-cal__day--today,
+.sch-cal__day--today.sch-cal__day--has {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-on-primary);
+  font-weight: 700;
+}
+.sch-cal__day--today .cnt {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-on-primary);
+  margin-top: 1px;
+}
+/* 달력 아래 다가오는 경기 요약 */
+.sch-next {
+  margin-top: var(--space-md);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+.sch-next h3 {
+  font-size: var(--type-caption);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.sch-next__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-hairline);
+  font-size: var(--type-caption);
+}
+.sch-next__more {
+  display: block;
+  margin-left: auto;
+  margin-top: 4px;
+  background: none;
+  border: none;
+  font-family: var(--font-ui);
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+  cursor: pointer;
+  padding: 4px 0;
+}
 
 /* 학교/팀 카드 그리드 (경기일정 학교별 + 선수현황 공용) */
 .sch-team-grid {
@@ -1108,6 +1154,22 @@
 .sch-side.lose .rb { background: var(--color-sale); }
 .sch-game__colon {
   font-weight: 800;
+  color: var(--color-mute);
+}
+/* 예정 경기: 점수 자리 대신 시작 시간 */
+.sch-game__time {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 8px;
+  line-height: 1.15;
+}
+.sch-game__time b {
+  font-size: var(--type-heading-md);
+  font-variant-numeric: tabular-nums;
+}
+.sch-game__time span {
+  font-size: var(--type-utility-xs);
   color: var(--color-mute);
 }
 .sch-game__meta {

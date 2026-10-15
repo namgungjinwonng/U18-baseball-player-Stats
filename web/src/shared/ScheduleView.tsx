@@ -12,6 +12,9 @@ import type { ScheduleGame, ScheduleSide } from "./types";
 import { SearchIcon } from "./LineIcons";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
+// 기기 로컬 날짜(YYYY-MM-DD). toISOString()은 UTC라 KST 00~09시에 하루 전으로 계산된다.
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const localYmd = (d = new Date()) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 const fmtDateHeader = (d: string) => {
   const dt = new Date(`${d}T00:00:00`);
   return `${dt.getMonth() + 1}/${dt.getDate()} (${WD[dt.getDay()]})`;
@@ -142,9 +145,11 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
   const stageCls = g.round
     ? /결승|준결|[0-9]+강|왕중왕|플레이오프|토너/.test(g.round) ? "cup" : "league"
     : g.status === "취소" ? "cup" : "sched";
+  // 예정 경기는 점수 자리(- : -) 대신 가운데에 시작 시간을 크게 보여준다.
+  const upcoming = g.status === "예정" && a.score == null && h.score == null;
   const metaLeft = [
-    g.status === "예정" ? "예정" : g.status === "취소" ? "취소" : "",
-    g.time,
+    !upcoming && g.status === "취소" ? "취소" : "",
+    upcoming ? "" : g.time,
     g.venue,
   ].filter(Boolean).join(" · ");
   return (
@@ -153,6 +158,16 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
         <span className="sch-game__comp">{!hideComp && g.title ? shortTitle(g.title) : ""}</span>
         {stage && <span className={`sch-game__stage sch-game__stage--${stageCls}`}>{stage}</span>}
       </div>
+      {upcoming ? (
+        <div className="sch-game__score">
+          <span className="sch-side"><span className="nm">{a.name}</span></span>
+          <span className="sch-game__time">
+            <b>{g.time || "vs"}</b>
+            <span>예정</span>
+          </span>
+          <span className="sch-side"><span className="nm">{h.name}</span></span>
+        </div>
+      ) : (
       <div className="sch-game__score">
         <span className={`sch-side ${cls(a)}`}>
           <span className="nm">{a.name}</span>
@@ -166,9 +181,10 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
           <span className="nm">{h.name}</span>
         </span>
       </div>
+      )}
       <div className="sch-game__meta">
         <span>{metaLeft}</span>
-        <span className="muted">기록 ›</span>
+        <span className="muted">{upcoming ? "KBSA ↗" : "기록 ›"}</span>
       </div>
     </a>
   );
@@ -354,22 +370,37 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
     for (const g of games) {
       if (g.date?.slice(0, 7) === ym) counts.set(g.date, (counts.get(g.date) ?? 0) + 1);
     }
+    const todayStr = localYmd();
     const cells: React.ReactNode[] = [];
     for (let i = 0; i < firstWd; i++) cells.push(<div key={`e${i}`} className="sch-cal__day sch-cal__day--empty" />);
     for (let d = 1; d <= daysIn; d++) {
       const ds = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
       const n = counts.get(ds) ?? 0;
+      const todayCls = ds === todayStr ? " sch-cal__day--today" : "";
       cells.push(
         n ? (
-          <button key={ds} className="sch-cal__day sch-cal__day--has" onClick={() => setModal({ type: "date", ds })}>
+          <button key={ds} className={`sch-cal__day sch-cal__day--has${todayCls}`} onClick={() => setModal({ type: "date", ds })}>
             {d}
             <span className="cnt">{n}</span>
           </button>
         ) : (
-          <div key={ds} className="sch-cal__day">{d}</div>
+          <div key={ds} className={`sch-cal__day${todayCls}`}>
+            {d}
+            {todayCls && <span className="cnt">오늘</span>}
+          </div>
         )
       );
     }
+    // 오늘 이후 가장 가까운 경기일(취소 제외)의 경기를 달력 아래에 바로 보여준다.
+    const nextDate = games
+      .filter((g) => g.date >= todayStr && g.status === "예정")
+      .map((g) => g.date)
+      .sort()[0];
+    const nextGames = nextDate
+      ? games
+          .filter((g) => g.date === nextDate && g.status === "예정")
+          .sort((x, z) => (x.time || "").localeCompare(z.time || ""))
+      : [];
     return (
       <>
         <div className="sch-monthnav">
@@ -385,6 +416,24 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
           </div>
           <div className="sch-cal__grid">{cells}</div>
         </div>
+        {nextDate && (
+          <section className="sch-next" aria-label="다가오는 경기">
+            <h3>
+              {nextDate === todayStr ? "오늘 경기" : "다가오는 경기"} · {fmtDateHeader(nextDate)}
+            </h3>
+            {nextGames.slice(0, 4).map((g) => (
+              <div key={g.game_idx} className="sch-next__row">
+                <span>
+                  {g.away.name} <span className="muted">vs</span> {g.home.name}
+                </span>
+                <span className="muted">{g.time}</span>
+              </div>
+            ))}
+            <button className="sch-next__more" onClick={() => setModal({ type: "date", ds: nextDate })}>
+              {nextGames.length > 4 ? `${nextGames.length}경기 전체 보기 ›` : "경기 정보 보기 ›"}
+            </button>
+          </section>
+        )}
       </>
     );
   };
