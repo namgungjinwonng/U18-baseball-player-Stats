@@ -56,6 +56,23 @@ function MAwards({ profile }: { profile: PlayerProfile | null }) {
   );
 }
 
+// 시즌 기록 상단 핵심 지표 4개 요약 — 아래 상세 표에서 무엇이 중요한지 먼저 보여준다.
+function KpiRow({ items, note }: { items: [string, string][]; note?: string }) {
+  return (
+    <>
+      <div className="m-kpi">
+        {items.map(([k, val]) => (
+          <div key={k} className="m-kpi__cell">
+            <span className="m-kpi__k">{k}</span>
+            <span className="m-kpi__v">{val}</span>
+          </div>
+        ))}
+      </div>
+      {note && <p className="m-kpi__note">{note}</p>}
+    </>
+  );
+}
+
 // 경기 로그 한 경기 카드 — 클릭 시 그 시합 상대 학교의 상대전적(상대 선수별 기록)을 펼친다.
 function MGameLogEntry({
   g, role, matchups, byId,
@@ -316,6 +333,10 @@ export function MPlayer() {
         const a = battingAdvanced(v.batting, lg);
         return (
           <>
+            <KpiRow
+              items={[["타율", rate(v.batting.avg)], ["OPS", rate(a.ops)], ["홈런", n(v.batting.hr)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
+              note={a.wrcPlus != null ? `wRC+ ${int(a.wrcPlus)} (리그 평균 100)` : undefined}
+            />
             <section className="player-section">
               <h3>타자 기록</h3>
               <div className="m-strip">
@@ -363,6 +384,9 @@ export function MPlayer() {
         const a = pitchingAdvanced(v.pitching, lg);
         return (
           <>
+            <KpiRow
+              items={[["평균자책", dec2(v.pitching.era)], ["WHIP", dec2(a.whip)], ["탈삼진", n(v.pitching.so)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
+            />
             <section className="player-section">
               <h3>투수 기록</h3>
               <div className="m-strip">

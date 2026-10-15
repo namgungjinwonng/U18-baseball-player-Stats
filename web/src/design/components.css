@@ -321,18 +321,23 @@
 }
 
 /* --- Player detail: single-line meta + section spacing --- */
+/* 구분점은 각 항목 앞(::before)에 두고, 줄 맨 앞에 온 구분점은 왼쪽 20px 클립으로 숨긴다
+   (뒤에 붙이면 줄바꿈 시 줄 끝에 '·'가 홀로 남는다). */
 .player-meta-line {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 10px;
+  gap: 6px 0;
   align-items: baseline;
   color: var(--color-mute);
   font-size: 14px;
-  margin: 4px 0 16px;
+  margin: 4px 0 16px -20px;
+  clip-path: inset(0 0 0 20px);
 }
-.player-meta-line > span:not(:last-child)::after {
+.player-meta-line > span::before {
   content: "·";
-  margin-left: 10px;
+  display: inline-block;
+  width: 20px;
+  text-align: center;
   color: var(--color-hairline);
 }
 .player-section {
