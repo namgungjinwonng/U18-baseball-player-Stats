@@ -10,6 +10,7 @@ import {
 import { Ico } from "../../shared/navIcons";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 import { useYear } from "../../shared/year";
+import { SearchIcon } from "../../shared/LineIcons";
 
 export function MMatchup() {
   const { year } = useYear();
@@ -99,7 +100,7 @@ export function MMatchup() {
       ) : (
         <>
           <div className="search-pill" style={{ marginTop: 8 }}>
-            <span aria-hidden>⌕</span>
+            <SearchIcon />
             <input value={query} onChange={(e) => setQuery(e.target.value)}
               placeholder={`${aRole === "batter" ? "타자" : "투수"} 이름`} aria-label="선수 이름 검색" />
           </div>

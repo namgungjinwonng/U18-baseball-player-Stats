@@ -16,6 +16,7 @@ import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
 import { HomeIcon } from "../shared/HomeIcon";
+import { MenuIcon, SearchIcon } from "../shared/LineIcons";
 import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
@@ -86,14 +87,14 @@ export function MobileApp() {
       <header className="m-topbar">
         <div className="m-topbar__inner">
           <button className="icon-btn" onClick={() => setDrawer(true)} aria-label="메뉴">
-            ☰
+            <MenuIcon />
           </button>
           <Link to="/" className="brand" title="홈으로 이동">
             <HomeIcon />
             <span>U18 BASEBALL</span>
           </Link>
           <div className="m-topbar__group">
-            <InstallButton />
+            <InstallButton compact />
             <RefreshButton />
             <YearSelect />
             <button
@@ -101,7 +102,7 @@ export function MobileApp() {
               onClick={() => nav("/search")}
               aria-label="선수 검색"
             >
-              ⌕
+              <SearchIcon />
             </button>
           </div>
         </div>

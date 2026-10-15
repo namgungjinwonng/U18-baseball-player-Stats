@@ -55,6 +55,12 @@
   height: 20px;
   flex-shrink: 0;
 }
+/* 메뉴·검색·설치 아이콘 (LineIcons) — 글자 크기에 맞춰 버튼·입력칸 안에서 쓴다 */
+.line-icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex-shrink: 0;
+}
 .brand .home-icon {
   /* Bebas Neue 대문자 라인과 시각 중심을 맞춘다 */
   margin-top: -2px;
@@ -770,6 +776,11 @@
   padding: 6px 14px;
   min-height: 32px;
   cursor: pointer;
+}
+/* 모바일 상단바용 아이콘 설치 버튼 (.icon-btn 크기·모양을 그대로 따른다) */
+.install-btn--icon .line-icon {
+  width: 18px;
+  height: 18px;
 }
 .install-guide {
   position: absolute;

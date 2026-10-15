@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePlayerIndex, searchPlayers } from "../../shared/data";
 import { Ico } from "../../shared/navIcons";
+import { SearchIcon } from "../../shared/LineIcons";
 
 export function SearchPage() {
   const [params, setParams] = useSearchParams();
@@ -20,7 +21,7 @@ export function SearchPage() {
         <h2 className="heading-xl"><Ico name="search" variant="title" />선수 검색</h2>
       </div>
       <div className="search-pill" style={{ maxWidth: 480, marginBottom: 24 }}>
-        <span aria-hidden>⌕</span>
+        <SearchIcon />
         <input
           autoFocus
           value={q}

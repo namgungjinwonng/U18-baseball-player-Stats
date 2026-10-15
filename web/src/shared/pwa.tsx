@@ -1,5 +1,6 @@
 // PWA 설치 + 인앱 브라우저 처리 (u81-baseball 방식 미러).
 import { useEffect, useState } from "react";
+import { InstallIcon } from "./LineIcons";
 
 const BASE = import.meta.env.BASE_URL;
 const isStandalone = () =>
@@ -82,16 +83,21 @@ export function usePwaInstall() {
 }
 
 // 설치 버튼 — 설치 가능하면 노출, 설치되면 숨김. iOS는 안내 토글.
-export function InstallButton() {
+// compact: 좁은 모바일 상단바용 아이콘 버튼(글자 버튼은 상단바 폭을 넘겨 세로로 깨진다).
+export function InstallButton({ compact = false }: { compact?: boolean }) {
   const { canInstall, installed, install, ios } = usePwaInstall();
   const [showGuide, setShowGuide] = useState(false);
 
   if (installed) return null; // 이미 설치됨 → 숨김
 
+  const label = canInstall ? "앱 설치" : "설치 방법";
+  const content = compact ? <InstallIcon /> : `📲 ${label}`;
+  const className = compact ? "icon-btn install-btn--icon" : "install-btn";
+
   if (canInstall) {
     return (
-      <button className="install-btn" onClick={install}>
-        📲 앱 설치
+      <button className={className} onClick={install} aria-label={label} title={label}>
+        {content}
       </button>
     );
   }
@@ -99,8 +105,14 @@ export function InstallButton() {
   if (ios) {
     return (
       <span className="install-wrap">
-        <button className="install-btn" onClick={() => setShowGuide((v) => !v)}>
-          📲 설치 방법
+        <button
+          className={className}
+          onClick={() => setShowGuide((v) => !v)}
+          aria-label={label}
+          aria-expanded={showGuide}
+          title={label}
+        >
+          {content}
         </button>
         {showGuide && (
           <div className="install-guide">

@@ -10,6 +10,7 @@ import {
 import { Ico } from "../../shared/navIcons";
 import type { Matchup, PlayerIndexEntry } from "../../shared/types";
 import { useYear } from "../../shared/year";
+import { SearchIcon } from "../../shared/LineIcons";
 
 function Stat({ k, v }: { k: string; v: string }) {
   return <div className="stat"><div className="k">{k}</div><div className="v">{v}</div></div>;
@@ -130,7 +131,7 @@ export function MatchupPage() {
       ) : (
         <div className="ac" style={{ maxWidth: 480 }}>
           <div className="search-pill">
-            <span aria-hidden>⌕</span>
+            <SearchIcon />
             <input autoFocus value={query} onChange={(e) => setQuery(e.target.value)}
               placeholder={`${aRole === "batter" ? "타자" : "투수"} 이름 입력`} aria-label="선수 이름 검색" />
           </div>

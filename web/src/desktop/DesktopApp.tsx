@@ -17,6 +17,7 @@ import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
+import { MenuIcon, SearchIcon } from "../shared/LineIcons";
 
 // 상단바 검색 = 선수 검색 페이지로 바로 이동 (검색 UI 를 /search 하나로 통일)
 function DesktopSearch() {
@@ -29,7 +30,7 @@ function DesktopSearch() {
       onClick={() => nav("/search")}
       aria-label="선수 검색 열기"
     >
-      <span aria-hidden>⌕</span>
+      <SearchIcon />
       <span className="search-pill__ph">선수 검색 (이름 또는 팀+등번호 가능)</span>
     </button>
   );
@@ -53,7 +54,7 @@ export function DesktopApp() {
             aria-label="메뉴"
             onClick={() => setMenuOpen((o) => !o)}
           >
-            ☰
+            <MenuIcon />
           </button>
           <Link to="/" className="brand" title="홈으로 이동" onClick={() => setMenuOpen(false)}>
             <HomeIcon />

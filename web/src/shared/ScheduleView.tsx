@@ -9,6 +9,7 @@ import { kbsaBoxScoreUrl } from "./kbsa";
 import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { ScheduleGame, ScheduleSide } from "./types";
+import { SearchIcon } from "./LineIcons";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 const fmtDateHeader = (d: string) => {
@@ -507,7 +508,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
                 ))}
               </select>
               <div className="search-pill" style={{ flex: 1, minWidth: 160 }}>
-                <span aria-hidden>⌕</span>
+                <SearchIcon />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}

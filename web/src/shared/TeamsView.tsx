@@ -10,6 +10,7 @@ import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { TeamPlayerEntry, TeamStaffEntry } from "./types";
+import { SearchIcon } from "./LineIcons";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
 const getPos = (p: TeamPlayerEntry) => p.position || "미지정";
@@ -389,7 +390,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
             style={{ flex: 1, minWidth: 160 }}
             onSubmit={(e) => { e.preventDefault(); doSearch(); }}
           >
-            <span aria-hidden>⌕</span>
+            <SearchIcon />
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
