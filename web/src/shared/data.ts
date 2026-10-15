@@ -8,9 +8,22 @@ import { useYear } from "./year";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
 
-// 새 문서 로드마다 고유한 URL로 시작해 GitHub Pages의 10분 HTTP 캐시를 우회한다.
-// 이후 메타 변경 감지 시 lastUpdated 기반 리비전으로 교체되어 모든 훅이 재조회된다.
-let dataRevision = `start-${Date.now()}`;
+// 데이터 URL 리비전 = meta.json 의 lastUpdated|gameCount (autoSync 서명과 같은 형식).
+// 데이터가 그대로면 실행할 때마다 같은 URL이라 브라우저 HTTP 캐시·서비스워커 캐시를 재사용하고,
+// 수집으로 데이터가 바뀌면 URL도 바뀌어 새로 받는다. (예전에는 실행마다 start-시각을 붙여
+// 매번 전량을 다시 받고 서비스워커 캐시에 실행마다 새 항목이 쌓였다.)
+// meta 조회에 실패하면 고유값으로 폴백해 최신성을 우선한다.
+let dataRevision = "";
+const revisionReady: Promise<void> = fetch(`${BASE}data/meta.json?check=${Date.now()}`, { cache: "no-store" })
+  .then((r) => (r.ok ? (r.json() as Promise<{ lastUpdated?: string; gameCount?: number }>) : null))
+  .then((m) => {
+    if (!dataRevision) {
+      dataRevision = m?.lastUpdated ? `${m.lastUpdated}|${m.gameCount ?? ""}` : `start-${Date.now()}`;
+    }
+  })
+  .catch(() => {
+    if (!dataRevision) dataRevision = `start-${Date.now()}`;
+  });
 const revisionListeners = new Set<() => void>();
 
 export function setDataRevision(revision: string) {
@@ -32,6 +45,7 @@ function useDataRevision() {
 const jsonCache = new Map<string, Promise<unknown>>();
 
 async function getJSON<T>(rel: string): Promise<T> {
+  await revisionReady;
   const join = rel.includes("?") ? "&" : "?";
   const url = `${BASE}data/${rel}${join}v=${encodeURIComponent(dataRevision)}`;
   let pending = jsonCache.get(url);
