@@ -91,8 +91,13 @@ const realSeasons = Object.entries(ids).map(([year, id]) => ({
   year: Number(year),
   player: JSON.parse(fs.readFileSync(path.join(dataDir, year, "players", `${id}.json`), "utf8")) as Player,
 }));
+// 실데이터는 수집 때마다 갱신되므로 고정 숫자 대신 시즌 파일의 원자료 합으로 기대값을 만든다.
+const sumOf = (key: "h" | "ab") => realSeasons.reduce((sum, s) => sum + (s.player.batting?.[key] ?? 0), 0);
+const expectedH = sumOf("h");
+const expectedAb = sumOf("ab");
+assert.ok(realSeasons.length >= 3 && expectedAb > 0, "권민수는 3시즌 이상 타격 기록이 있어야 함");
 const realBatting = aggregateCareerBatting(realSeasons)!;
-assert.equal(realBatting.h, 59);
-assert.equal(realBatting.ab, 197);
-assert.equal(realBatting.avg, 0.299, "권민수 통산 타율은 59/197=.299");
-console.log("✓ 실제 3시즌 선수 통산 검증: 권민수 59/197 = .299");
+assert.equal(realBatting.h, expectedH);
+assert.equal(realBatting.ab, expectedAb);
+assert.equal(realBatting.avg, Number((expectedH / expectedAb).toFixed(3)), "통산 타율은 시즌 합산 안타/타수");
+console.log(`✓ 실제 ${realSeasons.length}시즌 선수 통산 검증: 권민수 ${expectedH}/${expectedAb} = ${realBatting.avg}`);
