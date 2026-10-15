@@ -21,6 +21,11 @@ const fmtDateHeader = (d: string) => {
   const dt = new Date(`${d}T00:00:00`);
   return `${dt.getMonth() + 1}/${dt.getDate()} (${WD[dt.getDay()]})`;
 };
+// 연도까지 보여야 하는 짧은 날짜: 2026-10-16 → '26.10.16 금 (다른 시즌 날짜로 오해 방지)
+const fmtShortYmd = (d: string) => {
+  const dt = new Date(`${d}T00:00:00`);
+  return `'${d.slice(2, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)} ${WD[dt.getDay()]}`;
+};
 // 카드용 짧은 대회명: 맨 앞 연도만 제거 (청룡기·황금사자기 등 이름은 유지)
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
 // 주말리그 = 제목에 '주말리그 전반기/후반기' 포함 / 전국대회 = 그 외
@@ -387,8 +392,11 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
     const [y, m] = ym.split("-").map(Number);
     const firstWd = new Date(y, m - 1, 1).getDay();
     const daysIn = new Date(y, m, 0).getDate();
+    // 시즌 전환 직후에는 새 일정이 올 때까지 이전 시즌 일정이 남아 있다 —
+    // 선택 시즌의 일정일 때만 달력·다가오는 경기에 쓴다(2024 선택 중 2026 경기 표시 방지).
+    const calGames = sched?.year === year ? games : [];
     const counts = new Map<string, number>();
-    for (const g of games) {
+    for (const g of calGames) {
       if (g.date?.slice(0, 7) === ym) counts.set(g.date, (counts.get(g.date) ?? 0) + 1);
     }
     const todayStr = localYmd();
@@ -413,12 +421,12 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
       );
     }
     // 오늘 이후 가장 가까운 경기일(취소 제외)의 경기를 달력 아래에 바로 보여준다.
-    const nextDate = games
+    const nextDate = calGames
       .filter((g) => g.date >= todayStr && g.status === "예정")
       .map((g) => g.date)
       .sort()[0];
     const nextGames = nextDate
-      ? games
+      ? calGames
           .filter((g) => g.date === nextDate && g.status === "예정")
           .sort((x, z) => (x.time || "").localeCompare(z.time || ""))
       : [];
@@ -440,7 +448,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
         {nextDate && (
           <section className="sch-next" aria-label="다가오는 경기">
             <h3>
-              {nextDate === todayStr ? "오늘 경기" : "다가오는 경기"} · {fmtDateHeader(nextDate)}
+              {nextDate === todayStr ? "오늘 경기" : "다가오는 경기"} ({fmtShortYmd(nextDate)})
             </h3>
             {nextGames.slice(0, 4).map((g) => (
               <div key={g.game_idx} className="sch-next__row">
