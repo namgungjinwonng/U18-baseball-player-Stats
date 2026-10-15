@@ -693,6 +693,14 @@
   width: 15px;
   height: 15px;
 }
+.qual-badge {
+  font-size: var(--type-caption-sm);
+  color: var(--color-mute);
+  background: var(--color-soft-cloud);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
 .rank-row--unqual {
   opacity: 0.55;
 }

@@ -58,7 +58,11 @@ export function MRecords() {
           checked={includeUnqualified}
           onChange={(e) => setIncludeUnqualified(e.target.checked)}
         />
-        규정 미달 포함 — {describeQualify(ctx, tab.kind)}
+        규정 미달 포함
+        {/* 모바일 폭에서 한 줄에 들어가도록 괄호 설명은 배지 툴팁으로만 둔다 */}
+        <span className="qual-badge" title={describeQualify(ctx, tab.kind)}>
+          {describeQualify(ctx, tab.kind).replace(/\s*\(.*\)\s*$/, "")}
+        </span>
       </label>
       {loading && <div className="state">불러오는 중…</div>}
       {players && (

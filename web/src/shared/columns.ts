@@ -18,6 +18,7 @@ const team: Column<Player> = {
   label: "팀",
   value: (p) => p.team,
   defaultDesc: false,
+  align: "left", // 글자 열은 숫자 열과 달리 왼쪽 정렬
 };
 
 // 타자 기본 — 카운팅 스탯만 (G, 타석, 타수, 안타, 2루타, 3루타, 홈런, 타점, 득점, 도루, 볼넷, 사구, 삼진)
