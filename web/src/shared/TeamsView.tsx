@@ -11,6 +11,7 @@ import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { TeamPlayerEntry, TeamStaffEntry } from "./types";
 import { SearchIcon } from "./LineIcons";
+import { SeasonEmpty } from "./SeasonEmpty";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
 const getPos = (p: TeamPlayerEntry) => p.position || "미지정";
@@ -301,11 +302,12 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   }, [modalTeam, closeModal]);
 
   if (loading) return <div className={wrapClass}><div className="state">불러오는 중…</div></div>;
-  if (!teams) {
+  // 새 시즌 등록 전(파일 없음 또는 팀만 있고 선수 0명)이면 0명 카드 대신 안내를 보여준다.
+  if (!teams || teams.every((t) => t.players.length === 0)) {
     return (
       <div className={wrapClass}>
         <h2 className="heading-xl"><Ico name="players" variant="title" />선수현황</h2>
-        <div className="state">선수현황 데이터가 아직 없습니다.</div>
+        <SeasonEmpty kind="teams" />
       </div>
     );
   }

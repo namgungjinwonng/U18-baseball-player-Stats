@@ -12,6 +12,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
+import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { Ico } from "../shared/navIcons";
 import { YearSelect } from "../shared/year";
@@ -91,15 +92,15 @@ export function DesktopApp() {
       </nav>
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<SeasonRecordsGate wrapClass="container page"><HomePage /></SeasonRecordsGate>} />
           <Route path="/schedule" element={<ScheduleView wrapClass="container page" />} />
           <Route path="/players" element={<TeamsView wrapClass="container page" />} />
           <Route path="/person/:personNo" element={<PersonView wrapClass="container page" />} />
-          <Route path="/records" element={<RecordsPage />} />
-          <Route path="/matchup" element={<MatchupPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/player/:id" element={<PlayerPage />} />
-          <Route path="/leaders/:id" element={<LeadersView wrapClass="container page" />} />
+          <Route path="/records" element={<SeasonRecordsGate wrapClass="container page"><RecordsPage /></SeasonRecordsGate>} />
+          <Route path="/matchup" element={<SeasonRecordsGate wrapClass="container page"><MatchupPage /></SeasonRecordsGate>} />
+          <Route path="/search" element={<SeasonRecordsGate wrapClass="container page"><SearchPage /></SeasonRecordsGate>} />
+          <Route path="/player/:id" element={<SeasonRecordsGate wrapClass="container page"><PlayerPage /></SeasonRecordsGate>} />
+          <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="container page"><LeadersView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/glossary" element={<div className="container page"><Glossary /></div>} />
           <Route path="/notice" element={<Notice wrapClass="container page" />} />
         </Routes>

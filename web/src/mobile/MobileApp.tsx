@@ -15,6 +15,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { Notice } from "../shared/Notice";
+import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { MenuIcon, SearchIcon } from "../shared/LineIcons";
 import { Ico } from "../shared/navIcons";
@@ -112,15 +113,15 @@ export function MobileApp() {
 
       <main>
         <Routes>
-          <Route path="/" element={<MHome />} />
+          <Route path="/" element={<SeasonRecordsGate wrapClass="m-page"><MHome /></SeasonRecordsGate>} />
           <Route path="/schedule" element={<ScheduleView wrapClass="m-page" />} />
           <Route path="/players" element={<TeamsView wrapClass="m-page" />} />
           <Route path="/person/:personNo" element={<PersonView wrapClass="m-page" />} />
-          <Route path="/records" element={<MRecords />} />
-          <Route path="/matchup" element={<MMatchup />} />
-          <Route path="/search" element={<MSearch />} />
-          <Route path="/player/:id" element={<MPlayer />} />
-          <Route path="/leaders/:id" element={<LeadersView wrapClass="m-page" />} />
+          <Route path="/records" element={<SeasonRecordsGate wrapClass="m-page"><MRecords /></SeasonRecordsGate>} />
+          <Route path="/matchup" element={<SeasonRecordsGate wrapClass="m-page"><MMatchup /></SeasonRecordsGate>} />
+          <Route path="/search" element={<SeasonRecordsGate wrapClass="m-page"><MSearch /></SeasonRecordsGate>} />
+          <Route path="/player/:id" element={<SeasonRecordsGate wrapClass="m-page"><MPlayer /></SeasonRecordsGate>} />
+          <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="m-page"><LeadersView wrapClass="m-page" /></SeasonRecordsGate>} />
           <Route path="/glossary" element={<div className="m-page"><Glossary /></div>} />
           <Route path="/notice" element={<Notice wrapClass="m-page" />} />
         </Routes>

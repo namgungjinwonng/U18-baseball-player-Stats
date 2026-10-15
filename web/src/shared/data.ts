@@ -106,6 +106,10 @@ export const useMeta = () => {
   return useAsync<Meta>(() => getJSON(`${year}/meta.json`), [year]);
 };
 
+// 시즌 경기 기록 존재 여부 — 새 시즌은 일정·선수현황만 있고 meta.json이 없을 수 있다.
+export const seasonHasRecords = (year: number) =>
+  getJSON<Meta>(`${year}/meta.json`).then(() => true, () => false);
+
 // 특정 시합/대회의 meta (teamGames 등 — 규정 계산 스코프용). slug 비면 null.
 export const useTournamentMeta = (slug: string | "") => {
   const { year } = useYear();

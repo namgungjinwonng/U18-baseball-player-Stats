@@ -10,6 +10,7 @@ import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { ScheduleGame, ScheduleSide } from "./types";
 import { SearchIcon } from "./LineIcons";
+import { SeasonEmpty } from "./SeasonEmpty";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 // 기기 로컬 날짜(YYYY-MM-DD). toISOString()은 UTC라 KST 00~09시에 하루 전으로 계산된다.
@@ -351,11 +352,11 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   }, [comp, round, games]);
 
   if (loading) return <div className={wrapClass}><div className="state">불러오는 중…</div></div>;
-  if (!sched) {
+  if (!sched || sched.games.length === 0) {
     return (
       <div className={wrapClass}>
         <h2 className="heading-xl"><Ico name="schedule" variant="title" />경기일정</h2>
-        <div className="state">일정 데이터가 아직 없습니다.</div>
+        <SeasonEmpty kind="schedule" />
       </div>
     );
   }

@@ -521,6 +521,19 @@
   text-align: center;
   color: var(--color-mute);
 }
+/* 새 시즌 데이터 없음 안내 (SeasonEmpty) */
+.season-empty__title {
+  color: var(--color-ink);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+.season-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
 
 /* 다중 정렬 마크 / 인라인 링크 버튼 */
 .sort-mark sup {
