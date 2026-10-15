@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePlayerIndex, searchPlayers } from "../../shared/data";
 import { Ico } from "../../shared/navIcons";
 import { SearchIcon } from "../../shared/LineIcons";
+
+const PAGE = 50;
 
 export function SearchPage() {
   const [params, setParams] = useSearchParams();
@@ -14,6 +16,9 @@ export function SearchPage() {
     () => (index ? searchPlayers(index, q) : []),
     [index, q]
   );
+  // 결과가 수백 명이어도 한 번에 다 그리지 않고 PAGE명씩 늘려 보여준다.
+  const [limit, setLimit] = useState(PAGE);
+  useEffect(() => setLimit(PAGE), [q]);
 
   return (
     <div className="container page">
@@ -41,7 +46,7 @@ export function SearchPage() {
       )}
       {!q && <div className="state muted">이름을 입력해 선수를 찾아보세요.</div>}
 
-      {results.map((p) => (
+      {results.slice(0, limit).map((p) => (
         <Link to={`/player/${p.id}`} key={p.id} className="result-row">
           <span>
             <span className="nm" style={{ fontWeight: 500 }}>
@@ -56,6 +61,15 @@ export function SearchPage() {
           <span className="pos">{p.position}</span>
         </Link>
       ))}
+      {results.length > limit && (
+        <button
+          className="btn btn--secondary btn--sm"
+          style={{ margin: "16px auto", display: "flex" }}
+          onClick={() => setLimit((n) => n + PAGE)}
+        >
+          더 보기 ({limit} / {results.length}명)
+        </button>
+      )}
     </div>
   );
 }
