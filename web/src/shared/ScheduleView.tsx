@@ -254,7 +254,7 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   // 초기 월 = 오늘이 속한 월(없으면 다음 월, 그것도 없으면 마지막 월)
   const curMonthIdx = useMemo(() => {
     if (monthIdx != null) return Math.max(0, Math.min(months.length - 1, monthIdx));
-    const today = new Date().toISOString().slice(0, 7);
+    const today = localYmd().slice(0, 7);
     let idx = months.indexOf(today);
     if (idx < 0) idx = months.findIndex((m) => m >= today);
     if (idx < 0) idx = months.length - 1;
