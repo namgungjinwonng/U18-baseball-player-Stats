@@ -248,10 +248,12 @@ export function ScheduleView({ wrapClass }: { wrapClass: string }) {
   }, [teamRows]);
 
   // ===== 월별 달력 =====
-  const months = useMemo(
-    () => [...new Set(games.filter((g) => g.date).map((g) => g.date.slice(0, 7)))].sort(),
-    [games]
-  );
+  // 경기가 없는 달(예: 9월)도 건너뛰지 않도록 시즌 연도의 1~12월을 모두 넣는다.
+  const months = useMemo(() => {
+    const year = sched?.year ?? Number(games.find((g) => g.date)?.date.slice(0, 4));
+    if (!year) return [];
+    return Array.from({ length: 12 }, (_, i) => `${year}-${pad2(i + 1)}`);
+  }, [sched, games]);
   // 초기 월 = 오늘이 속한 월(없으면 다음 월, 그것도 없으면 마지막 월)
   const curMonthIdx = useMemo(() => {
     if (monthIdx != null) return Math.max(0, Math.min(months.length - 1, monthIdx));
