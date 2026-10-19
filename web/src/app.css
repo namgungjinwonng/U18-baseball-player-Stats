@@ -1706,3 +1706,83 @@
 .mirror__track--b { grid-area: tb; justify-content: flex-start; }
 .mirror__fill { display: block; height: 100%; background: var(--color-hairline); }
 .mirror__fill.is-better { background: var(--color-ink); }
+
+/* ===== 팀 상세 (/team/:name) ===== */
+.team-versus { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 8px 0 16px; }
+.team-versus .caption { flex-basis: 100%; }
+.team-versus .m-select { flex: 1 1 200px; }
+.team-strip .cell { transition: none; }
+.team-cell__avg { margin-top: 2px; color: var(--color-mute); font-size: 10px; }
+.team-games { border-top: 1px solid var(--color-hairline-soft); }
+.team-game {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-hairline-soft);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.team-game__date { color: var(--color-mute); font-size: 12px; }
+.team-game__main { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.team-game__title { overflow: hidden; color: var(--color-mute); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.team-game__score { margin-left: 4px; font-weight: 700; }
+.team-game__vs { font-size: 12px; white-space: nowrap; }
+
+/* ===== 선수 상세: 바로가기, 리그 백분위 카드, 경기별 추세 ===== */
+.player-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 12px; }
+.pct-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pct-card__head h3 { margin: 0; }
+.pct-card__base.career-mode-toggle { width: auto; margin: 0; }
+.pct-card__base.career-mode-toggle button { min-width: 52px; padding: 4px 10px; font-size: 12px; }
+.pct-card__note { margin: 6px 0 12px; }
+.pct-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 68px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.pct-row__label { font-size: 13px; }
+.pct-row__track { position: relative; height: 6px; border-radius: 3px; background: var(--color-soft-cloud); }
+.pct-row__fill { position: absolute; top: 0; left: 0; bottom: 0; border-radius: 3px; }
+.pct-row__bubble {
+  position: absolute;
+  top: 50%;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  border: 2px solid var(--color-canvas);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+}
+.pct-row__value { display: flex; flex-direction: column; align-items: flex-end; font-size: 13px; font-weight: 700; line-height: 1.2; }
+.pct-row__value small { color: var(--color-mute); font-size: 10px; font-weight: 500; }
+.trend__range { display: flex; gap: 6px; margin: 8px 0 4px; }
+.trend__chip {
+  padding: 3px 8px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.trend__chip.active { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-on-primary); }
+.trend__chip:disabled { opacity: 0.4; cursor: default; }
+.trend__svg { display: block; width: 100%; max-width: 560px; height: auto; overflow: visible; }
+.trend__grid { stroke: var(--color-hairline-soft); stroke-width: 1; }
+.trend__tick { fill: var(--color-mute); font-size: 9px; }
+.trend__avg { stroke: var(--color-sale); stroke-width: 1; stroke-dasharray: 4 3; }
+.trend__avg-label { fill: var(--color-sale); font-size: 9px; font-weight: 600; }
+.trend__line { fill: none; stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
+.trend__dot { fill: var(--color-ink); }

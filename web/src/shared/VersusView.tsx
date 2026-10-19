@@ -83,7 +83,7 @@ function GameRow({ g, aName, bName }: { g: SideGame; aName: string; bName: strin
   );
 }
 
-function TopList({ title, players, value }: { title: string; players: Player[]; value: (p: Player) => string }) {
+export function TopList({ title, players, value }: { title: string; players: Player[]; value: (p: Player) => string }) {
   return (
     <div className="versus-top__col">
       <h4>{title}</h4>

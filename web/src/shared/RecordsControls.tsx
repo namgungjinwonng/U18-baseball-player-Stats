@@ -48,32 +48,35 @@ export function HeatLegend() {
 }
 
 export function CompareBar({
-  picked, names, onClear, onGo,
+  picked, names, onClear, onGo, max = MAX_COMPARE, unit = "명", goLabel = "비교",
 }: {
   picked: string[];
   names: Map<string, string>;
   onClear: () => void;
   onGo: () => void;
+  max?: number;
+  unit?: string; // 안내 문구 단위 — 선수 "명", 학교 "곳"
+  goLabel?: string;
 }) {
   return (
     <div className="compare-bar" role="status">
       <span className="compare-bar__text">
         {picked.length === 0
-          ? `행을 눌러 ${MAX_COMPARE}명까지 고르세요`
+          ? `행을 눌러 ${max}${unit}${max === 2 ? "을" : "까지"} 고르세요`
           : picked.map((id) => names.get(id) ?? id).join(" · ")}
       </span>
       {picked.length > 0 && (
         <button type="button" className="link-btn" onClick={onClear}>해제</button>
       )}
       <button type="button" className="btn btn--primary btn--sm" disabled={picked.length < 2} onClick={onGo}>
-        비교 {picked.length}/{MAX_COMPARE}
+        {goLabel} {picked.length}/{max}
       </button>
     </div>
   );
 }
 
 // 선택 토글 — 이미 있으면 빼고, 꽉 찼으면 가장 먼저 고른 선수를 밀어낸다.
-export function togglePick(picked: string[], id: string): string[] {
+export function togglePick(picked: string[], id: string, max = MAX_COMPARE): string[] {
   if (picked.includes(id)) return picked.filter((x) => x !== id);
-  return [...picked, id].slice(-MAX_COMPARE);
+  return [...picked, id].slice(-max);
 }

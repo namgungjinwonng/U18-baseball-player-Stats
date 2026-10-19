@@ -15,6 +15,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { VersusView } from "../shared/VersusView";
+import { TeamView } from "../shared/TeamView";
 import { Notice } from "../shared/Notice";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
@@ -125,6 +126,7 @@ export function MobileApp() {
           <Route path="/records" element={<SeasonRecordsGate wrapClass="m-page"><MRecords /></SeasonRecordsGate>} />
           <Route path="/matchup" element={<SeasonRecordsGate wrapClass="m-page"><MMatchup /></SeasonRecordsGate>} />
           <Route path="/versus" element={<SeasonRecordsGate wrapClass="m-page"><VersusView wrapClass="m-page" /></SeasonRecordsGate>} />
+          <Route path="/team/:name" element={<SeasonRecordsGate wrapClass="m-page"><TeamView wrapClass="m-page" /></SeasonRecordsGate>} />
           <Route path="/search" element={<SeasonRecordsGate wrapClass="m-page"><MSearch /></SeasonRecordsGate>} />
           <Route path="/player/:id" element={<SeasonRecordsGate wrapClass="m-page"><MPlayer /></SeasonRecordsGate>} />
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="m-page"><LeadersView wrapClass="m-page" /></SeasonRecordsGate>} />
