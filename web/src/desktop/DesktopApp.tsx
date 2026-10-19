@@ -88,7 +88,7 @@ export function DesktopApp() {
             <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록</NavLink>
             <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />랭킹</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}><Ico name="matchup" />상대전적</NavLink>
-            <NavLink to="/versus" onClick={() => setMenuOpen(false)}><Ico name="matchup" />학교 대전</NavLink>
+            <NavLink to="/versus" onClick={() => setMenuOpen(false)}><Ico name="versus" />학교 대전</NavLink>
             <NavLink to="/search" onClick={() => setMenuOpen(false)}><Ico name="search" />선수 검색</NavLink>
             <NavLink to="/glossary" onClick={() => setMenuOpen(false)}><Ico name="glossary" />지표 설명</NavLink>
             <NavLink to="/notice" onClick={() => setMenuOpen(false)}><Ico name="notice" />알리는 글</NavLink>

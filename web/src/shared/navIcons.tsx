@@ -1,10 +1,11 @@
-// 메뉴/페이지 타이틀용 아이콘 8종 — 항목별로 한 파일을 모든 위치에서 공용한다.
+// 메뉴/페이지 타이틀용 아이콘 9종 — 항목별로 한 파일을 모든 위치에서 공용한다.
 // 드로어에서는 .nav-ico, 페이지 제목 옆에서는 .title-ico 크기로 렌더한다.
 import calendarPng from "../assets/icons/calendar.png";
 import profilePng from "../assets/icons/profile.png";
 import jerseySvg from "../assets/icons/jersey.svg";
 import trophySvg from "../assets/icons/trophy.svg";
 import sportsPng from "../assets/icons/sports.png";
+import versusSvg from "../assets/icons/versus.svg";
 import searchPng from "../assets/icons/search.png";
 import chartPng from "../assets/icons/chart.png";
 import announcementPng from "../assets/icons/announcement.png";
@@ -16,6 +17,7 @@ const SRC = {
   records: jerseySvg, // 선수 기록 상세·선수 기록 — 등번호 유니폼
   leaders: trophySvg, // 항목별 랭킹 — C7 트로피
   matchup: sportsPng, // 상대전적 — 기존 교차 배트
+  versus: versusSvg, // 학교 대전 — VS 글자
   search: searchPng, // 선수 검색 — 기존 검색
   glossary: chartPng, // 지표 설명 — 기존 차트
   notice: announcementPng, // 알리는 글 — 기존 알림

@@ -59,7 +59,7 @@ function Drawer({ onClose }: { onClose: () => void }) {
           상대전적
         </NavLink>
         <NavLink to="/versus" onClick={onClose}>
-          <Ico name="matchup" />
+          <Ico name="versus" />
           학교 대전
         </NavLink>
         <NavLink to="/search" onClick={onClose}>
