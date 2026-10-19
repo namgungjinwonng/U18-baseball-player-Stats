@@ -2,7 +2,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type {
   LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile,
-  ScheduleData, StrengthData, TeamRosterEntry,
+  ScheduleData, ScheduleGame, StrengthData, TeamRosterEntry,
 } from "./types";
 import { useYear } from "./year";
 
@@ -274,6 +274,37 @@ export const useSchedule = () => {
   return useAsync<ScheduleData | null>(
     () => getJSON<ScheduleData>(`${year}/schedule.json`).catch(() => null),
     [year]
+  );
+};
+
+// 여러 시즌 일정을 이어 붙인 경기 목록 — 대전 모드 "통산 맞대결"용. 없는 연도는 건너뛴다.
+export const useSchedules = (years: number[]) => {
+  const key = [...new Set(years)].sort((a, b) => a - b).join(",");
+  return useAsync<ScheduleGame[]>(
+    async () => {
+      const lists = await Promise.all(
+        (key ? key.split(",") : []).map((year) =>
+          getJSON<ScheduleData>(`${year}/schedule.json`).then((d) => d.games, () => [] as ScheduleGame[])
+        )
+      );
+      return lists.flat();
+    },
+    [key],
+    key
+  );
+};
+
+// 여러 선수 상세 파일(선택 연도) — 대전 모드 선수 맞대결표용. 한 팀 선수 파일만 받는다.
+// ids 가 비면 요청하지 않는다. 받지 못한 파일은 건너뛴다.
+export const usePlayerFiles = (ids: string[]) => {
+  const { year } = useYear();
+  const key = ids.join(",");
+  return useAsync<Player[]>(
+    () =>
+      Promise.all(ids.map((id) => getJSON<Player>(`${year}/players/${id}.json`).catch(() => null)))
+        .then((rows) => rows.filter((row): row is Player => row != null)),
+    [year, key],
+    `${year}:${key}`
   );
 };
 

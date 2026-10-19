@@ -118,12 +118,13 @@ const files: Player[] = [
   { ...player("a2", "A고"), matchups: [mu("a2", "b9", 4, 2), mu("a2", "c1", 3, 1)] },
   { ...player("a3", "A고"), matchups: [mu("b1", "a3", 5, 1), mu("b1", "a3", 5, 1)] },
 ];
-const aBat = versusMatrix(files, byId, "A고", "B BC", "aBat");
+const fileMatchups = files.flatMap((f) => f.matchups ?? []);
+const aBat = versusMatrix(fileMatchups, byId, "A고", "B BC", "aBat");
 assert.deepEqual(aBat.batters.map((p) => p.id), ["a2"]);
 assert.deepEqual(aBat.pitchers.map((p) => p.id), ["b9"]);
 assert.equal(aBat.cells.get(cellKey("a2", "b9"))!.h, 2);
 assert.equal(aBat.cells.size, 1, "C고 투수와의 대결은 제외");
-const bBat = versusMatrix(files, byId, "A고", "B BC", "bBat");
+const bBat = versusMatrix(fileMatchups, byId, "A고", "B BC", "bBat");
 assert.deepEqual(bBat.batters.map((p) => p.id), ["b1"]);
 assert.equal(bBat.cells.size, 1, "중복 대결은 한 번만");
 

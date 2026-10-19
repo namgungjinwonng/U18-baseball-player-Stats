@@ -212,9 +212,10 @@ export interface VersusMatrix {
 
 export const cellKey = (batterId: string, pitcherId: string) => `${batterId}|${pitcherId}`;
 
-// 선수 파일들의 matchups(타자·투수 양방향이 모두 들어 있음)에서 두 학교 사이 대결만 골라 표로 만든다.
+// 상대전적 행(선수 파일 matchups 묶음 또는 대회 matchups.json)에서 두 학교 사이 대결만 골라 표로 만든다.
+// 선수 파일에는 타자·투수 양방향이 모두 들어 있어 한 팀 파일만 모아도 양쪽 표를 만들 수 있다.
 export function versusMatrix(
-  playerFiles: Player[],
+  matchups: Matchup[],
   byId: Map<string, PlayerIndexEntry>,
   a: string,
   b: string,
@@ -224,18 +225,16 @@ export function versusMatrix(
   const cells = new Map<string, Matchup>();
   const batterPa = new Map<string, number>();
   const pitcherPa = new Map<string, number>();
-  for (const file of playerFiles) {
-    for (const m of file.matchups ?? []) {
-      const key = cellKey(m.batterId, m.pitcherId);
-      if (cells.has(key)) continue; // 같은 대결이 타자·투수 파일 양쪽에 있다
-      const batter = byId.get(m.batterId);
-      const pitcher = byId.get(m.pitcherId);
-      if (!batter || !pitcher) continue;
-      if (!sameTeam(batter.team, batTeam) || !sameTeam(pitcher.team, pitTeam)) continue;
-      cells.set(key, m);
-      batterPa.set(m.batterId, (batterPa.get(m.batterId) ?? 0) + m.pa);
-      pitcherPa.set(m.pitcherId, (pitcherPa.get(m.pitcherId) ?? 0) + m.pa);
-    }
+  for (const m of matchups) {
+    const key = cellKey(m.batterId, m.pitcherId);
+    if (cells.has(key)) continue; // 같은 대결이 타자·투수 파일 양쪽에 있다
+    const batter = byId.get(m.batterId);
+    const pitcher = byId.get(m.pitcherId);
+    if (!batter || !pitcher) continue;
+    if (!sameTeam(batter.team, batTeam) || !sameTeam(pitcher.team, pitTeam)) continue;
+    cells.set(key, m);
+    batterPa.set(m.batterId, (batterPa.get(m.batterId) ?? 0) + m.pa);
+    pitcherPa.set(m.pitcherId, (pitcherPa.get(m.pitcherId) ?? 0) + m.pa);
   }
   const order = (pa: Map<string, number>) =>
     [...pa.entries()]

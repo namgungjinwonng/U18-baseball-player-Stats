@@ -14,6 +14,7 @@ import { LeadersView } from "../shared/LeadersView";
 import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
+import { VersusView } from "../shared/VersusView";
 import { Notice } from "../shared/Notice";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
@@ -54,6 +55,10 @@ function Drawer({ onClose }: { onClose: () => void }) {
         <NavLink to="/matchup" onClick={onClose}>
           <Ico name="matchup" />
           상대전적
+        </NavLink>
+        <NavLink to="/versus" onClick={onClose}>
+          <Ico name="matchup" />
+          학교 대전
         </NavLink>
         <NavLink to="/search" onClick={onClose}>
           <Ico name="search" />
@@ -119,6 +124,7 @@ export function MobileApp() {
           <Route path="/person/:personNo" element={<PersonView wrapClass="m-page" />} />
           <Route path="/records" element={<SeasonRecordsGate wrapClass="m-page"><MRecords /></SeasonRecordsGate>} />
           <Route path="/matchup" element={<SeasonRecordsGate wrapClass="m-page"><MMatchup /></SeasonRecordsGate>} />
+          <Route path="/versus" element={<SeasonRecordsGate wrapClass="m-page"><VersusView wrapClass="m-page" /></SeasonRecordsGate>} />
           <Route path="/search" element={<SeasonRecordsGate wrapClass="m-page"><MSearch /></SeasonRecordsGate>} />
           <Route path="/player/:id" element={<SeasonRecordsGate wrapClass="m-page"><MPlayer /></SeasonRecordsGate>} />
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="m-page"><LeadersView wrapClass="m-page" /></SeasonRecordsGate>} />
