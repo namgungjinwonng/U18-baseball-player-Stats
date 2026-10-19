@@ -8,20 +8,20 @@ import {
   playerInSeason, searchByRole, sumMatchups, type Role,
 } from "../../shared/matchup";
 import { Ico } from "../../shared/navIcons";
-import type { Matchup, PlayerIndexEntry } from "../../shared/types";
+import type { Matchup } from "../../shared/types";
 import { useYear } from "../../shared/year";
 import { SearchIcon } from "../../shared/LineIcons";
+import { useMatchupQuery } from "../../shared/useMatchupQuery";
+import { Link } from "react-router-dom";
 
 export function MMatchup() {
   const { year } = useYear();
   const indexState = usePlayerIndex();
   const { data: index } = indexState;
-  const [aRole, setARole] = useState<Role>("batter");
   const [query, setQuery] = useState("");
-  const [a, setA] = useState<PlayerIndexEntry | null>(null);
-  const [school, setSchool] = useState("");
-  const [oppId, setOppId] = useState("");
-  const [tournamentSlug, setTournamentSlug] = useState("");
+  // 역할·선수·학교·상대·대회는 URL에 둔다 — 새로고침·뒤로가기·링크 공유 시 복원된다.
+  const { aRole, setARole, a, setA, school, setSchool, oppId, setOppId, tournamentSlug, setTournamentSlug } =
+    useMatchupQuery(index ?? null);
   const indexReady = indexState.scope === String(year);
   const seasonA = useMemo(
     () => (a && index && indexReady ? playerInSeason(a, index) : null),
@@ -67,9 +67,12 @@ export function MMatchup() {
     setA(seasonA);
   }, [seasonA, a]);
   useEffect(() => {
+    // 상대전적이 다 불러와진 뒤에만 정리한다 — URL에서 복원한 학교·상대를 로딩 중에 지우지 않도록.
+    if (!seasonA || !matchupReady) return;
     if (school && !schools.some((s) => s.team === school)) setSchool("");
     if (oppId && !schoolOpps.some((f) => f.opponent.id === oppId)) setOppId("");
-  }, [school, schools, oppId, schoolOpps]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seasonA, matchupReady, school, schools, oppId, schoolOpps]);
 
   function reset(role: Role) { setARole(role); setA(null); setQuery(""); setSchool(""); setOppId(""); }
   const oppRoleLabel = opposite(aRole) === "pitcher" ? "투수" : "타자";
@@ -146,6 +149,12 @@ export function MMatchup() {
             <p className="caption" style={{ marginBottom: 8 }}>
               학교 합계 {schoolTotal.ab}타수 {schoolTotal.h}안타 · {rate(schoolTotal.avg)}
             </p>
+          )}
+          {seasonA && (
+            <Link className="link-btn" style={{ display: "inline-block", marginBottom: 8 }}
+              to={`/versus?a=${encodeURIComponent(seasonA.team)}&b=${encodeURIComponent(school)}`}>
+              {school} 학교 대전 보기 ›
+            </Link>
           )}
           {schoolOpps.map(({ opponent, matchup }) => (
             <div key={opponent.id} className="m-result"
