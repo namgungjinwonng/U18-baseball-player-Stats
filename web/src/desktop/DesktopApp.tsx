@@ -13,6 +13,7 @@ import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { VersusView } from "../shared/VersusView";
 import { TeamView } from "../shared/TeamView";
+import { CompareView } from "../shared/CompareView";
 import { Notice } from "../shared/Notice";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
@@ -104,6 +105,7 @@ export function DesktopApp() {
           <Route path="/matchup" element={<SeasonRecordsGate wrapClass="container page"><MatchupPage /></SeasonRecordsGate>} />
           <Route path="/versus" element={<SeasonRecordsGate wrapClass="container page"><VersusView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/team/:name" element={<SeasonRecordsGate wrapClass="container page"><TeamView wrapClass="container page" /></SeasonRecordsGate>} />
+          <Route path="/compare" element={<SeasonRecordsGate wrapClass="container page"><CompareView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/search" element={<SeasonRecordsGate wrapClass="container page"><SearchPage /></SeasonRecordsGate>} />
           <Route path="/player/:id" element={<SeasonRecordsGate wrapClass="container page"><PlayerPage /></SeasonRecordsGate>} />
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="container page"><LeadersView wrapClass="container page" /></SeasonRecordsGate>} />

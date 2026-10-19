@@ -1786,3 +1786,13 @@
 .trend__avg-label { fill: var(--color-sale); font-size: 9px; font-weight: 600; }
 .trend__line { fill: none; stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
 .trend__dot { fill: var(--color-ink); }
+
+/* ===== 선수 비교 (/compare) ===== */
+.compare-heads { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; }
+.compare-head { display: flex; min-width: 0; flex-direction: column; gap: 2px; padding: 10px; background: var(--color-soft-cloud); }
+.compare-head__name { font-size: 15px; font-weight: 700; }
+.compare-head .link-btn { align-self: flex-start; font-size: 12px; }
+.compare-table td { position: relative; }
+.compare-table td.is-better { font-weight: 700; }
+.compare-table__bar { position: absolute; right: 12px; bottom: 4px; height: 2px; max-width: calc(100% - 24px); background: var(--color-hairline); }
+.compare-table td.is-better .compare-table__bar { background: var(--color-ink); }
