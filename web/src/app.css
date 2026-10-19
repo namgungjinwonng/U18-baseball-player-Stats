@@ -1548,3 +1548,55 @@
   .career-mode-toggle { max-width: 320px; }
   .career-panel { max-width: 760px; }
 }
+
+/* ===== 선수 기록 표: 종류×프리셋 칩, 리그 대비 색 범례, 비교 선택 ===== */
+.record-chips { margin-bottom: 12px; }
+.record-chips__row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.record-chips__row .chip { padding: 6px 10px; min-height: 34px; font-size: 13px; }
+.record-chips__sep { width: 1px; height: 20px; margin: 0 2px; background: var(--color-hairline); }
+.record-chips__compare {
+  margin-left: auto;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.record-chips__compare.active { background: var(--color-ink); color: var(--color-on-primary); }
+.heat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 0 0 8px;
+  color: var(--color-mute);
+  font-size: 11px;
+}
+.heat-legend__sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+.heat-legend__sw--good { background: rgba(211, 0, 5, 0.34); }
+.heat-legend__sw--bad { margin-left: 6px; background: rgba(17, 81, 255, 0.34); }
+/* 고정된 이름 열 오른쪽 경계 — 가로로 밀어도 이름이 남아 있음을 보이게 한다. */
+.stat-table td:first-child,
+.stat-table th:first-child { box-shadow: inset -1px 0 0 var(--color-hairline-soft); }
+.stat-table tbody tr.is-selected td { background-image: linear-gradient(rgba(17, 17, 17, 0.08), rgba(17, 17, 17, 0.08)); }
+.stat-table tbody tr.is-selected td:first-child { font-weight: 700; }
+.stat-table tbody tr.is-selected td:first-child::before { content: "✓ "; }
+.compare-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--color-ink);
+  background: var(--color-canvas);
+}
+.compare-bar__text { flex: 1; min-width: 0; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.compare-bar .btn:disabled { opacity: 0.4; cursor: default; }

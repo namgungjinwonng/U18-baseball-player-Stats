@@ -2,6 +2,7 @@
 // 다중 정렬: 최대 3개 키. 헤더 클릭 1회=내림, 2회=오름, 3회=해제.
 // 우선순위는 추가된 순서 (먼저 추가한 키가 1순위).
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { heatColor } from "./heat";
 
 export interface Column<T> {
   key: string;
@@ -14,6 +15,8 @@ export interface Column<T> {
   defaultDesc?: boolean;
   // 셀 정렬 (생략 시 표 기본값인 우측 정렬 — 숫자 기록용). 텍스트 열은 left 로.
   align?: "left" | "center" | "right";
+  // 리그 평균 대비 점수(+1 좋음 ~ -1 나쁨). 있으면 셀 배경에 옅은 빨강/파랑을 입힌다.
+  heat?: (row: T) => number | null;
 }
 
 interface SortKey {
@@ -31,6 +34,7 @@ export function StatTable<T>({
   rowKey,
   limit = 100,
   unit = "명",
+  selectedKeys,
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -41,6 +45,8 @@ export function StatTable<T>({
   limit?: number;
   // 더보기 버튼의 행 단위 — 선수 표는 "명", 학교 표는 "팀".
   unit?: string;
+  // 비교 선택 모드에서 선택된 행 키 — 해당 행을 강조한다.
+  selectedKeys?: ReadonlySet<string>;
 }) {
   const initialKey = initialSort ?? columns[0]?.key;
   const initialDesc = columns.find((c) => c.key === initialKey)?.defaultDesc ?? true;
@@ -126,11 +132,16 @@ export function StatTable<T>({
           {capped.map((row, sortedIndex) => (
             <tr
               key={rowKey(row)}
+              className={selectedKeys?.has(rowKey(row)) ? "is-selected" : undefined}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
               style={{ cursor: onRowClick ? "pointer" : "default" }}
             >
               {columns.map((col) => (
-                <td key={col.key} className="num" style={{ textAlign: col.align }}>
+                <td
+                  key={col.key}
+                  className="num"
+                  style={{ textAlign: col.align, background: col.heat ? heatColor(col.heat(row)) : undefined }}
+                >
                   {col.render ? col.render(row, sortedIndex) : String(col.value(row))}
                 </td>
               ))}

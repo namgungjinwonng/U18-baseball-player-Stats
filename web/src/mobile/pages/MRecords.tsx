@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
-import { recordTabs, filterByKind } from "../../shared/columns";
+import { recordTabs, filterByKind, type RecordKind, type RecordPreset } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
-import { Chip } from "../../design/ui";
+import { CompareBar, HeatLegend, RecordTabChips, togglePick } from "../../shared/RecordsControls";
 import { FilterBar, applyFilter, filterFromQuery, filterToQuery, unqualifiedFromQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
 import { Ico } from "../../shared/navIcons";
@@ -12,7 +12,11 @@ import type { Player } from "../../shared/types";
 export function MRecords() {
   const location = useLocation();
   const nav = useNavigate();
-  const [tabId, setTabId] = useState("hit-basic");
+  const [kind, setKind] = useState<RecordKind>("batting");
+  const [preset, setPreset] = useState<RecordPreset>("basic");
+  // 비교 선택 모드 — 켜져 있으면 행 클릭이 선수 상세 이동 대신 선택 토글이 된다.
+  const [compareMode, setCompareMode] = useState(false);
+  const [picked, setPicked] = useState<string[]>([]);
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(location.search));
   // 학교별 랭킹에서 넘어오면 ?u=1 로 규정 미달 포함이 켜진 채 시작한다.
   const [includeUnqualified, setIncludeUnqualified] = useState(() => unqualifiedFromQuery(location.search));
@@ -30,7 +34,12 @@ export function MRecords() {
     return averages.overall;
   }, [averages, filter.tournament]);
   const tabs = useMemo(() => recordTabs(lg), [lg]);
-  const tab = tabs.find((t) => t.id === tabId)!;
+  const tab = tabs.find((t) => t.kind === kind && t.preset === preset)!;
+  const names = useMemo(() => new Map((players ?? []).map((p) => [p.id, p.name])), [players]);
+  const changeKind = (next: RecordKind) => {
+    setKind(next);
+    setPicked([]); // 타자·투수 비교는 섞지 않는다
+  };
   // 랭킹 페이지와 동일하게 규정 미달 선수는 기본 제외 (토글로 포함 가능).
   const rows = useMemo(() => {
     if (!players) return [];
@@ -44,13 +53,14 @@ export function MRecords() {
   return (
     <div className="m-page m-records-page">
       <h2 className="heading-xl"><Ico name="records" variant="title" />선수 기록</h2>
-      <div className="m-tabs m-records-head">
-        {tabs.map((t) => (
-          <Chip key={t.id} active={t.id === tabId} onClick={() => setTabId(t.id)}>
-            {t.label}
-          </Chip>
-        ))}
-      </div>
+      <RecordTabChips
+        kind={kind}
+        preset={preset}
+        onKind={changeKind}
+        onPreset={setPreset}
+        compareMode={compareMode}
+        onCompareMode={(on) => { setCompareMode(on); setPicked([]); }}
+      />
       <FilterBar rows={players ?? []} value={filter} onChange={changeFilter} />
       <label className="qual-toggle">
         <input
@@ -64,6 +74,7 @@ export function MRecords() {
           {describeQualify(ctx, tab.kind).replace(/\s*\(.*\)\s*$/, "")}
         </span>
       </label>
+      {tab.preset !== "basic" && <HeatLegend />}
       {loading && <div className="state">불러오는 중…</div>}
       {players && (
         <StatTable<Player>
@@ -72,7 +83,20 @@ export function MRecords() {
           rows={rows}
           initialSort={tab.initialSort}
           rowKey={(p) => p.id}
-          onRowClick={(p) => nav(`/player/${p.id}${filterToQuery(filter)}`)}
+          selectedKeys={compareMode ? new Set(picked) : undefined}
+          onRowClick={(p) =>
+            compareMode
+              ? setPicked((prev) => togglePick(prev, p.id))
+              : nav(`/player/${p.id}${filterToQuery(filter)}`)
+          }
+        />
+      )}
+      {compareMode && (
+        <CompareBar
+          picked={picked}
+          names={names}
+          onClear={() => setPicked([])}
+          onGo={() => nav(`/compare?k=${kind}&ids=${picked.map(encodeURIComponent).join(",")}`)}
         />
       )}
     </div>
