@@ -14,6 +14,7 @@ import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
 import { CareerPanel } from "../../shared/CareerPanel";
+import { PercentileCard, TrendChart } from "../../shared/PlayerInsights";
 import { useYear } from "../../shared/year";
 import type { GameLogEntry, Matchup, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
 
@@ -283,7 +284,7 @@ export function MPlayer() {
         {p.name}
       </h2>
       <div className="player-meta-line">
-        <span>{p.team}</span>
+        <span><Link to={`/team/${encodeURIComponent(p.team)}`}>{p.team}</Link></span>
         <span>{p.position}</span>
         {p.grade && <span>{p.grade}학년</span>}
         {p.number && <span>{p.number}번</span>}
@@ -291,11 +292,12 @@ export function MPlayer() {
         {profile?.birth && <span>{profile.birth}</span>}
         {profile?.height && profile?.weight && <span>{profile.height}cm·{profile.weight}kg</span>}
       </div>
-      {p.personNo && (
-        <div style={{ margin: "0 0 12px" }}>
-          <KbsaLink personNo={p.personNo} />
-        </div>
-      )}
+      <div className="player-links">
+        {p.personNo && <KbsaLink personNo={p.personNo} />}
+        <Link className="link-btn" to={`/matchup?role=${active === "pitching" ? "pitcher" : "batter"}&p=${encodeURIComponent(p.id)}`}>
+          상대전적에서 보기 ›
+        </Link>
+      </div>
 
       <div className="career-mode-toggle" role="group" aria-label="기록 범위">
         <button className={recordMode === "season" ? "active" : ""} onClick={() => setRecordMode("season")}>{year} 시즌</button>
@@ -337,6 +339,8 @@ export function MPlayer() {
               items={[["타율", rate(v.batting.avg)], ["OPS", rate(a.ops)], ["홈런", n(v.batting.hr)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
               note={a.wrcPlus != null ? `wRC+ ${int(a.wrcPlus)} (리그 평균 100)` : undefined}
             />
+            {!tournamentSlug && <PercentileCard player={p} kind="batting" />}
+            <TrendChart log={v.gameLog} lg={lg} />
             <section className="player-section">
               <h3>타자 기록</h3>
               <div className="m-strip">
@@ -387,6 +391,7 @@ export function MPlayer() {
             <KpiRow
               items={[["평균자책", dec2(v.pitching.era)], ["WHIP", dec2(a.whip)], ["탈삼진", n(v.pitching.so)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
             />
+            {!tournamentSlug && <PercentileCard player={p} kind="pitching" />}
             <section className="player-section">
               <h3>투수 기록</h3>
               <div className="m-strip">

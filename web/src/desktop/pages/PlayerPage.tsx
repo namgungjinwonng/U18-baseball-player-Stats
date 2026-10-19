@@ -13,6 +13,7 @@ import { Fold } from "../../shared/Fold";
 import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
+import { PercentileCard, TrendChart } from "../../shared/PlayerInsights";
 import { CareerPanel } from "../../shared/CareerPanel";
 import { useYear } from "../../shared/year";
 import type { BattingStats, GameLogEntry, LeagueRates, Matchup, PitchingStats, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
@@ -476,7 +477,7 @@ export function PlayerPage() {
       <div className="player-head">
         <h1 className="heading-xl" style={{ marginBottom: 0 }}>{player.name}</h1>
         <div className="player-meta-line">
-          <span>{player.team}</span>
+          <span><Link to={`/team/${encodeURIComponent(player.team)}`}>{player.team}</Link></span>
           <span>{player.position}</span>
           {player.grade && <span>{player.grade}학년</span>}
           {player.number && <span>{player.number}번</span>}
@@ -486,7 +487,12 @@ export function PlayerPage() {
             <span>{profile.height}cm·{profile.weight}kg</span>
           )}
         </div>
-        <KbsaLink personNo={player.personNo} />
+        <div className="player-links">
+          <KbsaLink personNo={player.personNo} />
+          <Link className="link-btn" to={`/matchup?role=${active === "pitching" ? "pitcher" : "batter"}&p=${encodeURIComponent(player.id)}`}>
+            상대전적에서 보기 ›
+          </Link>
+        </div>
       </div>
 
       <div className="career-mode-toggle" role="group" aria-label="기록 범위">
@@ -525,6 +531,8 @@ export function PlayerPage() {
 
       {recordMode === "season" && active === "batting" && v.batting && (
         <>
+          {!tournamentSlug && <PercentileCard player={player} kind="batting" />}
+          <TrendChart log={v.gameLog} lg={lg} />
           <section className="player-section">
             <h3>타자 기록</h3>
             <BattingStrip b={v.batting} />
@@ -548,6 +556,7 @@ export function PlayerPage() {
 
       {recordMode === "season" && active === "pitching" && v.pitching && (
         <>
+          {!tournamentSlug && <PercentileCard player={player} kind="pitching" />}
           <section className="player-section">
             <h3>투수 기록</h3>
             <PitchingStrip p={v.pitching} />
