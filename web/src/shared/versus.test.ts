@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { seasonConfig, type QualifyContext } from "./leaders";
 import {
-  cellKey, commonOpponents, headToHead, teamGames, teamRecord, teamTotals, topPlayers, versusMatrix,
+  cellKey, commonOpponents, headToHead, returningTopPlayers, teamGames, teamRecord, teamTotals, topPlayers, versusMatrix,
 } from "./versus";
 import type { Matchup, Player, PlayerIndexEntry, ScheduleGame } from "./types";
 
@@ -106,6 +106,24 @@ const ctx: QualifyContext = { scope: "season", config: seasonConfig(2026), teamG
 const top = topPlayers(records, "A고", ctx);
 assert.deepEqual(top.batters.map((p) => p.id), ["a2"], "1타수 선수는 규정 미달로 제외");
 assert.deepEqual(top.pitchers.map((p) => p.id), ["a4", "a3"], "ERA 0.00 → 4.05 순");
+
+// 전년도 기준 주요 선수: 올해 로스터에 남은 선수만 (졸업생 제외, 유급생 유지), 학년은 올해 기준
+const prevCtx: QualifyContext = { scope: "season", config: seasonConfig(2025), teamGames: { A고: 3, B고: 3 } };
+const withPn = (p: Player, personNo: string, grade: string): Player => ({ ...p, personNo, grade });
+const prevRecords: Player[] = [
+  withPn(player("p3", "A고", bat(15, 40)), "pn3", "3"), // 졸업 → 올해 로스터에 없음
+  withPn(player("p2", "A고", bat(12, 40)), "pn2", "2"), // 올해 3학년
+  withPn(player("pR", "A고", bat(14, 40)), "pnR", "3"), // 유급 → 올해도 3학년으로 로스터에 있음
+  withPn(player("pT", "B고", bat(16, 40)), "pnT", "1"), // 전학 → 올해 A고 로스터
+  withPn(player("q1", "B고", bat(18, 40)), "pnQ", "2"), // 다른 학교 그대로
+];
+const roster = new Map([["pn2", "3"], ["pnR", "3"], ["pnT", "2"]]);
+const ret = returningTopPlayers(prevRecords, "A고", roster, prevCtx);
+assert.deepEqual(ret.batters.map((p) => p.id), ["pT", "pR", "p2"], "졸업생 p3·타교 q1 제외, OPS 순");
+assert.deepEqual(ret.batters.map((p) => p.grade), ["2", "3", "3"], "학년은 올해 로스터 기준");
+// 로스터가 없으면 전년도 같은 학교 3학년만 뺀다
+const noRoster = returningTopPlayers(prevRecords, "A고", null, prevCtx);
+assert.deepEqual(noRoster.batters.map((p) => [p.id, p.grade]), [["p2", "3"]]);
 
 // 선수 맞대결표: A 파일만으로 양방향, 타자·투수 파일에 중복된 같은 대결은 한 번만
 const idx = (id: string, team: string): PlayerIndexEntry => ({ id, name: id, team, position: "내야수" });

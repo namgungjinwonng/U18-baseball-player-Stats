@@ -277,6 +277,23 @@ export const useSchedule = () => {
   );
 };
 
+// 선택 연도와 다른 특정 시즌의 시즌 기록·meta — 주요 선수 "전년도 기준" 보기용. year 가 null 이면 요청하지 않는다.
+export const useYearRecords = (year: number | null) =>
+  useAsync<Player[] | null>(
+    () =>
+      year
+        ? getJSON<Player[]>(`${year}/records/players.json`).then((rows) => rows.filter(isRealPlayer), () => null)
+        : Promise.resolve(null),
+    [year],
+    String(year ?? "")
+  );
+export const useYearMeta = (year: number | null) =>
+  useAsync<Meta | null>(
+    () => (year ? getJSON<Meta>(`${year}/meta.json`).catch(() => null) : Promise.resolve(null)),
+    [year],
+    String(year ?? "")
+  );
+
 // 여러 시즌 일정을 이어 붙인 경기 목록 — 대전 모드 "통산 맞대결"용. 없는 연도는 건너뛴다.
 export const useSchedules = (years: number[]) => {
   const key = [...new Set(years)].sort((a, b) => a - b).join(",");

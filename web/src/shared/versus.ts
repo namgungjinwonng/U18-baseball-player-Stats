@@ -183,14 +183,36 @@ export function teamTotals(records: Player[], team: string): TeamTotals | null {
 
 const opsOf = (p: Player) => (p.batting ? p.batting.obp + p.batting.slg : 0);
 
+export interface TopPlayers {
+  batters: Player[];
+  pitchers: Player[];
+}
+
 // 팀 주요 선수 — 규정타석·규정이닝 충족 선수 중 OPS·ERA 상위 n명.
-export function topPlayers(
-  records: Player[],
+export function topPlayers(records: Player[], team: string, ctx: QualifyContext, n = 3): TopPlayers {
+  return rankTop(records.filter((p) => sameTeam(p.team, team)), ctx, n);
+}
+
+// 전년도 기준 주요 선수 — 시즌 초 규정 충족 선수가 없을 때 쓴다.
+// 올해 이 학교 로스터(personNo → 올해 학년)에 있는 선수만 남겨 졸업생은 빼고, 유급·재학생은 남긴다.
+// 로스터를 모르면 전년도 같은 학교 선수 중 3학년(대부분 졸업)만 뺀다. 학년은 올해 기준으로 바꿔 보여 준다.
+export function returningTopPlayers(
+  prevRecords: Player[],
   team: string,
-  ctx: QualifyContext,
+  roster: Map<string, string> | null,
+  prevCtx: QualifyContext,
   n = 3
-): { batters: Player[]; pitchers: Player[] } {
-  const rows = records.filter((p) => sameTeam(p.team, team));
+): TopPlayers {
+  const rows = prevRecords
+    .filter((p) => (roster ? !!p.personNo && roster.has(p.personNo) : sameTeam(p.team, team) && p.grade !== "3"))
+    .map((p) => {
+      const grade = roster ? roster.get(p.personNo!) : p.grade ? String(Number(p.grade) + 1) : undefined;
+      return { ...p, grade: grade || p.grade };
+    });
+  return rankTop(rows, prevCtx, n);
+}
+
+function rankTop(rows: Player[], ctx: QualifyContext, n: number): TopPlayers {
   const batters = rows
     .filter((p) => p.batting && isQualifiedBat(p, ctx))
     .sort((x, y) => opsOf(y) - opsOf(x))

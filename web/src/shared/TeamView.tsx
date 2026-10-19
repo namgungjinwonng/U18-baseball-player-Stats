@@ -6,8 +6,8 @@ import { useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
 import { heatColor, heatScore } from "./heat";
 import { kbsaBoxScoreUrl } from "./kbsa";
-import { sameTeam, teamGames, teamKey, teamRecord, teamTotals, topPlayers } from "./versus";
-import { TopList } from "./VersusView";
+import { sameTeam, teamGames, teamKey, teamRecord, teamTotals } from "./versus";
+import { TopPlayersSection } from "./TopPlayers";
 import { useYear } from "./year";
 
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
@@ -51,7 +51,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
     [schedule.data, year, team]
   );
   const totals = useMemo(() => (records.data ? teamTotals(records.data, team) : null), [records.data, team]);
-  const top = useMemo(() => (records.data ? topPlayers(records.data, team, ctx) : null), [records.data, team, ctx]);
+  const topTeams = useMemo(() => [team], [team]);
   const str = useMemo(
     () => Object.entries(strength.data?.teams ?? {}).find(([t]) => sameTeam(t, team))?.[1],
     [strength.data, team]
@@ -138,18 +138,11 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
         </>
       )}
 
-      {top && (
-        <section className="player-section">
-          <h3>주요 선수</h3>
-          <div className="versus-top__team">
-            <TopList title="타자 OPS (규정타석)" players={top.batters} value={(p) => rate((p.batting?.obp ?? 0) + (p.batting?.slg ?? 0))} />
-            <TopList title="투수 ERA (규정이닝)" players={top.pitchers} value={(p) => dec2(p.pitching?.era)} />
-          </div>
-          <Link className="link-btn" to={`/records?s=${encodeURIComponent(roster?.team ?? team)}`}>
-            {team} 선수 기록 전체 ›
-          </Link>
-        </section>
-      )}
+      <TopPlayersSection teams={topTeams} records={records.data} ctx={ctx} title="주요 선수" />
+      <Link className="link-btn" to={`/records?s=${encodeURIComponent(roster?.team ?? team)}`}>
+        {team} 선수 기록 전체 ›
+      </Link>
+
 
       {games.length > 0 && (
         <section className="player-section">
