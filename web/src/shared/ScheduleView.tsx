@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useSchedule, useTeams } from "./data";
 import { useModalHistory } from "./useModalHistory";
 import { Chip } from "../design/ui";
-import { kbsaBoxScoreUrl } from "./kbsa";
 import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { ScheduleGame, ScheduleSide } from "./types";
@@ -142,7 +141,7 @@ function compStandings(games: ScheduleGame[], title: string, officialRanks?: Rec
   return { rows: res, official: false };
 }
 
-// 경기 카드 (원본 gameCard 이식 — 클릭 시 KBSA 박스스코어 새 탭)
+// 경기 카드 (원본 gameCard 이식 — 클릭 시 두 학교의 학교 대전, KBSA 공식 기록은 그 화면에서 연결)
 function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
   const a = g.away, h = g.home;
   const done = g.status === "완료";
@@ -160,9 +159,10 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
     upcoming ? "" : g.time,
     g.venue,
   ].filter(Boolean).join(" · ");
+  // 카드 → 두 학교가 선택된 학교 대전. g 로 이 경기를 넘겨 그 화면에서 KBSA 공식 기록으로 이어간다.
+  const versusTo = `/versus?a=${encodeURIComponent(a.name)}&b=${encodeURIComponent(h.name)}&g=${encodeURIComponent(g.game_idx)}`;
   return (
-    <>
-    <a className="sch-game" href={kbsaBoxScoreUrl(g.game_idx)} target="_blank" rel="noreferrer">
+    <Link className="sch-game" to={versusTo}>
       <div className="sch-game__top">
         <span className="sch-game__comp">{!hideComp && g.title ? shortTitle(g.title) : ""}</span>
         {stage && <span className={`sch-game__stage sch-game__stage--${stageCls}`}>{stage}</span>}
@@ -193,14 +193,9 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
       )}
       <div className="sch-game__meta">
         <span>{metaLeft}</span>
-        <span className="muted">{upcoming ? "KBSA ↗" : "기록 ›"}</span>
+        <span className="muted">학교 대전 ›</span>
       </div>
-    </a>
-    {/* 카드(외부 박스스코어 링크) 안에 링크를 넣을 수 없어 카드 바로 아래에 둔다 */}
-    <Link className="sch-game__vs" to={`/versus?a=${encodeURIComponent(a.name)}&b=${encodeURIComponent(h.name)}`}>
-      맞대결 보기 ›
     </Link>
-    </>
   );
 }
 

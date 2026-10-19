@@ -13,12 +13,13 @@ import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, sameTeam, teamKey, teamRecord, teamTotals, topPlayers, versusMatrix,
+  cellKey, commonOpponents, headToHead, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
+import { TopPlayersSection } from "./TopPlayers";
 import { useYear } from "./year";
 import { Chip } from "../design/ui";
-import type { Player, ScheduleGame } from "./types";
+import type { ScheduleGame } from "./types";
 
 type Tab = "sum" | "stat" | "player" | "game";
 const TABS: { id: Tab; label: string }[] = [
@@ -58,10 +59,10 @@ function TeamSelect({
   );
 }
 
-function GameRow({ g, aName, bName }: { g: SideGame; aName: string; bName: string }) {
+function GameRow({ g, aName, bName, focus }: { g: SideGame; aName: string; bName: string; focus?: boolean }) {
   const done = g.game.status === "완료";
   return (
-    <a className="versus-game" href={kbsaBoxScoreUrl(g.game.game_idx)} target="_blank" rel="noreferrer">
+    <a className={`versus-game ${focus ? "is-focus" : ""}`} href={kbsaBoxScoreUrl(g.game.game_idx)} target="_blank" rel="noreferrer">
       <span className="versus-game__date">{g.game.date.slice(2).replace(/-/g, ".")}</span>
       <span className="versus-game__title">
         {shortTitle(g.game.title)}
@@ -79,24 +80,35 @@ function GameRow({ g, aName, bName }: { g: SideGame; aName: string; bName: strin
         )}
       </span>
       {g.outcome && <span className={`versus-game__result versus-game__result--${g.outcome}`}>{g.outcome}</span>}
+      {/* 행 전체가 KBSA 박스스코어 링크임을 보이게 한다 */}
+      <span className="versus-game__kbsa">KBSA ↗</span>
     </a>
   );
 }
 
-export function TopList({ title, players, value }: { title: string; players: Player[]; value: (p: Player) => string }) {
+// 기기 로컬 날짜(YYYY-MM-DD) — toISOString()은 UTC라 KST 새벽에 하루 전이 된다.
+const localYmd = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+// 경기일정에서 경기 카드를 눌러 들어온 경우 그 경기 요약과 KBSA 공식 기록 바로가기.
+function FocusGame({ game }: { game: ScheduleGame }) {
+  const done = game.status === "완료";
+  const when = game.date === localYmd() ? "오늘 경기" : "이 경기";
   return (
-    <div className="versus-top__col">
-      <h4>{title}</h4>
-      {players.length === 0 && <p className="caption muted">규정 충족 선수 없음</p>}
-      <ol>
-        {players.map((p) => (
-          <li key={p.id}>
-            <Link to={`/player/${p.id}`}>{p.name}</Link>
-            {p.grade && <small> {p.grade}학년</small>}
-            <span className="versus-top__v">{value(p)}</span>
-          </li>
-        ))}
-      </ol>
+    <div className="versus-focus">
+      <div className="versus-focus__info">
+        <span className="caption muted">
+          {game.date.slice(2).replace(/-/g, ".")} · {shortTitle(game.title)}{game.round ? ` · ${game.round}` : ""}
+        </span>
+        <b>
+          {done
+            ? `${teamKey(game.away.name)} ${game.away.score ?? "-"} : ${game.home.score ?? "-"} ${teamKey(game.home.name)}`
+            : `${teamKey(game.away.name)} vs ${teamKey(game.home.name)} · ${game.status || "예정"} ${game.time}`}
+        </b>
+      </div>
+      <a className="btn btn--primary btn--sm versus-focus__kbsa" href={kbsaBoxScoreUrl(game.game_idx)} target="_blank" rel="noreferrer">
+        {done ? `${when} 공식 기록 KBSA 가기 ↗` : `${when} KBSA 경기 정보 ↗`}
+      </a>
     </div>
   );
 }
@@ -110,6 +122,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const all = params.get("all") === "1";
   const tab = (TABS.find((t) => t.id === params.get("v"))?.id ?? "sum") as Tab;
   const side = (params.get("m") === "bBat" ? "bBat" : "aBat") as MatrixSide;
+  const focusId = params.get("g") ?? ""; // 경기일정 카드에서 넘어온 경기 game_idx
   // 선택 상태는 모두 URL에 둔다 — 새로고침·뒤로가기·링크 공유 시 그대로 복원된다.
   const update = (patch: Record<string, string>) => {
     const next = new URLSearchParams(params);
@@ -137,6 +150,10 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const games = all ? allSchedules.data ?? [] : seasonGames;
   const scopeTitle = all ? undefined : tournamentTitle;
   const ready = !!a && !!b && !sameTeam(a, b);
+  const focusGame = useMemo(
+    () => (focusId ? [...seasonGames, ...(allSchedules.data ?? [])].find((g) => g.game_idx === focusId) ?? null : null),
+    [focusId, seasonGames, allSchedules.data]
+  );
 
   // 학교 목록: 선수현황(teams.json) 정식명 + 일정에만 있는 학교. 지역별 그룹.
   const teamOptions = useMemo(() => {
@@ -168,8 +185,6 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const recB = useMemo(() => (ready ? teamRecord(seasonGames, b, tournamentTitle) : null), [ready, seasonGames, b, tournamentTitle]);
   const totA = useMemo(() => (ready && records.data ? teamTotals(records.data, a) : null), [ready, records.data, a]);
   const totB = useMemo(() => (ready && records.data ? teamTotals(records.data, b) : null), [ready, records.data, b]);
-  const topA = useMemo(() => (ready && records.data ? topPlayers(records.data, a, ctx) : null), [ready, records.data, a, ctx]);
-  const topB = useMemo(() => (ready && records.data ? topPlayers(records.data, b, ctx) : null), [ready, records.data, b, ctx]);
   const strengthOf = useMemo(() => {
     const m = new Map<string, { bat: number; pit: number }>();
     for (const [team, s] of Object.entries(strength.data?.teams ?? {})) m.set(teamKey(team), s);
@@ -231,7 +246,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     h2h && h2h.games.length > 0 && (
       <div className="versus-games">
         {(limit ? h2h.games.slice(0, limit) : h2h.games).map((g) => (
-          <GameRow key={g.game.game_idx} g={g} aName={aName} bName={bName} />
+          <GameRow key={g.game.game_idx} g={g} aName={aName} bName={bName} focus={g.game.game_idx === focusId} />
         ))}
         {limit && h2h.games.length > limit && (
           <button type="button" className="link-btn" onClick={() => update({ v: "game" })}>
@@ -249,20 +264,9 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     </section>
   );
 
+  const topTeams = useMemo(() => [aName, bName], [aName, bName]);
   const topSection = (
-    <section className="versus-section">
-      <h3 className="heading-md">팀별 주요 선수</h3>
-      <p className="caption muted">규정타석·규정이닝 충족 선수 중 OPS·ERA 상위 3명</p>
-      <div className="versus-top">
-        {[{ name: aName, top: topA }, { name: bName, top: topB }].map(({ name, top }) => (
-          <div key={name} className="versus-top__team">
-            <h4 className="versus-top__name"><Link to={`/team/${encodeURIComponent(name)}`}>{name}</Link></h4>
-            <TopList title="타자 OPS" players={top?.batters ?? []} value={(p) => rate((p.batting?.obp ?? 0) + (p.batting?.slg ?? 0))} />
-            <TopList title="투수 ERA" players={top?.pitchers ?? []} value={(p) => dec2(p.pitching?.era)} />
-          </div>
-        ))}
-      </div>
-    </section>
+    <TopPlayersSection teams={topTeams} records={records.data} ctx={ctx} title="팀별 주요 선수" allowPrev={!slug && !all} />
   );
 
   const [batTeam, pitTeam] = side === "aBat" ? [aName, bName] : [bName, aName];
@@ -359,10 +363,10 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
 
   return (
     <div className={`${wrapClass} versus-page`}>
-      <h2 className="heading-xl"><Ico name="matchup" variant="title" />학교 대전</h2>
+      <h2 className="heading-xl"><Ico name="versus" variant="title" />학교 대전</h2>
       <div className={`versus-bar ${compact ? "versus-bar--compact" : ""}`}>
         <div className="versus-bar__teams">
-          <TeamSelect value={aName} onChange={(team) => update({ a: team, t: "" })} options={teamOptions} label="학교 A" />
+          <TeamSelect value={aName} onChange={(team) => update({ a: team, t: "", g: "" })} options={teamOptions} label="학교 A" />
           <button
             type="button"
             className="icon-btn versus-bar__swap"
@@ -372,11 +376,12 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
           >
             ⇄
           </button>
-          <TeamSelect value={bName} onChange={(team) => update({ b: team, t: "" })} options={teamOptions} label="학교 B" />
+          <TeamSelect value={bName} onChange={(team) => update({ b: team, t: "", g: "" })} options={teamOptions} label="학교 B" />
         </div>
       </div>
       {/* 상단에는 학교 선택만 고정하고, 대회·통산·탭은 본문과 함께 스크롤한다 */}
       <div className="versus-controls">
+        {ready && focusGame && <FocusGame game={focusGame} />}
         {ready && (
           <div className="versus-bar__scope">
             {!all && (

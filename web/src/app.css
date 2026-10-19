@@ -1796,8 +1796,25 @@
 .compare-table td.is-better { font-weight: 700; }
 .compare-table__bar { position: absolute; right: 12px; bottom: 4px; height: 2px; max-width: calc(100% - 24px); background: var(--color-hairline); }
 .compare-table td.is-better .compare-table__bar { background: var(--color-ink); }
-
-/* 경기 카드 아래 학교 대전 바로가기 */
-.sch-game__vs { display: block; margin: -4px 2px 10px; color: var(--color-mute); font-size: 12px; text-align: right; }
 .team-rank-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .team-rank-head .record-chips__compare { margin-left: 0; }
+
+/* 학교 대전: 경기일정에서 넘어온 경기 요약 + KBSA 바로가기, 경기 행 KBSA 표시 */
+.versus-focus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-sm);
+}
+.versus-focus__info { display: flex; min-width: 0; flex-direction: column; gap: 2px; font-variant-numeric: tabular-nums; }
+.versus-focus__kbsa { white-space: nowrap; }
+.versus-game { grid-template-areas: "date title result" "date score kbsa"; }
+.versus-game__kbsa { grid-area: kbsa; color: var(--color-info); font-size: 11px; font-weight: 600; text-align: right; white-space: nowrap; }
+.versus-game.is-focus { margin: 0 -8px; padding-left: 8px; padding-right: 8px; background: var(--color-soft-cloud); }
+.versus-top--single { grid-template-columns: 1fr; }
+.top-players__auto { margin: -4px 0 10px; color: var(--color-info); }
