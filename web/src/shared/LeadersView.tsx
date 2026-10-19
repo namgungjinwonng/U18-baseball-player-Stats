@@ -12,6 +12,7 @@ import {
 import { WeightToggle, useStrengthMap } from "./weights";
 import { Ico } from "./navIcons";
 import { StatTable, type Column } from "./StatTable";
+import { CompareBar, togglePick } from "./RecordsControls";
 import { buildTeamRanking, type TeamRankingRow } from "./teamRanking";
 import { categorize } from "./tournamentTree";
 import { dec2, rate } from "./format";
@@ -42,6 +43,9 @@ function TeamRankingPanel({
   const nav = useNavigate();
   const schedule = useSchedule();
   const teams = useTeams();
+  // 대전 선택 모드 — 켜져 있으면 행 클릭으로 두 학교를 고른다.
+  const [pickMode, setPickMode] = useState(false);
+  const [picked, setPicked] = useState<string[]>([]);
   const tournaments = useTournaments();
   const tournament = tournaments.data?.find((item) => item.slug === filter.tournament);
   const isWeekend = !!tournament && categorize(tournament).kind === "주말리그";
@@ -62,8 +66,13 @@ function TeamRankingPanel({
       {
         key: "team", label: "학교", value: (row) => row.team, defaultDesc: false, align: "left",
         // 긴 학교명은 한 단계 작은 글자로 — 열 폭이 최장 이름에 끌려가는 것을 막는다.
-        render: (row) =>
-          row.team.length > 3 ? <span className="cell-compact">{row.team}</span> : row.team,
+        // 학교명 = 팀 상세 링크 (행 클릭은 선수 기록/대전 선택으로 쓰이므로 전파를 막는다)
+        render: (row) => (
+          <Link to={`/team/${encodeURIComponent(row.team)}`} onClick={(e) => e.stopPropagation()}
+            className={row.team.length > 3 ? "cell-compact" : undefined}>
+            {row.team}
+          </Link>
+        ),
       },
       { key: "region", label: "지역", value: (row) => row.region, defaultDesc: false, align: "left" },
       { key: "games", label: "경기수", value: (row) => row.games },
@@ -87,7 +96,17 @@ function TeamRankingPanel({
 
   return (
     <>
-      <h3 className="heading-md" style={{ marginBottom: 4 }}>학교별 랭킹</h3>
+      <div className="team-rank-head">
+        <h3 className="heading-md" style={{ marginBottom: 4 }}>학교별 랭킹</h3>
+        <button
+          type="button"
+          className={`record-chips__compare ${pickMode ? "active" : ""}`}
+          aria-pressed={pickMode}
+          onClick={() => { setPickMode((on) => !on); setPicked([]); }}
+        >
+          {pickMode ? "대전 끄기" : "학교 대전"}
+        </button>
+      </div>
       <p className="caption" style={{ marginBottom: 8 }}>
         완료 경기 기준 · 기본 정렬 경기수 내림차순
       </p>
@@ -109,10 +128,24 @@ function TeamRankingPanel({
           rows={rows}
           initialSort="games"
           rowKey={(row) => row.team}
+          selectedKeys={pickMode ? new Set(picked) : undefined}
           onRowClick={(row) =>
-            nav(`/records${unqualifiedToQuery(filterToQuery({ ...filter, team: row.team, grade: "" }))}`)
+            pickMode
+              ? setPicked((prev) => togglePick(prev, row.team, 2))
+              : nav(`/records${unqualifiedToQuery(filterToQuery({ ...filter, team: row.team, grade: "" }))}`)
           }
           unit="팀"
+        />
+      )}
+      {pickMode && (
+        <CompareBar
+          picked={picked}
+          names={new Map(picked.map((team) => [team, team]))}
+          max={2}
+          unit="곳"
+          goLabel="대전"
+          onClear={() => setPicked([])}
+          onGo={() => nav(`/versus?a=${encodeURIComponent(picked[0])}&b=${encodeURIComponent(picked[1])}`)}
         />
       )}
     </>
