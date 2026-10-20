@@ -8,10 +8,11 @@ import { playerHref, returningTopPlayers, sameTeam, teamKey, topPlayers, type To
 import { useYear } from "./year";
 import type { Player } from "./types";
 
-export function TopList({ title, players, value, emptyText = "규정 충족 선수 없음", hrefOf }: {
+export function TopList({ title, players, value, emptyText = "규정 충족 선수 없음", hrefOf, sample }: {
   title: string;
   players: Player[];
   value: (p: Player) => string;
+  sample?: (p: Player) => string; // 규정 미달 포함 시 표본(타석·이닝)
   emptyText?: string;
   hrefOf?: (p: Player) => string; // 다른 시즌 선수 링크 (기본은 /player/ID)
 }) {
@@ -24,7 +25,7 @@ export function TopList({ title, players, value, emptyText = "규정 충족 선�
           <li key={p.id}>
             <Link to={hrefOf ? hrefOf(p) : `/player/${p.id}`}>{p.name}</Link>
             {p.grade && <small> {p.grade}학년</small>}
-            <span className="versus-top__v">{value(p)}</span>
+            <span className="versus-top__v">{value(p)}{sample && <small className="versus-top__sample">{sample(p)}</small>}</span>
           </li>
         ))}
       </ol>
@@ -51,11 +52,21 @@ export function TopPlayersSection({
   const prevRecords = useYearRecords(prevYear);
   const prevMeta = useYearMeta(prevYear);
   const [choice, setChoice] = useState<"auto" | "current" | "prev">("auto");
+  const [unq, setUnq] = useState<"auto" | boolean>("auto"); // 규정 미달 포함
 
-  const current = useMemo(
+  const strict = useMemo(
     () => (records ? teams.map((team) => topPlayers(records, team, ctx)) : null),
     [records, teams, ctx]
   );
+  const relaxed = useMemo(
+    () => (records ? teams.map((team) => topPlayers(records, team, ctx, 3, true)) : null),
+    [records, teams, ctx]
+  );
+  // 기본(auto): 한쪽이라도 규정 충족 선수가 없으면 규정 미달 포함으로 보여 준다(표본 있는 선수가 있을 때).
+  const strictLacking = !!strict && strict.some(isEmpty);
+  const relaxedHas = !!relaxed && relaxed.some((tp) => !isEmpty(tp));
+  const includeUnq = unq === "auto" ? strictLacking && relaxedHas : unq;
+  const current = includeUnq ? relaxed : strict;
   const prev = useMemo(() => {
     if (!prevYear || !prevRecords.data) return null;
     const prevCtx: QualifyContext = {
@@ -76,6 +87,7 @@ export function TopPlayersSection({
   const shown = basis === "prev" ? prev : current;
   // 전년도 기준 선수는 전년도 ID라 고유번호 경로로 연결한다(올해 기록이 있으면 올해 상세로 이동).
   const hrefOf = basis === "prev" && prevYear ? (p: Player) => playerHref(p, prevYear, year) : undefined;
+  const showSample = basis === "current" && includeUnq;
 
   return (
     <section className="versus-section">
@@ -88,11 +100,22 @@ export function TopPlayersSection({
           </div>
         )}
       </div>
+      {basis === "current" && (
+        <label className="qual-toggle top-players__unq">
+          <input type="checkbox" checked={includeUnq} onChange={(e) => setUnq(e.target.checked)} />
+          규정 미달 포함
+        </label>
+      )}
       <p className="caption muted">
         {basis === "current"
-          ? "규정타석·규정이닝 충족 선수 중 OPS·ERA 상위 3명"
+          ? includeUnq
+            ? "규정 미달 선수 포함(10타석·3이닝 이상) OPS·ERA 상위 3명 · 오른쪽 작은 글씨 = 타석·이닝"
+            : "규정타석·규정이닝 충족 선수 중 OPS·ERA 상위 3명"
           : `${prevYear} 시즌 규정 충족 선수 중 올해도 로스터에 있는 선수 · 졸업생 제외 · 학년은 ${year} 기준`}
       </p>
+      {unq === "auto" && includeUnq && basis === "current" && (
+        <p className="caption top-players__auto">규정을 채운 선수가 없는 학교가 있어 규정 미달 선수까지 포함해 보여 줍니다.</p>
+      )}
       {choice === "auto" && basis === "prev" && (
         <p className="caption top-players__auto">{year} 시즌은 아직 규정을 채운 선수가 없어 {prevYear} 기준으로 보여 줍니다.</p>
       )}
@@ -103,9 +126,11 @@ export function TopPlayersSection({
               <h4 className="versus-top__name"><Link to={`/team/${encodeURIComponent(teamKey(team))}`}>{teamKey(team)}</Link></h4>
             )}
             <TopList title="타자 OPS" players={shown?.[i]?.batters ?? []} value={opsText} hrefOf={hrefOf}
-              emptyText={basis === "prev" ? "해당 재학생 없음" : undefined} />
+              sample={showSample ? (p) => `${p.batting?.pa ?? 0}타석` : undefined}
+              emptyText={basis === "prev" ? "해당 재학생 없음" : showSample ? "10타석 이상 선수 없음" : undefined} />
             <TopList title="투수 ERA" players={shown?.[i]?.pitchers ?? []} value={eraText} hrefOf={hrefOf}
-              emptyText={basis === "prev" ? "해당 재학생 없음" : undefined} />
+              sample={showSample ? (p) => `${p.pitching?.ip ?? 0}이닝` : undefined}
+              emptyText={basis === "prev" ? "해당 재학생 없음" : showSample ? "3이닝 이상 선수 없음" : undefined} />
           </div>
         ))}
       </div>

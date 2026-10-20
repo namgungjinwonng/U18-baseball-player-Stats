@@ -1,11 +1,11 @@
-// 학교 A vs 학교 B 대전 모드 화면 (데스크탑·모바일 공용) — /versus?a=학교&b=학교&t=대회slug&all=1&v=탭
+// 학교 A vs 학교 B 대전 모드 화면 (데스크탑·모바일 공용) — /versus?a=학교&b=학교&v=탭&g=경기
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
   useTournamentMatchups, useTournamentRecords, useTournaments,
 } from "./data";
-import { TournamentPicker, useQualifyContext } from "./filters";
+import { useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
@@ -119,8 +119,10 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const [params, setParams] = useSearchParams();
   const a = params.get("a") ?? "";
   const b = params.get("b") ?? "";
-  const slug = params.get("t") ?? "";
-  const all = params.get("all") === "1";
+  // 고교 팀끼리는 한 해에 많아야 몇 번 만나므로 맞대결·선수 맞대결표는 항상 통산으로 보고,
+  // 대회·통산 필터는 두지 않는다(사용자 요청). 팀 지표·주요 선수·공통 상대는 선택 시즌 전체 기준.
+  const slug = "";
+  const all = true;
   const tab = (TABS.find((t) => t.id === params.get("v"))?.id ?? "sum") as Tab;
   const side = (params.get("m") === "bBat" ? "bBat" : "aBat") as MatrixSide;
   const focusId = params.get("g") ?? ""; // 경기일정 카드에서 넘어온 경기 game_idx
@@ -171,18 +173,9 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
       .sort((x, y) => (x.region ? x.region.localeCompare(y.region || "힣", "ko") : 1));
   }, [teams.data, seasonGames]);
 
-  // 대회 선택지는 두 학교가 모두 뛴 대회만.
-  const availableSlugs = useMemo(() => {
-    if (!ready || !tournaments.data) return new Set<string>();
-    const played = (team: string) =>
-      new Set(seasonGames.filter((g) => sameTeam(g.away.name, team) || sameTeam(g.home.name, team)).map((g) => g.title));
-    const pa = played(a);
-    const pb = played(b);
-    return new Set(tournaments.data.filter((t) => pa.has(t.title) && pb.has(t.title)).map((t) => t.slug));
-  }, [ready, tournaments.data, seasonGames, a, b]);
 
   const h2h = useMemo(() => (ready ? headToHead(games, a, b, scopeTitle) : null), [ready, games, a, b, scopeTitle]);
-  const common = useMemo(() => (ready ? commonOpponents(games, a, b, scopeTitle) : []), [ready, games, a, b, scopeTitle]);
+  const common = useMemo(() => (ready ? commonOpponents(seasonGames, a, b) : []), [ready, seasonGames, a, b]);
   const recA = useMemo(() => (ready ? teamRecord(seasonGames, a, tournamentTitle) : null), [ready, seasonGames, a, tournamentTitle]);
   const recB = useMemo(() => (ready ? teamRecord(seasonGames, b, tournamentTitle) : null), [ready, seasonGames, b, tournamentTitle]);
   const totA = useMemo(() => (ready && records.data ? teamTotals(records.data, a) : null), [ready, records.data, a]);
@@ -348,7 +341,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
 
   const topTeams = useMemo(() => [aName, bName], [aName, bName]);
   const topSection = (
-    <TopPlayersSection teams={topTeams} records={records.data} ctx={ctx} title="팀별 주요 선수" allowPrev={!slug && !all} />
+    <TopPlayersSection teams={topTeams} records={records.data} ctx={ctx} title="팀별 주요 선수" allowPrev />
   );
 
   const [batTeam, pitTeam] = side === "aBat" ? [aName, bName] : [bName, aName];
@@ -467,19 +460,6 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
       {/* 상단에는 학교 선택만 고정하고, 대회·통산·탭은 본문과 함께 스크롤한다 */}
       <div className="versus-controls">
         {ready && focusGame && <FocusGame game={focusGame} />}
-        {ready && (
-          <div className="versus-bar__scope">
-            {!all && (
-              <div className="filter-bar__row filter-bar__row--tournament">
-                <TournamentPicker value={slug} onChange={(s) => update({ t: s })} availableSlugs={availableSlugs} />
-              </div>
-            )}
-            <label className="qual-toggle versus-bar__all">
-              <input type="checkbox" checked={all} onChange={(e) => update({ all: e.target.checked ? "1" : "", t: "" })} />
-              통산 맞대결 ({Math.min(...years)}–{Math.max(...years)})
-            </label>
-          </div>
-        )}
         {ready && compact && (
           <div className="m-tabs versus-tabs" role="tablist">
             {TABS.map((t) => (

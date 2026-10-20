@@ -189,9 +189,13 @@ export interface TopPlayers {
 }
 
 // 팀 주요 선수 — 규정타석·규정이닝 충족 선수 중 OPS·ERA 상위 n명.
-export function topPlayers(records: Player[], team: string, ctx: QualifyContext, n = 3): TopPlayers {
-  return rankTop(records.filter((p) => sameTeam(p.team, team)), ctx, n);
+// relaxed = 규정 미달 포함 — 표본이 너무 작은 선수(10타석·3이닝 미만)만 빼고 순위를 매긴다.
+export function topPlayers(records: Player[], team: string, ctx: QualifyContext, n = 3, relaxed = false): TopPlayers {
+  return rankTop(records.filter((p) => sameTeam(p.team, team)), ctx, n, relaxed);
 }
+
+export const RELAXED_MIN_PA = 10;
+export const RELAXED_MIN_OUTS = 9;
 
 // 전년도 기준 주요 선수 — 시즌 초 규정 충족 선수가 없을 때 쓴다.
 // 올해 이 학교 로스터(personNo → 올해 학년)에 있는 선수만 남겨 졸업생은 빼고, 유급·재학생은 남긴다.
@@ -212,13 +216,13 @@ export function returningTopPlayers(
   return rankTop(rows, prevCtx, n);
 }
 
-function rankTop(rows: Player[], ctx: QualifyContext, n: number): TopPlayers {
+function rankTop(rows: Player[], ctx: QualifyContext, n: number, relaxed = false): TopPlayers {
   const batters = rows
-    .filter((p) => p.batting && isQualifiedBat(p, ctx))
+    .filter((p) => p.batting && (relaxed ? (p.batting.pa || p.batting.ab) >= RELAXED_MIN_PA : isQualifiedBat(p, ctx)))
     .sort((x, y) => opsOf(y) - opsOf(x))
     .slice(0, n);
   const pitchers = rows
-    .filter((p) => p.pitching && isQualifiedPit(p, ctx))
+    .filter((p) => p.pitching && (relaxed ? ipToOuts(p.pitching.ip) >= RELAXED_MIN_OUTS : isQualifiedPit(p, ctx)))
     .sort((x, y) => x.pitching!.era - y.pitching!.era || y.pitching!.ip - x.pitching!.ip)
     .slice(0, n);
   return { batters, pitchers };

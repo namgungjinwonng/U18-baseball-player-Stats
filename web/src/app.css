@@ -1899,3 +1899,5 @@
 .versus-analysis li { margin: 3px 0; color: var(--color-charcoal); font-size: 13px; line-height: 1.5; }
 .versus-analysis li.is-head { font-weight: 700; color: var(--color-ink); }
 .versus-analysis li.is-note { color: var(--color-mute); font-size: 12px; }
+.top-players__unq { margin: 0 0 4px; }
+.versus-top__sample { margin-left: 4px; color: var(--color-mute); font-size: 10px; font-weight: 500; }
