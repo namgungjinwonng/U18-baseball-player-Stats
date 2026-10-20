@@ -1,7 +1,7 @@
 // 두 팀·두 선수 지표를 가운데 기준 좌우 대칭 막대로 비교하는 공용 컴포넌트 (대전 모드·선수 비교).
 // 우위 쪽만 파랑으로 칠하고(차이가 클수록 진하게: 근소 우위·우위·큰 우위), 열위 쪽은 흐린 회색, 대등은 양쪽 회색이다.
 // 우위 단계 글자는 우위 학교 쪽 막대 위에 텍스트로만 표시한다.
-import { EDGE_LABELS, edgeLevel, type EdgeLevel } from "./heat";
+import { EDGE_LABELS, compareEdge } from "./heat";
 
 export interface MirrorRow {
   key: string;
@@ -12,20 +12,27 @@ export interface MirrorRow {
   lowerIsBetter?: boolean; // ERA·WHIP처럼 낮을수록 좋은 지표
 }
 
-function compare(row: MirrorRow): { win: "a" | "b" | null; level: EdgeLevel } {
-  if (row.a == null || row.b == null) return { win: null, level: 0 };
-  const level = edgeLevel(row.a, row.b);
-  if (level === 0) return { win: null, level };
-  const aWins = row.lowerIsBetter ? row.a < row.b : row.a > row.b;
-  return { win: aWins ? "a" : "b", level };
+const compare = (row: MirrorRow) => compareEdge(row.a, row.b, row.lowerIsBetter);
+
+// 각 쪽이 앞선 항목 수 (대등·값 없음 제외)
+export function countWins(rows: MirrorRow[]): { a: number; b: number } {
+  let a = 0;
+  let b = 0;
+  for (const row of rows) {
+    const { win } = compare(row);
+    if (win === "a") a += 1;
+    else if (win === "b") b += 1;
+  }
+  return { a, b };
 }
 
 export function MirrorBars({ rows, aName, bName }: { rows: MirrorRow[]; aName: string; bName: string }) {
+  const wins = countWins(rows);
   return (
     <div className="mirror">
       <div className="mirror__names">
-        <span>{aName}</span>
-        <span>{bName}</span>
+        <span>{aName} <small className={wins.a > wins.b ? "is-lead" : ""}>({wins.a}개 항목 우위)</small></span>
+        <span><small className={wins.b > wins.a ? "is-lead" : ""}>({wins.b}개 항목 우위)</small> {bName}</span>
       </div>
       {rows.map((row) => {
         // 막대 길이는 값 크기 그대로 — 둘 중 큰 값이 반폭을 채운다.

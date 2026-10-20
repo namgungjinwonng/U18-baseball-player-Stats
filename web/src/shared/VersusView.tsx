@@ -2,13 +2,14 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
-  useAllPlayers, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
+  useAllPlayers, useLeagueAverages, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
   useTournamentMatchups, useTournamentRecords, useTournaments,
 } from "./data";
 import { TournamentPicker, useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
+import { analyzeVersus, type MetricKey } from "./versusAnalysis";
 import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
@@ -140,6 +141,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const records = useTournamentRecords(slug);
   const seasonRecords = useAllPlayers();
   const strength = useStrength();
+  const averages = useLeagueAverages();
   const indexState = usePlayerIndex();
   const allSchedules = useSchedules(all ? years : []);
   const ctx = useQualifyContext({ region: "", team: "", grade: "", tournament: slug });
@@ -256,10 +258,39 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
       </div>
     );
 
+  // 기록 조건에 맞는 경기 분석 문구 (규칙 101개 중 분류당 한 줄, 최대 6줄)
+  const analysis = ready && !records.loading
+    ? analyzeVersus({
+        aName,
+        bName,
+        metrics: Object.fromEntries(statRows.map((r) => [r.key, { a: r.a, b: r.b }])) as Partial<Record<MetricKey, { a?: number | null; b?: number | null }>>,
+        recA,
+        recB,
+        h2h: h2h && {
+          ...h2h,
+          games: h2h.games.map((g) => ({ date: g.game.date, status: g.game.status, me: g.me.score, opp: g.opp.score, outcome: g.outcome })),
+        },
+        allYears: all,
+        lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
+      })
+    : [];
+
   const statSection = (
     <section className="versus-section">
       <h3 className="heading-md">팀 지표 비교</h3>
       <p className="caption muted">{tournamentTitle ? shortTitle(tournamentTitle) : `${year} 시즌 전체`} 기준 · 비율은 합산 원자료로 재계산 · 강도지수 1.00 = 리그 평균</p>
+      {analysis.length > 0 && (
+        <div className="versus-analysis">
+          <h4>경기 분석 <small>기록 기반 자동 분석 · 참고용</small></h4>
+          <ul>
+            {analysis.map((line) => (
+              <li key={line.id} className={line.cat === "overall" ? "is-head" : line.cat === "sample" ? "is-note" : undefined}>
+                {line.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {records.loading ? <div className="state">불러오는 중…</div> : <MirrorBars rows={statRows} aName={aName} bName={bName} />}
     </section>
   );

@@ -29,3 +29,16 @@ export function edgeLevel(a: number, b: number): EdgeLevel {
   const diff = Math.abs(a - b) / base;
   return diff < 0.03 ? 0 : diff < 0.1 ? 1 : diff < 0.25 ? 2 : 3;
 }
+
+// 두 값 중 어느 쪽이 앞서는지와 우위 단계 — 비교 막대·우위 항목 수·경기 분석이 같은 기준을 쓴다.
+export function compareEdge(
+  a: number | null | undefined,
+  b: number | null | undefined,
+  lowerIsBetter = false
+): { win: "a" | "b" | null; level: EdgeLevel } {
+  if (a == null || b == null) return { win: null, level: 0 };
+  const level = edgeLevel(a, b);
+  if (level === 0) return { win: null, level };
+  const aWins = lowerIsBetter ? a < b : a > b;
+  return { win: aWins ? "a" : "b", level };
+}
