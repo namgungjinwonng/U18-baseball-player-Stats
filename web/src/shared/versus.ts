@@ -264,3 +264,60 @@ export function versusMatrix(
       .map(([id]) => byId.get(id)!);
   return { batters: order(batterPa), pitchers: order(pitcherPa), cells };
 }
+
+// 선수 상세 링크 — 선수 ID는 시즌마다 달라 다른 시즌 선수는 KBSA 고유번호 경로(/person)로 보낸다.
+// /person 화면은 선택 연도에 기록이 있으면 그 시즌 선수 상세로 자동 이동한다.
+export function playerHref(p: { id: string; personNo?: string }, fromYear: number, currentYear: number): string {
+  if (fromYear !== currentYear && p.personNo) return `/person/${encodeURIComponent(p.personNo)}`;
+  return `/player/${encodeURIComponent(p.id)}`;
+}
+
+export interface MergedMatrix extends VersusMatrix {
+  yearOf: Map<string, number>; // 대표 선수 ID → 대표 엔트리의 시즌 (링크용)
+}
+
+// 여러 시즌 선수 맞대결표를 한 표로 합친다 (통산 맞대결).
+// 같은 선수는 personNo(없으면 시즌:ID)로 묶고 가장 최근 시즌 엔트리(이름·학년)를 대표로 쓰며, 같은 대결의 기록은 더한다.
+export function mergeMatrices(parts: { year: number; matrix: VersusMatrix }[]): MergedMatrix {
+  const keyOf = (p: PlayerIndexEntry, year: number) => (p.personNo ? `pn:${p.personNo}` : `${year}:${p.id}`);
+  const rep = new Map<string, { entry: PlayerIndexEntry; year: number }>();
+  const sums = new Map<string, Matchup>();
+  for (const { year, matrix } of parts) {
+    const byId = new Map<string, PlayerIndexEntry>();
+    for (const p of [...matrix.batters, ...matrix.pitchers]) {
+      byId.set(p.id, p);
+      const k = keyOf(p, year);
+      const cur = rep.get(k);
+      if (!cur || year > cur.year) rep.set(k, { entry: p, year });
+    }
+    for (const m of matrix.cells.values()) {
+      const bk = keyOf(byId.get(m.batterId)!, year);
+      const pk = keyOf(byId.get(m.pitcherId)!, year);
+      const key = `${bk}|${pk}`;
+      const acc = sums.get(key) ?? {
+        batterId: bk, batterName: m.batterName, pitcherId: pk, pitcherName: m.pitcherName,
+        pa: 0, ab: 0, h: 0, b2: 0, b3: 0, hr: 0, bb: 0, hbp: 0, so: 0, avg: 0,
+      };
+      acc.pa += m.pa; acc.ab += m.ab; acc.h += m.h; acc.b2 += m.b2; acc.b3 += m.b3;
+      acc.hr += m.hr; acc.bb += m.bb; acc.hbp += m.hbp; acc.so += m.so;
+      acc.avg = acc.ab ? Number((acc.h / acc.ab).toFixed(3)) : 0;
+      sums.set(key, acc);
+    }
+  }
+  const cells = new Map<string, Matchup>();
+  const batterPa = new Map<string, number>();
+  const pitcherPa = new Map<string, number>();
+  for (const m of sums.values()) {
+    const b = rep.get(m.batterId)!.entry;
+    const p = rep.get(m.pitcherId)!.entry;
+    cells.set(cellKey(b.id, p.id), { ...m, batterId: b.id, pitcherId: p.id });
+    batterPa.set(m.batterId, (batterPa.get(m.batterId) ?? 0) + m.pa);
+    pitcherPa.set(m.pitcherId, (pitcherPa.get(m.pitcherId) ?? 0) + m.pa);
+  }
+  const order = (pa: Map<string, number>) =>
+    [...pa.entries()]
+      .sort((x, y) => y[1] - x[1] || rep.get(x[0])!.entry.name.localeCompare(rep.get(y[0])!.entry.name, "ko"))
+      .map(([k]) => rep.get(k)!.entry);
+  const yearOf = new Map([...rep.values()].map(({ entry, year }) => [entry.id, year]));
+  return { batters: order(batterPa), pitchers: order(pitcherPa), cells, yearOf };
+}

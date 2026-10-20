@@ -325,6 +325,43 @@ export const usePlayerFiles = (ids: string[]) => {
   );
 };
 
+// 여러 시즌의 선수 인덱스 — 통산 선수 맞대결표용. 없는 연도는 빈 배열.
+export const usePlayerIndexes = (years: number[]) => {
+  const key = [...new Set(years)].sort((a, b) => a - b).join(",");
+  return useAsync<Record<number, PlayerIndexEntry[]>>(
+    async () =>
+      Object.fromEntries(
+        await Promise.all(
+          (key ? key.split(",").map(Number) : []).map(async (year) => [
+            year,
+            await getJSON<PlayerIndexEntry[]>(`${year}/players/index.json`).then((rows) => rows.filter(isRealPlayer), () => []),
+          ] as const)
+        )
+      ),
+    [key],
+    key
+  );
+};
+
+// 시즌별 선수 상세 파일 묶음 — 통산 선수 맞대결표용. 받지 못한 파일은 건너뛴다.
+export const useSeasonPlayerFiles = (specs: { year: number; ids: string[] }[]) => {
+  const key = specs.map((s) => `${s.year}:${s.ids.join(",")}`).join("|");
+  return useAsync<Record<number, Player[]>>(
+    async () =>
+      Object.fromEntries(
+        await Promise.all(
+          specs.map(async ({ year, ids }) => [
+            year,
+            (await Promise.all(ids.map((id) => getJSON<Player>(`${year}/players/${id}.json`).catch(() => null))))
+              .filter((row): row is Player => row != null),
+          ] as const)
+        )
+      ),
+    [key],
+    key
+  );
+};
+
 // 팀·선수현황 (scraper/src/teams.ts 수집 — 선수현황 페이지용). 없으면 null.
 export const useTeams = () => {
   const { year } = useYear();

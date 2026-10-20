@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
-  useAllPlayers, useLeagueAverages, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
+  useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
   useTournamentMatchups, useTournamentRecords, useTournaments,
 } from "./data";
 import { TournamentPicker, useQualifyContext } from "./filters";
@@ -14,7 +14,7 @@ import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, playerHref, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
@@ -212,6 +212,50 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     return list ? versusMatrix(list, byId, a, b, side) : null;
   }, [showPlayers, slug, tournamentMatchups.data, files.scope, files.data, year, fileIds, byId, a, b, side]);
 
+  // 통산 맞대결 — 두 학교가 실제로 맞붙은 시즌만 골라 시즌별 표를 만든 뒤 합친다.
+  // 시즌마다 선수 수가 적은 학교의 선수 파일만 받는다(선수 파일에 타자·투수 양방향 기록이 있다).
+  const showAllPlayers = ready && all && (!compact || tab === "player");
+  const h2hYears = useMemo(
+    () =>
+      showAllPlayers && h2h
+        ? [...new Set(h2h.games.filter((g) => g.outcome != null).map((g) => Number(g.game.date.slice(0, 4))))].sort((x, y) => x - y)
+        : [],
+    [showAllPlayers, h2h]
+  );
+  const yearIndexes = usePlayerIndexes(h2hYears);
+  const fileSpecs = useMemo(() => {
+    if (!h2hYears.length || yearIndexes.scope !== h2hYears.join(",") || !yearIndexes.data) return [];
+    return h2hYears.map((y) => {
+      const idx = yearIndexes.data![y] ?? [];
+      const of = (team: string) => idx.filter((p) => sameTeam(p.team, team)).map((p) => p.id);
+      const ia = of(a);
+      const ib = of(b);
+      return { year: y, ids: ia.length <= ib.length ? ia : ib };
+    });
+  }, [h2hYears, yearIndexes.scope, yearIndexes.data, a, b]);
+  const yearFiles = useSeasonPlayerFiles(fileSpecs);
+  const specKey = fileSpecs.map((f) => `${f.year}:${f.ids.join(",")}`).join("|");
+  const allMatrix = useMemo(() => {
+    if (!showAllPlayers || !h2h) return null;
+    if (h2hYears.length === 0) return mergeMatrices([]);
+    if (!specKey || yearFiles.scope !== specKey || !yearFiles.data || !yearIndexes.data) return null;
+    return mergeMatrices(
+      h2hYears.map((y) => ({
+        year: y,
+        matrix: versusMatrix(
+          (yearFiles.data![y] ?? []).flatMap((f) => f.matchups ?? []),
+          indexById(yearIndexes.data![y] ?? []),
+          a, b, side
+        ),
+      }))
+    );
+  }, [showAllPlayers, h2h, h2hYears, specKey, yearFiles.scope, yearFiles.data, yearIndexes.data, a, b, side]);
+  const shownMatrix = all ? allMatrix : matrix;
+  const loadingFiles = all ? fileSpecs.reduce((n, f) => n + f.ids.length, 0) : fileIds.length;
+  // 통산 표의 선수는 다른 시즌 ID일 수 있어 고유번호 경로로 연결한다.
+  const hrefOf = (p: { id: string; personNo?: string }) =>
+    all && allMatrix ? playerHref(p, allMatrix.yearOf.get(p.id) ?? year, year) : `/player/${p.id}`;
+
   const aName = teamKey(a);
   const bName = teamKey(b);
   const loading = schedule.loading || teams.loading || (all && allSchedules.loading);
@@ -304,36 +348,40 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const playerSection = (
     <section className="versus-section">
       <h3 className="heading-md">선수 맞대결표</h3>
-      {all ? (
-        <p className="state muted">선수 맞대결표는 시즌별로만 볼 수 있습니다.</p>
-      ) : (
-        <>
+      <>
           <div className="m-tabs versus-side">
             <Chip active={side === "aBat"} onClick={() => update({ m: "" })}>{aName} 타자 vs {bName} 투수</Chip>
             <Chip active={side === "bBat"} onClick={() => update({ m: "bBat" })}>{bName} 타자 vs {aName} 투수</Chip>
           </div>
-          <p className="caption muted">칸 = 안타/타수 · 작은 글씨 = 타석 · {SMALL_SAMPLE_PA}타석 미만은 흐리게</p>
-          {!matrix ? (
-            <div className="state">{fileIds.length ? `${fileIds.length}명 기록을 불러오는 중…` : "불러오는 중…"}</div>
-          ) : matrix.batters.length === 0 ? (
-            <div className="state muted">두 학교 선수의 맞대결 기록이 없습니다.</div>
+          <p className="caption muted">
+            {all && h2hYears.length > 0 && `통산 ${h2hYears.join("·")} 맞대결 시즌 합산 · 이름·학년은 가장 최근 시즌 기준 · `}
+            칸 = 안타/타수 · 작은 글씨 = 타석 · {SMALL_SAMPLE_PA}타석 미만은 흐리게
+          </p>
+          {!shownMatrix ? (
+            <div className="state">{loadingFiles ? `${loadingFiles}명 기록을 불러오는 중…` : "불러오는 중…"}</div>
+          ) : shownMatrix.batters.length === 0 ? (
+            <div className="state muted">
+              {all
+                ? "두 학교가 맞붙은 시즌에 선수 맞대결 기록이 없습니다."
+                : `${year} 시즌에는 두 학교 선수의 맞대결 기록이 없습니다.${slug ? "" : " 지난 시즌 기록은 「통산 맞대결」을 켜면 볼 수 있습니다."}`}
+            </div>
           ) : (
             <div className="versus-matrix">
               <table>
                 <thead>
                   <tr>
                     <th className="versus-matrix__corner">{batTeam} 타자 \ {pitTeam} 투수</th>
-                    {matrix.pitchers.map((p) => (
-                      <th key={p.id}><Link to={`/player/${p.id}`}>{p.name}</Link></th>
+                    {shownMatrix.pitchers.map((p) => (
+                      <th key={p.id}><Link to={hrefOf(p)}>{p.name}</Link></th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {matrix.batters.map((bt) => (
+                  {shownMatrix.batters.map((bt) => (
                     <tr key={bt.id}>
-                      <th><Link to={`/player/${bt.id}`}>{bt.name}</Link></th>
-                      {matrix.pitchers.map((pt) => {
-                        const m = matrix.cells.get(cellKey(bt.id, pt.id));
+                      <th><Link to={hrefOf(bt)}>{bt.name}</Link></th>
+                      {shownMatrix.pitchers.map((pt) => {
+                        const m = shownMatrix.cells.get(cellKey(bt.id, pt.id));
                         return (
                           <td key={pt.id} className={m && m.pa < SMALL_SAMPLE_PA ? "is-small" : ""}>
                             {m ? (
@@ -353,8 +401,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
               </table>
             </div>
           )}
-        </>
-      )}
+      </>
     </section>
   );
 

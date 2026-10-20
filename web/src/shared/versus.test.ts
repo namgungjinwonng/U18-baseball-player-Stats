@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { seasonConfig, type QualifyContext } from "./leaders";
 import {
-  cellKey, commonOpponents, headToHead, returningTopPlayers, teamGames, teamRecord, teamTotals, topPlayers, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, playerHref, returningTopPlayers, teamGames, teamRecord, teamTotals, topPlayers, versusMatrix,
 } from "./versus";
 import type { Matchup, Player, PlayerIndexEntry, ScheduleGame } from "./types";
 
@@ -145,5 +145,24 @@ assert.equal(aBat.cells.size, 1, "C고 투수와의 대결은 제외");
 const bBat = versusMatrix(fileMatchups, byId, "A고", "B BC", "bBat");
 assert.deepEqual(bBat.batters.map((p) => p.id), ["b1"]);
 assert.equal(bBat.cells.size, 1, "중복 대결은 한 번만");
+
+// 통산 맞대결표: 시즌마다 다른 선수 ID를 personNo로 묶고 같은 대결은 합산, 대표는 최근 시즌 엔트리
+const e = (id: string, team: string, personNo: string, grade: string): PlayerIndexEntry => ({ id, name: id.split("_")[1], team, position: "내야수", personNo, grade });
+const y24 = { batters: [e("A고_김타_1", "A고", "pA", "1")], pitchers: [e("B고_박투_9", "B고", "pB", "2")], cells: new Map([[cellKey("A고_김타_1", "B고_박투_9"), mu("A고_김타_1", "B고_박투_9", 3, 1)]]) };
+const y25 = { batters: [e("A고_김타_2", "A고", "pA", "2")], pitchers: [e("B고_박투_9", "B고", "pB", "3"), e("B고_최투_1", "B고", "pC", "1")],
+  cells: new Map([
+    [cellKey("A고_김타_2", "B고_박투_9"), mu("A고_김타_2", "B고_박투_9", 4, 2)],
+    [cellKey("A고_김타_2", "B고_최투_1"), mu("A고_김타_2", "B고_최투_1", 2, 0)],
+  ]) };
+const merged = mergeMatrices([{ year: 2024, matrix: y24 }, { year: 2025, matrix: y25 }]);
+assert.deepEqual(merged.batters.map((p) => [p.id, p.grade]), [["A고_김타_2", "2"]], "같은 선수 한 줄, 최근 시즌 학년");
+assert.deepEqual(merged.pitchers.map((p) => p.id), ["B고_박투_9", "B고_최투_1"], "타석 많은 순");
+const sum = merged.cells.get(cellKey("A고_김타_2", "B고_박투_9"))!;
+assert.deepEqual([sum.pa, sum.ab, sum.h, sum.avg], [7, 7, 3, 0.429], "2024 3타석 1안타 + 2025 4타석 2안타");
+assert.equal(merged.yearOf.get("A고_김타_2"), 2025);
+
+// 다른 시즌 선수 링크는 고유번호 경로로
+assert.equal(playerHref({ id: "A고_김타_2", personNo: "pA" }, 2025, 2026), "/person/pA");
+assert.equal(playerHref({ id: "A고_김타_5", personNo: "pA" }, 2026, 2026), `/player/${encodeURIComponent("A고_김타_5")}`);
 
 console.log("versus tests passed");

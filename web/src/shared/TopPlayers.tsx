@@ -4,15 +4,16 @@ import { Link } from "react-router-dom";
 import { useTeams, useYearMeta, useYearRecords } from "./data";
 import { dec2, rate } from "./format";
 import { seasonConfig, type QualifyContext } from "./leaders";
-import { returningTopPlayers, sameTeam, teamKey, topPlayers, type TopPlayers } from "./versus";
+import { playerHref, returningTopPlayers, sameTeam, teamKey, topPlayers, type TopPlayers } from "./versus";
 import { useYear } from "./year";
 import type { Player } from "./types";
 
-export function TopList({ title, players, value, emptyText = "규정 충족 선수 없음" }: {
+export function TopList({ title, players, value, emptyText = "규정 충족 선수 없음", hrefOf }: {
   title: string;
   players: Player[];
   value: (p: Player) => string;
   emptyText?: string;
+  hrefOf?: (p: Player) => string; // 다른 시즌 선수 링크 (기본은 /player/ID)
 }) {
   return (
     <div className="versus-top__col">
@@ -21,7 +22,7 @@ export function TopList({ title, players, value, emptyText = "규정 충족 선�
       <ol>
         {players.map((p) => (
           <li key={p.id}>
-            <Link to={`/player/${p.id}`}>{p.name}</Link>
+            <Link to={hrefOf ? hrefOf(p) : `/player/${p.id}`}>{p.name}</Link>
             {p.grade && <small> {p.grade}학년</small>}
             <span className="versus-top__v">{value(p)}</span>
           </li>
@@ -73,6 +74,8 @@ export function TopPlayersSection({
   const currentLacking = !!current && current.some(isEmpty);
   const basis = choice === "prev" && prev ? "prev" : choice === "current" || !prev ? "current" : currentLacking ? "prev" : "current";
   const shown = basis === "prev" ? prev : current;
+  // 전년도 기준 선수는 전년도 ID라 고유번호 경로로 연결한다(올해 기록이 있으면 올해 상세로 이동).
+  const hrefOf = basis === "prev" && prevYear ? (p: Player) => playerHref(p, prevYear, year) : undefined;
 
   return (
     <section className="versus-section">
@@ -99,9 +102,9 @@ export function TopPlayersSection({
             {teams.length > 1 && (
               <h4 className="versus-top__name"><Link to={`/team/${encodeURIComponent(teamKey(team))}`}>{teamKey(team)}</Link></h4>
             )}
-            <TopList title="타자 OPS" players={shown?.[i]?.batters ?? []} value={opsText}
+            <TopList title="타자 OPS" players={shown?.[i]?.batters ?? []} value={opsText} hrefOf={hrefOf}
               emptyText={basis === "prev" ? "해당 재학생 없음" : undefined} />
-            <TopList title="투수 ERA" players={shown?.[i]?.pitchers ?? []} value={eraText}
+            <TopList title="투수 ERA" players={shown?.[i]?.pitchers ?? []} value={eraText} hrefOf={hrefOf}
               emptyText={basis === "prev" ? "해당 재학생 없음" : undefined} />
           </div>
         ))}
