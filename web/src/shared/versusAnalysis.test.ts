@@ -1,12 +1,12 @@
-// 학교 대전 경기 분석 문구 규칙(101개)의 선택·중복 방지·조사·안전성을 검증하는 단위 테스트.
+// 학교 대전 경기 분석 문구 규칙(152개)의 선택·중복 방지·조사·안전성을 검증하는 단위 테스트.
 import assert from "node:assert/strict";
 import { ANALYSIS_RULES, analyzeVersus, type AnalysisGame, type AnalysisInput } from "./versusAnalysis";
 
 // 규칙 수와 id 중복
-assert.ok(ANALYSIS_RULES.length >= 100, `규칙 ${ANALYSIS_RULES.length}개`);
+assert.ok(ANALYSIS_RULES.length >= 150, `규칙 ${ANALYSIS_RULES.length}개`);
 assert.equal(new Set(ANALYSIS_RULES.map((r) => r.id)).size, ANALYSIS_RULES.length, "규칙 id 중복");
 
-const lg = { avg: 0.265, obp: 0.379, ops: 0.743, era: 4.95, whip: 1.71, k9: 8.31, bb9: 6.48 };
+const lg = { avg: 0.265, obp: 0.379, ops: 0.743, era: 4.95, whip: 1.71, k9: 8.31, bb9: 6.48, iso: 0.1, babip: 0.338, kPct: 0.198, bbPct: 0.112, h9: 8.91 };
 const game = (date: string, me: number, opp: number): AnalysisGame => ({
   date, status: "완료", me, opp, outcome: me > opp ? "승" : me < opp ? "패" : "무",
 });
@@ -66,6 +66,8 @@ const t = analyzeVersus(thin);
 assert.ok(t.some((l) => l.id === "H1"), "맞대결 없음");
 assert.equal(t[t.length - 1].id, "X1", "표본 경고는 맨 뒤");
 
+const sg = (date: string, rf: number, ra: number) => ({ date, rf, ra, outcome: (rf > ra ? "승" : rf < ra ? "패" : "무") as "승" | "패" | "무" });
+
 // 4) 무작위 입력 2,000건 — 빈 값이 문구에 새지 않고, 분류당 한 줄, 다양한 규칙이 실제로 쓰인다
 let seed = 7;
 const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
@@ -81,7 +83,7 @@ for (let i = 0; i < 2000; i++) {
   const wA = Math.floor(between(0, gA + 1)), wB = Math.floor(between(0, gB + 1));
   const n = Math.floor(between(0, 5));
   const games: AnalysisGame[] = Array.from({ length: n }, (_, k) =>
-    game(`2026-0${k + 3}-1${k}`, Math.floor(between(0, 15)), Math.floor(between(0, 15)))
+    ({ ...game(`${2024 + (k % 3)}-0${k + 3}-1${k}`, Math.floor(between(0, 15)), Math.floor(between(0, 15))), title: rnd() < 0.6 ? "고교야구 주말리그 전반기" : "청룡기 전국고교야구선수권대회" })
   );
   if (rnd() < 0.2) games.push({ date: "2026-11-01", status: "예정", me: null, opp: null, outcome: null });
   const done = games.filter((g) => g.outcome);
@@ -107,6 +109,13 @@ for (let i = 0; i < 2000; i++) {
     },
     allYears: rnd() < 0.2,
     lg: rnd() < 0.9 ? lg : null,
+    year: 2026,
+    extra: {
+      a: rnd() < 0.9 ? { kPct: between(0.1, 0.3), bbPct: between(0.06, 0.18), iso: between(0.04, 0.2), babip: between(0.26, 0.42), bbK: between(0.3, 1.4), h9: between(5, 12), unearned: between(0, 0.5), kbbP: between(0.8, 4) } : null,
+      b: rnd() < 0.9 ? { kPct: between(0.1, 0.3), bbPct: between(0.06, 0.18), iso: between(0.04, 0.2), babip: between(0.26, 0.42), bbK: between(0.3, 1.4), h9: between(5, 12), unearned: between(0, 0.5), kbbP: between(0.8, 4) } : null,
+    },
+    seasonA: Array.from({ length: gA }, (_, k) => sg(`2026-${String(3 + Math.floor(k / 4)).padStart(2, "0")}-${String(1 + (k % 4) * 7).padStart(2, "0")}`, Math.floor(between(0, 14)), Math.floor(between(0, 14)))),
+    seasonB: Array.from({ length: gB }, (_, k) => sg(`2026-${String(3 + Math.floor(k / 4)).padStart(2, "0")}-${String(1 + (k % 4) * 7).padStart(2, "0")}`, Math.floor(between(0, 14)), Math.floor(between(0, 14)))),
   };
   const lines = analyzeVersus(input);
   for (const l of lines) {
@@ -116,4 +125,30 @@ for (let i = 0; i < 2000; i++) {
   assert.equal(new Set(lines.map((l) => l.cat)).size, lines.length, "분류당 한 줄");
   assert.ok(lines.length <= 7);
 }
+// 5) 확장 규칙: 최근 흐름·맞대결 시즌 흐름·팀 색깔
+const formCase: AnalysisInput = {
+  aName: "덕수고", bName: "배재고",
+  metrics: { pct: { a: 0.7, b: 0.69 }, ops: { a: 0.75, b: 0.74 } },
+  recA: { w: 7, l: 3, d: 0, rf: 60, ra: 40 }, recB: { w: 7, l: 3, d: 0, rf: 58, ra: 41 },
+  seasonA: [sg("2026-03-01", 2, 5), sg("2026-03-08", 1, 4), sg("2026-03-15", 3, 6), sg("2026-04-01", 5, 2), sg("2026-04-08", 6, 1), sg("2026-04-15", 7, 2), sg("2026-04-22", 4, 3), sg("2026-04-29", 9, 1)],
+  seasonB: [sg("2026-03-01", 5, 2), sg("2026-03-08", 4, 1), sg("2026-03-15", 6, 3), sg("2026-04-01", 2, 5), sg("2026-04-08", 1, 6), sg("2026-04-15", 2, 7), sg("2026-04-22", 3, 4), sg("2026-04-29", 1, 9)],
+  h2h: { w: 1, l: 2, d: 0, rf: 10, ra: 12, games: [
+    { ...game("2024-05-01", 1, 4), title: "2024 고교야구 주말리그 전반기(서울권)" },
+    { ...game("2025-05-01", 2, 5), title: "2025 고교야구 주말리그 전반기(서울권)" },
+    { ...game("2026-05-01", 7, 3), title: "제81회 청룡기 전국고교야구선수권대회" },
+  ] },
+  year: 2026, lg,
+};
+const f = analyzeVersus(formCase);
+const fids = f.map((l) => l.id);
+assert.ok(fids.includes("Y4"), `지난 시즌과 올해 맞대결 승자가 바뀜 — ${fids.join(",")}`);
+assert.ok(f.some((l) => l.cat === "form"), "최근 흐름 문구");
+// 표현은 변형 중 하나지만 이번에 앞선 쪽(덕수고)과 연도는 반드시 들어간다
+assert.match(f.find((l) => l.id === "Y4")!.text, /덕수고/);
+assert.match(f.find((l) => l.id === "Y4")!.text, /2026년/);
+assert.ok(!fids.includes("D3"), "같은 '최근 결과 뒤집힘'은 Y4 한 줄만");
+
+// 같은 대진은 항상 같은 문장 (표현 변형은 학교 이름으로 고정 선택)
+assert.deepEqual(analyzeVersus(formCase).map((l) => l.text), f.map((l) => l.text));
+
 console.log(`versusAnalysis tests passed (규칙 ${ANALYSIS_RULES.length}개, 무작위 2,000건에서 ${fired.size}개 규칙 사용)`);

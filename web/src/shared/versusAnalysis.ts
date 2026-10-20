@@ -1,14 +1,15 @@
-// 학교 대전 "경기 분석" 문구를 기록 조건에 따라 고르는 규칙 엔진 (101개 규칙, 15개 분류).
+// 학교 대전 "경기 분석" 문구를 기록 조건에 따라 고르는 규칙 엔진 (152개 규칙, 21개 분류).
 // 분류마다 한 줄, 같은 지표를 두 번 말하지 않도록 골라 최대 6줄을 만든다. 외부 호출 없는 순수 함수.
 import { compareEdge, type EdgeLevel } from "./heat";
 import type { LeagueRates } from "./types";
-import type { Record3 } from "./versus";
+import type { Record3, TeamExtra } from "./versus";
 
 export type MetricKey = "pct" | "avg" | "obp" | "ops" | "hr" | "sb" | "era" | "whip" | "k9" | "bb9" | "sbat" | "spit";
 type Side = "a" | "b";
 type Cat =
   | "overall" | "h2h" | "key" | "balance" | "power" | "bat" | "speed" | "pit" | "pitstyle"
-  | "record" | "runs" | "strength" | "h2hDetail" | "level" | "sample";
+  | "record" | "runs" | "strength" | "h2hDetail" | "level" | "sample"
+  | "form" | "contact" | "pitchContact" | "games" | "h2hHistory" | "identity";
 
 export interface AnalysisGame {
   date: string;
@@ -16,6 +17,15 @@ export interface AnalysisGame {
   me: number | null; // A팀 점수
   opp: number | null; // B팀 점수
   outcome: "승" | "패" | "무" | null; // A팀 기준
+  title?: string; // 대회명
+}
+
+// 한 팀의 시즌 완료 경기 (최근 흐름·접전 성적용)
+export interface SeasonGame {
+  date: string;
+  rf: number; // 득점
+  ra: number; // 실점
+  outcome: "승" | "패" | "무";
 }
 
 export interface AnalysisInput {
@@ -27,6 +37,10 @@ export interface AnalysisInput {
   h2h?: { w: number; l: number; d: number; rf: number; ra: number; games: AnalysisGame[] } | null;
   allYears?: boolean; // 통산 맞대결 보기
   lg?: Partial<LeagueRates> | null; // 리그 평균
+  extra?: { a?: TeamExtra | null; b?: TeamExtra | null }; // 팀 세부 지표
+  year?: number; // 선택 시즌
+  seasonA?: SeasonGame[]; // 시즌 완료 경기
+  seasonB?: SeasonGame[];
 }
 
 export interface AnalysisLine {
@@ -48,6 +62,12 @@ function finalOf(word: string): number {
   if (up === "M" || up === "N") return 16;
   return 0;
 }
+// 같은 대진은 항상 같은 표현, 다른 대진은 다른 표현이 나오도록 학교 이름·규칙 id로 고른다.
+const hashOf = (text: string) => {
+  let h = 0;
+  for (const ch of text) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h;
+};
 const ga = (w: string) => `${w}${finalOf(w) ? "이" : "가"}`;
 const eun = (w: string) => `${w}${finalOf(w) ? "은" : "는"}`;
 
@@ -116,9 +136,28 @@ class Ctx {
   };
   // 두 쪽 중 조건을 만족하는 쪽(앞선 쪽 우선)으로 문구를 만든다.
   either = (fn: (s: Side) => string | null): string | null => fn("a") ?? fn("b");
+  pick = (id: string, variants: string[]) =>
+    variants[hashOf(`${this.input.aName}|${this.input.bName}|${id}`) % variants.length];
   get done() {
     return (this.input.h2h?.games ?? []).filter((g) => g.outcome != null);
   }
+  ex = (k: keyof TeamExtra, s: Side): number | undefined => {
+    const x = this.input.extra?.[s]?.[k];
+    return x == null || !Number.isFinite(x) ? undefined : x;
+  };
+  season = (s: Side): SeasonGame[] =>
+    [...((s === "a" ? this.input.seasonA : this.input.seasonB) ?? [])].sort((x, y) => x.date.localeCompare(y.date));
+  recent = (s: Side, n = 5) => this.season(s).slice(-n);
+  // 현재 연승·연패 (무승부에서 끊긴다)
+  streak = (s: Side): { kind: "승" | "패" | null; n: number } => {
+    const g = this.season(s);
+    const last = g[g.length - 1]?.outcome;
+    if (last !== "승" && last !== "패") return { kind: null, n: 0 };
+    let n = 0;
+    for (let i = g.length - 1; i >= 0 && g[i].outcome === last; i--) n += 1;
+    return { kind: last, n };
+  };
+  avgOf = (games: SeasonGame[], k: "rf" | "ra") => (games.length ? games.reduce((x, g) => x + g[k], 0) / games.length : undefined);
   // 지표 수로 본 우세 팀
   get leader(): Side | null {
     const w = this.wins;
@@ -147,7 +186,11 @@ const overall = (c: Ctx) => {
 rule("O1", "overall", 100, [], (c) => {
   const o = overall(c);
   return o.lead && o.ll === 0 && o.wl >= 6
-    ? `${ga(c.name(o.lead))} 비교한 ${c.compared}개 지표 가운데 ${o.wl}개에서 앞서고 뒤진 항목이 하나도 없다. 전력 차가 분명한 매치업이다.`
+    ? c.pick("O1", [
+        `${ga(c.name(o.lead))} 비교한 ${c.compared}개 지표 가운데 ${o.wl}개에서 앞서고 뒤진 항목이 하나도 없다. 전력 차가 분명한 매치업이다.`,
+        `${c.compared}개 지표 중 ${c.name(o.lead)}의 열세 항목은 0개다. 기록상으로는 빈틈이 보이지 않는다.`,
+        `지표 ${o.wl}개를 모두 ${ga(c.name(o.lead))} 가져갔다. ${c.name(c.oth(o.lead))}에게는 이변이 필요한 대진이다.`,
+      ])
     : null;
 });
 rule("O2", "overall", 100, [], (c) => {
@@ -168,18 +211,32 @@ rule("O8", "overall", 100, [], (c) => {
 rule("O3", "overall", 100, [], (c) => {
   const o = overall(c);
   return o.lead && o.wl / o.decided >= 0.75
-    ? `${ga(c.name(o.lead))} ${o.wl}:${o.ll}로 대부분 지표에서 앞선다. 객관적 전력은 ${c.name(o.lead)} 쪽이다.`
+    ? c.pick("O3", [
+        `${ga(c.name(o.lead))} ${o.wl}:${o.ll}로 대부분 지표에서 앞선다. 객관적 전력은 ${c.name(o.lead)} 쪽이다.`,
+        `지표 싸움은 ${o.wl}:${o.ll}, ${c.name(o.lead)} 쪽으로 크게 기운다. ${eun(c.name(c.oth(o.lead)))} 강점 항목에서 승부를 걸어야 한다.`,
+        `${c.name(o.lead)} 우세가 뚜렷한 대진이다(앞선 지표 ${o.wl}개, 뒤진 지표 ${o.ll}개).`,
+      ])
     : null;
 });
 rule("O4", "overall", 100, [], (c) => {
   const o = overall(c);
   return o.lead && o.wl / o.decided >= 0.6
-    ? `${ga(c.name(o.lead))} ${o.wl}:${o.ll}로 우세하지만 압도적이진 않다. 열세 항목에서 반격의 여지가 있다.`
+    ? c.pick("O4", [
+        `${ga(c.name(o.lead))} ${o.wl}:${o.ll}로 우세하지만 압도적이진 않다. 열세 항목에서 반격의 여지가 있다.`,
+        `앞선 지표 ${o.wl}:${o.ll}로 ${c.name(o.lead)} 쪽이 낫지만, 뒤집히지 않을 만큼의 차이는 아니다.`,
+        `${eun(c.name(o.lead))} 더 많은 지표(${o.wl}개)에서 앞서지만 ${c.name(c.oth(o.lead))}도 ${o.ll}개 항목에서 우위를 지켰다.`,
+      ])
     : null;
 });
 rule("O5", "overall", 100, [], (c) => {
   const o = overall(c);
-  return o.lead ? `앞선 항목 ${o.wl}:${o.ll}, 근소하게 ${c.name(o.lead)} 쪽으로 기운 박빙 구도다.` : null;
+  return o.lead
+    ? c.pick("O5", [
+        `앞선 항목 ${o.wl}:${o.ll}, 근소하게 ${c.name(o.lead)} 쪽으로 기운 박빙 구도다.`,
+        `지표는 ${o.wl}:${o.ll}로 거의 반반이다. 당일 컨디션이 승부를 가를 대진이다.`,
+        `${ga(c.name(o.lead))} 한 끗 앞서는 정도(${o.wl}:${o.ll})다. 어느 쪽이 이겨도 이상하지 않다.`,
+      ])
+    : null;
 });
 rule("O6", "overall", 100, [], (c) => {
   const o = overall(c);
@@ -216,7 +273,11 @@ rule("H3", "h2h", 90, [], (c) => {
   const h = h2hLead(c);
   const x = c.input.h2h;
   return h && x && c.done.length >= 2 && Math.min(x.w, x.l) === 0 && x.d === 0
-    ? `맞대결 ${c.done.length}전 전승, ${ga(c.name(h))} 상대 전적에서 확실히 앞선다.`
+    ? c.pick("H3", [
+        `맞대결 ${c.done.length}전 전승, ${ga(c.name(h))} 상대 전적에서 확실히 앞선다.`,
+        `${eun(c.name(h))} 이 상대와 ${c.done.length}번 붙어 한 번도 지지 않았다.`,
+        `상대 전적은 ${c.name(h)}의 ${c.done.length}전 전승이다. ${c.name(c.oth(h))}에게는 설욕전이다.`,
+      ])
     : null;
 });
 rule("H4", "h2h", 90, [], (c) => {
@@ -233,7 +294,13 @@ rule("H5", "h2h", 90, [], (c) => {
 });
 rule("H6", "h2h", 90, [], (c) => {
   const h = h2hLead(c);
-  return h && c.done.length >= 2 ? `맞대결 ${h2hRec(c, h)}로 ${ga(c.name(h))} 우세하다.` : null;
+  return h && c.done.length >= 2
+    ? c.pick("H6", [
+        `맞대결 ${h2hRec(c, h)}로 ${ga(c.name(h))} 우세하다.`,
+        `상대 전적은 ${c.name(h)} 기준 ${h2hRec(c, h)}다. 맞대결에서는 ${c.name(h)} 쪽이 한 수 위였다.`,
+        `${eun(c.name(h))} 이 상대에게 ${h2hRec(c, h)}로 강했다.`,
+      ])
+    : null;
 });
 rule("H7", "h2h", 90, [], (c) => {
   const x = c.input.h2h;
@@ -241,11 +308,15 @@ rule("H7", "h2h", 90, [], (c) => {
 });
 
 // ── 3. 핵심 매치업: 한 팀의 강점 vs 상대 약점 (5) ───────────────
-rule("M1", "key", 85, ["ops", "era"], (c) => c.either((s) => {
+rule("M1", "key", 80, ["ops", "era"], (c) => c.either((s) => {
   const o = c.oth(s);
   const ops = c.v("ops", s), era = c.v("era", o), lo = c.lg("ops"), le = c.lg("era");
-  return ops != null && era != null && lo && le && ops >= lo * 1.1 && era <= le * 0.85
-    ? `${c.name(s)} 타선(OPS ${f3(ops)})과 ${c.name(o)} 마운드(ERA ${f2(era)}), 창과 방패가 정면으로 부딪친다.`
+  return ops != null && era != null && lo && le && ops >= lo * 1.15 && era <= le * 0.8
+    ? c.pick("M1", [
+        `${c.name(s)} 타선(OPS ${f3(ops)})과 ${c.name(o)} 마운드(ERA ${f2(era)}), 창과 방패가 정면으로 부딪친다.`,
+        `리그 상위권 ${c.name(s)} 타선(OPS ${f3(ops)})이 실점이 적은 ${c.name(o)} 마운드(ERA ${f2(era)})를 얼마나 공략하느냐가 관전 포인트다.`,
+        `${c.name(o)} 투수진(ERA ${f2(era)})이 ${c.name(s)}의 강타선(OPS ${f3(ops)})을 묶을 수 있을지가 승부처다.`,
+      ])
     : null;
 }));
 rule("M2", "key", 85, ["ops", "era"], (c) => c.either((s) => {
@@ -286,8 +357,12 @@ rule("B3", "balance", 80, [], (c) => {
 });
 rule("B1", "balance", 75, [], (c) => {
   const b = c.groupWins(BAT), p = c.groupWins(PIT);
-  return b.side && b.side === p.side && b[b.side] >= 3 && p[p.side] >= 3
-    ? `${ga(c.name(b.side))} 타격(${b[b.side]}개)과 마운드(${p[p.side]}개) 양쪽에서 모두 앞선 완성형 전력이다.`
+  return b.side && b.side === p.side && b[b.side] >= 4 && p[p.side] >= 3
+    ? c.pick("B1", [
+        `${ga(c.name(b.side))} 타격(${b[b.side]}개)과 마운드(${p[p.side]}개) 양쪽에서 모두 앞선 완성형 전력이다.`,
+        `방망이도 마운드도 ${c.name(b.side)} 쪽이 낫다(타격 ${b[b.side]}개·마운드 ${p[p.side]}개 우위).`,
+        `${eun(c.name(b.side))} 투타 어느 쪽에서도 밀리지 않는다. 약점을 찾기 어려운 전력이다.`,
+      ])
     : null;
 });
 rule("B4", "balance", 65, [], (c) => {
@@ -314,11 +389,17 @@ rule("T7", "power", 78, ["obp", "hr"], (c) => c.either((s) => {
     ? `${eun(c.name(s))} 출루(출루율 ${f3(c.v("obp", s)!)}), ${eun(c.name(o))} 장타(홈런 ${c.v("hr", o)}개)로 맞서는 색깔이 다른 타선이다.`
     : null;
 }));
-rule("T8", "power", 70, ["hr", "ops"], (c) => c.either((s) =>
-  c.win("hr") === s && c.win("ops") === s
-    ? `${eun(c.name(s))} 홈런(${c.v("hr", s)}개)과 OPS(${f3(c.v("ops", s)!)}) 모두 앞선 '한 방 있는 타선'이다.`
-    : null
-));
+// 두 팀 비교만이 아니라 OPS가 리그 평균 이상이어야 '한 방 있는 타선'이라 부른다.
+rule("T8", "power", 70, ["hr", "ops"], (c) => c.either((s) => {
+  const ops = c.v("ops", s), lo = c.lg("ops");
+  return c.win("hr") === s && c.win("ops") === s && ops != null && (!lo || ops >= lo)
+    ? c.pick("T8", [
+        `${eun(c.name(s))} 홈런(${c.v("hr", s)}개)과 OPS(${f3(ops)}) 모두 앞선 '한 방 있는 타선'이다.`,
+        `장타력은 ${c.name(s)} 쪽이다. 홈런 ${c.v("hr", s)}개, OPS ${f3(ops)}로 큰 것 한 방을 기대할 수 있다.`,
+        `${c.name(s)} 타선은 담장을 넘길 힘이 있다(홈런 ${c.v("hr", s)}개·OPS ${f3(ops)}).`,
+      ])
+    : null;
+}));
 rule("T4", "power", 68, ["hr"], (c) => c.either((s) =>
   c.win("hr") === s && c.lv("hr") === 3 && c.v("hr", s)! >= 3
     ? `홈런 ${c.v("hr", s)}:${c.v("hr", c.oth(s))}, 장타력에서 ${ga(c.name(s))} 확실히 앞선다.`
@@ -342,9 +423,14 @@ rule("T10", "bat", 76, ["avg", "ops"], (c) => c.either((s) =>
     : null
 ));
 rule("T12", "bat", 74, ["obp", "avg"], (c) => c.either((s) => {
-  const avg = c.v("avg", s), obp = c.v("obp", s);
-  return avg != null && obp != null && obp - avg >= 0.12
-    ? `${eun(c.name(s))} 타율(${f3(avg)})보다 출루율(${f3(obp)})이 크게 높다. 볼넷을 잘 골라내는 타선이다.`
+  const avg = c.v("avg", s), obp = c.v("obp", s), la = c.lg("avg"), lo = c.lg("obp");
+  const lgGap = la && lo ? lo - la : 0.11;
+  return avg != null && obp != null && obp - avg >= lgGap * 1.25
+    ? c.pick("T12", [
+        `${eun(c.name(s))} 타율(${f3(avg)})보다 출루율(${f3(obp)})이 크게 높다. 볼넷을 잘 골라내는 타선이다.`,
+        `${c.name(s)} 타자들은 치지 않고도 잘 나간다(출루율 ${f3(obp)}, 타율 ${f3(avg)}).`,
+        `${c.name(s)} 타선의 무기는 선구안이다. 출루율과 타율 차이가 리그 평균보다 크다.`,
+      ])
     : null;
 }));
 rule("T1", "bat", 66, ["ops"], (c) => c.either((s) =>
@@ -467,7 +553,11 @@ rule("K5", "pitstyle", 50, ["bb9"], (c) => c.either((s) =>
 rule("R5", "record", 84, ["pct"], (c) => {
   const m = c.leader, p = c.win("pct");
   return m && p && m !== p
-    ? `${eun(c.name(m))} 지표상 앞서지만 승률은 ${ga(c.name(p))} 높다. 접전에서 이기는 힘은 ${c.name(p)} 쪽이다.`
+    ? c.pick("R5", [
+        `${eun(c.name(m))} 지표상 앞서지만 승률은 ${ga(c.name(p))} 높다. 접전에서 이기는 힘은 ${c.name(p)} 쪽이다.`,
+        `기록은 ${c.name(m)}, 결과는 ${c.name(p)}였다. 승률(${f3(c.v("pct", p)!)})이 지표 열세를 뒤집고 있다.`,
+        `${eun(c.name(p))} 지표에 비해 승리를 잘 챙겼다. 기록만으로 ${c.name(m)} 우세를 단정하기 어렵다.`,
+      ])
     : null;
 });
 rule("R10", "record", 78, ["pct"], (c) => c.either((s) => {
@@ -584,7 +674,7 @@ rule("S8", "strength", 40, ["sbat", "spit"], (c) => {
 // ── 13. 맞대결 세부 (8) ──────────────────────────────────────
 const winnerOf = (g: AnalysisGame): Side | null => (g.outcome === "승" ? "a" : g.outcome === "패" ? "b" : null);
 const latest = (c: Ctx) => [...c.done].sort((x, y) => y.date.localeCompare(x.date))[0];
-rule("D3", "h2hDetail", 72, [], (c) => {
+rule("D3", "h2hDetail", 72, ["flip"], (c) => {
   const h = h2hLead(c);
   const g = latest(c);
   const r = g && winnerOf(g);
@@ -696,12 +786,326 @@ rule("X1", "sample", 0, [], (c) => c.either((s) => {
   return g > 0 && g < 5 && c.games(c.oth(s)) >= 5 ? `${eun(c.name(s))} ${g}경기 기록뿐이라 표본이 적다. 참고용으로 보자.` : null;
 }));
 
+
+// ════════ 확장 규칙 (51개) ════════
+
+// ── 16. 최근 흐름 (10) — 시즌 완료 경기 기준 ─────────────────
+const winsIn = (gs: SeasonGame[]) => gs.filter((g) => g.outcome === "승").length;
+rule("F1", "form", 76, ["form"], (c) => c.either((s) => {
+  const r = c.recent(s);
+  return r.length === 5 && winsIn(r) === 5
+    ? c.pick("F1", [
+        `${eun(c.name(s))} 최근 5경기를 모두 이겼다. 상승세가 뚜렷하다.`,
+        `${c.name(s)}의 최근 5경기는 전승이다. 지금 가장 분위기가 좋은 쪽이다.`,
+        `최근 5연속 승리, ${ga(c.name(s))} 기세를 타고 있다.`,
+      ])
+    : null;
+}));
+rule("F3", "form", 74, ["form"], (c) => c.either((s) => {
+  const st = c.streak(s);
+  return st.kind === "패" && st.n >= 3 ? `${eun(c.name(s))} 최근 ${st.n}연패로 분위기 반전이 필요하다.` : null;
+}));
+rule("F2", "form", 72, ["form"], (c) => c.either((s) => {
+  const x = c.recent(s), y = c.recent(c.oth(s));
+  return x.length === 5 && y.length === 5 && winsIn(x) >= 4 && winsIn(y) <= 2
+    ? `최근 5경기 ${winsIn(x)}승 대 ${winsIn(y)}승, 흐름은 ${c.name(s)} 쪽이다.`
+    : null;
+}));
+rule("F6", "form", 66, ["form"], (c) => c.either((s) => {
+  const st = c.streak(s);
+  return st.kind === "승" && st.n >= 3 && st.n < 5 ? `${eun(c.name(s))} ${st.n}연승을 달리고 있다.` : null;
+}));
+rule("F7", "form", 64, ["form"], (c) => c.either((s) => {
+  const r = c.avgOf(c.recent(s), "rf"), all = c.avgOf(c.season(s), "rf");
+  return c.season(s).length >= 8 && r != null && all != null && r >= all + 2
+    ? `${c.name(s)} 타선은 최근 5경기 경기당 ${f1(r)}점으로 시즌 평균(${f1(all)}점)보다 뜨겁다.`
+    : null;
+}));
+rule("F8", "form", 64, ["form"], (c) => c.either((s) => {
+  const r = c.avgOf(c.recent(s), "ra"), all = c.avgOf(c.season(s), "ra");
+  return c.season(s).length >= 8 && r != null && all != null && r <= all - 2
+    ? `${c.name(s)} 마운드는 최근 5경기 경기당 ${f1(r)}실점으로 시즌 평균(${f1(all)}실점)보다 안정적이다.`
+    : null;
+}));
+rule("F9", "form", 62, ["form"], (c) => c.either((s) => {
+  const r = c.avgOf(c.recent(s), "rf"), all = c.avgOf(c.season(s), "rf");
+  return c.season(s).length >= 8 && r != null && all != null && r <= all - 2
+    ? `${c.name(s)} 타선은 최근 5경기 경기당 ${f1(r)}점으로 시즌 평균(${f1(all)}점)보다 식었다.`
+    : null;
+}));
+rule("F4", "form", 60, ["form"], (c) => {
+  const a = c.recent("a"), b = c.recent("b");
+  return a.length === 5 && b.length === 5 && winsIn(a) >= 4 && winsIn(b) >= 4 ? "두 팀 모두 최근 5경기 4승 이상, 좋은 흐름끼리 만난다." : null;
+});
+rule("F5", "form", 60, ["form"], (c) => {
+  const a = c.recent("a"), b = c.recent("b");
+  return a.length === 5 && b.length === 5 && winsIn(a) <= 1 && winsIn(b) <= 1 ? "두 팀 모두 최근 5경기 1승 이하로 흐름이 좋지 않다." : null;
+});
+rule("F10", "form", 58, ["form"], (c) => c.either((s) => {
+  const g = c.season(s).slice(-1)[0];
+  return g && g.outcome === "승" && g.rf - g.ra >= 7 ? `${eun(c.name(s))} 직전 경기(${md(g.date)})에서 ${g.rf}:${g.ra} 대승을 거뒀다.` : null;
+}));
+
+// ── 17. 타격 성향 (6) — 삼진율·볼넷율·순수장타 ─────────────────
+const pct1 = (v: number) => `${(v * 100).toFixed(1)}%`;
+rule("C5", "contact", 62, ["iso"], (c) => c.either((s) => {
+  const v = c.ex("iso", s), l = c.lg("iso");
+  return v != null && l && v >= l * 1.3 ? `${c.name(s)}의 순수장타율(ISO ${f3(v)})이 리그 평균(${f3(l)})보다 높다. 장타로 경기를 뒤집을 힘이 있다.` : null;
+}));
+rule("C2", "contact", 60, ["kpct"], (c) => c.either((s) => {
+  const v = c.ex("kPct", s), l = c.lg("kPct");
+  return v != null && l && v >= l * 1.2 ? `${c.name(s)} 타선은 삼진이 많은 편(삼진율 ${pct1(v)})이라 탈삼진형 투수에게 고전할 수 있다.` : null;
+}));
+rule("C7", "contact", 59, ["bbk"], (c) => c.either((s) => {
+  const v = c.ex("bbK", s);
+  return v != null && v >= 1 ? `${c.name(s)} 타선은 삼진보다 볼넷이 많을 만큼 선구안이 좋다(볼넷/삼진 ${f2(v)}).` : null;
+}));
+rule("C1", "contact", 58, ["kpct"], (c) => c.either((s) => {
+  const v = c.ex("kPct", s), l = c.lg("kPct");
+  return v != null && l && v <= l * 0.8 ? `${c.name(s)} 타선은 삼진이 적다(삼진율 ${pct1(v)}). 공을 맞히는 능력이 좋다.` : null;
+}));
+rule("C6", "contact", 57, ["iso"], (c) => {
+  const a = c.ex("iso", "a"), b = c.ex("iso", "b"), l = c.lg("iso");
+  return a != null && b != null && l && a <= l * 0.7 && b <= l * 0.7
+    ? `두 팀 모두 장타가 적은 타선(ISO ${f3(a)}·${f3(b)})이라 단타와 작전 싸움이 예상된다.`
+    : null;
+});
+rule("C3", "contact", 56, ["bbpct"], (c) => c.either((s) => {
+  const v = c.ex("bbPct", s), l = c.lg("bbPct");
+  return v != null && l && v >= l * 1.2 ? `${c.name(s)} 타선은 볼넷을 많이 얻어낸다(볼넷율 ${pct1(v)}).` : null;
+}));
+
+// ── 18. 피안타·실점의 질 (5) ────────────────────────────────
+rule("Q4", "pitchContact", 65, ["unearned"], (c) => c.either((s) => {
+  const v = c.ex("unearned", s);
+  return v != null && v >= 0.35 ? `${c.name(s)}의 실점 중 ${Math.round(v * 100)}%가 비자책이다. 수비 실책이 실점으로 이어진 경우가 많다.` : null;
+}));
+rule("Q3", "pitchContact", 63, ["h9", "bb9"], (c) => c.either((s) => {
+  const h9 = c.ex("h9", s), bb9 = c.v("bb9", s), lw = c.lg("whip"), w = c.v("whip", s);
+  return h9 != null && bb9 != null && w != null && lw && w >= lw && bb9 >= h9
+    ? `${c.name(s)} 마운드의 출루 허용은 안타보다 볼넷 비중이 크다(H/9 ${f1(h9)}·BB/9 ${f1(bb9)}). 제구만 잡히면 나아질 여지가 크다.`
+    : null;
+}));
+rule("Q1", "pitchContact", 60, ["h9"], (c) => c.either((s) => {
+  const v = c.ex("h9", s), l = c.lg("h9");
+  return v != null && l && v <= l * 0.8 ? `${c.name(s)} 마운드는 9이닝당 피안타 ${f1(v)}개로 안타 자체를 잘 맞지 않는다.` : null;
+}));
+rule("Q2", "pitchContact", 58, ["h9"], (c) => c.either((s) => {
+  const v = c.ex("h9", s), l = c.lg("h9");
+  return v != null && l && v >= l * 1.2 ? `${c.name(s)} 마운드는 9이닝당 피안타가 ${f1(v)}개로 많다. 수비의 도움이 필요하다.` : null;
+}));
+rule("Q5", "pitchContact", 57, ["kbbp"], (c) => c.either((s) => {
+  const v = c.ex("kbbP", s);
+  return v != null && v >= 3 ? `${c.name(s)} 투수진은 볼넷 1개당 삼진 ${f1(v)}개, 구위와 제구의 균형이 좋다.` : null;
+}));
+
+// ── 19. 시즌 경기 내용 (7) ──────────────────────────────────
+const oneRun = (gs: SeasonGame[]) => gs.filter((g) => Math.abs(g.rf - g.ra) === 1);
+rule("G4", "games", 69, ["close"], (c) => c.either((s) => {
+  const g = oneRun(c.season(s));
+  const w = winsIn(g), l = g.length - w;
+  return g.length >= 3 && w / g.length >= 0.7 ? `${eun(c.name(s))} 1점 차 승부에서 ${w}승 ${l}패로 강하다. 접전이 되면 유리하다.` : null;
+}));
+rule("G5", "games", 67, ["close"], (c) => c.either((s) => {
+  const g = oneRun(c.season(s));
+  const w = winsIn(g), l = g.length - w;
+  return g.length >= 3 && w / g.length <= 0.3 ? `${eun(c.name(s))} 1점 차 승부에서 ${w}승 ${l}패로 약했다. 마지막 한 점을 지키는 힘이 과제다.` : null;
+}));
+rule("G3", "games", 61, ["shutout"], (c) => c.either((s) => {
+  const n = c.season(s).filter((g) => g.outcome === "승" && g.ra === 0).length;
+  return n >= 3 ? `${eun(c.name(s))} 올 시즌 상대를 무득점으로 막고 이긴 경기가 ${n}번이다.` : null;
+}));
+rule("G7", "games", 61, ["bigloss"], (c) => c.either((s) => {
+  const n = c.season(s).filter((g) => g.ra >= 10).length;
+  return n >= 3 ? `${eun(c.name(s))} 10점 이상 내준 경기가 ${n}번 있다. 대량 실점이 약점이다.` : null;
+}));
+rule("G6", "games", 59, ["bigwin"], (c) => c.either((s) => {
+  const n = c.season(s).filter((g) => g.rf >= 10).length;
+  return n >= 5 ? `${eun(c.name(s))} 10점 이상 낸 경기가 ${n}번이다. 한번 터지면 몰아치는 타선이다.` : null;
+}));
+rule("G2", "games", 55, ["gp"], (c) => c.either((s) => {
+  const x = c.games(s), y = c.games(c.oth(s));
+  return x >= 10 && x - y >= 6 ? `${ga(c.name(s))} ${x}경기로 ${y}경기의 ${c.name(c.oth(s))}보다 훨씬 많은 경기를 치렀다. 기록의 무게가 다르다.` : null;
+}));
+rule("G1", "games", 50, ["draw"], (c) => c.either((s) => {
+  const d = c.rec(s)?.d ?? 0;
+  return d >= 2 ? `${eun(c.name(s))} 무승부가 ${d}번으로 승부를 내지 못한 경기가 잦다.` : null;
+}));
+
+// ── 20. 맞대결 시즌 흐름 (9) — 통산 맞대결 ────────────────────
+const yearOf = (g: AnalysisGame) => g.date.slice(0, 4);
+const ymd = (d: string) => `${d.slice(2, 4)}.${Number(d.slice(5, 7))}.${Number(d.slice(8, 10))}`;
+const byYear = (c: Ctx) => {
+  const m = new Map<string, { a: number; b: number }>();
+  for (const g of c.done) {
+    const w = winnerOf(g);
+    if (!w) continue;
+    const y = m.get(yearOf(g)) ?? { a: 0, b: 0 };
+    y[w] += 1;
+    m.set(yearOf(g), y);
+  }
+  return [...m.entries()].sort((x, y) => x[0].localeCompare(y[0]));
+};
+const yearWinner = (r: { a: number; b: number }): Side | null => (r.a > r.b ? "a" : r.b > r.a ? "b" : null);
+rule("Y4", "h2hHistory", 82, ["flip"], (c) => {
+  const ys = byYear(c);
+  if (ys.length < 2) return null;
+  const [cy, cr] = ys[ys.length - 1];
+  const past = ys.slice(0, -1).reduce((acc, [, r]) => ({ a: acc.a + r.a, b: acc.b + r.b }), { a: 0, b: 0 });
+  const pw = yearWinner(past), cw = yearWinner(cr);
+  return pw && cw && pw !== cw
+    ? c.pick("Y4", [
+        `${Number(cy) - 1}년까지는 ${ga(c.name(pw))} 앞섰지만 ${cy}년 맞대결은 ${ga(c.name(cw))} 가져갔다. 상성이 바뀌는 중이다.`,
+        `지난 시즌까지의 열세를 ${ga(c.name(cw))} ${cy}년 맞대결에서 뒤집었다.`,
+        `${cy}년 들어 맞대결 흐름이 ${c.name(cw)} 쪽으로 넘어왔다(이전 우위는 ${c.name(pw)}).`,
+      ])
+    : null;
+});
+rule("Y1", "h2hHistory", 80, [], (c) => {
+  const ys = byYear(c).filter(([, r]) => yearWinner(r));
+  const winners = new Set(ys.map(([, r]) => yearWinner(r)));
+  return ys.length >= 2 && winners.size === 2
+    ? `시즌마다 맞대결 승자가 달랐다(${ys.map(([y, r]) => `${y} ${c.name(yearWinner(r)!)}`).join(", ")}).`
+    : null;
+});
+rule("Y2", "h2hHistory", 78, [], (c) => {
+  const ys = byYear(c);
+  const ws = ys.map(([, r]) => yearWinner(r));
+  return ys.length >= 2 && ws.every((w) => w && w === ws[0])
+    ? c.pick("Y2", [
+        `${eun(c.name(ws[0]!))} 맞대결이 있었던 ${ys.length}개 시즌 모두 우위였다. 꾸준히 강한 상대다.`,
+        `시즌이 바뀌어도 맞대결 우위는 늘 ${c.name(ws[0]!)} 쪽이었다(${ys.length}개 시즌).`,
+        `${ys.map(([y]) => y).join("·")}년 모두 맞대결은 ${ga(c.name(ws[0]!))} 앞섰다.`,
+      ])
+    : null;
+});
+rule("Y3", "h2hHistory", 70, [], (c) => {
+  const ys = [...new Set(c.done.map(yearOf))].sort();
+  const now = c.input.year ? String(c.input.year) : null;
+  return now && ys.length > 0 && !ys.includes(now) ? `맞대결은 ${ys.join("·")}년에만 있었고 올해는 아직 맞붙지 않았다.` : null;
+});
+rule("Y8", "h2hHistory", 66, [], (c) => {
+  const g = c.done.find((x) => x.me != null && x.opp != null && (x.me === 0 || x.opp === 0) && x.me !== x.opp);
+  if (!g) return null;
+  const s: Side = g.opp === 0 ? "a" : "b";
+  return `맞대결에서 ${ga(c.name(s))} 상대를 무득점으로 막은 경기도 있었다(${ymd(g.date)}).`;
+});
+rule("Y7", "h2hHistory", 64, [], (c) =>
+  c.done.length >= 5 ? `통산 ${c.done.length}번 맞붙은 단골 상대다. 서로의 전력을 잘 아는 사이다.` : null
+);
+rule("Y5", "h2hHistory", 62, [], (c) => {
+  const g = c.done.find((x) => x.title && !/주말리그/.test(x.title));
+  return g ? `전국대회에서도 맞붙은 적이 있다(${ymd(g.date)} ${g.title!.replace(/^\s*\d{4}\s*/, "")}).` : null;
+});
+rule("Y6", "h2hHistory", 52, [], (c) =>
+  c.done.length >= 2 && c.done.every((x) => x.title && /주말리그/.test(x.title))
+    ? "맞대결은 모두 주말리그에서 나왔다. 같은 권역에서 자주 만나는 사이다."
+    : null
+);
+rule("Y9", "h2hHistory", 45, [], (c) =>
+  c.done.length === 1 ? "맞대결이 1경기뿐이라 상성을 단정하기엔 이르다." : null
+);
+
+// ── 21. 핵심 매치업 추가 (4) ────────────────────────────────
+rule("M6", "key", 85, ["avg", "h9"], (c) => c.either((s) => {
+  const o = c.oth(s);
+  const avg = c.v("avg", s), h9 = c.ex("h9", o), la = c.lg("avg"), lh = c.lg("h9");
+  return avg != null && h9 != null && la && lh && avg >= la * 1.08 && h9 <= lh * 0.85
+    ? c.pick("M6", [
+        `정교한 ${c.name(s)} 타선(타율 ${f3(avg)})과 안타를 잘 맞지 않는 ${c.name(o)} 마운드(H/9 ${f1(h9)})의 대결이다.`,
+        `${c.name(s)} 타선의 컨택(타율 ${f3(avg)})이 피안타가 적은 ${c.name(o)} 투수진(H/9 ${f1(h9)})에게도 통할지가 관건이다.`,
+        `안타를 잘 치는 팀(${c.name(s)}, 타율 ${f3(avg)})과 안타를 잘 안 주는 팀(${c.name(o)}, H/9 ${f1(h9)})이 만났다.`,
+      ])
+    : null;
+}));
+rule("M7", "key", 85, ["kpct", "k9"], (c) => c.either((s) => {
+  const o = c.oth(s);
+  const kp = c.ex("kPct", s), k9 = c.v("k9", o), lk = c.lg("kPct"), l9 = c.lg("k9");
+  return kp != null && k9 != null && lk && l9 && kp <= lk * 0.85 && k9 >= l9 * 1.1
+    ? c.pick("M7", [
+        `삼진이 적은 ${c.name(s)} 타선(삼진율 ${pct1(kp)})이 ${c.name(o)}의 탈삼진 능력(K/9 ${f1(k9)})을 무디게 할 수 있다.`,
+        `${c.name(o)} 투수진의 삼진 능력(K/9 ${f1(k9)})과 ${c.name(s)} 타자들의 컨택(삼진율 ${pct1(kp)})이 맞부딪친다.`,
+        `${eun(c.name(s))} 쉽게 삼진을 당하지 않는 타선(삼진율 ${pct1(kp)})이라 ${c.name(o)} 투수들이 공을 많이 던져야 할 수 있다.`,
+      ])
+    : null;
+}));
+rule("M8", "key", 85, ["kpct", "k9"], (c) => c.either((s) => {
+  const o = c.oth(s);
+  const kp = c.ex("kPct", s), k9 = c.v("k9", o), lk = c.lg("kPct"), l9 = c.lg("k9");
+  return kp != null && k9 != null && lk && l9 && kp >= lk * 1.15 && k9 >= l9 * 1.1
+    ? `삼진이 많은 ${c.name(s)} 타선(삼진율 ${pct1(kp)})이 탈삼진에 강한 ${c.name(o)} 마운드(K/9 ${f1(k9)})를 만난다. ${c.name(s)}에게 불리한 상성이다.`
+    : null;
+}));
+rule("M9", "key", 85, ["sb", "bb9"], (c) => c.either((s) => {
+  const o = c.oth(s);
+  const sbg = c.perGame(s, "sb"), bb9 = c.v("bb9", o), lb = c.lg("bb9");
+  return sbg != null && bb9 != null && lb && sbg >= 2 && bb9 >= lb * 1.1
+    ? `볼넷이 많은 ${c.name(o)} 마운드(BB/9 ${f1(bb9)})는 경기당 도루 ${f1(sbg)}개의 ${c.name(s)} 발야구에 더 흔들릴 수 있다.`
+    : null;
+}));
+
+// ── 22. 팀 색깔 (4) — 리그 평균 대비 투타 균형 ─────────────────
+const identity = (c: Ctx, s: Side) => {
+  const ops = c.v("ops", s), era = c.v("era", s), lo = c.lg("ops"), le = c.lg("era");
+  return ops != null && era != null && lo && le ? { bat: ops / lo, pit: le / era } : null;
+};
+rule("I1", "identity", 68, [], (c) => c.either((s) => {
+  const x = identity(c, s);
+  return x && x.bat >= 1.1 && x.pit <= 0.9 ? `${eun(c.name(s))} 화끈한 타선에 비해 마운드가 불안한 '때리는 야구' 팀이다. 난타전에 강하다.` : null;
+}));
+rule("I2", "identity", 68, [], (c) => c.either((s) => {
+  const x = identity(c, s);
+  return x && x.pit >= 1.15 && x.bat <= 0.95 ? `${eun(c.name(s))} 마운드로 버티고 타선은 약한 '지키는 야구' 팀이다. 적은 점수로 이기는 법을 안다.` : null;
+}));
+rule("I3", "identity", 60, [], (c) => c.either((s) => {
+  const x = identity(c, s);
+  return x && x.bat >= 1.05 && x.pit >= 1.05 ? `${eun(c.name(s))} 투타 모두 리그 평균 이상인 균형 잡힌 팀이다.` : null;
+}));
+rule("I4", "identity", 60, [], (c) => c.either((s) => {
+  const x = identity(c, s);
+  return x && x.bat <= 0.95 && x.pit <= 0.95 ? `${eun(c.name(s))} 투타 모두 리그 평균에 못 미쳐 고전하고 있다.` : null;
+}));
+
+// ── 23. 그 밖의 보강 (6) ────────────────────────────────────
+rule("L11", "level", 52, ["babip"], (c) => c.either((s) => {
+  const v = c.ex("babip", s), l = c.lg("babip");
+  return v != null && l && v >= l * 1.12 ? `${c.name(s)} 타선은 BABIP ${f3(v)}로 높은 편이다. 타구 운이 따른 면도 있다.` : null;
+}));
+rule("L12", "level", 54, ["babip"], (c) => c.either((s) => {
+  const v = c.ex("babip", s), l = c.lg("babip");
+  return v != null && l && v <= l * 0.88 ? `${c.name(s)} 타선은 BABIP ${f3(v)}로 낮다. 잘 맞은 타구가 잡힌 경우가 많아 반등 여지가 있다.` : null;
+}));
+// 득실로 본 기대 승률(피타고리안, 지수 1.83)과 실제 승률의 차이
+const pythag = (r: Record3) => (r.rf + r.ra > 0 ? r.rf ** 1.83 / (r.rf ** 1.83 + r.ra ** 1.83) : undefined);
+rule("U8", "runs", 71, ["runs"], (c) => c.either((s) => {
+  const r = c.rec(s), act = c.v("pct", s);
+  const exp = r && pythag(r);
+  return r && exp != null && act != null && c.games(s) >= 8 && act - exp >= 0.12
+    ? `${eun(c.name(s))} 득실로 본 기대 승률(${f3(exp)})보다 실제 승률(${f3(act)})이 높다. 접전 운이 따랐다.`
+    : null;
+}));
+rule("U9", "runs", 71, ["runs"], (c) => c.either((s) => {
+  const r = c.rec(s), act = c.v("pct", s);
+  const exp = r && pythag(r);
+  return r && exp != null && act != null && c.games(s) >= 8 && exp - act >= 0.12
+    ? `${eun(c.name(s))} 득실로 본 기대 승률(${f3(exp)})보다 실제 승률(${f3(act)})이 낮다. 득실만큼 승리를 챙기지 못했다.`
+    : null;
+}));
+rule("V6", "speed", 50, ["sb"], (c) => {
+  const a = c.perGame("a", "sb"), b = c.perGame("b", "sb");
+  return a != null && b != null && a <= 0.5 && b <= 0.5 ? "두 팀 모두 도루가 거의 없다. 주루보다 타격 위주의 경기가 예상된다." : null;
+});
+rule("T13", "power", 60, ["hr"], (c) => c.either((s) => {
+  const g = c.perGame(s, "hr");
+  return g != null && g >= 1 ? `${eun(c.name(s))} 경기당 홈런 ${f1(g)}개, 한 방이 자주 나오는 팀이다.` : null;
+}));
+
 export const ANALYSIS_RULES = R.map(({ id, cat }) => ({ id, cat }));
 
 // 표시 순서 — 전체 구도와 맞대결을 먼저, 나머지는 분류 순서대로.
 const DISPLAY: Cat[] = [
-  "overall", "h2h", "key", "balance", "bat", "power", "pit", "pitstyle", "speed",
-  "record", "runs", "strength", "h2hDetail", "level", "sample",
+  "overall", "h2h", "h2hHistory", "form", "key", "identity", "balance", "bat", "contact", "power",
+  "pit", "pitchContact", "pitstyle", "speed", "record", "games", "runs", "strength", "h2hDetail", "level", "sample",
 ];
 
 // 조건이 맞는 규칙 중 중요도 높은 순으로, 분류당 한 줄·같은 지표 중복 없이 max줄을 고른다.

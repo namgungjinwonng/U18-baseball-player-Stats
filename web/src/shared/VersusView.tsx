@@ -14,7 +14,7 @@ import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, mergeMatrices, playerHref, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, playerHref, sameTeam, teamExtra, teamGames, teamKey, teamRecord, teamTotals, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
@@ -296,6 +296,11 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     );
 
   // 기록 조건에 맞는 경기 분석 문구 (규칙 101개 중 분류당 한 줄, 최대 6줄)
+  // 경기 분석용: 선택 시즌의 완료 경기(최근 흐름·접전 성적)
+  const seasonDone = (team: string) =>
+    teamGames(seasonGames, team)
+      .filter((g) => g.outcome && g.me.score != null && g.opp.score != null)
+      .map((g) => ({ date: g.game.date, rf: g.me.score!, ra: g.opp.score!, outcome: g.outcome! }));
   // 한쪽이라도 이 범위(시즌·대회)의 기록이 없으면 지표 비교·분석이 의미가 없어 안내만 보인다.
   const missing = ready && !records.loading && records.data ? [totA ? null : aName, totB ? null : bName].filter(Boolean) as string[] : [];
   const analysis = ready && !records.loading && missing.length === 0
@@ -307,8 +312,14 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
         recB,
         h2h: h2h && {
           ...h2h,
-          games: h2h.games.map((g) => ({ date: g.game.date, status: g.game.status, me: g.me.score, opp: g.opp.score, outcome: g.outcome })),
+          games: h2h.games.map((g) => ({
+            date: g.game.date, status: g.game.status, me: g.me.score, opp: g.opp.score, outcome: g.outcome, title: g.game.title,
+          })),
         },
+        extra: { a: teamExtra(totA), b: teamExtra(totB) },
+        year,
+        seasonA: seasonDone(a),
+        seasonB: seasonDone(b),
         allYears: all,
         lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
       })

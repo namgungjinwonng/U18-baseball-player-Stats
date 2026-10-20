@@ -325,3 +325,30 @@ export function mergeMatrices(parts: { year: number; matrix: VersusMatrix }[]): 
   const yearOf = new Map([...rep.values()].map(({ entry, year }) => [entry.id, year]));
   return { batters: order(batterPa), pitchers: order(pitcherPa), cells, yearOf };
 }
+
+// 경기 분석용 팀 세부 지표 — 팀 합계 원자료에서 계산한다(비교 막대에는 쓰지 않음).
+export interface TeamExtra {
+  kPct?: number; // 타선 삼진율 (삼진/타석)
+  bbPct?: number; // 타선 볼넷율 (볼넷/타석)
+  iso?: number; // 순수장타율 (장타율 − 타율)
+  babip?: number; // 인플레이 타구 타율
+  bbK?: number; // 타선 볼넷/삼진
+  h9?: number; // 마운드 9이닝당 피안타
+  unearned?: number; // 실점 중 비자책 비율
+  kbbP?: number; // 마운드 삼진/볼넷
+}
+export function teamExtra(t: TeamTotals | null | undefined): TeamExtra | null {
+  if (!t) return null;
+  const b = t.batting, p = t.pitching;
+  const bip = b.ab - b.so - b.hr;
+  return {
+    kPct: b.pa ? b.so / b.pa : undefined,
+    bbPct: b.pa ? b.bb / b.pa : undefined,
+    iso: b.ab ? b.slg - b.avg : undefined,
+    babip: bip > 0 ? (b.h - b.hr) / bip : undefined,
+    bbK: b.so ? b.bb / b.so : undefined,
+    h9: p.outs ? (p.h * 27) / p.outs : undefined,
+    unearned: p.r >= 5 ? (p.r - p.er) / p.r : undefined,
+    kbbP: p.bb ? p.so / p.bb : undefined,
+  };
+}
