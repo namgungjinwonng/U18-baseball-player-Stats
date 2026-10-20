@@ -66,7 +66,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
   const lg = averages.data?.overall;
   const loading = schedule.loading || records.loading || teams.loading;
   if (!loading && !roster && games.length === 0 && !totals) {
-    return <div className={wrapClass}><div className="state">{team} 의 {year} 시즌 기록이 없습니다.</div></div>;
+    return <div className={wrapClass}><div className="state">{team}의 {year} 시즌 기록이 없습니다.</div></div>;
   }
   const pct = rec && rec.w + rec.l ? (rec.w / (rec.w + rec.l)).toFixed(3) : "-";
 

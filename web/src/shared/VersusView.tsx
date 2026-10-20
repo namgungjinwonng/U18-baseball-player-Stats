@@ -303,7 +303,9 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     );
 
   // 기록 조건에 맞는 경기 분석 문구 (규칙 101개 중 분류당 한 줄, 최대 6줄)
-  const analysis = ready && !records.loading
+  // 한쪽이라도 이 범위(시즌·대회)의 기록이 없으면 지표 비교·분석이 의미가 없어 안내만 보인다.
+  const missing = ready && !records.loading && records.data ? [totA ? null : aName, totB ? null : bName].filter(Boolean) as string[] : [];
+  const analysis = ready && !records.loading && missing.length === 0
     ? analyzeVersus({
         aName,
         bName,
@@ -323,6 +325,11 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     <section className="versus-section">
       <h3 className="heading-md">팀 지표 비교</h3>
       <p className="caption muted">{tournamentTitle ? shortTitle(tournamentTitle) : `${year} 시즌 전체`} 기준 · 비율은 합산 원자료로 재계산 · 강도지수 1.00 = 리그 평균</p>
+      {missing.length > 0 && (
+        <p className="state muted">
+          {missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 지표를 비교할 수 없습니다.
+        </p>
+      )}
       {analysis.length > 0 && (
         <div className="versus-analysis">
           <h4>경기 분석 <small>기록 기반 자동 분석 · 참고용</small></h4>
@@ -335,7 +342,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
           </ul>
         </div>
       )}
-      {records.loading ? <div className="state">불러오는 중…</div> : <MirrorBars rows={statRows} aName={aName} bName={bName} />}
+      {records.loading ? <div className="state">불러오는 중…</div> : missing.length === 0 && <MirrorBars rows={statRows} aName={aName} bName={bName} />}
     </section>
   );
 
