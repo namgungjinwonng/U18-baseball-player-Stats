@@ -1,6 +1,7 @@
 // 선수 요약 카드의 백분위와 경기별 누적 타율·OPS 계산을 검증하는 단위 테스트.
 import assert from "node:assert/strict";
-import { cumulativeBatting, percentileRank } from "./percentile";
+import { cumulativeBatting, pctGrade, percentileRank, topPercent } from "./percentile";
+import { edgeLevel } from "./heat";
 import type { GameLogEntry } from "./types";
 
 // 높을수록 좋은 지표: 4명 중 2명보다 좋고 1명과 동률 → (2 + 0.5)/4 = 63
@@ -31,5 +32,18 @@ assert.ok(Math.abs(all[1].ops - (4 / 7 + 7 / 6)) < 1e-9);
 assert.equal(all[2].avg, 0.3);
 // 최근 1경기만 누적
 assert.deepEqual(cumulativeBatting(log, 1).map((p) => [p.date, p.avg]), [["2026-03-15", 0]]);
+
+// 백분위 → 등급: 20점 구간 A~E, 구간 안 위 1/3 +, 아래 1/3 -
+assert.deepEqual([100, 98, 91, 80, 79, 70, 60, 50, 40, 21, 10, 0].map((p) => pctGrade(p).grade),
+  ["A+", "A+", "A", "A-", "B+", "B", "B-", "C", "C-", "D-", "E", "E-"]);
+assert.equal(topPercent(98), 2);
+assert.equal(topPercent(100), 1);
+
+// 우위 단계: 차이 비율 3%·10%·25% 경계
+assert.equal(edgeLevel(0.194, 0.199), 0); // 2.5% 대등
+assert.equal(edgeLevel(6.39, 6.09), 1); // 4.7% 근소
+assert.equal(edgeLevel(0.294, 0.24), 2); // 18% 우위
+assert.equal(edgeLevel(0.133, 0.235), 3); // 43% 큰 우위
+assert.equal(edgeLevel(0, 0), 0);
 
 console.log("percentile tests passed");

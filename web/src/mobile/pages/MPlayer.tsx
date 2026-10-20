@@ -14,9 +14,9 @@ import { TournamentPicker, filterFromQuery } from "../../shared/filters";
 import { Chip } from "../../design/ui";
 import { KbsaLink } from "../../shared/KbsaLink";
 import { CareerPanel } from "../../shared/CareerPanel";
-import { PercentileCard, TrendChart } from "../../shared/PlayerInsights";
+import { PercentileCard, TrendChart, gradeFor, useGradePopulation, type GradeInfo } from "../../shared/PlayerInsights";
 import { useYear } from "../../shared/year";
-import type { GameLogEntry, Matchup, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
+import type { GameLogEntry, Matchup, Player, PlayerIndexEntry, PlayerProfile } from "../../shared/types";
 
 type TabId = "batting" | "pitching" | "schools" | "awards";
 
@@ -58,12 +58,14 @@ function MAwards({ profile }: { profile: PlayerProfile | null }) {
 }
 
 // 시즌 기록 상단 핵심 지표 4개 요약 — 아래 상세 표에서 무엇이 중요한지 먼저 보여준다.
-function KpiRow({ items, note }: { items: [string, string][]; note?: string }) {
+// 칸 색·작은 등급 배지는 아래 리그 등급 카드와 같은 기준(규정 충족 선수 대비 백분위 → A+~E-)이다.
+function KpiRow({ items, note }: { items: [string, string, (GradeInfo | null)?][]; note?: string }) {
   return (
     <>
       <div className="m-kpi">
-        {items.map(([k, val]) => (
-          <div key={k} className="m-kpi__cell">
+        {items.map(([k, val, g]) => (
+          <div key={k} className={`m-kpi__cell ${g ? `grade-bg--${g.letter}` : ""}`} title={g ? `리그 등급 ${g.grade} (백분위 ${g.pct})` : undefined}>
+            {g && <span className="m-kpi__grade">{g.grade}</span>}
             <span className="m-kpi__k">{k}</span>
             <span className="m-kpi__v">{val}</span>
           </div>
@@ -148,6 +150,9 @@ export function MPlayer() {
   const [recordMode, setRecordMode] = useState<"season" | "career">("season");
   const [tab, setTab] = useState<TabId | null>(null); // null = 자동(타자→투수)
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
+  // 상단 핵심 지표 등급용 비교 집단 (리그 등급 카드와 같은 기준)
+  const batPop = useGradePopulation("batting");
+  const pitPop = useGradePopulation("pitching");
   useEffect(() => {
     if (!p?.personNo || p.id !== id || careerLoading || !careerSeasons) return;
     if (!careerSeasons.some((season) => season.player.personNo === p.personNo)) return;
@@ -333,10 +338,19 @@ export function MPlayer() {
         // undefined 값은 "-" 로 통일 표기 (시합 필터 재집계 시 sh/sf/ibb/e 등은 측정 불가).
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = battingAdvanced(v.batting, lg);
+        // 등급은 시즌 기준이라 대회 필터 중이거나 타석이 없으면 붙이지 않는다.
+        const gb = !tournamentSlug && v.batting.pa > 0;
+        const lgAll = averages?.overall;
+        const g = (of: (x: Player) => number | undefined) => (gb ? gradeFor(batPop.population, p, of) : null);
         return (
           <>
             <KpiRow
-              items={[["타율", rate(v.batting.avg)], ["OPS", rate(a.ops)], ["홈런", n(v.batting.hr)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
+              items={[
+                ["타율", rate(v.batting.avg), g((x) => x.batting?.avg)],
+                ["OPS", rate(a.ops), g((x) => (x.batting ? x.batting.obp + x.batting.slg : undefined))],
+                ["홈런", n(v.batting.hr), g((x) => x.batting?.hr)],
+                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.batting ? battingAdvanced(x.batting, lgAll).war : undefined)) : null],
+              ]}
               note={a.wrcPlus != null ? `wRC+ ${int(a.wrcPlus)} (리그 평균 100)` : undefined}
             />
             {!tournamentSlug && <PercentileCard player={p} kind="batting" />}
@@ -386,10 +400,19 @@ export function MPlayer() {
       {recordMode === "season" && active === "pitching" && v.pitching && (() => {
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = pitchingAdvanced(v.pitching, lg);
+        // 등급은 시즌 기준이라 대회 필터 중이거나 이닝이 없으면 붙이지 않는다.
+        const gp = !tournamentSlug && v.pitching.ip > 0;
+        const lgAll = averages?.overall;
+        const g = (of: (x: Player) => number | undefined, lower = false) => (gp ? gradeFor(pitPop.population, p, of, lower) : null);
         return (
           <>
             <KpiRow
-              items={[["평균자책", dec2(v.pitching.era)], ["WHIP", dec2(a.whip)], ["탈삼진", n(v.pitching.so)], ["WAR", a.war != null ? dec1(a.war) : "-"]]}
+              items={[
+                ["평균자책", dec2(v.pitching.era), g((x) => x.pitching?.era, true)],
+                ["WHIP", dec2(a.whip), g((x) => x.pitching?.whip, true)],
+                ["탈삼진", n(v.pitching.so), g((x) => x.pitching?.so)],
+                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.pitching ? pitchingAdvanced(x.pitching, lgAll).war : undefined)) : null],
+              ]}
             />
             {!tournamentSlug && <PercentileCard player={p} kind="pitching" />}
             <section className="player-section">

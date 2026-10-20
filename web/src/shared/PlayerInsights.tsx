@@ -1,43 +1,62 @@
-// 선수 상세 상단 요약 — 핵심 5지표 리그 백분위 막대(비교 기준 전체/같은 학년)와 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
-import { useMemo, useState } from "react";
+// 선수 상세 상단 요약 — 핵심 5지표 리그 등급(A+~E-, 백분위 기준·비교 기준 전체/같은 학년)과 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
+import { useCallback, useMemo, useState } from "react";
 import { useAllPlayers, useLeagueAverages } from "./data";
 import { emptyFilter, useQualifyContext } from "./filters";
 import { rate } from "./format";
 import { isQualifiedBat, isQualifiedPit } from "./leaders";
-import { BAT_METRICS, PIT_METRICS, cumulativeBatting, percentileRank } from "./percentile";
+import { BAT_METRICS, PIT_METRICS, cumulativeBatting, pctGrade, percentileRank, topPercent, type GradeLetter } from "./percentile";
 import type { GameLogEntry, LeagueRates, Player } from "./types";
 
-// 백분위 색: 0(파랑) → 50(회색) → 100(빨강). Baseball Savant 관례.
-function pctColor(p: number): string {
-  const mix = (a: number[], b: number[], t: number) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
-  const blue = [17, 81, 255];
-  const grey = [170, 170, 172];
-  const red = [211, 0, 5];
-  const c = p < 50 ? mix(blue, grey, p / 50) : mix(grey, red, (p - 50) / 50);
-  return `rgb(${c.join(",")})`;
+// 등급 비교 집단 — 시즌 기록의 규정 충족 선수(학년 지정 시 그 학년만).
+// 리그 등급 카드와 선수 상세 상단 핵심 지표가 같은 기준을 쓴다.
+export function useGradePopulation(kind: "batting" | "pitching", grade?: string) {
+  const { data: records } = useAllPlayers();
+  const ctx = useQualifyContext(emptyFilter);
+  const qualified = useCallback(
+    (p: Player) => (kind === "batting" ? !!p.batting && isQualifiedBat(p, ctx) : !!p.pitching && isQualifiedPit(p, ctx)),
+    [kind, ctx]
+  );
+  const population = useMemo(
+    () => (records ? records.filter((p) => qualified(p) && (!grade || p.grade === grade)) : null),
+    [records, qualified, grade]
+  );
+  return { population, qualified };
+}
+
+export interface GradeInfo {
+  grade: string; // A+ ~ E-
+  letter: GradeLetter;
+  pct: number; // 백분위
+}
+
+// 한 지표의 등급 — 집단이 5명 미만이거나 값이 없으면 null.
+export function gradeFor(
+  population: Player[] | null,
+  player: Player,
+  of: (p: Player) => number | undefined,
+  lowerIsBetter = false
+): GradeInfo | null {
+  if (!population || population.length < 5) return null;
+  const v = of(player);
+  if (v == null || !Number.isFinite(v)) return null;
+  const values = population.map(of).filter((x): x is number => x != null && Number.isFinite(x));
+  const pct = percentileRank(values, v, lowerIsBetter);
+  return pct == null ? null : { ...pctGrade(pct), pct };
 }
 
 export function PercentileCard({ player, kind }: { player: Player; kind: "batting" | "pitching" }) {
-  const { data: records } = useAllPlayers();
   const { data: averages } = useLeagueAverages();
-  const ctx = useQualifyContext(emptyFilter);
   const [base, setBase] = useState<"all" | "grade">("all");
   const metrics = kind === "batting" ? BAT_METRICS : PIT_METRICS;
-  const qualified = (p: Player) => (kind === "batting" ? !!p.batting && isQualifiedBat(p, ctx) : !!p.pitching && isQualifiedPit(p, ctx));
   const gradeOk = base === "grade" && !!player.grade;
-
-  const population = useMemo(
-    () => (records ?? []).filter((p) => qualified(p) && (!gradeOk || p.grade === player.grade)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [records, ctx, kind, gradeOk, player.grade]
-  );
+  const { population, qualified } = useGradePopulation(kind, gradeOk ? player.grade : undefined);
   const lg: LeagueRates | undefined = gradeOk ? averages?.grades?.[player.grade!] : averages?.overall;
-  if (!records || population.length < 5) return null;
+  if (!population || population.length < 5) return null;
 
   return (
     <section className="player-section pct-card">
       <div className="pct-card__head">
-        <h3>리그 백분위</h3>
+        <h3>리그 등급</h3>
         <div className="career-mode-toggle pct-card__base" role="group" aria-label="비교 기준">
           <button className={base === "all" ? "active" : ""} onClick={() => setBase("all")}>전체</button>
           {player.grade && (
@@ -49,26 +68,34 @@ export function PercentileCard({ player, kind }: { player: Player; kind: "battin
         규정 충족 {kind === "batting" ? "타자" : "투수"} {population.length}명{gradeOk ? `(${player.grade}학년)` : ""} 중 위치 · 시즌 기준
         {!qualified(player) && " · 이 선수는 규정 미달이라 참고용"}
       </p>
+      <div className="pct-card__rows">
+      <p className="pct-card__legend">
+        A 상위 20% · B 20~40% · C 40~60% · D 60~80% · E 하위 20% <span className="muted">(등급 안에서 +는 위쪽, −는 아래쪽)</span>
+      </p>
       {metrics.map((m) => {
         const v = m.of(player);
-        const values = population.map((p) => m.of(p)).filter((x): x is number => x != null);
-        const pct = v == null ? null : percentileRank(values, v, m.lowerIsBetter);
+        const g = gradeFor(population, player, m.of, m.lowerIsBetter);
         const avg = lg?.[m.key];
-        if (v == null || pct == null) return null;
+        if (v == null || !g) return null;
+        const { grade, letter, pct } = g;
         return (
-          <div key={m.key} className="pct-row">
-            <span className="pct-row__label">{m.label}</span>
+          <div key={m.key} className={`pct-row pct-row--${letter}`}>
+            <span className="pct-row__label">
+              {m.label}
+              {avg != null && <small>평균 {m.format(avg)}</small>}
+            </span>
             <span className="pct-row__track">
-              <span className="pct-row__fill" style={{ width: `${pct}%`, background: pctColor(pct) }} />
-              <span className="pct-row__bubble" style={{ left: `${pct}%`, background: pctColor(pct) }}>{pct}</span>
+              <span className="pct-row__fill" style={{ width: `${pct}%` }} />
+              <span className="pct-row__bubble" style={{ left: `${pct}%` }} title={`백분위 ${pct}`}>{grade}</span>
             </span>
             <span className="pct-row__value">
               {m.format(v)}
-              {avg != null && <small>평균 {m.format(avg)}</small>}
+              <small>상위 {topPercent(pct)}%</small>
             </span>
           </div>
         );
       })}
+      </div>
     </section>
   );
 }

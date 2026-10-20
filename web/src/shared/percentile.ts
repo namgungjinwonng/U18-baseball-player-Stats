@@ -42,6 +42,23 @@ export function percentileRank(population: number[], v: number, lowerIsBetter = 
   return Math.round(((worse + ties / 2) / values.length) * 100);
 }
 
+export type GradeLetter = "A" | "B" | "C" | "D" | "E";
+const LETTERS: GradeLetter[] = ["E", "D", "C", "B", "A"];
+
+// 백분위(0~100, 높을수록 좋음) → A+ ~ E- 등급.
+// 20점 구간마다 E·D·C·B·A, 구간 안을 셋으로 나눠 아래 1/3은 -, 위 1/3은 + 를 붙인다.
+// 예: 98 → A+, 91 → A, 80 → A-, 79 → B+, 50 → C, 40 → C-, 0 → E-.
+export function pctGrade(p: number): { grade: string; letter: GradeLetter } {
+  const v = Math.max(0, Math.min(100, p));
+  const band = Math.min(4, Math.floor(v / 20));
+  const offset = v - band * 20; // 0 ~ 20 (100점은 A 구간의 20)
+  const sign = offset >= 40 / 3 ? "+" : offset < 20 / 3 ? "-" : "";
+  return { grade: `${LETTERS[band]}${sign}`, letter: LETTERS[band] };
+}
+
+// 백분위 → "상위 N%" 문구용 숫자 (최소 1).
+export const topPercent = (p: number) => Math.max(1, Math.round(100 - p));
+
 export interface TrendPoint {
   date: string;
   avg: number;

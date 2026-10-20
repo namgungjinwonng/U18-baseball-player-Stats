@@ -18,3 +18,14 @@ export function heatColor(score: number | null | undefined): string | undefined 
   const alpha = (Math.abs(score) * MAX_ALPHA).toFixed(3);
   return score > 0 ? `rgba(211, 0, 5, ${alpha})` : `rgba(17, 81, 255, ${alpha})`;
 }
+
+// 두 값의 우위 단계 — 차이 비율(|a−b| ÷ 큰 쪽 절댓값) 기준.
+// 0 대등(3% 미만) · 1 근소 우위(10% 미만) · 2 우위(25% 미만) · 3 큰 우위.
+export type EdgeLevel = 0 | 1 | 2 | 3;
+export const EDGE_LABELS = ["대등", "근소 우위", "우위", "큰 우위"] as const;
+export function edgeLevel(a: number, b: number): EdgeLevel {
+  const base = Math.max(Math.abs(a), Math.abs(b));
+  if (base === 0) return 0;
+  const diff = Math.abs(a - b) / base;
+  return diff < 0.03 ? 0 : diff < 0.1 ? 1 : diff < 0.25 ? 2 : 3;
+}
