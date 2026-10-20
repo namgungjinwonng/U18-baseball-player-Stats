@@ -63,6 +63,10 @@ export interface TrendPoint {
   date: string;
   avg: number;
   ops: number;
+  entry: GameLogEntry; // 그 경기 로그 (상대·한 줄 기록) — 지점 선택 시 표시
+  games: number; // 그 경기까지 누적 경기 수
+  ab: number; // 누적 타수
+  h: number; // 누적 안타
 }
 
 // 경기 로그(bStat 보유 경기)를 날짜순으로 쌓아 경기별 누적 타율·OPS를 만든다. last 지정 시 최근 N경기만 누적.
@@ -74,7 +78,7 @@ export function cumulativeBatting(log: GameLogEntry[], last?: number): TrendPoin
     .map(({ g }) => g);
   const window = last ? games.slice(-last) : games;
   let ab = 0, h = 0, b2 = 0, b3 = 0, hr = 0, bb = 0, hbp = 0;
-  return window.map((g) => {
+  return window.map((g, i) => {
     const s = g.bStat!;
     ab += s.ab; h += s.h; b2 += s.b2; b3 += s.b3; hr += s.hr; bb += s.bb; hbp += s.hbp;
     const tb = h + b2 + 2 * b3 + 3 * hr;
@@ -82,6 +86,6 @@ export function cumulativeBatting(log: GameLogEntry[], last?: number): TrendPoin
     const avg = ab ? h / ab : 0;
     const obp = obpDen ? (h + bb + hbp) / obpDen : 0;
     const slg = ab ? tb / ab : 0;
-    return { date: g.date, avg, ops: obp + slg };
+    return { date: g.date, avg, ops: obp + slg, entry: g, games: i + 1, ab, h };
   });
 }

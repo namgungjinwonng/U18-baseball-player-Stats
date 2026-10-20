@@ -30,6 +30,9 @@ assert.equal(all[0].ops, 0.5 + 2); // 출루 1/2 + 장타 4/2
 assert.equal(all[1].avg, 0.5);
 assert.ok(Math.abs(all[1].ops - (4 / 7 + 7 / 6)) < 1e-9);
 assert.equal(all[2].avg, 0.3);
+// 지점 선택용 정보: 그 경기 로그와 누적 경기·타수·안타
+assert.equal(all[1].entry.date, "2026-03-08");
+assert.deepEqual([all[2].games, all[2].ab, all[2].h], [3, 10, 3]);
 // 최근 1경기만 누적
 assert.deepEqual(cumulativeBatting(log, 1).map((p) => [p.date, p.avg]), [["2026-03-15", 0]]);
 

@@ -1,5 +1,5 @@
 // 선수 상세 상단 요약 — 핵심 5지표 리그 등급(A+~E-, 백분위 기준·비교 기준 전체/같은 학년)과 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAllPlayers, useLeagueAverages } from "./data";
 import { emptyFilter, useQualifyContext } from "./filters";
 import { rate } from "./format";
@@ -105,11 +105,16 @@ const H = 150;
 const PAD = { l: 34, r: 10, t: 10, b: 20 };
 
 // 경기별 누적 타율·OPS 꺾은선 (인라인 SVG — 차트 라이브러리 없이).
+// 지점을 누르거나 좌우로 끌면(마우스는 올리기만 해도) 가장 가까운 경기의 기록과 그 시점 누적값을 보여 준다.
 export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates | null }) {
   const [metric, setMetric] = useState<"avg" | "ops">("avg");
   const [last, setLast] = useState<0 | 10 | 5>(0);
+  const [sel, setSel] = useState<number | null>(null); // 선택한 지점 (null = 최근 경기)
+  const dragging = useRef(false);
+  const svgRef = useRef<SVGSVGElement>(null);
   const total = log.filter((g) => g.bStat).length;
   const points = useMemo(() => cumulativeBatting(log, last || undefined), [log, last]);
+  useEffect(() => setSel(null), [points]); // 구간을 바꾸면 선택을 풀어 범위 밖 지점을 막는다
   if (total < 3) return null;
 
   const values = points.map((p) => p[metric]);
@@ -118,9 +123,22 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
   const x = (i: number) => PAD.l + (points.length === 1 ? 0 : (i / (points.length - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - v / yMax) * (H - PAD.t - PAD.b);
   const path = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p[metric]).toFixed(1)}`).join(" ");
-  const lastPoint = points[points.length - 1];
+  const lastIndex = points.length - 1;
+  const lastPoint = points[lastIndex];
   const md = (d: string) => d.slice(5).replace("-", ".");
   const ticks = [0, yMax / 2, yMax];
+  const label = metric === "avg" ? "타율" : "OPS";
+
+  // 포인터 위치(화면 좌표) → 가장 가까운 지점
+  const pick = (clientX: number) => {
+    const box = svgRef.current?.getBoundingClientRect();
+    if (!box || box.width === 0 || points.length < 2) return;
+    const sx = ((clientX - box.left) / box.width) * W;
+    const ratio = (sx - PAD.l) / (W - PAD.l - PAD.r);
+    setSel(Math.max(0, Math.min(lastIndex, Math.round(ratio * lastIndex))));
+  };
+  const shown = sel ?? lastIndex;
+  const cur = points[shown];
 
   return (
     <section className="player-section trend">
@@ -138,8 +156,45 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
           </button>
         ))}
       </div>
-      <svg className="trend__svg" viewBox={`0 0 ${W} ${H}`} role="img"
-        aria-label={`경기별 누적 ${metric === "avg" ? "타율" : "OPS"} — 최종 ${rate(lastPoint[metric])}`}>
+      {/* 선택한 경기 기록 — 높이를 고정해 드래그 중 그래프가 흔들리지 않게 한다 */}
+      <div className="trend__info" aria-live="polite">
+        <div className="trend__info-game">
+          <b>{md(cur.entry.date)}</b>
+          <span>vs {cur.entry.opponent}</span>
+          <span className="trend__info-line">{cur.entry.line}</span>
+        </div>
+        <div className="trend__info-cum">
+          {sel == null ? "최근 경기까지" : `${cur.games}번째 경기까지`} 누적 {label} <b>{rate(cur[metric])}</b>
+          <span className="muted"> · {cur.games}경기 {cur.ab}타수 {cur.h}안타</span>
+        </div>
+      </div>
+      <svg
+        ref={svgRef}
+        className="trend__svg"
+        viewBox={`0 0 ${W} ${H}`}
+        role="group"
+        tabIndex={0}
+        aria-label={`경기별 누적 ${label} 그래프 — 좌우 화살표로 경기 이동`}
+        onPointerDown={(e) => {
+          e.preventDefault(); // 눌러서 고를 때는 포커스 테두리를 띄우지 않는다(키보드 Tab 포커스는 유지)
+          dragging.current = true;
+          pick(e.clientX);
+          try {
+            e.currentTarget.setPointerCapture(e.pointerId); // 손가락이 그래프 밖으로 나가도 계속 따라간다
+          } catch {
+            // 캡처할 수 없는 포인터여도 선택은 이미 반영됐다.
+          }
+        }}
+        onPointerMove={(e) => {
+          if (dragging.current || e.pointerType === "mouse") pick(e.clientX);
+        }}
+        onPointerUp={() => { dragging.current = false; }}
+        onPointerCancel={() => { dragging.current = false; }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") { e.preventDefault(); setSel(Math.max(0, shown - 1)); }
+          if (e.key === "ArrowRight") { e.preventDefault(); setSel(Math.min(lastIndex, shown + 1)); }
+        }}
+      >
         {ticks.map((t) => (
           <g key={t}>
             <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} className="trend__grid" />
@@ -152,14 +207,16 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
             <text x={PAD.l + 3} y={y(avg) - 3} className="trend__avg-label">리그 {rate(avg)}</text>
           </g>
         )}
+        <line x1={x(shown)} x2={x(shown)} y1={PAD.t} y2={H - PAD.b} className={`trend__guide ${sel == null ? "is-idle" : ""}`} />
         <path d={path} className="trend__line" />
         {points.map((p, i) => (
-          <circle key={i} cx={x(i)} cy={y(p[metric])} r={i === points.length - 1 ? 3.5 : 2} className="trend__dot" />
+          <circle key={i} cx={x(i)} cy={y(p[metric])} r={2} className="trend__dot" />
         ))}
+        <circle cx={x(shown)} cy={y(cur[metric])} r={5} className="trend__sel" />
         <text x={PAD.l} y={H - 4} className="trend__tick">{md(points[0].date)}</text>
         <text x={W - PAD.r} y={H - 4} className="trend__tick" textAnchor="end">{md(lastPoint.date)}</text>
       </svg>
-      <p className="caption muted">최종 {rate(lastPoint[metric])} · 점 하나 = 한 경기까지의 누적값</p>
+      <p className="caption muted">그래프를 누르거나 좌우로 끌면 경기별 기록을 볼 수 있어요 · 점 하나 = 한 경기까지의 누적값</p>
     </section>
   );
 }

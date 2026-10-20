@@ -1877,3 +1877,14 @@
 .versus-game.is-focus { margin: 0 -8px; padding-left: 8px; padding-right: 8px; background: var(--color-soft-cloud); }
 .versus-top--single { grid-template-columns: 1fr; }
 .top-players__auto { margin: -4px 0 10px; color: var(--color-info); }
+
+/* 경기별 추세: 지점 선택·드래그 */
+.trend__info { min-height: 40px; margin: 6px 0 2px; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--color-soft-cloud); font-size: 12px; font-variant-numeric: tabular-nums; }
+.trend__info-game { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.trend__info-line { color: var(--color-ash); }
+.trend__info-cum b { font-size: 14px; }
+.trend__svg { touch-action: pan-y; cursor: crosshair; user-select: none; -webkit-user-select: none; }
+.trend__svg:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+.trend__guide { stroke: var(--color-ink); stroke-width: 1; stroke-dasharray: 2 2; }
+.trend__guide.is-idle { stroke: var(--color-hairline); }
+.trend__sel { fill: var(--color-canvas); stroke: var(--color-ink); stroke-width: 2.5; }
