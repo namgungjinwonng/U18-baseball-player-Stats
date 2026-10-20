@@ -1901,3 +1901,24 @@
 .versus-analysis li.is-note { color: var(--color-mute); font-size: 12px; }
 .top-players__unq { margin: 0 0 4px; }
 .versus-top__sample { margin-left: 4px; color: var(--color-mute); font-size: 10px; font-weight: 500; }
+
+/* ===== 학교 정보 목록 (/team) ===== */
+.team-index__search { margin: 4px 0 16px; }
+.team-index__group { margin-bottom: 18px; }
+.team-index__group h3 { margin: 0 0 8px; font-size: 15px; }
+.team-index__group h3 small { margin-left: 4px; color: var(--color-mute); font-size: 11px; font-weight: 500; }
+.team-index__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.team-index__item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+}
+.team-index__item:hover { border-color: var(--color-ink); }
+.team-index__item b { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.team-index__item small { color: var(--color-mute); font-size: 11px; font-variant-numeric: tabular-nums; }

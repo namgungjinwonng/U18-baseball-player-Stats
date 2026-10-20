@@ -12,7 +12,7 @@ import { ScheduleView } from "../shared/ScheduleView";
 import { TeamsView } from "../shared/TeamsView";
 import { PersonView } from "../shared/PersonView";
 import { VersusView } from "../shared/VersusView";
-import { TeamView } from "../shared/TeamView";
+import { TeamIndex, TeamView } from "../shared/TeamView";
 import { CompareView } from "../shared/CompareView";
 import { Notice } from "../shared/Notice";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
@@ -67,6 +67,7 @@ export function DesktopApp() {
           <div className="nav-links">
             <NavLink to="/schedule">경기일정</NavLink>
             <NavLink to="/players">선수현황</NavLink>
+            <NavLink to="/team">학교 정보</NavLink>
             <NavLink to="/records">선수 기록</NavLink>
             <NavLink to="/leaders/avg">랭킹</NavLink>
             <NavLink to="/matchup">상대전적</NavLink>
@@ -85,6 +86,7 @@ export function DesktopApp() {
           <div className="nav-drawer">
             <NavLink to="/schedule" onClick={() => setMenuOpen(false)}><Ico name="schedule" />경기일정</NavLink>
             <NavLink to="/players" onClick={() => setMenuOpen(false)}><Ico name="players" />선수현황</NavLink>
+            <NavLink to="/team" onClick={() => setMenuOpen(false)}><Ico name="team" />학교 정보</NavLink>
             <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록</NavLink>
             <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />랭킹</NavLink>
             <NavLink to="/matchup" onClick={() => setMenuOpen(false)}><Ico name="matchup" />상대전적</NavLink>
@@ -104,6 +106,7 @@ export function DesktopApp() {
           <Route path="/records" element={<SeasonRecordsGate wrapClass="container page"><RecordsPage /></SeasonRecordsGate>} />
           <Route path="/matchup" element={<SeasonRecordsGate wrapClass="container page"><MatchupPage /></SeasonRecordsGate>} />
           <Route path="/versus" element={<SeasonRecordsGate wrapClass="container page"><VersusView wrapClass="container page" /></SeasonRecordsGate>} />
+          <Route path="/team" element={<TeamIndex wrapClass="container page" />} />
           <Route path="/team/:name" element={<SeasonRecordsGate wrapClass="container page"><TeamView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/compare" element={<SeasonRecordsGate wrapClass="container page"><CompareView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/search" element={<SeasonRecordsGate wrapClass="container page"><SearchPage /></SeasonRecordsGate>} />

@@ -1,11 +1,13 @@
-// 팀 상세 화면 (데스크탑·모바일 공용) — /team/:name: 시즌 성적·팀 타격/투구·주요 선수·일정, 대전 모드 입구.
-import { useMemo } from "react";
+// 학교 정보 (데스크탑·모바일 공용) — /team: 지역별 학교 목록·검색, /team/:name: 시즌 성적·팀 타격/투구·주요 선수·일정, 대전 모드 입구.
+import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAllPlayers, useLeagueAverages, useSchedule, useStrength, useTeams } from "./data";
 import { useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
 import { heatColor, heatScore } from "./heat";
 import { kbsaBoxScoreUrl } from "./kbsa";
+import { Ico } from "./navIcons";
+import { SearchIcon } from "./LineIcons";
 import { sameTeam, teamGames, teamKey, teamRecord, teamTotals } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
 import { useYear } from "./year";
@@ -25,6 +27,63 @@ function Cell({ k, v, avg, lowerIsBetter, fmt }: {
       <div className="k">{k}</div>
       <div className="v">{v == null ? "-" : fmt(v)}</div>
       {avg != null && <div className="team-cell__avg">리그 {fmt(avg)}</div>}
+    </div>
+  );
+}
+
+// 학교 정보 첫 화면 — 지역별 학교 목록(올 시즌 전적 표시)과 이름 검색. 학교를 누르면 학교 상세로 간다.
+export function TeamIndex({ wrapClass }: { wrapClass: string }) {
+  const { year } = useYear();
+  const teams = useTeams();
+  const schedule = useSchedule();
+  const [query, setQuery] = useState("");
+  const games = useMemo(() => (schedule.data?.year === year ? schedule.data.games : []), [schedule.data, year]);
+  // 선수현황(teams.json) 정식명 + 일정에만 있는 학교. 지역별로 묶고 학교명 가나다순.
+  const all = useMemo(() => {
+    const region = new Map<string, string>();
+    for (const t of teams.data ?? []) region.set(teamKey(t.team), t.region);
+    for (const g of games) for (const side of [g.away, g.home]) if (!region.has(teamKey(side.name))) region.set(teamKey(side.name), "");
+    return [...region.entries()].map(([name, r]) => ({ name, region: r, rec: teamRecord(games, name) }));
+  }, [teams.data, games]);
+  const groups = useMemo(() => {
+    const q = query.replace(/\s/g, "").toLowerCase();
+    const byRegion = new Map<string, typeof all>();
+    for (const t of all) {
+      if (q && !t.name.replace(/\s/g, "").toLowerCase().includes(q) && !t.region.includes(q)) continue;
+      byRegion.set(t.region, [...(byRegion.get(t.region) ?? []), t]);
+    }
+    return [...byRegion.entries()]
+      .map(([region, list]) => ({ region, list: list.sort((x, y) => x.name.localeCompare(y.name, "ko")) }))
+      .sort((x, y) => (x.region ? (y.region ? x.region.localeCompare(y.region, "ko") : -1) : 1));
+  }, [all, query]);
+  const loading = teams.loading || schedule.loading;
+
+  return (
+    <div className={`${wrapClass} team-index`}>
+      <h2 className="heading-xl"><Ico name="team" variant="title" />학교 정보</h2>
+      <p className="caption muted">학교를 누르면 {year} 시즌 성적·팀 타격/투구·주요 선수·일정을 볼 수 있습니다.</p>
+      <div className="search-pill team-index__search">
+        <SearchIcon />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="학교 이름 또는 지역" aria-label="학교 검색" />
+      </div>
+      {loading && <div className="state">불러오는 중…</div>}
+      {!loading && groups.length === 0 && <div className="state muted">찾는 학교가 없습니다.</div>}
+      {groups.map(({ region, list }) => (
+        <section key={region || "기타"} className="team-index__group">
+          <h3>{region || "기타"} <small>{list.length}개교</small></h3>
+          <div className="team-index__grid">
+            {list.map((t) => {
+              const g = t.rec.w + t.rec.l + t.rec.d;
+              return (
+                <Link key={t.name} className="team-index__item" to={`/team/${encodeURIComponent(t.name)}`}>
+                  <b>{t.name}</b>
+                  <small>{g ? `${t.rec.w}승 ${t.rec.l}패${t.rec.d ? ` ${t.rec.d}무` : ""}` : "경기 없음"}</small>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }
@@ -78,6 +137,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
         {roster?.manager && <span>감독 {roster.manager}</span>}
         {roster && <span>선수 {roster.player_count}명</span>}
         {roster && <Link to={`/players?team=${encodeURIComponent(roster.team)}`}>선수현황 ›</Link>}
+        <Link to="/team">다른 학교 보기 ›</Link>
       </div>
 
       <div className="team-versus">

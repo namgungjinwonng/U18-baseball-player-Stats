@@ -1,0 +1,11 @@
+<!-- 학교 정보 메뉴·제목 아이콘 — 단선 학교 건물(지붕·깃발·출입문) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <g fill="none" stroke="#111111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 10.5 12 5.2l9 5.3" />
+    <path d="M5 9.4V20.5h14V9.4" />
+    <path d="M10 20.5v-4.6h4v4.6" />
+    <path d="M12 5.2V2" />
+    <path d="M12 2h3.4l-1 1.1 1 1.1H12" />
+    <circle cx="12" cy="11.6" r="1.6" />
+  </g>
+</svg>
