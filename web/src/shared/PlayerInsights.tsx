@@ -1,5 +1,5 @@
 // 선수 상세 상단 요약 — 핵심 5지표 리그 등급(A+~E-, 백분위 기준·비교 기준 전체/같은 학년)과 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useAllPlayers, useLeagueAverages } from "./data";
 import { emptyFilter, useQualifyContext } from "./filters";
 import { rate } from "./format";
@@ -114,7 +114,6 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
   const svgRef = useRef<SVGSVGElement>(null);
   const total = log.filter((g) => g.bStat).length;
   const points = useMemo(() => cumulativeBatting(log, last || undefined), [log, last]);
-  useEffect(() => setSel(null), [points]); // 구간을 바꾸면 선택을 풀어 범위 밖 지점을 막는다
   if (total < 3) return null;
 
   const values = points.map((p) => p[metric]);
@@ -137,7 +136,8 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
     const ratio = (sx - PAD.l) / (W - PAD.l - PAD.r);
     setSel(Math.max(0, Math.min(lastIndex, Math.round(ratio * lastIndex))));
   };
-  const shown = sel ?? lastIndex;
+  // 구간이 줄면 이전 선택이 범위를 벗어날 수 있다 — 그때는 최근 경기를 보여 준다.
+  const shown = sel != null && sel <= lastIndex ? sel : lastIndex;
   const cur = points[shown];
 
   return (
@@ -151,7 +151,7 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
       </div>
       <div className="trend__range" role="group" aria-label="구간">
         {([0, 10, 5] as const).map((n) => (
-          <button key={n} type="button" className={`trend__chip ${last === n ? "active" : ""}`} disabled={n > 0 && total < n} onClick={() => setLast(n)}>
+          <button key={n} type="button" className={`trend__chip ${last === n ? "active" : ""}`} disabled={n > 0 && total < n} onClick={() => { setLast(n); setSel(null); }}>
             {n === 0 ? `전체 ${total}경기` : `최근 ${n}경기`}
           </button>
         ))}
@@ -164,7 +164,7 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
           <span className="trend__info-line">{cur.entry.line}</span>
         </div>
         <div className="trend__info-cum">
-          {sel == null ? "최근 경기까지" : `${cur.games}번째 경기까지`} 누적 {label} <b>{rate(cur[metric])}</b>
+          {shown === lastIndex && sel !== lastIndex ? "최근 경기까지" : `${cur.games}번째 경기까지`} 누적 {label} <b>{rate(cur[metric])}</b>
           <span className="muted"> · {cur.games}경기 {cur.ab}타수 {cur.h}안타</span>
         </div>
       </div>
@@ -207,7 +207,7 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
             <text x={PAD.l + 3} y={y(avg) - 3} className="trend__avg-label">리그 {rate(avg)}</text>
           </g>
         )}
-        <line x1={x(shown)} x2={x(shown)} y1={PAD.t} y2={H - PAD.b} className={`trend__guide ${sel == null ? "is-idle" : ""}`} />
+        <line x1={x(shown)} x2={x(shown)} y1={PAD.t} y2={H - PAD.b} className={`trend__guide ${shown !== sel ? "is-idle" : ""}`} />
         <path d={path} className="trend__line" />
         {points.map((p, i) => (
           <circle key={i} cx={x(i)} cy={y(p[metric])} r={2} className="trend__dot" />
