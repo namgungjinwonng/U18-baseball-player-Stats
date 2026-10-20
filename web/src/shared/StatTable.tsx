@@ -15,7 +15,7 @@ export interface Column<T> {
   defaultDesc?: boolean;
   // 셀 정렬 (생략 시 표 기본값인 우측 정렬 — 숫자 기록용). 텍스트 열은 left 로.
   align?: "left" | "center" | "right";
-  // 리그 평균 대비 점수(+1 좋음 ~ -1 나쁨). 있으면 셀 배경에 옅은 빨강/파랑을 입힌다.
+  // 리그 평균 대비 점수(+1 좋음 ~ -1 나쁨). 있으면 셀 배경에 옅은 파랑(좋음)/빨강(나쁨)을 입힌다.
   heat?: (row: T) => number | null;
 }
 

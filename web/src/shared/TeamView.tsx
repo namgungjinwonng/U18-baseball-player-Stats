@@ -133,7 +133,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
               <Cell k="BB/9" v={totals.pitching.bb9} avg={lg?.bb9} lowerIsBetter fmt={(x) => x.toFixed(1)} />
               {str && <Cell k="마운드 강도지수" v={str.pit} avg={1} fmt={dec2} />}
             </div>
-            <p className="caption muted">팀 비율은 선수 기록 합산 원자료로 재계산 · 빨강 = 리그 평균보다 좋음, 파랑 = 나쁨</p>
+            <p className="caption muted">팀 비율은 선수 기록 합산 원자료로 재계산 · 파랑 = 리그 평균보다 좋음, 빨강 = 나쁨</p>
           </section>
         </>
       )}
