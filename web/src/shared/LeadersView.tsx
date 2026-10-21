@@ -104,7 +104,7 @@ function TeamRankingPanel({
           aria-pressed={pickMode}
           onClick={() => { setPickMode((on) => !on); setPicked([]); }}
         >
-          {pickMode ? "대전 끄기" : "학교 대전"}
+          {pickMode ? "매치업 끄기" : "매치업"}
         </button>
       </div>
       <p className="caption" style={{ marginBottom: 8 }}>

@@ -6,6 +6,7 @@ import { formatDate } from "../../shared/format";
 import { Button } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { WeightToggle, useStrengthMap } from "../../shared/weights";
+import { HOME_LINKS } from "../../shared/navMenu";
 
 export function HomePage() {
   const [filter, setFilter] = useState<RecordFilter>(emptyFilter);
@@ -33,19 +34,12 @@ export function HomePage() {
           <p className="hero__sub">
             선수 이름으로 타격·투구 기록을 조회하고, 타자 vs 투수 상대전적까지 한눈에.
           </p>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link to="/schedule">
-              <Button variant="on-image">경기일정</Button>
-            </Link>
-            <Link to="/players">
-              <Button variant="secondary">선수현황</Button>
-            </Link>
-            <Link to="/records">
-              <Button variant="secondary">선수기록</Button>
-            </Link>
-            <Link to="/matchup">
-              <Button variant="secondary">상대전적</Button>
-            </Link>
+          <div className="hero__links" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {HOME_LINKS.map((item, i) => (
+              <Link key={item.to} to={item.to}>
+                <Button variant={i === 0 ? "on-image" : "secondary"}>{item.label}</Button>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

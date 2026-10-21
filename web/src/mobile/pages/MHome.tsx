@@ -6,6 +6,7 @@ import { formatDate } from "../../shared/format";
 import { Button, Chip } from "../../design/ui";
 import { FilterBar, applyFilter, emptyFilter, filterToQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { WeightToggle, useStrengthMap } from "../../shared/weights";
+import { HOME_LINKS } from "../../shared/navMenu";
 
 const BATTING_IDS: LeaderCategoryId[] = ["avg", "hr", "rbi", "h", "r", "sb"];
 const ALL_LEADER_IDS: LeaderCategoryId[] = [...BATTING_IDS, "era", "whip", "so", "w", "ip"];
@@ -57,26 +58,11 @@ export function MHome() {
             2024 시즌부터 누적되는 고교 야구 기록. 이름으로 조회하고 상대전적까지.
           </p>
           <div className="m-hero__links">
-            <Link to="/schedule">
-              <Button variant="on-image" sm block>
-                경기일정
-              </Button>
-            </Link>
-            <Link to="/players">
-              <Button variant="secondary" sm block>
-                선수현황
-              </Button>
-            </Link>
-            <Link to="/records">
-              <Button variant="secondary" sm block>
-                선수 기록
-              </Button>
-            </Link>
-            <Link to="/matchup">
-              <Button variant="secondary" sm block>
-                상대전적
-              </Button>
-            </Link>
+            {HOME_LINKS.map((item, i) => (
+              <Link key={item.to} to={item.to}>
+                <Button variant={i === 0 ? "on-image" : "secondary"} sm block>{item.label}</Button>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

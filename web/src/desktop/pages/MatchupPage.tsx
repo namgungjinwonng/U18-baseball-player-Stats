@@ -184,7 +184,7 @@ export function MatchupPage() {
             {schoolTotal && <span className="caption">학교 합계 {schoolTotal.ab}타수 {schoolTotal.h}안타 · {rate(schoolTotal.avg)}</span>}
             {seasonA && (
               <Link className="link-btn" to={`/versus?a=${encodeURIComponent(seasonA.team)}&b=${encodeURIComponent(school)}`}>
-                학교 대전 보기 ›
+                매치업 보기 ›
               </Link>
             )}
           </div>

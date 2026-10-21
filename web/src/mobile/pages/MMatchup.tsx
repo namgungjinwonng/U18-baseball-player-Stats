@@ -153,7 +153,7 @@ export function MMatchup() {
           {seasonA && (
             <Link className="link-btn" style={{ display: "inline-block", marginBottom: 8 }}
               to={`/versus?a=${encodeURIComponent(seasonA.team)}&b=${encodeURIComponent(school)}`}>
-              {school} 학교 대전 보기 ›
+              {school} 매치업 보기 ›
             </Link>
           )}
           {schoolOpps.map(({ opponent, matchup }) => (

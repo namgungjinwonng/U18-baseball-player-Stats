@@ -22,6 +22,7 @@ import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { MenuIcon, SearchIcon } from "../shared/LineIcons";
 import { Ico } from "../shared/navIcons";
+import { NAV_GROUPS } from "../shared/navMenu";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -38,46 +39,18 @@ function Drawer({ onClose }: { onClose: () => void }) {
           <HomeIcon />
           <span>U18 BASEBALL</span>
         </Link>
-        <NavLink to="/schedule" onClick={onClose}>
-          <Ico name="schedule" />
-          경기일정
-        </NavLink>
-        <NavLink to="/players" onClick={onClose}>
-          <Ico name="players" />
-          선수현황
-        </NavLink>
-        <NavLink to="/team" onClick={onClose}>
-          <Ico name="team" />
-          학교 정보
-        </NavLink>
-        <NavLink to="/records" onClick={onClose}>
-          <Ico name="records" />
-          선수 기록
-        </NavLink>
-        <NavLink to="/leaders/avg" onClick={onClose}>
-          <Ico name="leaders" />
-          랭킹
-        </NavLink>
-        <NavLink to="/matchup" onClick={onClose}>
-          <Ico name="matchup" />
-          상대전적
-        </NavLink>
-        <NavLink to="/versus" onClick={onClose}>
-          <Ico name="versus" />
-          학교 대전
-        </NavLink>
-        <NavLink to="/search" onClick={onClose}>
-          <Ico name="search" />
-          선수 검색
-        </NavLink>
-        <NavLink to="/glossary" onClick={onClose}>
-          <Ico name="glossary" />
-          지표 설명
-        </NavLink>
-        <NavLink to="/notice" onClick={onClose}>
-          <Ico name="notice" />
-          알리는 글
-        </NavLink>
+        {/* 큰 카테고리(경기·학교·선수·안내)별로 묶어 작은 제목을 단다 — 순서는 shared/navMenu.ts */}
+        {NAV_GROUPS.map((group) => (
+          <section key={group.title} className="m-drawer__group" aria-label={group.title}>
+            <h3 className="m-drawer__title">{group.title}</h3>
+            {group.items.map((item) => (
+              <NavLink key={item.to} to={item.to} onClick={onClose}>
+                <Ico name={item.icon} />
+                {item.label}
+              </NavLink>
+            ))}
+          </section>
+        ))}
       </nav>
     </>
   );

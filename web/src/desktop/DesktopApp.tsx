@@ -1,5 +1,5 @@
 import { Routes, Route, NavLink, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { HomePage } from "./pages/HomePage";
 import { RecordsPage } from "./pages/RecordsPage";
 import { MatchupPage } from "./pages/MatchupPage";
@@ -18,6 +18,7 @@ import { Notice } from "../shared/Notice";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { Ico } from "../shared/navIcons";
+import { NAV_GROUPS } from "../shared/navMenu";
 import { YearSelect } from "../shared/year";
 import { RefreshButton } from "../shared/refresh";
 import { InAppBanner, InstallButton } from "../shared/pwa";
@@ -65,16 +66,15 @@ export function DesktopApp() {
             <span>U18 BASEBALL</span>
           </Link>
           <div className="nav-links">
-            <NavLink to="/schedule">경기일정</NavLink>
-            <NavLink to="/players">선수현황</NavLink>
-            <NavLink to="/team">학교 정보</NavLink>
-            <NavLink to="/records">선수 기록</NavLink>
-            <NavLink to="/leaders/avg">랭킹</NavLink>
-            <NavLink to="/matchup">상대전적</NavLink>
-            <NavLink to="/versus">학교 대전</NavLink>
-            <NavLink to="/search">선수 검색</NavLink>
-            <NavLink to="/glossary">지표 설명</NavLink>
-            <NavLink to="/notice">알리는 글</NavLink>
+            {/* 큰 카테고리 사이에는 얇은 구분선만 — 순서는 shared/navMenu.ts */}
+            {NAV_GROUPS.map((group, gi) => (
+              <Fragment key={group.title}>
+                {gi > 0 && <span className="nav-links__sep" aria-hidden />}
+                {group.items.map((item) => (
+                  <NavLink key={item.to} to={item.to}>{item.label}</NavLink>
+                ))}
+              </Fragment>
+            ))}
           </div>
           <div className="nav-right">
             <RefreshButton />
@@ -84,16 +84,14 @@ export function DesktopApp() {
         </div>
         {menuOpen && (
           <div className="nav-drawer">
-            <NavLink to="/schedule" onClick={() => setMenuOpen(false)}><Ico name="schedule" />경기일정</NavLink>
-            <NavLink to="/players" onClick={() => setMenuOpen(false)}><Ico name="players" />선수현황</NavLink>
-            <NavLink to="/team" onClick={() => setMenuOpen(false)}><Ico name="team" />학교 정보</NavLink>
-            <NavLink to="/records" onClick={() => setMenuOpen(false)}><Ico name="records" />선수 기록</NavLink>
-            <NavLink to="/leaders/avg" onClick={() => setMenuOpen(false)}><Ico name="leaders" />랭킹</NavLink>
-            <NavLink to="/matchup" onClick={() => setMenuOpen(false)}><Ico name="matchup" />상대전적</NavLink>
-            <NavLink to="/versus" onClick={() => setMenuOpen(false)}><Ico name="versus" />학교 대전</NavLink>
-            <NavLink to="/search" onClick={() => setMenuOpen(false)}><Ico name="search" />선수 검색</NavLink>
-            <NavLink to="/glossary" onClick={() => setMenuOpen(false)}><Ico name="glossary" />지표 설명</NavLink>
-            <NavLink to="/notice" onClick={() => setMenuOpen(false)}><Ico name="notice" />알리는 글</NavLink>
+            {NAV_GROUPS.map((group) => (
+              <Fragment key={group.title}>
+                <h3 className="nav-drawer__title">{group.title}</h3>
+                {group.items.map((item) => (
+                  <NavLink key={item.to} to={item.to} onClick={() => setMenuOpen(false)}><Ico name={item.icon} />{item.label}</NavLink>
+                ))}
+              </Fragment>
+            ))}
           </div>
         )}
       </nav>

@@ -193,7 +193,7 @@ function GameCard({ g, hideComp }: { g: ScheduleGame; hideComp?: boolean }) {
       )}
       <div className="sch-game__meta">
         <span>{metaLeft}</span>
-        <span className="muted">학교 대전 ›</span>
+        <span className="muted">매치업 ›</span>
       </div>
     </Link>
   );
