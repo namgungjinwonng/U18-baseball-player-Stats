@@ -1,5 +1,7 @@
 // 선수 기록 표 상단 컨트롤 — 타자/투수 × 기본/세부/세이버 칩, 리그 대비 색 범례, 비교 선택 바 (데스크탑·모바일 공용).
+import { useMemo, useState } from "react";
 import { Chip } from "../design/ui";
+import { resolvePicks, togglePickRef, type PickRef } from "./comparePicks";
 import { RECORD_KINDS, RECORD_PRESETS, type RecordKind, type RecordPreset } from "./columns";
 
 export const MAX_COMPARE = 3;
@@ -79,4 +81,20 @@ export function CompareBar({
 export function togglePick(picked: string[], id: string, max = MAX_COMPARE): string[] {
   if (picked.includes(id)) return picked.filter((x) => x !== id);
   return [...picked, id].slice(-max);
+}
+
+// 선수 기록 표의 비교 선택. personNo로 기억해 두고 현재 시즌 목록에서 다시 찾으므로,
+// 시즌을 바꾸면 선택 바·비교 버튼·이동 주소가 모두 현재 시즌 선수 기준이 된다(기록 없는 선수는 빠진다).
+export function useComparePicks<T extends { id: string; personNo?: string; name: string }>(players: T[] | null) {
+  const [refs, setRefs] = useState<PickRef[]>([]);
+  const picked = useMemo(() => resolvePicks(refs, players), [refs, players]);
+  return {
+    picked,
+    ids: picked.map((p) => p.id),
+    names: new Map(picked.map((p) => [p.id, p.name])),
+    // 토글 전에 현재 시즌에서 찾은 선수만 남겨, 사라진 선수가 최대 인원을 차지하지 않게 한다.
+    toggle: (p: T) =>
+      setRefs((prev) => togglePickRef(resolvePicks(prev, players).map((x) => ({ id: x.id, personNo: x.personNo })), p, MAX_COMPARE)),
+    clear: () => setRefs([]),
+  };
 }

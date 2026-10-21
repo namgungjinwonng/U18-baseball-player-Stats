@@ -67,8 +67,16 @@ export function TopPlayersSection({
   const relaxedHas = !!relaxed && relaxed.some((tp) => !isEmpty(tp));
   const includeUnq = unq === "auto" ? strictLacking && relaxedHas : unq;
   const current = includeUnq ? relaxed : strict;
+  // 연도를 바꾸면 새 요청이 끝날 때까지 이전 응답이 남아 있다. 전년도 기록·meta와 올해 로스터가
+  // 모두 요청한 시즌의 것일 때만 계산해, 서로 다른 시즌 자료(기록·학년·라벨)가 섞이지 않게 한다.
+  const prevReady =
+    !!prevYear &&
+    prevRecords.scope === String(prevYear) &&
+    prevMeta.scope === String(prevYear) &&
+    roster.scope === String(year);
+  const prevLoading = !!prevYear && !prevReady;
   const prev = useMemo(() => {
-    if (!prevYear || !prevRecords.data) return null;
+    if (!prevYear || !prevReady || !prevRecords.data) return null;
     const prevCtx: QualifyContext = {
       scope: "season",
       config: seasonConfig(prevYear),
@@ -79,11 +87,15 @@ export function TopPlayersSection({
       const pairs = (entry?.players ?? []).filter((p) => p.person_no).map((p) => [p.person_no, p.grade] as [string, string]);
       return returningTopPlayers(prevRecords.data!, team, pairs.length ? new Map(pairs) : null, prevCtx);
     });
-  }, [prevYear, prevRecords.data, prevMeta.data, roster.data, teams]);
+  }, [prevYear, prevReady, prevRecords.data, prevMeta.data, roster.data, teams]);
 
   // 기본(auto): 올해 규정 충족 선수가 없는 학교가 있으면 전년도 기준으로 보여 준다.
   const currentLacking = !!current && current.some(isEmpty);
-  const basis = choice === "prev" && prev ? "prev" : choice === "current" || !prev ? "current" : currentLacking ? "prev" : "current";
+  // 기준: 직접 고른 쪽 우선. 전년도를 골랐는데 자료가 아직 오는 중이면 "loading"(이전 시즌 자료를 대신 보이지 않는다).
+  // 자동일 때는 기다리는 동안 올해 목록을 보인다(올해 자료는 그대로 유효).
+  const wantPrev = choice === "prev" || (choice === "auto" && currentLacking);
+  const basis: "current" | "prev" | "loading" =
+    wantPrev && prev ? "prev" : choice === "prev" && prevLoading ? "loading" : "current";
   const shown = basis === "prev" ? prev : current;
   // 전년도 기준 선수는 전년도 ID라 고유번호 경로로 연결한다(올해 기록이 있으면 올해 상세로 이동).
   const hrefOf = basis === "prev" && prevYear ? (p: Player) => playerHref(p, prevYear, year) : undefined;
@@ -93,10 +105,10 @@ export function TopPlayersSection({
     <section className="versus-section">
       <div className="pct-card__head">
         <h3 className="heading-md">{title}</h3>
-        {prev && (
+        {(prev || prevLoading) && (
           <div className="career-mode-toggle pct-card__base" role="group" aria-label="주요 선수 기준">
             <button className={basis === "current" ? "active" : ""} onClick={() => setChoice("current")}>{year} 시즌</button>
-            <button className={basis === "prev" ? "active" : ""} onClick={() => setChoice("prev")}>{prevYear} 기준</button>
+            <button className={basis !== "current" ? "active" : ""} onClick={() => setChoice("prev")}>{prevYear} 기준</button>
           </div>
         )}
       </div>
@@ -119,6 +131,9 @@ export function TopPlayersSection({
       {choice === "auto" && basis === "prev" && (
         <p className="caption top-players__auto">{year} 시즌은 아직 규정을 채운 선수가 없어 {prevYear} 기준으로 보여 줍니다.</p>
       )}
+      {basis === "loading" ? (
+        <div className="state">{prevYear} 기준 자료를 불러오는 중…</div>
+      ) : (
       <div className={`versus-top ${teams.length === 1 ? "versus-top--single" : ""}`}>
         {teams.map((team, i) => (
           <div key={team} className="versus-top__team">
@@ -134,6 +149,7 @@ export function TopPlayersSection({
           </div>
         ))}
       </div>
+      )}
     </section>
   );
 }

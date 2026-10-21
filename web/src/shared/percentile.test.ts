@@ -1,6 +1,6 @@
 // 선수 요약 카드의 백분위와 경기별 누적 타율·OPS 계산을 검증하는 단위 테스트.
 import assert from "node:assert/strict";
-import { cumulativeBatting, pctGrade, percentileRank, topPercent } from "./percentile";
+import { cumulativeBatting, pctGrade, percentileRank, topPercent, trendGap } from "./percentile";
 import { edgeLevel } from "./heat";
 import type { GameLogEntry } from "./types";
 
@@ -48,5 +48,18 @@ assert.equal(edgeLevel(6.39, 6.09), 1); // 4.7% 근소
 assert.equal(edgeLevel(0.294, 0.24), 2); // 18% 우위
 assert.equal(edgeLevel(0.133, 0.235), 3); // 43% 큰 우위
 assert.equal(edgeLevel(0, 0), 0);
+
+// 공식 시즌 합계 vs 경기 로그 합계 — 같으면 차이 없음, 다르면 항목별로 (박상준 사례: 2루타 7/9·홈런 1/2)
+const season = (over: Partial<import("./types").BattingStats>) => ({
+  g: 3, pa: 15, ab: 10, h: 3, b2: 1, b3: 0, hr: 1, rbi: 0, r: 0, bb: 1, hbp: 0, so: 0, sb: 0, avg: 0.3, obp: 0.364, slg: 0.7, ...over,
+});
+assert.deepEqual(trendGap(log, season({})), { diffs: [], sf: 0 }, "합계 일치");
+assert.deepEqual(trendGap(log, season({ b2: 3, hr: 2 }))!.diffs, [
+  { label: "2루타", log: 1, official: 3 },
+  { label: "홈런", log: 1, official: 2 },
+]);
+assert.equal(trendGap(log, season({ sf: 1 }))!.sf, 1, "희생플라이는 따로 안내");
+assert.equal(trendGap(log, undefined), null);
+assert.equal(trendGap([], season({})), null);
 
 console.log("percentile tests passed");

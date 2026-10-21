@@ -363,11 +363,13 @@ export const useSeasonPlayerFiles = (specs: { year: number; ids: string[] }[]) =
 };
 
 // 팀·선수현황 (scraper/src/teams.ts 수집 — 선수현황 페이지용). 없으면 null.
+// scope = 연도 — 연도 전환 중 유지되는 이전 시즌 로스터와 구분할 때 쓴다.
 export const useTeams = () => {
   const { year } = useYear();
   return useAsync<TeamRosterEntry[] | null>(
     () => getJSON<TeamRosterEntry[]>(`${year}/teams.json`).catch(() => null),
-    [year]
+    [year],
+    String(year)
   );
 };
 

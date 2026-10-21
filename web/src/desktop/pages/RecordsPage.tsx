@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLeagueAverages, useTournamentRecords } from "../../shared/data";
 import { recordTabs, filterByKind, type RecordKind, type RecordPreset } from "../../shared/columns";
 import { StatTable } from "../../shared/StatTable";
-import { CompareBar, HeatLegend, RecordTabChips, togglePick } from "../../shared/RecordsControls";
+import { CompareBar, HeatLegend, RecordTabChips, useComparePicks } from "../../shared/RecordsControls";
+import { compareHref } from "../../shared/comparePicks";
 import { FilterBar, applyFilter, filterFromQuery, filterToQuery, unqualifiedFromQuery, useQualifyContext, type RecordFilter } from "../../shared/filters";
 import { describeQualify, isQualifiedBat, isQualifiedPit } from "../../shared/leaders";
 import { Ico } from "../../shared/navIcons";
@@ -16,7 +17,6 @@ export function RecordsPage() {
   const [preset, setPreset] = useState<RecordPreset>("basic");
   // 비교 선택 모드 — 켜져 있으면 행 클릭이 선수 상세 이동 대신 선택 토글이 된다.
   const [compareMode, setCompareMode] = useState(false);
-  const [picked, setPicked] = useState<string[]>([]);
   const [filter, setFilter] = useState<RecordFilter>(() => filterFromQuery(location.search));
   // 학교별 랭킹에서 넘어오면 ?u=1 로 규정 미달 포함이 켜진 채 시작한다.
   const [includeUnqualified, setIncludeUnqualified] = useState(() => unqualifiedFromQuery(location.search));
@@ -35,10 +35,11 @@ export function RecordsPage() {
   }, [averages, filter.tournament]);
   const tabs = useMemo(() => recordTabs(lg), [lg]);
   const tab = tabs.find((t) => t.kind === kind && t.preset === preset)!;
-  const names = useMemo(() => new Map((players ?? []).map((p) => [p.id, p.name])), [players]);
+  // 비교 선택 — 시즌을 바꿔도 현재 시즌 선수로 다시 찾는다(기록 없는 선수는 빠진다).
+  const picks = useComparePicks(players);
   const changeKind = (next: RecordKind) => {
     setKind(next);
-    setPicked([]); // 타자·투수 비교는 섞지 않는다
+    picks.clear(); // 타자·투수 비교는 섞지 않는다
   };
   // 랭킹 페이지와 동일하게 규정 미달 선수는 기본 제외 (토글로 포함 가능).
   const rows = useMemo(() => {
@@ -61,7 +62,7 @@ export function RecordsPage() {
         onKind={changeKind}
         onPreset={setPreset}
         compareMode={compareMode}
-        onCompareMode={(on) => { setCompareMode(on); setPicked([]); }}
+        onCompareMode={(on) => { setCompareMode(on); picks.clear(); }}
       />
       <FilterBar rows={players ?? []} value={filter} onChange={changeFilter} />
 
@@ -84,20 +85,20 @@ export function RecordsPage() {
           rows={rows}
           initialSort={tab.initialSort}
           rowKey={(p) => p.id}
-          selectedKeys={compareMode ? new Set(picked) : undefined}
+          selectedKeys={compareMode ? new Set(picks.ids) : undefined}
           onRowClick={(p) =>
             compareMode
-              ? setPicked((prev) => togglePick(prev, p.id))
+              ? picks.toggle(p)
               : nav(`/player/${p.id}${filterToQuery(filter)}`)
           }
         />
       )}
       {compareMode && (
         <CompareBar
-          picked={picked}
-          names={names}
-          onClear={() => setPicked([])}
-          onGo={() => nav(`/compare?k=${kind}&ids=${picked.map(encodeURIComponent).join(",")}`)}
+          picked={picks.ids}
+          names={picks.names}
+          onClear={picks.clear}
+          onGo={() => nav(compareHref(kind, picks.picked))}
         />
       )}
     </div>

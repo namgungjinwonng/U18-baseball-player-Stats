@@ -1,6 +1,6 @@
 // 선수 상세 요약 카드용 백분위·누적 추세 계산 순수 함수 (MLB Savant 방식 백분위).
 import { battingAdvanced, pitchingAdvanced } from "./sabermetrics";
-import type { GameLogEntry, LeagueRates, Player } from "./types";
+import type { BattingStats, GameLogEntry, LeagueRates, Player } from "./types";
 import { dec2, rate } from "./format";
 
 export interface PctMetric {
@@ -88,4 +88,25 @@ export function cumulativeBatting(log: GameLogEntry[], last?: number): TrendPoin
     const slg = ab ? tb / ab : 0;
     return { date: g.date, avg, ops: obp + slg, entry: g, games: i + 1, ab, h };
   });
+}
+
+// 공식 시즌 합계와 경기 로그(bStat) 합계의 차이. 추세는 경기 로그만 쌓기 때문에, 박스스코어 집계가
+// 공식 기록과 다르면(2루타·홈런 누락 등) 마지막 누적값이 시즌 값과 달라진다. 희생플라이는 경기 로그에 없다.
+export interface TrendGap {
+  diffs: { label: string; log: number; official: number }[];
+  sf: number; // 공식 희생플라이 — 경기 로그 출루율에는 반영되지 않는다
+}
+const GAP_KEYS: [keyof NonNullable<GameLogEntry["bStat"]> & keyof BattingStats, string][] = [
+  ["ab", "타수"], ["h", "안타"], ["b2", "2루타"], ["b3", "3루타"], ["hr", "홈런"], ["bb", "볼넷"], ["hbp", "사구"],
+];
+export function trendGap(log: GameLogEntry[], season: BattingStats | undefined): TrendGap | null {
+  if (!season) return null;
+  const games = log.filter((g) => g.bStat);
+  if (games.length === 0) return null;
+  const diffs = GAP_KEYS.flatMap(([k, label]) => {
+    const sum = games.reduce((acc, g) => acc + (g.bStat![k] ?? 0), 0);
+    const official = season[k] ?? 0;
+    return sum !== official ? [{ label, log: sum, official }] : [];
+  });
+  return { diffs, sf: season.sf ?? 0 };
 }

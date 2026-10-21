@@ -5,6 +5,9 @@ import { useAllPlayers, useLeagueAverages } from "./data";
 import { dec2, inn, rate } from "./format";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
 import { battingAdvanced, pitchingAdvanced } from "./sabermetrics";
+import { compareHref, picksFromQuery, resolvePicks } from "./comparePicks";
+import { MAX_COMPARE } from "./RecordsControls";
+import { useYear } from "./year";
 import type { LeagueRates, Player } from "./types";
 
 type Kind = "batting" | "pitching";
@@ -87,32 +90,32 @@ function CompareTable({ players, metrics, lg }: { players: Player[]; metrics: Me
 export function CompareView({ wrapClass }: { wrapClass: string }) {
   const [params] = useSearchParams();
   const nav = useNavigate();
-  const ids = (params.get("ids") ?? "").split(",").filter(Boolean).slice(0, 3);
+  const { year } = useYear();
+  // 주소의 선수 ID는 고른 시즌 기준이라, 비교 화면에서 시즌을 바꾸면 personNo(pn)로 그 시즌 선수를 다시 찾는다.
+  const refs = useMemo(() => picksFromQuery(params, MAX_COMPARE), [params]);
   const { data: records, loading } = useAllPlayers();
   const { data: averages } = useLeagueAverages();
   const lg = averages?.overall ?? null;
-  const players = useMemo(
-    () => ids.map((id) => records?.find((p) => p.id === id)).filter((p): p is Player => !!p),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [records, ids.join(",")]
-  );
+  const players = useMemo(() => resolvePicks(refs, records), [refs, records]);
+  const missing = loading ? 0 : refs.length - players.length; // 이 시즌 기록이 없는 선수 수
   const canBat = players.length > 0 && players.every((p) => p.batting);
   const canPit = players.length > 0 && players.every((p) => p.pitching);
   const requested = params.get("k") === "pitching" ? "pitching" : "batting";
   const kind: Kind = requested === "pitching" ? (canPit ? "pitching" : "batting") : canBat ? "batting" : "pitching";
   const metrics = kind === "batting" ? BAT : PIT;
-  const remove = (id: string) => {
-    const next = ids.filter((x) => x !== id);
-    nav(`/compare?k=${kind}&ids=${next.map(encodeURIComponent).join(",")}`, { replace: true });
-  };
+  const go = (k: Kind, list: Player[]) => nav(compareHref(k, list), { replace: true });
+  const remove = (id: string) => go(kind, players.filter((p) => p.id !== id));
 
   return (
     <div className={`${wrapClass} compare-page`}>
       <h2 className="heading-xl">선수 비교</h2>
       {loading && <div className="state">불러오는 중…</div>}
+      {missing > 0 && (
+        <p className="caption compare-missing">고른 선수 중 {missing}명은 {year} 시즌 기록이 없어 비교에서 빠졌습니다.</p>
+      )}
       {!loading && players.length < 2 && (
         <p className="state muted">
-          비교할 선수가 부족합니다. <Link to="/records">선수 기록</Link>에서 「비교」를 켜고 2~3명을 고르세요.
+          {year} 시즌에 비교할 선수가 부족합니다. <Link to="/records">선수 기록</Link>에서 「비교」를 켜고 2~3명을 고르세요.
         </p>
       )}
       {players.length >= 2 && (
@@ -129,11 +132,11 @@ export function CompareView({ wrapClass }: { wrapClass: string }) {
           <div className="m-tabs" style={{ marginTop: 12 }}>
             {canBat && (
               <button type="button" className={`chip ${kind === "batting" ? "chip--active" : ""}`}
-                onClick={() => nav(`/compare?k=batting&ids=${ids.map(encodeURIComponent).join(",")}`, { replace: true })}>타자 기록</button>
+                onClick={() => go("batting", players)}>타자 기록</button>
             )}
             {canPit && (
               <button type="button" className={`chip ${kind === "pitching" ? "chip--active" : ""}`}
-                onClick={() => nav(`/compare?k=pitching&ids=${ids.map(encodeURIComponent).join(",")}`, { replace: true })}>투수 기록</button>
+                onClick={() => go("pitching", players)}>투수 기록</button>
             )}
           </div>
           <p className="caption muted">{kind === "batting" ? "타자" : "투수"} 시즌 기록 · 좋은 쪽을 진하게 표시</p>
