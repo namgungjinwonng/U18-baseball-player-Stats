@@ -1,89 +1,162 @@
 // 학교 정보 (데스크탑·모바일 공용) — /team: 지역별 학교 목록·검색, /team/:name: 시즌 성적·팀 타격/투구·주요 선수·일정, 대전 모드 입구.
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAllPlayers, useLeagueAverages, useSchedule, useStrength, useTeams } from "./data";
-import { useQualifyContext } from "./filters";
+import { useAllPlayers, useLeagueAverages, useSchedule, useStrength, useTeams, useYearRecords } from "./data";
+import { emptyFilter, filterToQuery, unqualifiedToQuery, useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
-import { heatColor, heatScore } from "./heat";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { Ico } from "./navIcons";
 import { SearchIcon } from "./LineIcons";
+import { PagedCardGrid } from "./PagedCardGrid";
+import { buildTeamSummaries, MIN_TEAM_GRADE_GAMES, MIN_TEAM_GRADE_POPULATION, type TeamSummaryGrade } from "./teamSummary";
+import { buildTeamDetailGrades } from "./teamDetailGrades";
 import { sameTeam, teamGames, teamKey, teamRecord, teamTotals } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
 import { useYear } from "./year";
 
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
 
-// 팀 지표 한 칸 — 리그 평균과 비교해 배경색을 입힌다.
-function Cell({ k, v, avg, lowerIsBetter, fmt }: {
+// 수치·리그 평균을 칸의 정중앙에 놓고 우측에 실제 등급을 표시한다.
+function Cell({ k, v, avg, grade, fmt, wide = false }: {
   k: string;
   v: number | undefined;
   avg?: number;
-  lowerIsBetter?: boolean;
+  grade?: TeamSummaryGrade | null;
   fmt: (x: number) => string;
+  wide?: boolean;
 }) {
   return (
-    <div className="cell" style={{ background: avg != null ? heatColor(heatScore(v, avg, lowerIsBetter)) : undefined }}>
+    <div className={`cell team-stat-cell grade-pastel${wide ? " team-stat-cell--wide" : ""}`} data-grade={grade?.grade}>
       <div className="k">{k}</div>
-      <div className="v">{v == null ? "-" : fmt(v)}</div>
-      {avg != null && <div className="team-cell__avg">리그 {fmt(avg)}</div>}
+      <div className="team-cell__numbers">
+        <div className="v">{v == null ? "-" : fmt(v)}</div>
+        <div className="team-cell__avg">리그 {avg == null ? "—" : fmt(avg)}</div>
+      </div>
+      <span className="team-cell__grade"
+        aria-label={grade ? `${k} 등급 ${grade.grade}, 백분위 ${grade.percentile}` : `${k} 등급 미산정`}
+        title={grade ? `시즌 전체 학교 대비 백분위 ${grade.percentile}` : "완료 경기 수 또는 유효 비교 자료 부족"}
+      >{grade?.grade ?? "-"}</span>
     </div>
   );
 }
 
-// 학교 정보 첫 화면 — 지역별 학교 목록(올 시즌 전적 표시)과 이름 검색. 학교를 누르면 학교 상세로 간다.
+// 학교 시즌 성적도 선수 핵심 지표와 같은 등급·항목명·큰 수치 구성으로 표시한다.
+function SeasonCard({ label, value, grade }: { label: string; value: string; grade?: TeamSummaryGrade | null }) {
+  return (
+    <div className="m-kpi__cell grade-pastel" data-grade={grade?.grade}
+      title={grade ? `${label} 등급 ${grade.grade} · 백분위 ${grade.percentile}${label === "전적" ? " · 승률 기준" : ""}` : "등급 미산정"}>
+      <span className="m-kpi__grade" aria-label={`${label} 등급 ${grade?.grade ?? "미산정"}`}>{grade?.grade ?? "-"}</span>
+      <span className="m-kpi__k">{label}</span>
+      <span className="m-kpi__v">{value}</span>
+    </div>
+  );
+}
+
+// 학교 정보 첫 화면 — 지역 선택 + 학교명 검색, 학교별 전적·팀타율·ERA·시즌 전체 대비 등급을
+// 10개씩 가로 스와이프 페이지로 보인다. 카드를 누르면 학교 상세로 간다.
+function TeamGradeBadge({ grade, label }: { grade: TeamSummaryGrade | null; label: string }) {
+  return (
+    <span
+      className={`team-summary-card__grade${grade ? ` grade-bg--${grade.letter}` : ""}`}
+      aria-label={grade ? `${label} 등급 ${grade.grade}, 백분위 ${grade.percentile}` : `${label} 등급 미산정`}
+      title={grade ? `${label} · 시즌 전체 학교 대비 백분위 ${grade.percentile}` : "등급 미산정: 경기 수 또는 유효 비교 자료 부족"}
+    >
+      {grade?.grade ?? "-"}
+    </span>
+  );
+}
+
 export function TeamIndex({ wrapClass }: { wrapClass: string }) {
   const { year } = useYear();
+  const nav = useNavigate();
   const teams = useTeams();
   const schedule = useSchedule();
+  const records = useYearRecords(year);
+  const [region, setRegion] = useState("");
   const [query, setQuery] = useState("");
   const games = useMemo(() => (schedule.data?.year === year ? schedule.data.games : []), [schedule.data, year]);
-  // 선수현황(teams.json) 정식명 + 일정에만 있는 학교. 지역별로 묶고 학교명 가나다순.
-  const all = useMemo(() => {
-    const region = new Map<string, string>();
-    for (const t of teams.data ?? []) region.set(teamKey(t.team), t.region);
-    for (const g of games) for (const side of [g.away, g.home]) if (!region.has(teamKey(side.name))) region.set(teamKey(side.name), "");
-    return [...region.entries()].map(([name, r]) => ({ name, region: r, rec: teamRecord(games, name) }));
-  }, [teams.data, games]);
-  const groups = useMemo(() => {
-    const q = query.replace(/\s/g, "").toLowerCase();
-    const byRegion = new Map<string, typeof all>();
-    for (const t of all) {
-      if (q && !t.name.replace(/\s/g, "").toLowerCase().includes(q) && !t.region.includes(q)) continue;
-      byRegion.set(t.region, [...(byRegion.get(t.region) ?? []), t]);
-    }
-    return [...byRegion.entries()]
-      .map(([region, list]) => ({ region, list: list.sort((x, y) => x.name.localeCompare(y.name, "ko")) }))
-      .sort((x, y) => (x.region ? (y.region ? x.region.localeCompare(y.region, "ko") : -1) : 1));
-  }, [all, query]);
-  const loading = teams.loading || schedule.loading;
+  const all = useMemo(
+    () => buildTeamSummaries(
+      year,
+      teams.scope === String(year) ? teams.data ?? [] : [],
+      games,
+      records.scope === String(year) ? records.data ?? [] : []
+    ),
+    [year, teams.scope, teams.data, games, records.scope, records.data]
+  );
+  const regions = useMemo(
+    () => [...new Set(all.map((t) => t.region).filter(Boolean))].sort((x, y) => x.localeCompare(y, "ko")),
+    [all]
+  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return all.filter((t) => (!region || t.region === region) && (!q || t.name.toLowerCase().includes(q)));
+  }, [all, region, query]);
+  const loading = teams.loading || schedule.loading || records.loading
+    || teams.scope !== String(year) || records.scope !== String(year)
+    || (!!schedule.data && schedule.data.year !== year);
 
   return (
-    <div className={`${wrapClass} team-index`}>
+    <div className={`${wrapClass} team-summary-index`}>
       <h2 className="heading-xl"><Ico name="team" variant="title" />학교 정보</h2>
-      <p className="caption muted">학교를 누르면 {year} 시즌 성적·팀 타격/투구·주요 선수·일정을 볼 수 있습니다.</p>
-      <div className="search-pill team-index__search">
-        <SearchIcon />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="학교 이름 또는 지역" aria-label="학교 검색" />
-      </div>
-      {loading && <div className="state">불러오는 중…</div>}
-      {!loading && groups.length === 0 && <div className="state muted">찾는 학교가 없습니다.</div>}
-      {groups.map(({ region, list }) => (
-        <section key={region || "기타"} className="team-index__group">
-          <h3>{region || "기타"} <small>{list.length}개교</small></h3>
-          <div className="team-index__grid">
-            {list.map((t) => {
-              const g = t.rec.w + t.rec.l + t.rec.d;
-              return (
-                <Link key={t.name} className="team-index__item" to={`/team/${encodeURIComponent(t.name)}`}>
-                  <b>{t.name}</b>
-                  <small>{g ? `${t.rec.w}승 ${t.rec.l}패${t.rec.d ? ` ${t.rec.d}무` : ""}` : "경기 없음"}</small>
-                </Link>
-              );
-            })}
+      <p className="caption muted" style={{ margin: "-4px 0 12px" }}>학교를 누르면 {year} 시즌 성적·팀 타격/투구·주요 선수·일정을 볼 수 있습니다.</p>
+      <div className="filter-bar">
+        <div className="filter-bar__row">
+          <select className="m-select" value={region} onChange={(e) => setRegion(e.target.value)} aria-label="지역 선택">
+            <option value="">지역 전체</option>
+            {regions.map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+          <div className="search-pill" style={{ flex: 1, minWidth: 160 }}>
+            <SearchIcon />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="학교명 검색" aria-label="학교명 검색" />
           </div>
-        </section>
-      ))}
+        </div>
+      </div>
+      {loading ? (
+        <div className="state">불러오는 중…</div>
+      ) : (
+        <>
+          <p className="caption-sm" style={{ margin: "0 0 10px" }}>{filtered.length}개 학교</p>
+          <p className="caption-sm team-summary-index__note" title={`항목별 유효 비교 학교가 ${MIN_TEAM_GRADE_POPULATION}곳 미만이면 등급을 표시하지 않습니다.`}>
+            등급: {year} 시즌 전체 · 완료 {MIN_TEAM_GRADE_GAMES}경기 이상
+            <br />팀타율 ↑ · ERA ↓가 좋음 · 표본·기록 부족은 -
+          </p>
+          {filtered.length > 0 ? (
+            <PagedCardGrid perPage={10} compact>
+              {filtered.map((t) => (
+                <button key={t.name} type="button" className="sch-team-card team-summary-card" onClick={() => nav(`/team/${encodeURIComponent(t.name)}`)}>
+                  <div className="sch-team-card__head">
+                    <h3 title={t.name}>{t.name}</h3>
+                    {t.region && <span className="sch-team-card__reg">{t.region}</span>}
+                  </div>
+                  <div className="team-summary-card__record">
+                    <span className="team-summary-card__wins">{t.rec.w}승</span>
+                    <span className="team-summary-card__losses">{t.rec.l}패</span>
+                    {t.rec.d > 0 && <span className="team-summary-card__draws">{t.rec.d}무</span>}
+                    <span className="team-summary-card__pct">승률 <b>{t.pct == null ? "-" : t.pct.toFixed(3)}</b></span>
+                  </div>
+                  <div className="team-summary-card__metrics">
+                    <div className="team-summary-card__metric">
+                      <span className="team-summary-card__label">팀타율</span>
+                      <b>{rate(t.avg ?? undefined)}</b>
+                      <TeamGradeBadge grade={t.avgGrade} label="팀타율" />
+                    </div>
+                    <div className="team-summary-card__metric">
+                      <span className="team-summary-card__label">ERA</span>
+                      <b>{dec2(t.era ?? undefined)}</b>
+                      <TeamGradeBadge grade={t.eraGrade} label="팀 ERA" />
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </PagedCardGrid>
+          ) : (
+            <div className="state">검색 결과가 없습니다.</div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -109,11 +182,20 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
     () => (schedule.data?.year === year ? teamRecord(schedule.data.games, team) : null),
     [schedule.data, year, team]
   );
-  const totals = useMemo(() => (records.data ? teamTotals(records.data, team) : null), [records.data, team]);
+  const seasonRecords = useMemo(() => records.data?.filter((p) => p.season === year) ?? [], [records.data, year]);
+  const totals = useMemo(() => teamTotals(seasonRecords, team), [seasonRecords, team]);
+  const detail = useMemo(() => buildTeamDetailGrades(
+    year,
+    teams.scope === String(year) ? teams.data ?? [] : [],
+    schedule.data?.year === year ? schedule.data.games : [],
+    seasonRecords,
+    strength.data
+  ).find((row) => row.name === team), [year, teams.scope, teams.data, schedule.data, seasonRecords, strength.data, team]);
+  const grades = detail?.grades;
   const topTeams = useMemo(() => [team], [team]);
   const str = useMemo(
-    () => Object.entries(strength.data?.teams ?? {}).find(([t]) => sameTeam(t, team))?.[1],
-    [strength.data, team]
+    () => Object.entries(strength.data?.season === year ? strength.data.teams : {}).find(([t]) => sameTeam(t, team))?.[1],
+    [strength.data, team, year]
   );
   // 상대 학교 선택지 — 이번 시즌 상대한 학교를 경기 수 순으로.
   const opponents = useMemo(() => {
@@ -122,7 +204,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
     return [...count.entries()].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0], "ko"));
   }, [games]);
 
-  const lg = averages.data?.overall;
+  const lg = averages.data?.season === year ? averages.data.overall : undefined;
   const loading = schedule.loading || records.loading || teams.loading;
   if (!loading && !roster && games.length === 0 && !totals) {
     return <div className={wrapClass}><div className="state">{team}의 {year} 시즌 기록이 없습니다.</div></div>;
@@ -136,12 +218,13 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
         {roster?.region && <span>{roster.region}</span>}
         {roster?.manager && <span>감독 {roster.manager}</span>}
         {roster && <span>선수 {roster.player_count}명</span>}
-        {roster && <Link to={`/players?team=${encodeURIComponent(roster.team)}`}>선수현황 ›</Link>}
-        <Link to="/team">다른 학교 보기 ›</Link>
+        {/* 줄의 "·" 구분자는 span 앞에만 붙으므로 링크도 span으로 감싼다 */}
+        {roster && <span><Link to={`/players?team=${encodeURIComponent(roster.team)}`}>선수현황 ›</Link></span>}
+        <span><Link to="/team">다른 학교 보기 ›</Link></span>
       </div>
 
       <div className="team-versus">
-        <label className="caption" htmlFor="team-versus-select">상대 학교 선택 → 학교 대전</label>
+        <label className="caption" htmlFor="team-versus-select">상대 학교 선택 → 매치업</label>
         <select
           id="team-versus-select"
           className="m-select"
@@ -161,11 +244,11 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
       {rec && (
         <section className="player-section">
           <h3>{year} 시즌 성적</h3>
-          <div className="m-kpi">
-            <div className="m-kpi__cell"><span className="m-kpi__k">전적</span><span className="m-kpi__v">{rec.w}-{rec.l}{rec.d ? `-${rec.d}` : ""}</span></div>
-            <div className="m-kpi__cell"><span className="m-kpi__k">승률</span><span className="m-kpi__v">{pct}</span></div>
-            <div className="m-kpi__cell"><span className="m-kpi__k">득점</span><span className="m-kpi__v">{rec.rf}</span></div>
-            <div className="m-kpi__cell"><span className="m-kpi__k">실점</span><span className="m-kpi__v">{rec.ra}</span></div>
+          <div className="m-kpi m-kpi--player-grade team-season-kpi">
+            <SeasonCard label="전적" value={`${rec.w}-${rec.l}${rec.d ? `-${rec.d}` : ""}`} grade={grades?.winPct} />
+            <SeasonCard label="승률" value={pct} grade={grades?.winPct} />
+            <SeasonCard label="득점" value={String(rec.rf)} grade={grades?.runsFor} />
+            <SeasonCard label="실점" value={String(rec.ra)} grade={grades?.runsAgainst} />
           </div>
         </section>
       )}
@@ -175,31 +258,32 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
           <section className="player-section">
             <h3>팀 타격</h3>
             <div className="m-strip team-strip">
-              <Cell k="타율" v={totals.batting.avg} avg={lg?.avg} fmt={rate} />
-              <Cell k="출루율" v={totals.batting.obp} avg={lg?.obp} fmt={rate} />
-              <Cell k="장타율" v={totals.batting.slg} avg={lg?.slg} fmt={rate} />
-              <Cell k="OPS" v={totals.batting.ops} avg={lg?.ops} fmt={rate} />
-              <Cell k="홈런" v={totals.batting.hr} fmt={String} />
-              <Cell k="도루" v={totals.batting.sb} fmt={String} />
-              {str && <Cell k="타선 강도지수" v={str.bat} avg={1} fmt={dec2} />}
+              <Cell k="타율" v={detail?.values.avg ?? undefined} avg={lg?.avg} grade={grades?.avg} fmt={rate} />
+              <Cell k="출루율" v={detail?.values.obp ?? undefined} avg={lg?.obp} grade={grades?.obp} fmt={rate} />
+              <Cell k="장타율" v={detail?.values.slg ?? undefined} avg={lg?.slg} grade={grades?.slg} fmt={rate} />
+              <Cell k="OPS" v={detail?.values.ops ?? undefined} avg={lg?.ops} grade={grades?.ops} fmt={rate} />
+              <Cell k="홈런" v={detail?.values.hr ?? undefined} grade={grades?.hr} fmt={String} />
+              <Cell k="도루" v={detail?.values.sb ?? undefined} grade={grades?.sb} fmt={String} />
+              {str && <Cell k="타선 강도지수" v={str.bat} avg={1} grade={grades?.batStrength} fmt={dec2} wide />}
             </div>
           </section>
           <section className="player-section">
             <h3>팀 투구</h3>
             <div className="m-strip team-strip">
-              <Cell k="ERA" v={totals.pitching.era} avg={lg?.era} lowerIsBetter fmt={dec2} />
-              <Cell k="WHIP" v={totals.pitching.whip} avg={lg?.whip} lowerIsBetter fmt={dec2} />
-              <Cell k="K/9" v={totals.pitching.k9} avg={lg?.k9} fmt={(x) => x.toFixed(1)} />
-              <Cell k="BB/9" v={totals.pitching.bb9} avg={lg?.bb9} lowerIsBetter fmt={(x) => x.toFixed(1)} />
-              {str && <Cell k="마운드 강도지수" v={str.pit} avg={1} fmt={dec2} />}
+              <Cell k="ERA" v={detail?.values.era ?? undefined} avg={lg?.era} grade={grades?.era} fmt={dec2} />
+              <Cell k="WHIP" v={detail?.values.whip ?? undefined} avg={lg?.whip} grade={grades?.whip} fmt={dec2} />
+              <Cell k="K/9" v={detail?.values.k9 ?? undefined} avg={lg?.k9} grade={grades?.k9} fmt={(x) => x.toFixed(1)} />
+              <Cell k="BB/9" v={detail?.values.bb9 ?? undefined} avg={lg?.bb9} grade={grades?.bb9} fmt={(x) => x.toFixed(1)} />
+              {str && <Cell k="마운드 강도지수" v={str.pit} avg={1} grade={grades?.pitStrength} fmt={dec2} wide />}
             </div>
-            <p className="caption muted">팀 비율은 선수 기록 합산 원자료로 재계산 · 파랑 = 리그 평균보다 좋음, 빨강 = 나쁨</p>
+            <p className="caption muted">팀 비율은 선수 기록 합산 원자료로 재계산 · 등급은 {year} 시즌 전체 학교 대비 · 완료 {MIN_TEAM_GRADE_GAMES}경기 이상, 항목별 유효 학교 {MIN_TEAM_GRADE_POPULATION}곳 이상 · A+~E- 파스텔 15단계 · 자료 부족은 -</p>
           </section>
         </>
       )}
 
       <TopPlayersSection teams={topTeams} records={records.data} ctx={ctx} title="주요 선수" />
-      <Link className="link-btn" to={`/records?s=${encodeURIComponent(roster?.team ?? team)}`}>
+      {/* "전체" = 규정 미달 선수까지 — 학교별 랭킹 링크와 같이 u=1 로 규정 미달 포함을 켠 채 연다 */}
+      <Link className="link-btn" to={`/records${unqualifiedToQuery(filterToQuery({ ...emptyFilter, team: roster?.team ?? team }))}`}>
         {team} 선수 기록 전체 ›
       </Link>
 

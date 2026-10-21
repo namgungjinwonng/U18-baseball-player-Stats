@@ -532,7 +532,7 @@ export function PlayerPage() {
       {recordMode === "season" && active === "batting" && v.batting && (
         <>
           {!tournamentSlug && <PercentileCard player={player} kind="batting" />}
-          <TrendChart log={v.gameLog} lg={lg} />
+          <TrendChart log={v.gameLog} lg={lg} season={v.batting} />
           <section className="player-section">
             <h3>타자 기록</h3>
             <BattingStrip b={v.batting} />

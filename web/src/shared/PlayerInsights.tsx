@@ -4,8 +4,8 @@ import { useAllPlayers, useLeagueAverages } from "./data";
 import { emptyFilter, useQualifyContext } from "./filters";
 import { rate } from "./format";
 import { isQualifiedBat, isQualifiedPit } from "./leaders";
-import { BAT_METRICS, PIT_METRICS, cumulativeBatting, pctGrade, percentileRank, topPercent, type GradeLetter } from "./percentile";
-import type { GameLogEntry, LeagueRates, Player } from "./types";
+import { BAT_METRICS, PIT_METRICS, cumulativeBatting, pctGrade, percentileRank, topPercent, trendGap, type GradeLetter } from "./percentile";
+import type { BattingStats, GameLogEntry, LeagueRates, Player } from "./types";
 
 // 등급 비교 집단 — 시즌 기록의 규정 충족 선수(학년 지정 시 그 학년만).
 // 리그 등급 카드와 선수 상세 상단 핵심 지표가 같은 기준을 쓴다.
@@ -79,7 +79,7 @@ export function PercentileCard({ player, kind }: { player: Player; kind: "battin
         if (v == null || !g) return null;
         const { grade, letter, pct } = g;
         return (
-          <div key={m.key} className={`pct-row pct-row--${letter}`}>
+          <div key={m.key} className={`pct-row grade-pastel pct-row--${letter}`} data-grade={grade}>
             <span className="pct-row__label">
               {m.label}
               {avg != null && <small>평균 {m.format(avg)}</small>}
@@ -106,7 +106,8 @@ const PAD = { l: 34, r: 10, t: 10, b: 20 };
 
 // 경기별 누적 타율·OPS 꺾은선 (인라인 SVG — 차트 라이브러리 없이).
 // 지점을 누르거나 좌우로 끌면(마우스는 올리기만 해도) 가장 가까운 경기의 기록과 그 시점 누적값을 보여 준다.
-export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates | null }) {
+// season = 화면 위쪽에 보이는 시즌(또는 대회) 기록 — 경기 로그 합계와 다르면 차이를 안내한다.
+export function TrendChart({ log, lg, season }: { log: GameLogEntry[]; lg?: LeagueRates | null; season?: BattingStats }) {
   const [metric, setMetric] = useState<"avg" | "ops">("avg");
   const [last, setLast] = useState<0 | 10 | 5>(0);
   const [sel, setSel] = useState<number | null>(null); // 선택한 지점 (null = 최근 경기)
@@ -114,6 +115,7 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
   const svgRef = useRef<SVGSVGElement>(null);
   const total = log.filter((g) => g.bStat).length;
   const points = useMemo(() => cumulativeBatting(log, last || undefined), [log, last]);
+  const gap = useMemo(() => trendGap(log, season), [log, season]);
   if (total < 3) return null;
 
   const values = points.map((p) => p[metric]);
@@ -164,7 +166,7 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
           <span className="trend__info-line">{cur.entry.line}</span>
         </div>
         <div className="trend__info-cum">
-          {shown === lastIndex && sel !== lastIndex ? "최근 경기까지" : `${cur.games}번째 경기까지`} 누적 {label} <b>{rate(cur[metric])}</b>
+          {shown === lastIndex && sel !== lastIndex ? "최근 경기까지" : `${cur.games}번째 경기까지`} 경기 로그 누적 {label} <b>{rate(cur[metric])}</b>
           <span className="muted"> · {cur.games}경기 {cur.ab}타수 {cur.h}안타</span>
         </div>
       </div>
@@ -217,6 +219,17 @@ export function TrendChart({ log, lg }: { log: GameLogEntry[]; lg?: LeagueRates 
         <text x={W - PAD.r} y={H - 4} className="trend__tick" textAnchor="end">{md(lastPoint.date)}</text>
       </svg>
       <p className="caption muted">그래프를 누르거나 좌우로 끌면 경기별 기록을 볼 수 있어요 · 점 하나 = 한 경기까지의 누적값</p>
+      {/* 추세는 경기 로그(박스스코어)만 다시 더한 값이다. 공식 시즌 합계와 다르면 무엇이 다른지 그대로 알린다. */}
+      <p className="caption trend__basis">
+        경기 로그(박스스코어) 기준 재계산값입니다. 희생플라이는 반영되지 않습니다.
+        {gap && gap.diffs.length > 0 && season && (
+          <>
+            {" "}공식 시즌 합계와 차이가 있습니다(경기 로그/공식: {gap.diffs.map((d) => `${d.label} ${d.log}/${d.official}`).join(" · ")}).
+            {last === 0 && ` 그래서 마지막 값(${rate(lastPoint[metric])})이 시즌 ${label}(${rate(metric === "avg" ? season.avg : season.obp + season.slg)})와 다릅니다.`}
+          </>
+        )}
+        {gap && gap.diffs.length === 0 && gap.sf > 0 && ` 이 선수의 희생플라이 ${gap.sf}개가 빠져 출루율이 공식 기록과 조금 다를 수 있습니다.`}
+      </p>
     </section>
   );
 }

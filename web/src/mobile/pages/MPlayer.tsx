@@ -62,9 +62,9 @@ function MAwards({ profile }: { profile: PlayerProfile | null }) {
 function KpiRow({ items, note }: { items: [string, string, (GradeInfo | null)?][]; note?: string }) {
   return (
     <>
-      <div className="m-kpi">
+      <div className="m-kpi m-kpi--player-grade">
         {items.map(([k, val, g]) => (
-          <div key={k} className={`m-kpi__cell ${g ? `grade-bg--${g.letter}` : ""}`} title={g ? `리그 등급 ${g.grade} (백분위 ${g.pct})` : undefined}>
+          <div key={k} className={`m-kpi__cell grade-pastel ${g ? `grade-bg--${g.letter}` : ""}`} data-grade={g?.grade} title={g ? `리그 등급 ${g.grade} (백분위 ${g.pct})` : undefined}>
             {g && <span className="m-kpi__grade">{g.grade}</span>}
             <span className="m-kpi__k">{k}</span>
             <span className="m-kpi__v">{val}</span>
@@ -354,7 +354,7 @@ export function MPlayer() {
               note={a.wrcPlus != null ? `wRC+ ${int(a.wrcPlus)} (리그 평균 100)` : undefined}
             />
             {!tournamentSlug && <PercentileCard player={p} kind="batting" />}
-            <TrendChart log={v.gameLog} lg={lg} />
+            <TrendChart log={v.gameLog} lg={lg} season={v.batting} />
             <section className="player-section">
               <h3>타자 기록</h3>
               <div className="m-strip">

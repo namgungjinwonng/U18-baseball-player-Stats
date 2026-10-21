@@ -1,5 +1,5 @@
 // 두 팀·두 선수 지표를 가운데 기준 좌우 대칭 막대로 비교하는 공용 컴포넌트 (대전 모드·선수 비교).
-// 우위 쪽만 파랑으로 칠하고(차이가 클수록 진하게: 근소 우위·우위·큰 우위), 열위 쪽은 흐린 회색, 대등은 양쪽 회색이다.
+// 우위는 파스텔 블루, 열위는 파스텔 로즈로 차이 크기에 따라 3단계 농도를 적용하고 대등은 옅은 회색으로 표시한다.
 // 우위 단계 글자는 우위 학교 쪽 막대 위에 텍스트로만 표시한다.
 import { EDGE_LABELS, compareEdge } from "./heat";
 
@@ -39,7 +39,7 @@ export function MirrorBars({ rows, aName, bName }: { rows: MirrorRow[]; aName: s
         const max = Math.max(Math.abs(row.a ?? 0), Math.abs(row.b ?? 0));
         const width = (v: number | null | undefined) => (v == null || max === 0 ? 0 : (Math.abs(v) / max) * 100);
         const { win, level } = compare(row);
-        const tone = (side: "a" | "b") => (win == null ? "even" : win === side ? `win${level}` : "lose");
+        const tone = (side: "a" | "b") => (win == null ? "even" : win === side ? `win${level}` : `lose${level}`);
         const edge = (side: "a" | "b") =>
           win === side ? <span className={`mirror__edge mirror__edge--${side} mirror__edge--l${level}`}>{EDGE_LABELS[level]}</span> : null;
         return (

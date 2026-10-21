@@ -1,5 +1,5 @@
 // 학교 A vs 학교 B 대전 모드 화면 (데스크탑·모바일 공용) — /versus?a=학교&b=학교&v=탭&g=경기
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
@@ -14,7 +14,7 @@ import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, mergeMatrices, playerHref, sameTeam, teamExtra, teamGames, teamKey, teamRecord, teamTotals, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, sameTeam, teamExtra, teamGames, teamKey, teamRecord, teamTotals, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
@@ -29,9 +29,6 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "player", label: "선수" },
   { id: "game", label: "경기" },
 ];
-
-// 3타석 미만 대결은 표본이 작아 흐리게 표시한다.
-const SMALL_SAMPLE_PA = 3;
 
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
 const recordText = (r: Record3) => `${r.w}승 ${r.l}패${r.d ? ` ${r.d}무` : ""}`;
@@ -119,8 +116,8 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   const [params, setParams] = useSearchParams();
   const a = params.get("a") ?? "";
   const b = params.get("b") ?? "";
-  // 고교 팀끼리는 한 해에 많아야 몇 번 만나므로 맞대결·선수 맞대결표는 항상 통산으로 보고,
-  // 대회·통산 필터는 두지 않는다(사용자 요청). 팀 지표·주요 선수·공통 상대는 선택 시즌 전체 기준.
+  // 고교 팀끼리는 한 해에 많아야 몇 번 만나므로 맞대결 전적은 항상 통산으로 보고, 대회 필터는 두지 않는다(사용자 요청).
+  // 선수 맞대결표는 선택 시즌 기본 + 연도·통산 선택(py). 팀 지표·주요 선수·공통 상대는 선택 시즌 전체 기준.
   const slug = "";
   const all = true;
   const tab = (TABS.find((t) => t.id === params.get("v"))?.id ?? "sum") as Tab;
@@ -136,7 +133,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     setParams(next, { replace: true });
   };
 
-  const { year, years } = useYear();
+  const { year, years, setYear } = useYear();
   const teams = useTeams();
   const schedule = useSchedule();
   const tournaments = useTournaments();
@@ -228,26 +225,42 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   }, [h2hYears, yearIndexes.scope, yearIndexes.data, a, b]);
   const yearFiles = useSeasonPlayerFiles(fileSpecs);
   const specKey = fileSpecs.map((f) => `${f.year}:${f.ids.join(",")}`).join("|");
-  const allMatrix = useMemo(() => {
+  const yearMatrices = useMemo(() => {
     if (!showAllPlayers || !h2h) return null;
-    if (h2hYears.length === 0) return mergeMatrices([]);
+    if (h2hYears.length === 0) return [];
     if (!specKey || yearFiles.scope !== specKey || !yearFiles.data || !yearIndexes.data) return null;
-    return mergeMatrices(
-      h2hYears.map((y) => ({
-        year: y,
-        matrix: versusMatrix(
-          (yearFiles.data![y] ?? []).flatMap((f) => f.matchups ?? []),
-          indexById(yearIndexes.data![y] ?? []),
-          a, b, side
-        ),
-      }))
-    );
+    return h2hYears.map((y) => ({
+      year: y,
+      matrix: versusMatrix(
+        (yearFiles.data![y] ?? []).flatMap((f) => f.matchups ?? []),
+        indexById(yearIndexes.data![y] ?? []),
+        a, b, side
+      ),
+    }));
   }, [showAllPlayers, h2h, h2hYears, specKey, yearFiles.scope, yearFiles.data, yearIndexes.data, a, b, side]);
-  const shownMatrix = all ? allMatrix : matrix;
+  // 표 기준 연도 — 기본은 선택 시즌, 맞붙은 다른 시즌이나 통산(py=all)으로 바꿀 수 있다.
+  // 졸업 선수도 그 시즌 기록으로 보이도록 시즌별 표를 기본으로 한다.
+  const matrixYears = useMemo(() => [...new Set([year, ...h2hYears])].sort((x, y) => y - x), [year, h2hYears]);
+  const pyParam = params.get("py");
+  const matrixYear: number | "all" = pyParam === "all" ? "all" : matrixYears.includes(Number(pyParam)) ? Number(pyParam) : year;
+  const allMatrix = useMemo(
+    () => (!yearMatrices ? null : matrixYear === "all" ? mergeMatrices(yearMatrices) : null),
+    [yearMatrices, matrixYear]
+  );
+  const yearMatrix = useMemo(
+    () => (!yearMatrices || matrixYear === "all" ? null : yearMatrices.find((m) => m.year === matrixYear)?.matrix ?? mergeMatrices([])),
+    [yearMatrices, matrixYear]
+  );
+  const shownMatrix = all ? allMatrix ?? yearMatrix : matrix;
   const loadingFiles = all ? fileSpecs.reduce((n, f) => n + f.ids.length, 0) : fileIds.length;
-  // 통산 표의 선수는 다른 시즌 ID일 수 있어 고유번호 경로로 연결한다.
-  const hrefOf = (p: { id: string; personNo?: string }) =>
-    all && allMatrix ? playerHref(p, allMatrix.yearOf.get(p.id) ?? year, year) : `/player/${p.id}`;
+  // 선수 ID는 시즌마다 달라 그 시즌으로 전환한 뒤 그 시즌 선수 화면으로 연결한다.
+  // 통산 표는 대표(가장 최근) 시즌 기록으로 연결한다.
+  const linkYearOf = (p: { id: string }) =>
+    matrixYear === "all" ? allMatrix?.yearOf.get(p.id) ?? year : matrixYear;
+  const playerLink = (p: { id: string; name: string }) => {
+    const y = linkYearOf(p);
+    return <Link to={`/player/${encodeURIComponent(p.id)}`} onClick={() => y !== year && setYear(y)}>{p.name}</Link>;
+  };
 
   const aName = teamKey(a);
   const bName = teamKey(b);
@@ -364,37 +377,58 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
             <Chip active={side === "aBat"} onClick={() => update({ m: "" })}>{aName} 타자 vs {bName} 투수</Chip>
             <Chip active={side === "bBat"} onClick={() => update({ m: "bBat" })}>{bName} 타자 vs {aName} 투수</Chip>
           </div>
+          <div className="career-mode-toggle versus-year" role="group" aria-label="선수 맞대결표 기준 연도">
+            {matrixYears.map((y) => (
+              <button key={y} type="button" className={matrixYear === y ? "active" : ""} onClick={() => update({ py: y === year ? "" : String(y) })}>
+                {y}
+              </button>
+            ))}
+            {h2hYears.length > 1 && (
+              <button type="button" className={matrixYear === "all" ? "active" : ""} onClick={() => update({ py: "all" })}>통산</button>
+            )}
+          </div>
           <p className="caption muted">
-            {all && h2hYears.length > 0 && `통산 ${h2hYears.join("·")} 맞대결 시즌 합산 · 이름·학년은 가장 최근 시즌 기준 · `}
-            칸 = 안타/타수 · 작은 글씨 = 타석 · {SMALL_SAMPLE_PA}타석 미만은 흐리게
+            {matrixYear === "all"
+              ? `통산 ${h2hYears.join("·")} 맞대결 시즌 합산 · 이름·학년은 가장 최근 시즌 기준 · `
+              : `${matrixYear} 시즌 기준 · 이름을 누르면 ${matrixYear} 시즌 기록으로 이동 · `}
+            칸 = 안타/타수 · 작은 글씨 = 타석 · 안타가 있으면 진하게, 무안타는 흐리게
           </p>
           {!shownMatrix ? (
             <div className="state">{loadingFiles ? `${loadingFiles}명 기록을 불러오는 중…` : "불러오는 중…"}</div>
           ) : shownMatrix.batters.length === 0 ? (
             <div className="state muted">
-              {all
+              {matrixYear === "all"
                 ? "두 학교가 맞붙은 시즌에 선수 맞대결 기록이 없습니다."
-                : `${year} 시즌에는 두 학교 선수의 맞대결 기록이 없습니다.${slug ? "" : " 지난 시즌 기록은 「통산 맞대결」을 켜면 볼 수 있습니다."}`}
+                : `${matrixYear} 시즌에는 두 학교 선수의 맞대결 기록이 없습니다.${h2hYears.some((y) => y !== matrixYear) ? " 위에서 다른 연도를 선택해 보세요." : ""}`}
             </div>
           ) : (
             <div className="versus-matrix">
               <table>
                 <thead>
                   <tr>
-                    <th className="versus-matrix__corner">{batTeam} 타자 \ {pitTeam} 투수</th>
+                    {/* 대각선으로 나눈 모서리 — 오른쪽 위 = 열(투수), 왼쪽 아래 = 행(타자). 타자 이름 열이 넓어지지 않게 두 줄로 쓴다 */}
+                    <th
+                      className="versus-matrix__corner"
+                      aria-label={`${batTeam} 타자, ${pitTeam} 투수`}
+                      // 학교명이 길면 칸이 넓어지므로 반대쪽 여백도 비례해 늘려 글자가 대각선에 걸치지 않게 한다
+                      style={{ "--corner-pad": `${Math.max(batTeam.length, pitTeam.length) * 5 + 15}px` } as CSSProperties}
+                    >
+                      <span className="versus-matrix__corner-pit">{pitTeam} 투수</span>
+                      <span className="versus-matrix__corner-bat">{batTeam} 타자</span>
+                    </th>
                     {shownMatrix.pitchers.map((p) => (
-                      <th key={p.id}><Link to={hrefOf(p)}>{p.name}</Link></th>
+                      <th key={p.id}>{playerLink(p)}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {shownMatrix.batters.map((bt) => (
                     <tr key={bt.id}>
-                      <th><Link to={hrefOf(bt)}>{bt.name}</Link></th>
+                      <th>{playerLink(bt)}</th>
                       {shownMatrix.pitchers.map((pt) => {
                         const m = shownMatrix.cells.get(cellKey(bt.id, pt.id));
                         return (
-                          <td key={pt.id} className={m && m.pa < SMALL_SAMPLE_PA ? "is-small" : ""}>
+                          <td key={pt.id} className={m ? (m.h > 0 ? "is-hit" : "is-no-hit") : ""}>
                             {m ? (
                               <>
                                 <b>{m.h}/{m.ab}</b>
@@ -452,7 +486,8 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
 
   return (
     <div className={`${wrapClass} versus-page`}>
-      <h2 className="heading-xl"><Ico name="versus" variant="title" />학교 대전</h2>
+      <h2 className="heading-xl"><Ico name="versus" variant="title" />매치업</h2>
+      <p className="caption muted versus-page__description">상대전적부터 팀 전력 비교까지</p>
       <div className={`versus-bar ${compact ? "versus-bar--compact" : ""}`}>
         <div className="versus-bar__teams">
           <TeamSelect value={aName} onChange={(team) => update({ a: team, t: "", g: "" })} options={teamOptions} label="학교 A" />
