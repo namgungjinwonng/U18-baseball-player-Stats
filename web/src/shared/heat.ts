@@ -1,4 +1,4 @@
-// 기록 값을 리그 평균과 비교해 셀 배경색(파랑=좋음, 빨강=나쁨)으로 바꾸는 순수 함수.
+// 기록 값을 리그 평균과 비교해 셀 배경색(빨강=좋음, 파랑=나쁨)으로 바꾸는 순수 함수.
 
 // 리그 평균 대비 상대 차이가 이 비율에 이르면 색이 가장 진해진다 (예: 타율 .265 → .345).
 const FULL_SCALE = 0.3;
@@ -12,11 +12,11 @@ export function heatScore(value: number | undefined, average: number | undefined
   return Math.max(-1, Math.min(1, signed));
 }
 
-// 점수 → 반투명 배경색. 파랑 = 리그 평균보다 좋음, 빨강 = 나쁨 (사용자 지정).
+// 점수 → 반투명 배경색. 빨강 = 리그 평균보다 좋음, 파랑 = 나쁨 (사용자 지정 — 등급·승패와 같은 규칙).
 export function heatColor(score: number | null | undefined): string | undefined {
   if (score == null || Math.abs(score) < 0.08) return undefined;
   const alpha = (Math.abs(score) * MAX_ALPHA).toFixed(3);
-  return score > 0 ? `rgba(17, 81, 255, ${alpha})` : `rgba(211, 0, 5, ${alpha})`;
+  return score > 0 ? `rgba(211, 0, 5, ${alpha})` : `rgba(17, 81, 255, ${alpha})`;
 }
 
 // 두 값의 우위 단계 — 차이 비율(|a−b| ÷ 큰 쪽 절댓값) 기준.

@@ -39,7 +39,7 @@ export function RecordTabChips({
   );
 }
 
-// 세부·세이버 표의 셀 색 의미 — 파랑 = 리그 평균보다 좋음, 빨강 = 나쁨.
+// 세부·세이버 표의 셀 색 의미 — 빨강 = 리그 평균보다 좋음, 파랑 = 나쁨.
 export function HeatLegend() {
   return (
     <p className="heat-legend">

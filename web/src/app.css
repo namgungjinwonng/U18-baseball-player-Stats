@@ -1095,8 +1095,9 @@
   color: var(--color-mute);
   font-weight: 700;
 }
-.wv { color: var(--color-success); }
-.lv { color: var(--color-sale); }
+/* 승 = 레드, 패 = 블루 (등급 색과 같은 규칙: 좋음 레드 · 나쁨 블루) */
+.wv { color: #8d292d; }
+.lv { color: #254a99; }
 
 /* 경기 카드 */
 .sch-game {
@@ -1171,8 +1172,8 @@
   border-radius: var(--radius-sm);
   padding: 1px 6px;
 }
-.sch-side.win .rb { background: var(--color-success); }
-.sch-side.lose .rb { background: var(--color-sale); }
+.sch-side.win .rb { background: #8d292d; }
+.sch-side.lose .rb { background: #254a99; }
 .sch-game__colon {
   font-weight: 800;
   color: var(--color-mute);
@@ -1578,8 +1579,8 @@
   font-size: 11px;
 }
 .heat-legend__sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
-.heat-legend__sw--good { background: rgba(17, 81, 255, 0.34); }
-.heat-legend__sw--bad { margin-left: 6px; background: rgba(211, 0, 5, 0.34); }
+.heat-legend__sw--good { background: rgba(211, 0, 5, 0.34); }
+.heat-legend__sw--bad { margin-left: 6px; background: rgba(17, 81, 255, 0.34); }
 /* 고정된 이름 열 오른쪽 경계 — 가로로 밀어도 이름이 남아 있음을 보이게 한다. */
 .stat-table td:first-child,
 .stat-table th:first-child { box-shadow: inset -1px 0 0 var(--color-hairline-soft); }
@@ -1843,9 +1844,9 @@
 .mirror__edge { font-size: 11px; white-space: nowrap; }
 .mirror__edge--a { grid-column: 1; justify-self: start; padding-left: 50px; }
 .mirror__edge--b { grid-column: 3; justify-self: end; padding-right: 50px; }
-.mirror__edge--l1 { color: #5b80f0; font-weight: 500; }
-.mirror__edge--l2 { color: #2050e6; font-weight: 700; }
-.mirror__edge--l3 { color: #0b3fd6; font-weight: 800; }
+.mirror__edge--l1 { color: #e0585c; font-weight: 500; }
+.mirror__edge--l2 { color: #d22a2f; font-weight: 700; }
+.mirror__edge--l3 { color: #b8000a; font-weight: 800; }
 .mirror__val { grid-area: va; font-size: 13px; text-align: left; }
 .mirror__val--b { grid-area: vb; text-align: right; }
 .mirror__val.is-better { font-weight: 700; }
@@ -1855,13 +1856,13 @@
 .mirror__fill { display: block; height: 100%; }
 /* TO-BE 보강 40%: 비교 HTML과 같은 혼합값. 우위 텍스트·단계·막대 길이는 유지한다. */
 .mirror__fill--even { background: #bbc1c6; }
-.mirror__fill--win1 { background: #a0b9dc; }
-.mirror__fill--win2 { background: #9ab5db; }
-.mirror__fill--win3 { background: #8faeda; }
-.mirror__fill--lose1 { background: #e2bdb7; }
-.mirror__fill--lose2 { background: #e1b8b1; }
+.mirror__fill--win1 { background: #e2bdb7; }
+.mirror__fill--win2 { background: #e1b8b1; }
+.mirror__fill--win3 { background: #dfb2ab; }
+.mirror__fill--lose1 { background: #a0b9dc; }
+.mirror__fill--lose2 { background: #9ab5db; }
 .mirror__fill--lose3,
-.mirror__fill--lose { background: #dfb2ab; }
+.mirror__fill--lose { background: #8faeda; }
 .mirror__legend { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; margin: 4px 0 0; color: var(--color-mute); font-size: 10px; }
 .mirror__sw { display: inline-block; width: 10px; height: 10px; margin-left: 6px; }
 .mirror__sw:first-child { margin-left: 0; }
@@ -1911,8 +1912,8 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.team-summary-card__wins { color: #254a99; font-weight: 700; }
-.team-summary-card__losses { color: #8d292d; font-weight: 700; }
+.team-summary-card__wins { color: #8d292d; font-weight: 700; }
+.team-summary-card__losses { color: #254a99; font-weight: 700; }
 .team-summary-card__draws { color: var(--color-mute); }
 .team-summary-card__pct { margin-left: auto; color: var(--color-mute); }
 .team-summary-card__pct b { color: var(--color-ink); font-weight: 600; }
@@ -1990,17 +1991,17 @@
   white-space: nowrap;
 }
 .pct-card__note--unq { color: #8a4b00; font-weight: 600; }
-/* 등급 색 — 리그 등급 카드·선수 상세 핵심 지표 공용. 파랑 = 좋음, 빨강 = 나쁨.
+/* 등급 색 — 리그 등급 카드·선수 상세 핵심 지표 공용. 빨강 = 좋음, 파랑 = 나쁨 (사용자 지정, 2026-10-22 반전).
    단계가 확실히 구분되도록 A·E는 진하게, B·D는 연하게(글자는 진한 같은 계열), C는 옅은 회색. */
 :root {
   --grade-text-size: 13.5px;
   --grade-muted: #525c69;
   --grade-track: #e7ebf1;
-  --grade-A: #0b3fd6; --grade-A-ink: #ffffff;
-  --grade-B: #8fb0ff; --grade-B-ink: #0b2a8a;
+  --grade-A: #d30005; --grade-A-ink: #ffffff;
+  --grade-B: #ff9c9e; --grade-B-ink: #7a0003;
   --grade-C: #dcdcde; --grade-C-ink: #39393b;
-  --grade-D: #ff9c9e; --grade-D-ink: #7a0003;
-  --grade-E: #d30005; --grade-E-ink: #ffffff;
+  --grade-D: #8fb0ff; --grade-D-ink: #0b2a8a;
+  --grade-E: #0b3fd6; --grade-E-ink: #ffffff;
 }
 .grade-bg--A { background: var(--grade-A) !important; color: var(--grade-A-ink) !important; }
 .grade-bg--B { background: var(--grade-B) !important; color: var(--grade-B-ink) !important; }
@@ -2008,11 +2009,11 @@
 .grade-bg--D { background: var(--grade-D) !important; color: var(--grade-D-ink) !important; }
 .grade-bg--E { background: var(--grade-E) !important; color: var(--grade-E-ink) !important; }
 /* 학교 목록 배지도 비교 HTML의 TO-BE 보강 40% 색상과 진한 등급 글자를 사용한다. */
-.team-summary-card__grade.grade-bg--A { background: #9cb4db !important; color: #173f70 !important; }
-.team-summary-card__grade.grade-bg--B { background: #afc1d3 !important; color: #294b63 !important; }
+.team-summary-card__grade.grade-bg--A { background: #dca9a6 !important; color: #6b2723 !important; }
+.team-summary-card__grade.grade-bg--B { background: #e2bab6 !important; color: #6d2d2a !important; }
 .team-summary-card__grade.grade-bg--C { background: #c3c6ca !important; color: #3f454f !important; }
-.team-summary-card__grade.grade-bg--D { background: #e2bab6 !important; color: #6d2d2a !important; }
-.team-summary-card__grade.grade-bg--E { background: #dca9a6 !important; color: #6b2723 !important; }
+.team-summary-card__grade.grade-bg--D { background: #afc1d3 !important; color: #294b63 !important; }
+.team-summary-card__grade.grade-bg--E { background: #9cb4db !important; color: #173f70 !important; }
 /* 등급 행: 가운데로 모으고 좌우 여백, 행 간격은 촘촘하게 */
 .pct-card__rows { max-width: 520px; margin: 0 auto; padding: 0 12px; box-sizing: border-box; }
 .pct-card__legend { margin: 0 0 10px; color: var(--color-charcoal); font-size: 11px; line-height: 1.5; }
@@ -2071,26 +2072,26 @@
   line-height: 18px;
 }
 /* 선택한 TO-BE: 원본 15색과 계열 강조색을 60:40으로 혼합. 등급 계산은 변경하지 않는다. */
-.grade-pastel[data-grade^="A"] { --player-grade-ink: #173f70; }
-.grade-pastel[data-grade^="B"] { --player-grade-ink: #294b63; }
+.grade-pastel[data-grade^="A"] { --player-grade-ink: #6b2723; }
+.grade-pastel[data-grade^="B"] { --player-grade-ink: #6d2d2a; }
 .grade-pastel[data-grade^="C"] { --player-grade-ink: #3f454f; }
-.grade-pastel[data-grade^="D"] { --player-grade-ink: #6d2d2a; }
-.grade-pastel[data-grade^="E"] { --player-grade-ink: #6b2723; }
-.grade-pastel[data-grade="A+"] { --player-grade-bg: #8faeda; }
-.grade-pastel[data-grade="A"] { --player-grade-bg: #9ab5db; }
-.grade-pastel[data-grade="A-"] { --player-grade-bg: #a0b9dc; }
-.grade-pastel[data-grade="B+"] { --player-grade-bg: #a7bdce; }
-.grade-pastel[data-grade="B"] { --player-grade-bg: #adc0cf; }
-.grade-pastel[data-grade="B-"] { --player-grade-bg: #b1c3d0; }
+.grade-pastel[data-grade^="D"] { --player-grade-ink: #294b63; }
+.grade-pastel[data-grade^="E"] { --player-grade-ink: #173f70; }
+.grade-pastel[data-grade="A+"] { --player-grade-bg: #d59590; }
+.grade-pastel[data-grade="A"] { --player-grade-bg: #d99d98; }
+.grade-pastel[data-grade="A-"] { --player-grade-bg: #dba49f; }
+.grade-pastel[data-grade="B+"] { --player-grade-bg: #dfb2ab; }
+.grade-pastel[data-grade="B"] { --player-grade-bg: #e1b8b1; }
+.grade-pastel[data-grade="B-"] { --player-grade-bg: #e2bdb7; }
 .grade-pastel[data-grade="C+"] { --player-grade-bg: #bbc1c6; }
 .grade-pastel[data-grade="C"] { --player-grade-bg: #c0c3c8; }
 .grade-pastel[data-grade="C-"] { --player-grade-bg: #c3c4c7; }
-.grade-pastel[data-grade="D+"] { --player-grade-bg: #e2bdb7; }
-.grade-pastel[data-grade="D"] { --player-grade-bg: #e1b8b1; }
-.grade-pastel[data-grade="D-"] { --player-grade-bg: #dfb2ab; }
-.grade-pastel[data-grade="E+"] { --player-grade-bg: #dba49f; }
-.grade-pastel[data-grade="E"] { --player-grade-bg: #d99d98; }
-.grade-pastel[data-grade="E-"] { --player-grade-bg: #d59590; }
+.grade-pastel[data-grade="D+"] { --player-grade-bg: #b1c3d0; }
+.grade-pastel[data-grade="D"] { --player-grade-bg: #adc0cf; }
+.grade-pastel[data-grade="D-"] { --player-grade-bg: #a7bdce; }
+.grade-pastel[data-grade="E+"] { --player-grade-bg: #a0b9dc; }
+.grade-pastel[data-grade="E"] { --player-grade-bg: #9ab5db; }
+.grade-pastel[data-grade="E-"] { --player-grade-bg: #8faeda; }
 .m-kpi--player-grade .m-kpi__cell { background: var(--color-soft-cloud); color: var(--color-ink); padding: 28px 4px 12px; }
 .m-kpi--player-grade .m-kpi__cell[data-grade] { background: var(--player-grade-bg) !important; color: var(--color-ink) !important; }
 .m-kpi--player-grade .m-kpi__k { color: var(--grade-muted); opacity: 1; }
@@ -2162,7 +2163,7 @@
 .trend__guide.is-idle { stroke: var(--color-hairline); }
 .trend__sel { fill: var(--color-canvas); stroke: var(--color-ink); stroke-width: 2.5; }
 .mirror__names small { color: var(--color-mute); font-size: 11px; font-weight: 500; }
-.mirror__names small.is-lead { color: #0b3fd6; font-weight: 700; }
+.mirror__names small.is-lead { color: #b8000a; font-weight: 700; }
 
 /* 학교 대전: 기록 기반 경기 분석 */
 .versus-analysis { max-width: 520px; margin: 4px auto 16px; padding: 10px 14px; border-left: 3px solid #0b3fd6; background: var(--color-soft-cloud); box-sizing: border-box; }
