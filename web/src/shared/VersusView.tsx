@@ -1,5 +1,5 @@
 // 학교 A vs 학교 B 대전 모드 화면 (데스크탑·모바일 공용) — /versus?a=학교&b=학교&v=탭&g=경기
-import { useMemo, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength,
@@ -9,12 +9,12 @@ import { useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
-import { analyzeVersus, type MetricKey } from "./versusAnalysis";
+import { buildAnalysisInput } from "./analysisInput";
 import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, mergeMatrices, sameTeam, teamExtra, teamGames, teamKey, teamRecord, teamTotals, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
@@ -124,6 +124,15 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
   };
 
   const { year, years, setYear } = useYear();
+  // 경기 분석 규칙 엔진(문구 약 1,000개)은 매치업 결과 화면에서만 필요해 지연 로딩한다.
+  const [engine, setEngine] = useState<typeof import("./versusAnalysis") | null>(null);
+  useEffect(() => {
+    let alive = true;
+    import("./versusAnalysis").then((m) => alive && setEngine(m));
+    return () => {
+      alive = false;
+    };
+  }, []);
   const schedule = useSchedule();
   const tournaments = useTournaments();
   const records = useTournamentRecords(slug);
@@ -283,35 +292,22 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       </div>
     );
 
-  // 기록 조건에 맞는 경기 분석 문구 (규칙 101개 중 분류당 한 줄, 최대 6줄)
-  // 경기 분석용: 선택 시즌의 완료 경기(최근 흐름·접전 성적)
-  const seasonDone = (team: string) =>
-    teamGames(seasonGames, team)
-      .filter((g) => g.outcome && g.me.score != null && g.opp.score != null)
-      .map((g) => ({ date: g.game.date, rf: g.me.score!, ra: g.opp.score!, outcome: g.outcome! }));
   // 한쪽이라도 이 범위(시즌·대회)의 기록이 없으면 지표 비교·분석이 의미가 없어 안내만 보인다.
   const missing = ready && !records.loading && records.data ? [totA ? null : aName, totB ? null : bName].filter(Boolean) as string[] : [];
-  const analysis = ready && !records.loading && missing.length === 0
-    ? analyzeVersus({
-        aName,
-        bName,
-        metrics: Object.fromEntries(statRows.map((r) => [r.key, { a: r.a, b: r.b }])) as Partial<Record<MetricKey, { a?: number | null; b?: number | null }>>,
-        recA,
-        recB,
-        h2h: h2h && {
-          ...h2h,
-          games: h2h.games.map((g) => ({
-            date: g.game.date, status: g.game.status, me: g.me.score, opp: g.opp.score, outcome: g.outcome, title: g.game.title,
-          })),
-        },
-        extra: { a: teamExtra(totA), b: teamExtra(totB) },
-        year,
-        seasonA: seasonDone(a),
-        seasonB: seasonDone(b),
-        allYears: all,
-        lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
-      })
-    : [];
+  // 경기 분석 — 입력은 실데이터 측정과 같은 함수로 만들고, 규칙 엔진은 이 화면에서만 따로 불러온다(첫 화면 코드 크기 절약).
+  const analysisInput = useMemo(
+    () =>
+      ready && !records.loading && records.data && totA && totB
+        ? buildAnalysisInput({
+            a, b, seasonGames, h2hGames: games, records: records.data, strength: strength.data?.teams ?? null,
+            lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
+            year, allYears: all,
+          })
+        : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ready, records.loading, records.data, totA, totB, a, b, seasonGames, games, strength.data, averages.data, year, tournamentTitle]
+  );
+  const analysis = useMemo(() => (engine && analysisInput ? engine.analyzeVersus(analysisInput) : []), [engine, analysisInput]);
 
   const statSection = (
     <section className="versus-section">
