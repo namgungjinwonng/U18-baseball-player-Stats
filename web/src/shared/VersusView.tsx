@@ -2,7 +2,7 @@
 import { useMemo, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
-  useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength, useTeams,
+  useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength,
   useTournamentMatchups, useTournamentRecords, useTournaments,
 } from "./data";
 import { useQualifyContext } from "./filters";
@@ -18,6 +18,8 @@ import {
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
+import { VersusTeamPicker } from "./VersusTeamPicker";
+import { editParams, needsSelect } from "./versusSelect";
 import { useYear } from "./year";
 import { Chip } from "../design/ui";
 import type { ScheduleGame } from "./types";
@@ -33,29 +35,6 @@ const TABS: { id: Tab; label: string }[] = [
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
 const recordText = (r: Record3) => `${r.w}승 ${r.l}패${r.d ? ` ${r.d}무` : ""}`;
 const winPct = (r: Record3) => (r.w + r.l ? r.w / (r.w + r.l) : null);
-
-// 학교 선택 — 지역별로 묶은 드롭다운.
-function TeamSelect({
-  value, onChange, options, label,
-}: {
-  value: string;
-  onChange: (team: string) => void;
-  options: { region: string; teams: string[] }[];
-  label: string;
-}) {
-  return (
-    <select className="m-select versus-bar__team" value={value} onChange={(e) => onChange(e.target.value)} aria-label={label}>
-      <option value="">{label}</option>
-      {options.map((group) => (
-        <optgroup key={group.region || "기타"} label={group.region || "기타"}>
-          {group.teams.map((team) => (
-            <option key={team} value={team}>{team}</option>
-          ))}
-        </optgroup>
-      ))}
-    </select>
-  );
-}
 
 function GameRow({ g, aName, bName, focus }: { g: SideGame; aName: string; bName: string; focus?: boolean }) {
   const done = g.game.status === "완료";
@@ -111,7 +90,18 @@ function FocusGame({ game }: { game: ScheduleGame }) {
   );
 }
 
+// 두 학교가 확정되지 않았거나(빈 값·한쪽·같은 학교) 「학교 변경」 중이면 선택 화면, 아니면 결과 화면.
+// 결과 화면 훅을 조건부로 부르지 않도록 화면별 컴포넌트로 나눈다(선택 중에는 결과용 자료를 받지 않는다).
 export function VersusView({ wrapClass }: { wrapClass: string }) {
+  const [params] = useSearchParams();
+  const a = params.get("a") ?? "";
+  const b = params.get("b") ?? "";
+  const select = params.get("select") === "1";
+  if (needsSelect(a, b, select)) return <VersusTeamPicker key={`${a}|${b}|${select ? 1 : 0}`} wrapClass={wrapClass} />;
+  return <VersusResult wrapClass={wrapClass} />;
+}
+
+function VersusResult({ wrapClass }: { wrapClass: string }) {
   const compact = useDevice() === "mobile";
   const [params, setParams] = useSearchParams();
   const a = params.get("a") ?? "";
@@ -134,7 +124,6 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
   };
 
   const { year, years, setYear } = useYear();
-  const teams = useTeams();
   const schedule = useSchedule();
   const tournaments = useTournaments();
   const records = useTournamentRecords(slug);
@@ -155,20 +144,6 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
     () => (focusId ? [...seasonGames, ...(allSchedules.data ?? [])].find((g) => g.game_idx === focusId) ?? null : null),
     [focusId, seasonGames, allSchedules.data]
   );
-
-  // 학교 목록: 선수현황(teams.json) 정식명 + 일정에만 있는 학교. 지역별 그룹.
-  const teamOptions = useMemo(() => {
-    const region = new Map<string, string>();
-    for (const t of teams.data ?? []) region.set(teamKey(t.team), t.region);
-    for (const g of seasonGames) {
-      for (const s of [g.away, g.home]) if (!region.has(teamKey(s.name))) region.set(teamKey(s.name), "");
-    }
-    const groups = new Map<string, string[]>();
-    for (const [team, r] of region) groups.set(r, [...(groups.get(r) ?? []), team]);
-    return [...groups.entries()]
-      .map(([r, list]) => ({ region: r, teams: list.sort((x, y) => x.localeCompare(y, "ko")) }))
-      .sort((x, y) => (x.region ? x.region.localeCompare(y.region || "힣", "ko") : 1));
-  }, [teams.data, seasonGames]);
 
 
   const h2h = useMemo(() => (ready ? headToHead(games, a, b, scopeTitle) : null), [ready, games, a, b, scopeTitle]);
@@ -264,7 +239,7 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
 
   const aName = teamKey(a);
   const bName = teamKey(b);
-  const loading = schedule.loading || teams.loading || (all && allSchedules.loading);
+  const loading = schedule.loading || (all && allSchedules.loading);
 
   const statRows: MirrorRow[] = [
     { key: "pct", label: "승률", a: recA && winPct(recA), b: recB && winPct(recB), format: (v) => v.toFixed(3) },
@@ -489,18 +464,25 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
       <h2 className="heading-xl"><Ico name="versus" variant="title" />매치업</h2>
       <p className="caption muted versus-page__description">상대전적부터 팀 전력 비교까지</p>
       <div className={`versus-bar ${compact ? "versus-bar--compact" : ""}`}>
-        <div className="versus-bar__teams">
-          <TeamSelect value={aName} onChange={(team) => update({ a: team, t: "", g: "" })} options={teamOptions} label="학교 A" />
+        <div className="versus-bar__teams versus-bar__teams--result">
+          <b className="versus-bar__name" title={aName}><span className="versus-bar__letter" aria-hidden="true">A</span><span className="versus-bar__name-text">{aName}</span></b>
           <button
             type="button"
             className="icon-btn versus-bar__swap"
-            aria-label="좌우 바꾸기"
-            disabled={!a && !b}
+            aria-label="A학교와 B학교 바꾸기"
             onClick={() => update({ a: b, b: a })}
           >
             ⇄
           </button>
-          <TeamSelect value={bName} onChange={(team) => update({ b: team, t: "", g: "" })} options={teamOptions} label="학교 B" />
+          <b className="versus-bar__name" title={bName}><span className="versus-bar__letter" aria-hidden="true">B</span><span className="versus-bar__name-text">{bName}</span></b>
+          {/* 현재 두 학교를 채운 선택 화면으로 — 취소하면 이 결과(탭·선수표 연도 등)로 돌아온다 */}
+          <button
+            type="button"
+            className="btn btn--secondary btn--sm versus-bar__change"
+            onClick={() => setParams(editParams(params), { state: { versusEdit: true } })}
+          >
+            학교 변경
+          </button>
         </div>
       </div>
       {/* 상단에는 학교 선택만 고정하고, 대회·통산·탭은 본문과 함께 스크롤한다 */}
@@ -515,11 +497,6 @@ export function VersusView({ wrapClass }: { wrapClass: string }) {
         )}
       </div>
 
-      {!ready && (
-        <p className="state muted">
-          {a && b ? "서로 다른 두 학교를 고르세요." : "비교할 두 학교를 고르세요. 경기일정·팀 상세·학교별 랭킹에서도 바로 들어올 수 있습니다."}
-        </p>
-      )}
       {ready && loading && <div className="state">불러오는 중…</div>}
       {ready && !loading && compact && (
         <>

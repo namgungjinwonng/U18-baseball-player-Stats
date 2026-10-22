@@ -1623,6 +1623,114 @@
 .versus-tabs { margin: 8px 0 0; }
 .versus-section { margin: 0 0 24px; }
 .versus-section > .heading-md { margin: 0 0 6px; }
+/* 결과 화면 상단: 확정된 두 학교 + 교환 + 학교 변경 */
+.versus-bar__teams--result { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; }
+.versus-bar__name { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 15px; }
+.versus-bar__name-text,
+.versus-slot__text b {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-all;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.versus-bar__letter,
+.versus-slot__letter {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+}
+.versus-bar__change { white-space: nowrap; }
+/* 좁은 화면: 학교명 폭을 확보하려고 「학교 변경」을 다음 줄로 */
+@media (max-width: 400px) {
+  .versus-bar__teams--result { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .versus-bar__change { grid-column: 1 / -1; }
+}
+
+/* ===== 매치업 학교 선택 화면 ===== */
+.versus-picker__slots { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 6px; }
+.versus-slot { position: relative; min-width: 0; }
+.versus-slot__main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 34px 8px 8px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* 고르는 칸: 굵은 테두리 + 채운 A/B 글자 (색만으로 구별하지 않는다) */
+.versus-slot.is-active .versus-slot__main { border: 2px solid var(--color-ink); padding: 7px 33px 7px 7px; }
+.versus-slot.is-active .versus-slot__letter { background: var(--color-ink); color: var(--color-canvas); }
+.versus-slot__text { display: flex; flex-direction: column; min-width: 0; }
+.versus-slot__text small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 좁은 화면의 긴 학교명은 두 줄까지 보이고 그 이상은 말줄임 (위 .versus-bar__name-text와 공용) */
+.versus-slot__text b { font-size: 14px; }
+.versus-slot:not(.is-filled) .versus-slot__text b { color: var(--color-mute); font-weight: 600; }
+.versus-slot__text small { color: var(--color-mute); font-size: 11px; }
+.versus-slot__clear {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-soft-cloud);
+  color: var(--color-mute);
+  font-size: 16px;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.versus-picker__target { margin: 6px 0 0; color: var(--color-mute); }
+.versus-picker__target b { color: var(--color-ink); }
+.versus-picker__notice { margin: 4px 0 0; color: var(--color-sale); }
+.versus-pick-card.is-picked { outline: 2px solid var(--color-ink); outline-offset: -2px; }
+.versus-pick-card__tag {
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 18px;
+}
+/* 하단 확정 버튼 — 흐름 안에 고정(sticky)해 마지막 카드를 가리지 않고, 안전 영역만큼 띄운다 */
+.versus-picker__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 16px -4px 0;
+  padding: 10px 4px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-hairline-soft);
+  background: var(--color-canvas);
+}
+.m-page .versus-picker__footer { margin: 16px -16px 0; padding-left: 16px; padding-right: 16px; }
+.versus-picker__go { flex: 1; min-height: 44px; }
+.versus-picker__go:disabled { opacity: 0.45; cursor: default; }
+.versus-picker__cancel { min-height: 44px; }
+.versus-picker__hint { flex-basis: 100%; margin: 0; color: var(--color-mute); text-align: center; }
 .versus-section > .caption { margin: 0 0 10px; }
 .versus-headline { margin: 4px 0 10px; font-size: 18px; }
 .versus-games { display: flex; flex-direction: column; margin-bottom: 20px; border-top: 1px solid var(--color-hairline-soft); }
