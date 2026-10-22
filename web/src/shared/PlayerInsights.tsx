@@ -1,17 +1,27 @@
-// 선수 상세 상단 요약 — 핵심 5지표 리그 등급(A+~E-, 백분위 기준·비교 기준 전체/같은 학년)과 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
+// 선수 상세 상단 요약 — 핵심 5지표 리그 등급(A+~E-, 백분위 기준·비교 기준 전체/같은 학년, 시합 필터 시 그 시합 기준)과 경기별 누적 추세 꺾은선 (데스크탑·모바일 공용).
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useAllPlayers, useLeagueAverages } from "./data";
+import { useLeagueAverages, useTournamentRecords, useTournaments } from "./data";
 import { emptyFilter, useQualifyContext } from "./filters";
 import { rate } from "./format";
-import { isQualifiedBat, isQualifiedPit } from "./leaders";
+import { describeQualify, isQualifiedBat, isQualifiedPit } from "./leaders";
 import { BAT_METRICS, PIT_METRICS, cumulativeBatting, pctGrade, percentileRank, topPercent, trendGap, type GradeLetter } from "./percentile";
 import type { BattingStats, GameLogEntry, LeagueRates, Player } from "./types";
+import { useYear } from "./year";
 
-// 등급 비교 집단 — 시즌 기록의 규정 충족 선수(학년 지정 시 그 학년만).
+const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
+
+// 등급 비교 집단 — 규정 충족 선수(학년 지정 시 그 학년만). slug가 있으면 그 시합 기록·시합 규정
+// (주말리그: 리그 경기 수 기준 / 전국대회: 학교별 대회 경기 수 + 최소 출전) 기준, 없으면 시즌 기준.
 // 리그 등급 카드와 선수 상세 상단 핵심 지표가 같은 기준을 쓴다.
-export function useGradePopulation(kind: "batting" | "pitching", grade?: string) {
-  const { data: records } = useAllPlayers();
-  const ctx = useQualifyContext(emptyFilter);
+export function useGradePopulation(kind: "batting" | "pitching", grade?: string, slug = "") {
+  const { year } = useYear();
+  const recs = useTournamentRecords(slug);
+  const { data: tournaments } = useTournaments();
+  const ctx = useQualifyContext(slug ? { ...emptyFilter, tournament: slug } : emptyFilter);
+  // 요청한 시즌·시합의 기록, 그 범위의 경기 수(meta)·시합 구분이 모두 준비됐을 때만 비교한다.
+  // (준비 전에는 경기 수가 비어 규정 0 → 전원 규정 충족으로 잘못 계산된다)
+  const ready = recs.scope === `${year}:${slug}` && Object.keys(ctx.teamGames).length > 0 && (!slug || !!tournaments);
+  const records = ready ? recs.data : null;
   const qualified = useCallback(
     (p: Player) => (kind === "batting" ? !!p.batting && isQualifiedBat(p, ctx) : !!p.pitching && isQualifiedPit(p, ctx)),
     [kind, ctx]
@@ -20,7 +30,9 @@ export function useGradePopulation(kind: "batting" | "pitching", grade?: string)
     () => (records ? records.filter((p) => qualified(p) && (!grade || p.grade === grade)) : null),
     [records, qualified, grade]
   );
-  return { population, qualified };
+  // 비교 범위(시즌 또는 시합)에서의 이 선수 기록 — 시합 기록 파일도 시즌과 같은 선수 ID를 쓴다.
+  const subject = useCallback((p: Player) => records?.find((x) => x.id === p.id) ?? null, [records]);
+  return { population, qualified, ctx, subject };
 }
 
 export interface GradeInfo {
@@ -44,39 +56,84 @@ export function gradeFor(
   return pct == null ? null : { ...pctGrade(pct), pct };
 }
 
-export function PercentileCard({ player, kind }: { player: Player; kind: "batting" | "pitching" }) {
+// slug·scopeTitle: 선수 화면에서 시합을 고르면 그 시합 기록·규정·리그 평균 기준으로 등급을 매긴다.
+// 시합 기준일 때는 학년별 리그 평균이 없어 학년 비교 버튼을 두지 않는다.
+export function PercentileCard({ player, kind, slug = "", scopeTitle = "" }: {
+  player: Player;
+  kind: "batting" | "pitching";
+  slug?: string;
+  scopeTitle?: string;
+}) {
   const { data: averages } = useLeagueAverages();
   const [base, setBase] = useState<"all" | "grade">("all");
   const metrics = kind === "batting" ? BAT_METRICS : PIT_METRICS;
-  const gradeOk = base === "grade" && !!player.grade;
-  const { population, qualified } = useGradePopulation(kind, gradeOk ? player.grade : undefined);
-  const lg: LeagueRates | undefined = gradeOk ? averages?.grades?.[player.grade!] : averages?.overall;
-  if (!population || population.length < 5) return null;
+  const gradeOk = !slug && base === "grade" && !!player.grade;
+  const { population, qualified, ctx, subject } = useGradePopulation(kind, gradeOk ? player.grade : undefined, slug);
+  const lg: LeagueRates | undefined = slug
+    ? averages?.tournaments[slug]?.rates
+    : gradeOk ? averages?.grades?.[player.grade!] : averages?.overall;
+  const me = subject(player); // 비교 범위에서의 이 선수 기록
+  if (!population || population.length < 5 || !me || !(kind === "batting" ? me.batting : me.pitching)) return null;
+  // 규정 미달은 표본이 적어 백분위·등급이 왜곡되므로 등급을 매기지 않고 수치·리그 평균만 보인다.
+  const unq = !qualified(me);
+  const current = kind === "batting" ? `${me.batting?.pa ?? 0}타석` : `${me.pitching?.ip ?? 0}이닝`;
+  const scope = slug ? shortTitle(scopeTitle) || "이 시합" : "";
 
   return (
     <section className="player-section pct-card">
       <div className="pct-card__head">
-        <h3>리그 등급</h3>
-        <div className="career-mode-toggle pct-card__base" role="group" aria-label="비교 기준">
-          <button className={base === "all" ? "active" : ""} onClick={() => setBase("all")}>전체</button>
-          {player.grade && (
-            <button className={base === "grade" ? "active" : ""} onClick={() => setBase("grade")}>{player.grade}학년</button>
-          )}
+        <div className="pct-card__title">
+          <h3>리그 등급</h3>
+          {unq && <span className="pct-card__unq">규정 미달 · 등급 미산정</span>}
         </div>
+        {!slug && (
+          <div className="career-mode-toggle pct-card__base" role="group" aria-label="비교 기준">
+            <button className={base === "all" ? "active" : ""} onClick={() => setBase("all")}>전체</button>
+            {player.grade && (
+              <button className={base === "grade" ? "active" : ""} onClick={() => setBase("grade")}>{player.grade}학년</button>
+            )}
+          </div>
+        )}
       </div>
-      <p className="caption muted pct-card__note">
-        규정 충족 {kind === "batting" ? "타자" : "투수"} {population.length}명{gradeOk ? `(${player.grade}학년)` : ""} 중 위치 · 시즌 기준
-        {!qualified(player) && " · 이 선수는 규정 미달이라 참고용"}
-      </p>
+      {unq ? (
+        <p className="caption pct-card__note pct-card__note--unq">
+          {scope && `${scope} · `}
+          {kind === "batting" ? "타석" : "이닝"}이 규정에 못 미쳐 등급을 매기지 않습니다 · {describeQualify(ctx, kind, me.team, (kind === "batting" ? me.batting?.g : me.pitching?.g) ?? 0)} · 현재 {current}
+        </p>
+      ) : (
+        <p className="caption muted pct-card__note">
+          {scope
+            ? `${scope} 규정 충족 ${kind === "batting" ? "타자" : "투수"} ${population.length}명 중 위치 · 이 시합 기록 기준`
+            : `규정 충족 ${kind === "batting" ? "타자" : "투수"} ${population.length}명${gradeOk ? `(${player.grade}학년)` : ""} 중 위치 · 시즌 기준`}
+        </p>
+      )}
       <div className="pct-card__rows">
-      <p className="pct-card__legend">
-        A 상위 20% · B 20~40% · C 40~60% · D 60~80% · E 하위 20% <span className="muted">(등급 안에서 +는 위쪽, −는 아래쪽)</span>
-      </p>
+      {!unq && (
+        <p className="pct-card__legend">
+          A 상위 20% · B 20~40% · C 40~60% · D 60~80% · E 하위 20% <span className="muted">(등급 안에서 +는 위쪽, −는 아래쪽)</span>
+        </p>
+      )}
       {metrics.map((m) => {
-        const v = m.of(player);
-        const g = gradeFor(population, player, m.of, m.lowerIsBetter);
+        const v = m.of(me);
         const avg = lg?.[m.key];
-        if (v == null || !g) return null;
+        if (v == null) return null;
+        if (unq) {
+          return (
+            <div key={m.key} className="pct-row pct-row--unq">
+              <span className="pct-row__label">
+                {m.label}
+                {avg != null && <small>평균 {m.format(avg)}</small>}
+              </span>
+              <span className="pct-row__track" aria-hidden="true" />
+              <span className="pct-row__value">
+                {m.format(v)}
+                <small>등급 없음</small>
+              </span>
+            </div>
+          );
+        }
+        const g = gradeFor(population, me, m.of, m.lowerIsBetter);
+        if (!g) return null;
         const { grade, letter, pct } = g;
         return (
           <div key={m.key} className={`pct-row grade-pastel pct-row--${letter}`} data-grade={grade}>

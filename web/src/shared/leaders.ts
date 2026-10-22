@@ -3,6 +3,7 @@
 // wOBA·wRC+·WAR 카테고리는 리그평균(LeagueRates)이 있어야 계산된다(pick 의 lg 인자).
 import type { LeagueRates, Player, PlayerOppIdx } from "./types";
 import { battingAdvanced, pitchingAdvanced, signed1, woba } from "./sabermetrics";
+import { teamDisplayName } from "./teamRanking";
 
 export interface LeaderItem {
   id: string;
@@ -73,27 +74,42 @@ function maxGames(tg: Record<string, number>): number {
   return m;
 }
 
+// teamKey와 동일한 정규화 함수를 재사용한다. versus를 직접 가져오면 순환 참조가 생긴다.
+function schoolGames(ctx: QualifyContext, team: string): number | undefined {
+  if (ctx.teamGames[team] !== undefined) return ctx.teamGames[team];
+  const key = teamDisplayName(team.trim());
+  const match = Object.keys(ctx.teamGames).find((name) => teamDisplayName(name.trim()) === key);
+  return match === undefined ? undefined : ctx.teamGames[match];
+}
+
 // 규정 기준 경기수 (팀별):
-// - season / weekend: 공식 목표(12 / 6)를 상한으로, 현재 진행된 최대 경기수로 동적 적용.
+// - season / weekend: 학교 경기수에 개막기 하한(최대 3경기)과 목표(12 / 6) 상한 적용.
+// - 학교 경기수 누락: 기존 전체 최다 경기수 기준으로 폴백.
+// - 선수 본인 출전 경기수(playerGames)가 학교 경기수보다 많으면(시즌 중 전학 — 기록은 마지막 학교 이름으로 쌓인다)
+//   본인 출전 경기수를 쓴다. 경기를 거의 안 치른 학교로 옮긴 선수의 규정이 하한까지 내려가는 것을 막는다.
 // - national: 해당 팀이 그 대회에서 치른 경기수(팀마다 다름).
-export function baseGames(ctx: QualifyContext, team: string): number {
+export function baseGames(ctx: QualifyContext, team: string, playerGames = 0): number {
   const { scope, config, teamGames } = ctx;
   if (scope === "national") return teamGames[team] ?? 0;
   const target = scope === "season" ? config.seasonGames : config.weekendLeagueGames;
   const progressed = maxGames(teamGames);
   // 데이터가 비어있으면(progressed=0) 0 → 규정 0 (모두 노출).
-  return progressed > 0 ? Math.min(target, progressed) : 0;
+  if (progressed === 0) return 0;
+  const ownGames = schoolGames(ctx, team);
+  return ownGames === undefined
+    ? Math.min(target, progressed)
+    : Math.min(target, Math.max(ownGames, playerGames, Math.min(3, progressed)));
 }
 
-export function regPA(ctx: QualifyContext, team: string): number {
-  return Math.floor(baseGames(ctx, team) * ctx.config.paPerGame);
+export function regPA(ctx: QualifyContext, team: string, playerGames = 0): number {
+  return Math.floor(baseGames(ctx, team, playerGames) * ctx.config.paPerGame);
 }
-export function regOuts(ctx: QualifyContext, team: string): number {
-  return Math.floor(baseGames(ctx, team) * ctx.config.ipPerGame) * 3;
+export function regOuts(ctx: QualifyContext, team: string, playerGames = 0): number {
+  return Math.floor(baseGames(ctx, team, playerGames) * ctx.config.ipPerGame) * 3;
 }
 
 export function isQualifiedBat(p: Player, ctx: QualifyContext): boolean {
-  if (paOf(p) < regPA(ctx, p.team)) return false;
+  if (paOf(p) < regPA(ctx, p.team, p.batting?.g ?? 0)) return false;
   if (ctx.scope === "national") {
     if ((p.batting?.g ?? 0) < ctx.config.nationalMinGames) return false;
     if (paOf(p) < ctx.config.nationalMinPA) return false;
@@ -101,27 +117,51 @@ export function isQualifiedBat(p: Player, ctx: QualifyContext): boolean {
   return true;
 }
 export function isQualifiedPit(p: Player, ctx: QualifyContext): boolean {
-  if (outsOf(p) < regOuts(ctx, p.team)) return false;
+  if (outsOf(p) < regOuts(ctx, p.team, p.pitching?.g ?? 0)) return false;
   if (ctx.scope === "national") {
     if ((p.pitching?.g ?? 0) < ctx.config.nationalMinGames) return false;
   }
   return true;
 }
 
-// 규정 기준 설명 문구 (캡션용).
-export function describeQualify(ctx: QualifyContext, kind: "batting" | "pitching"): string {
+// 규정 기준 설명 문구 (캡션용). team·playerGames를 주면 그 선수 기준(학교 경기 수·본인 출전 경기 수)으로 설명한다.
+export function describeQualify(ctx: QualifyContext, kind: "batting" | "pitching", team?: string, playerGames = 0): string {
   const c = ctx.config;
   if (ctx.scope === "national") {
+    // 선수 기준: 그 학교의 대회 경기 수로 계산한 규정과 최소 출전 조건을 함께 보인다.
+    if (team !== undefined) {
+      const name = teamDisplayName(team.trim());
+      const games = ctx.teamGames[team] ?? 0;
+      return kind === "batting"
+        ? `규정타석 ${Math.max(regPA(ctx, team), c.nationalMinPA)} 이상 · ${c.nationalMinGames}경기 이상 출전 (${name} 대회 ${games}경기 기준)`
+        : `규정이닝 ${regOuts(ctx, team) / 3} 이상 · ${c.nationalMinGames}경기 이상 등판 (${name} 대회 ${games}경기 기준)`;
+    }
     return kind === "batting"
       ? `규정타석 = 팀 경기수×${c.paPerGame} (최소 ${c.nationalMinGames}경기·${c.nationalMinPA}타석)`
       : `규정이닝 = 팀 경기수×${c.ipPerGame} (최소 ${c.nationalMinGames}경기)`;
   }
   const target = ctx.scope === "season" ? c.seasonGames : c.weekendLeagueGames;
-  const base = Math.min(target, maxGames(ctx.teamGames));
-  const label = ctx.scope === "season" ? "시즌" : "리그";
+  if (team === undefined) {
+    return kind === "batting"
+      ? `규정타석 = 학교 경기 수×${c.paPerGame} (최대 ${Math.floor(target * c.paPerGame)}타석)`
+      : `규정이닝 = 학교 경기 수×${c.ipPerGame.toFixed(1)} (최대 ${Math.floor(target * c.ipPerGame)}이닝)`;
+  }
+  const base = baseGames(ctx, team, playerGames);
+  const ownGames = schoolGames(ctx, team);
+  const name = teamDisplayName(team.trim()); // 안내 문구에는 (U-18) 표기를 붙이지 않는다
+  const own = ownGames === undefined ? "" : `${name} ${ownGames}경기${playerGames > ownGames ? ` · 본인 출전 ${playerGames}경기` : ""}`;
+  const basis = ownGames === undefined
+    ? `${name} 경기 수 미확인 · 전체 최다 ${maxGames(ctx.teamGames)}경기 · ${base}경기 기준`
+    : Math.max(ownGames, playerGames) > target
+      ? `${own} · 최대 ${base}경기 기준`
+      : playerGames > ownGames
+        ? `${own} 기준`
+        : ownGames < base
+          ? `${own} · 하한 ${base}경기 기준`
+          : `${name} ${base}경기 기준`;
   return kind === "batting"
-    ? `규정타석 ${Math.floor(base * c.paPerGame)} 이상 (${label} ${base}경기 기준)`
-    : `규정이닝 ${Math.floor(base * c.ipPerGame)} 이상 (${label} ${base}경기 기준)`;
+    ? `규정타석 ${regPA(ctx, team, playerGames)} 이상 (${basis})`
+    : `규정이닝 ${regOuts(ctx, team, playerGames) / 3} 이상 (${basis})`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────

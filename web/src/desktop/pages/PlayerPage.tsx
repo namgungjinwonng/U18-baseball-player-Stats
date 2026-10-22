@@ -531,7 +531,7 @@ export function PlayerPage() {
 
       {recordMode === "season" && active === "batting" && v.batting && (
         <>
-          {!tournamentSlug && <PercentileCard player={player} kind="batting" />}
+          <PercentileCard player={player} kind="batting" slug={tournamentSlug} scopeTitle={tournamentTitle} />
           <TrendChart log={v.gameLog} lg={lg} season={v.batting} />
           <section className="player-section">
             <h3>타자 기록</h3>
@@ -556,7 +556,7 @@ export function PlayerPage() {
 
       {recordMode === "season" && active === "pitching" && v.pitching && (
         <>
-          {!tournamentSlug && <PercentileCard player={player} kind="pitching" />}
+          <PercentileCard player={player} kind="pitching" slug={tournamentSlug} scopeTitle={tournamentTitle} />
           <section className="player-section">
             <h3>투수 기록</h3>
             <PitchingStrip p={v.pitching} />

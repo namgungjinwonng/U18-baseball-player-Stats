@@ -69,13 +69,14 @@ assert.equal(common[0].opponent, "C고");
 assert.deepEqual(common[0].a, { w: 1, l: 0, d: 0, rf: 10, ra: 0 });
 assert.deepEqual(common[0].b, { w: 0, l: 1, d: 0, rf: 1, ra: 2 });
 
+// 출전 경기 수(g)는 아래 규정 컨텍스트의 팀 경기 수(3)와 맞춘다 — 본인 출전이 학교 경기 수보다 많으면 전학으로 보고 규정을 올린다.
 const bat = (h: number, ab: number, extra: Partial<NonNullable<Player["batting"]>> = {}): Player["batting"] => ({
-  g: 10, pa: ab + (extra.bb ?? 0), ab, r: 0, h, b2: 0, b3: 0, hr: 0, rbi: 0, bb: 0, hbp: 0, so: 0, sb: 0,
+  g: 3, pa: ab + (extra.bb ?? 0), ab, r: 0, h, b2: 0, b3: 0, hr: 0, rbi: 0, bb: 0, hbp: 0, so: 0, sb: 0,
   avg: ab ? h / ab : 0, obp: 0, slg: ab ? h / ab : 0, ...extra,
 });
 const pit = (ip: number, er: number, h: number, bb: number, so: number): Player["pitching"] => {
   const outs = Math.floor(ip) * 3 + Math.round((ip % 1) * 10);
-  return { g: 5, w: 0, l: 0, sv: 0, ip, h, r: er, er, bb, so, era: (er * 27) / outs, whip: ((h + bb) * 3) / outs };
+  return { g: 3, w: 0, l: 0, sv: 0, ip, h, r: er, er, bb, so, era: (er * 27) / outs, whip: ((h + bb) * 3) / outs };
 };
 const player = (id: string, team: string, batting?: Player["batting"], pitching?: Player["pitching"]): Player => ({
   id, name: id, team, position: pitching && !batting ? "투수" : "내야수", season: 2026, batting, pitching,

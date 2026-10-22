@@ -150,9 +150,9 @@ export function MPlayer() {
   const [recordMode, setRecordMode] = useState<"season" | "career">("season");
   const [tab, setTab] = useState<TabId | null>(null); // null = 자동(타자→투수)
   const byId = useMemo(() => (index ? indexById(index) : null), [index]);
-  // 상단 핵심 지표 등급용 비교 집단 (리그 등급 카드와 같은 기준)
-  const batPop = useGradePopulation("batting");
-  const pitPop = useGradePopulation("pitching");
+  // 상단 핵심 지표 등급용 비교 집단 (리그 등급 카드와 같은 기준 — 시합을 고르면 그 시합 기준)
+  const batPop = useGradePopulation("batting", undefined, tournamentSlug);
+  const pitPop = useGradePopulation("pitching", undefined, tournamentSlug);
   useEffect(() => {
     if (!p?.personNo || p.id !== id || careerLoading || !careerSeasons) return;
     if (!careerSeasons.some((season) => season.player.personNo === p.personNo)) return;
@@ -338,10 +338,10 @@ export function MPlayer() {
         // undefined 값은 "-" 로 통일 표기 (시합 필터 재집계 시 sh/sf/ibb/e 등은 측정 불가).
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = battingAdvanced(v.batting, lg);
-        // 등급은 시즌 기준이라 대회 필터 중이거나 타석이 없으면 붙이지 않는다.
-        const gb = !tournamentSlug && v.batting.pa > 0;
-        const lgAll = averages?.overall;
-        const g = (of: (x: Player) => number | undefined) => (gb ? gradeFor(batPop.population, p, of) : null);
+        // 등급은 비교 범위(시즌 또는 고른 시합)의 이 선수 기록으로 매긴다. 타석이 없거나 규정 미달이면 붙이지 않는다.
+        const meB = batPop.subject(p);
+        const gb = v.batting.pa > 0 && !!meB && batPop.qualified(meB);
+        const g = (of: (x: Player) => number | undefined) => (gb ? gradeFor(batPop.population, meB!, of) : null);
         return (
           <>
             <KpiRow
@@ -349,11 +349,11 @@ export function MPlayer() {
                 ["타율", rate(v.batting.avg), g((x) => x.batting?.avg)],
                 ["OPS", rate(a.ops), g((x) => (x.batting ? x.batting.obp + x.batting.slg : undefined))],
                 ["홈런", n(v.batting.hr), g((x) => x.batting?.hr)],
-                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.batting ? battingAdvanced(x.batting, lgAll).war : undefined)) : null],
+                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.batting ? battingAdvanced(x.batting, lg).war : undefined)) : null],
               ]}
               note={a.wrcPlus != null ? `wRC+ ${int(a.wrcPlus)} (리그 평균 100)` : undefined}
             />
-            {!tournamentSlug && <PercentileCard player={p} kind="batting" />}
+            <PercentileCard player={p} kind="batting" slug={tournamentSlug} scopeTitle={tournamentTitle} />
             <TrendChart log={v.gameLog} lg={lg} season={v.batting} />
             <section className="player-section">
               <h3>타자 기록</h3>
@@ -400,10 +400,10 @@ export function MPlayer() {
       {recordMode === "season" && active === "pitching" && v.pitching && (() => {
         const n = (x?: number) => (x == null ? "-" : String(x));
         const a = pitchingAdvanced(v.pitching, lg);
-        // 등급은 시즌 기준이라 대회 필터 중이거나 이닝이 없으면 붙이지 않는다.
-        const gp = !tournamentSlug && v.pitching.ip > 0;
-        const lgAll = averages?.overall;
-        const g = (of: (x: Player) => number | undefined, lower = false) => (gp ? gradeFor(pitPop.population, p, of, lower) : null);
+        // 등급은 비교 범위(시즌 또는 고른 시합)의 이 선수 기록으로 매긴다. 이닝이 없거나 규정 미달이면 붙이지 않는다.
+        const meP = pitPop.subject(p);
+        const gp = v.pitching.ip > 0 && !!meP && pitPop.qualified(meP);
+        const g = (of: (x: Player) => number | undefined, lower = false) => (gp ? gradeFor(pitPop.population, meP!, of, lower) : null);
         return (
           <>
             <KpiRow
@@ -411,10 +411,10 @@ export function MPlayer() {
                 ["평균자책", dec2(v.pitching.era), g((x) => x.pitching?.era, true)],
                 ["WHIP", dec2(a.whip), g((x) => x.pitching?.whip, true)],
                 ["탈삼진", n(v.pitching.so), g((x) => x.pitching?.so)],
-                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.pitching ? pitchingAdvanced(x.pitching, lgAll).war : undefined)) : null],
+                ["WAR", a.war != null ? dec1(a.war) : "-", a.war != null ? g((x) => (x.pitching ? pitchingAdvanced(x.pitching, lg).war : undefined)) : null],
               ]}
             />
-            {!tournamentSlug && <PercentileCard player={p} kind="pitching" />}
+            <PercentileCard player={p} kind="pitching" slug={tournamentSlug} scopeTitle={tournamentTitle} />
             <section className="player-section">
               <h3>투수 기록</h3>
               <div className="m-strip">

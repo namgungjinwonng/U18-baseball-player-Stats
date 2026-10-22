@@ -223,7 +223,8 @@ export const useTournamentRecords = (slug: string | "") => {
             .then((rows) => rows.filter(isRealPlayer))
             .catch(() => [])
         : getJSON<Player[]>(`${year}/records/players.json`).then((rows) => rows.filter(isRealPlayer)),
-    [year, slug]
+    [year, slug],
+    `${year}:${slug}` // 시즌·시합 전환 중 이전 응답과 구분 (등급 비교 집단이 섞이지 않게)
   );
 };
 

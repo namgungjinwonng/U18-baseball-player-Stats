@@ -1977,6 +1977,19 @@
 .pct-card__base.career-mode-toggle { width: auto; margin: 0; }
 .pct-card__base.career-mode-toggle button { min-width: 52px; padding: 4px 10px; font-size: 12px; }
 .pct-card__note { margin: 6px 0 8px; }
+.pct-card__title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-width: 0; }
+/* 규정 미달: 등급 대신 눈에 띄는 안내 배지·문구 (등급 색과 겹치지 않는 주황 계열) */
+.pct-card__unq {
+  padding: 2px 8px;
+  border: 1px solid #f2c38b;
+  border-radius: 999px;
+  background: #fff1e0;
+  color: #8a4b00;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pct-card__note--unq { color: #8a4b00; font-weight: 600; }
 /* 등급 색 — 리그 등급 카드·선수 상세 핵심 지표 공용. 파랑 = 좋음, 빨강 = 나쁨.
    단계가 확실히 구분되도록 A·E는 진하게, B·D는 연하게(글자는 진한 같은 계열), C는 옅은 회색. */
 :root {
@@ -2043,6 +2056,7 @@
 .pct-row--E .pct-row__bubble { background: var(--grade-E); color: var(--grade-E-ink); }
 .pct-row__value { display: flex; flex-direction: column; align-items: flex-end; font-size: 13px; font-weight: 700; line-height: 1.2; }
 .pct-row__value small { color: var(--grade-muted); font-size: 11px; font-weight: 500; }
+.pct-row--unq .pct-row__value { font-weight: 600; }
 /* 선수 상세 핵심 지표 칸의 작은 등급 배지 */
 .m-kpi__cell { position: relative; }
 .m-kpi__grade {
