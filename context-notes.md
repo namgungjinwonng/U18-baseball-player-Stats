@@ -442,3 +442,7 @@
 - OpenAI 연결 형식은 공식 Structured Outputs 문서의 Responses text.format/json_schema/strict와 대조했다. 공급자·모델 변경은 하지 않았다. https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses
 - 사용자 키 입력 후 추가 실키 시험은 Flash-Lite 4방향 생성으로 마쳤다(각 6줄). 덕수고·충암고 종합은 맞대결을 5번 한 줄에만 언급했고, 이어 요청한 흐름 결과와 완전히 같은 문장은 0개다. 흐름은 승리 학교명(충암고)과 최근 5경기 기준을 사용했다. 강릉고·원주고 타격·마운드는 각각 6줄 모두 선수 이름이 등장했고 선발 예고 문구는 없었다. 기본 분석 전환·새로고침 후 저장 결과 표시·375px 가로 넘침 없음도 확인했다.
 - 품질 한계는 남는다. 흐름 첫 총평의 '열세를 보였던 두 학교'는 양쪽 모두 열세로 오해할 수 있고 일부 문장은 추상적이다. 종합의 짧은 맞대결 요약과 전용 흐름 분석은 같은 사실을 일부 공유한다. 프롬프트는 중복을 줄일 뿐 의미 오류·중복을 완전히 보장하지 않는다. Claude·GPT·Gemini 유료 실제 생성과 실물 휴대폰 검증은 미실시다.
+- 로컬 main에 fast-forward 통합했고 npm install 후 15개 테스트 파일·npm run build(tsc -b 포함)·git diff --check를 다시 통과했다. SW v11 변경 후 빌드와 node --check public/sw.js도 통과했다. 원본 5173의 375px 매치업·키 없음·메뉴→AI 설정 경로와 가로 넘침 없음을 재확인했다. 원본 추적 .claude/launch.json과 루트 미추적 사용자 문서 5개는 수정하지 않았다.
+- 설치 audit 경고는 기존 Vite(high), esbuild(moderate), react-router(moderate), react-router-dom(moderate) 4건이다. 잠금 파일에서 기존 패키지 버전은 바뀌지 않았으며 이번 AI 기능 범위를 벗어나는 major 업데이트나 npm audit fix --force는 실행하지 않았다.
+- 정리는 5180 테스트 node PID의 실행 인자·작업 트리 절대 경로·미커밋 없음·main에 커밋 포함을 확인한 뒤 수행했다. 테스트 서버·U18-ai-test 작업 트리·test/ai-analysis 브랜치를 제거하고 상위 .claude/launch.json의 ai-test 항목만 지웠다. 변경 소스는 main 커밋에서 복구 가능하다. 원본 5173 서버는 유지한다. GitHub push는 하지 않았다.
+- 키는 브라우저 출처별이다. 5180에서 입력한 키는 5173 또는 실제 사이트에서 다시 입력해야 한다. 시험 중 키 값을 출력하거나 파일에 기록하지 않았다.
