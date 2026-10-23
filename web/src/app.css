@@ -2213,6 +2213,11 @@
 .versus-analysis__focus button { padding: 4px 10px; border: 1px solid var(--color-hairline); border-radius: 999px; background: var(--color-canvas); color: var(--color-charcoal); font: inherit; font-size: 12px; cursor: pointer; }
 .versus-analysis__focus button.is-on { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-canvas); font-weight: 600; }
 .versus-analysis__focus button:disabled { opacity: 0.55; cursor: default; }
+.versus-analysis__pending { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; opacity: 0.8; }
+.versus-reference { padding: 12px; margin: 12px 0; border: 1px solid var(--color-hairline); border-radius: 10px; background: var(--color-soft-cloud); color: var(--color-charcoal); font-size: 13px; line-height: 1.6; }
+.versus-reference p { margin: 4px 0 0; }
+.ai-settings__storage { font-size: 13px; font-weight: 600; line-height: 1.6; }
+.m-drawer a[href$="/ai-settings"], .nav-drawer a[href$="/ai-settings"] { font-size: 13px; }
 /* AI 분석 설정 화면 */
 .ai-settings { max-width: 560px; }
 .ai-settings section { padding-bottom: var(--space-lg); margin-bottom: var(--space-lg); border-bottom: 1px solid var(--color-hairline-soft); }

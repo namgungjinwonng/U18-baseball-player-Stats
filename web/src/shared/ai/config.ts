@@ -57,7 +57,14 @@ export interface AiSettings {
   provider: ProviderId;
   models: Partial<Record<ProviderId, string>>; // 공급자별로 마지막에 고른 모델
   paidModels?: ModelOption[]; // Gemini 유료 키 연결 확인 때 받아 온 모델 목록
+  retentionDays?: number; // 분석 생성일 기준 보관 기간. 0은 자동 초기화 안 함.
 }
+
+export const RETENTION_OPTIONS = [1, 7, 30, 90, 0] as const;
+export const DEFAULT_RETENTION_DAYS = 30;
+export const retentionDays = (s: AiSettings) => RETENTION_OPTIONS.some((d) => d === s.retentionDays)
+  ? s.retentionDays! : DEFAULT_RETENTION_DAYS;
+export const AI_SETTINGS_CHANGED = "u18-ai-settings-changed";
 
 const SETTINGS_KEY = "u18-ai-settings";
 const DEFAULT: AiSettings = { provider: "gemini-free", models: {} };
@@ -66,7 +73,7 @@ export function loadSettings(): AiSettings {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
     const s = raw ? (JSON.parse(raw) as AiSettings) : null;
-    if (s && PROVIDERS.some((p) => p.id === s.provider)) return { ...DEFAULT, ...s, models: s.models ?? {} };
+    if (s && PROVIDERS.some((p) => p.id === s.provider)) return { ...DEFAULT, ...s, models: s.models ?? {}, retentionDays: retentionDays(s) };
   } catch {
     /* 저장소를 못 쓰면 기본값 */
   }
@@ -76,6 +83,7 @@ export function loadSettings(): AiSettings {
 export function saveSettings(s: AiSettings) {
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    if (typeof window !== "undefined") window.dispatchEvent(new Event(AI_SETTINGS_CHANGED));
   } catch {
     /* 저장 실패는 이번 접속에만 적용 */
   }

@@ -10,6 +10,8 @@ import { dec2, rate } from "./format";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
 import { buildAnalysisInput } from "./analysisInput";
+import { needsPreviousSeasonReference } from "./previousSeasonAnalysis";
+import { PreviousSeasonAnalysisView } from "./PreviousSeasonAnalysisView";
 import { AiAnalysisPanel } from "./ai/AiAnalysisPanel";
 import type { AiExtra } from "./ai/prompt";
 import { buildTeamDetailGrades } from "./teamDetailGrades";
@@ -136,7 +138,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       alive = false;
     };
   }, []);
-  const schedule = useSchedule();
+  const schedule = useSchedule(true); // 통신 실패를 무경기로 간주해 전년도 분석을 하지 않도록 오류를 구분한다.
   const tournaments = useTournaments();
   const records = useTournamentRecords(slug);
   const seasonRecords = useAllPlayers();
@@ -300,7 +302,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
   // 경기 분석 — 입력은 실데이터 측정과 같은 함수로 만들고, 규칙 엔진은 이 화면에서만 따로 불러온다(첫 화면 코드 크기 절약).
   const analysisInput = useMemo(
     () =>
-      ready && !records.loading && records.data && totA && totB
+      ready && !records.loading && !records.error && records.scope === `${year}:${slug}` && records.data && totA && totB
         ? buildAnalysisInput({
             a, b, seasonGames, h2hGames: games, records: records.data, strength: strength.data?.teams ?? null,
             lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
@@ -308,7 +310,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
           })
         : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ready, records.loading, records.data, totA, totB, a, b, seasonGames, games, strength.data, averages.data, year, tournamentTitle]
+    [ready, records.loading, records.error, records.scope, records.data, totA, totB, a, b, seasonGames, games, strength.data, averages.data, year, tournamentTitle]
   );
   const analysis = useMemo(() => (engine && analysisInput ? engine.analyzeVersus(analysisInput) : []), [engine, analysisInput]);
   // AI 분석 보강 자료 — 요청 버튼을 누를 때만 만든다. 등급은 학교 정보 화면과 같은 함수(일정의 5경기 이상 학교 집단),
@@ -328,18 +330,28 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
     };
   }, [records.data, analysisInput, year, seasonGames, strength.data, ctx, a, b, engine]);
 
+  const currentRecordFileMissing = records.error?.includes(`${year}/records/players.json (404)`) ?? false;
+  const currentRecordsReady = records.scope === `${year}:${slug}` && records.data !== null;
+  const currentScheduleReady = (schedule.scope === String(year) && schedule.data?.year === year)
+    || (schedule.error?.includes(`${year}/schedule.json (404)`) ?? false);
+  const referenceMode = ready && !records.loading && !schedule.loading
+    && currentScheduleReady
+    && (currentRecordsReady || currentRecordFileMissing)
+    && needsPreviousSeasonReference(a, b, year, seasonGames, currentRecordsReady ? records.data! : []);
+
   const statSection = (
     <section className="versus-section">
       <h3 className="heading-md">팀 지표 비교</h3>
-      <p className="caption muted">{tournamentTitle ? shortTitle(tournamentTitle) : `${year} 시즌 전체`} 기준 · 비율은 합산 원자료로 재계산 · 강도지수 1.00 = 리그 평균</p>
-      {missing.length > 0 && (
+      <p className="caption muted">{referenceMode ? `${year} 시즌 기록 전 · 현재 엔트리의 전년도 개인 기록 참고` : `${tournamentTitle ? shortTitle(tournamentTitle) : `${year} 시즌 전체`} 기준 · 비율은 합산 원자료로 재계산 · 강도지수 1.00 = 리그 평균`}</p>
+      {referenceMode && <PreviousSeasonAnalysisView year={year} a={a} b={b} />}
+      {!referenceMode && missing.length > 0 && (
         <p className="state muted">
           {missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 지표를 비교할 수 없습니다.
         </p>
       )}
       {/* 키가 없으면 기록 기반 분석, 있으면 저장된 AI 분석 우선·버튼으로 AI 분석 요청 (shared/ai) */}
-      {analysis.length > 0 && analysisInput && <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} />}
-      {records.loading ? <div className="state">불러오는 중…</div> : missing.length === 0 && <MirrorBars rows={statRows} aName={aName} bName={bName} />}
+      {!referenceMode && analysis.length > 0 && analysisInput && <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} />}
+      {!referenceMode && (records.loading ? <div className="state">불러오는 중…</div> : records.error || schedule.error ? <p className="state muted">올해 기록 또는 일정을 불러오지 못했습니다. 연결 오류를 무경기로 간주해 전년도 분석으로 대체하지 않습니다.</p> : missing.length === 0 && <MirrorBars rows={statRows} aName={aName} bName={bName} />)}
     </section>
   );
 

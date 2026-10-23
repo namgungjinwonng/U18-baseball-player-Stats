@@ -88,7 +88,7 @@ function useAsync<T>(fn: () => Promise<T>, deps: unknown[], scope: string | null
           setState((prev) => ({
             data: prev.data,
             loading: false,
-            error: prev.data === null ? String(e?.message ?? e) : null,
+            error: prev.data === null || prev.scope !== scope ? String(e?.message ?? e) : null,
             scope: prev.scope,
           }))
       );
@@ -270,11 +270,13 @@ export const useStrength = () => {
 };
 
 // 경기 일정 (scraper/src/schedule.ts 수집 — 경기일정 페이지용). 없으면 null.
-export const useSchedule = () => {
+export const useSchedule = (reportErrors = false) => {
   const { year } = useYear();
   return useAsync<ScheduleData | null>(
-    () => getJSON<ScheduleData>(`${year}/schedule.json`).catch(() => null),
-    [year]
+    () => reportErrors ? getJSON<ScheduleData>(`${year}/schedule.json`)
+      : getJSON<ScheduleData>(`${year}/schedule.json`).catch(() => null),
+    [year, reportErrors],
+    String(year)
   );
 };
 

@@ -40,7 +40,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
     items: [
       { to: "/glossary", label: "지표 설명", icon: "glossary" },
       { to: "/notice", label: "알리는 글", icon: "notice" },
-      { to: "/ai-settings", label: "AI 분석 설정", icon: "ai", drawerOnly: true }, // 사용자 API 키로 매치업 경기 분석
+      { to: "/ai-settings", label: "매치업 AI분석 설정", icon: "ai", drawerOnly: true }, // 사용자 API 키로 매치업 경기 분석
     ],
   },
 ];

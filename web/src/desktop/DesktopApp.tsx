@@ -104,7 +104,7 @@ export function DesktopApp() {
           <Route path="/person/:personNo" element={<PersonView wrapClass="container page" />} />
           <Route path="/records" element={<SeasonRecordsGate wrapClass="container page"><RecordsPage /></SeasonRecordsGate>} />
           <Route path="/matchup" element={<SeasonRecordsGate wrapClass="container page"><MatchupPage /></SeasonRecordsGate>} />
-          <Route path="/versus" element={<SeasonRecordsGate wrapClass="container page"><VersusView wrapClass="container page" /></SeasonRecordsGate>} />
+          <Route path="/versus" element={<VersusView wrapClass="container page" />} />
           <Route path="/team" element={<TeamIndex wrapClass="container page" />} />
           <Route path="/team/:name" element={<SeasonRecordsGate wrapClass="container page"><TeamView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/compare" element={<SeasonRecordsGate wrapClass="container page"><CompareView wrapClass="container page" /></SeasonRecordsGate>} />

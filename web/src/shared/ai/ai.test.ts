@@ -1,17 +1,19 @@
 // AI 경기분석 테스트 — 키 암호화 왕복, 기록 JSON·응답 검증(입력에 없는 숫자), 저장 키, 설정 기본값, 오류 분류, Gemini 요청 형식.
+import "fake-indexeddb/auto";
+import { IDBObjectStore } from "fake-indexeddb";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { buildAnalysisInput } from "../analysisInput";
 import type { SeasonGame } from "../analysis/core";
-import type { QualifyContext } from "../leaders";
+import { regPA, regOuts, seasonConfig, type QualifyContext } from "../leaders";
 import { buildTeamDetailGrades } from "../teamDetailGrades";
-import type { Player } from "../types";
-import { topPlayers } from "../versus";
-import { currentModel, geminiResetHourKst, hourText, type AiSettings } from "./config";
-import { buildPayload, buildUserPrompt, parseAnswer, unknownNumbers, InvalidAnswer, MAX_LINES, type AiExtra } from "./prompt";
+import type { Player, ScheduleGame } from "../types";
+import { teamTotals, topPlayers } from "../versus";
+import { currentModel, geminiResetHourKst, hourText, loadSettings, retentionDays, saveSettings, type AiSettings } from "./config";
+import { buildPayload, buildUserPrompt, parseAnswer, unknownNumbers, InvalidAnswer, MAX_LINES, SYSTEM_PROMPT, type AiExtra } from "./prompt";
 import { AiError, generate, geminiErrorKind, openaiErrorKind } from "./providers";
-import { entryKey, errorNotice, loadEntry, saveEntry } from "./store";
-import { newMasterKey, seal, unseal } from "./vault";
+import { acknowledgeStorageWarning, clearEntries, entryBytes, entryCount, entryKey, errorNotice, getStorageStats, isExpired, loadEntry, loadMatchupEntries, pendingStorageWarning, saveEntry, storageStats, storageWarningLevel, WARNING_BYTES, type AiEntry } from "./store";
+import { loadApiKey, newMasterKey, saveApiKey, seal, unseal } from "./vault";
 
 // --- localStorage 대용 (node) ---
 const mem = new Map<string, string>();
@@ -144,10 +146,111 @@ assert.deepEqual(unknownNumbers("최근 5경기 4승", []), [], "작은 정수(�
 assert.equal(entryKey("강릉고", "원주고", 2026, true), entryKey("원주고", "강릉고", 2026, true));
 assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("강릉고", "원주고", 2026, false));
 const k = entryKey("강릉고", "원주고", 2026, true);
-saveEntry(k, { lines: ["a"], provider: "gemini-free", model: "gemini-3.5-flash-lite", at: "2026-10-23T00:00:00Z" });
-assert.equal(loadEntry(k)?.model, "gemini-3.5-flash-lite");
-saveEntry(k, { lines: ["b"], provider: "claude", model: "claude-opus-5-5", at: "2026-10-23T01:00:00Z" });
-assert.deepEqual(loadEntry(k)?.lines, ["b"], "다시 분석하면 새 결과로 교체");
+const now = Date.now();
+const savedEntry: AiEntry = { lines: ["저장된 종합 분석"], provider: "gemini-free", model: "gemini-3.5-flash-lite", at: new Date(now).toISOString(), focus: "overall" };
+await saveEntry(k, savedEntry);
+assert.equal((await loadEntry(k))?.model, "gemini-3.5-flash-lite");
+await saveEntry(k, { ...savedEntry, lines: ["타격 분석"], focus: "batting" });
+await saveEntry(k, { ...savedEntry, lines: ["마운드 분석"], focus: "pitching" });
+await saveEntry(k, { ...savedEntry, lines: ["흐름 분석"], focus: "h2h" });
+await saveEntry(k, { ...savedEntry, lines: ["갱신한 타격"], focus: "batting" });
+assert.deepEqual((await loadEntry(k, "batting"))?.lines, ["갱신한 타격"], "다시 분석은 해당 방향만 갱신");
+assert.deepEqual((await loadEntry(k))?.lines, savedEntry.lines, "종합은 유지");
+assert.equal(Object.keys(await loadMatchupEntries(k)).length, 4, "네 방향을 개별 저장");
+const otherKey = entryKey("덕수고", "충암고", 2026, true);
+assert.equal(await loadEntry(otherKey, "batting"), null, "다른 대진은 분석 전");
+assert.equal(await loadEntry(entryKey("강릉고", "원주고", 2027, true)), null, "다른 시즌은 분리");
+assert.equal(await loadEntry(entryKey("강릉고", "원주고", 2026, false)), null, "맞대결 범위 분리");
+
+// 생성 시점부터 설정한 기간이 지나면 해당 항목만 삭제하고 다른 항목과 API 키 설정은 유지한다.
+saveSettings({ provider: "gemini-free", models: {}, retentionDays: 7 });
+await saveEntry(k, { ...savedEntry, at: new Date(now - 7 * 86400_000).toISOString(), focus: "overall" });
+assert.equal(await loadEntry(k, "overall", now), null, "만료 경계 포함");
+assert.ok(await loadEntry(k, "batting", now), "다른 방향의 새 기록은 보존");
+assert.ok(!isExpired(savedEntry, 7, now + 7 * 86400_000 - 1));
+assert.ok(isExpired(savedEntry, 7, now + 7 * 86400_000));
+assert.ok(!isExpired(savedEntry, 0, now + 365 * 86400_000));
+assert.ok(isExpired({ ...savedEntry, at: "invalid" }, 0, now));
+assert.equal(retentionDays({ provider: "gemini-free", models: {} }), 30);
+assert.equal(retentionDays({ provider: "gemini-free", models: {}, retentionDays: -1 }), 30);
+assert.equal(retentionDays({ provider: "gemini-free", models: {}, retentionDays: 0 }), 0);
+assert.equal(loadSettings().retentionDays, 7);
+
+// 기존 localStorage 결과를 원래 방향으로 옮기고, 더 최신인 개별 결과를 덮어쓰지 않는다.
+saveSettings({ provider: "gemini-free", models: {}, retentionDays: 0 });
+mem.set("u18-ai-analysis-v1", JSON.stringify({ [otherKey]: { ...savedEntry, focus: "pitching" }, [k]: { ...savedEntry, at: new Date(now - 1).toISOString(), focus: "batting" } }));
+assert.deepEqual((await loadEntry(otherKey, "pitching"))?.lines, savedEntry.lines);
+assert.deepEqual((await loadEntry(k, "batting"))?.lines, ["갱신한 타격"]);
+assert.ok(!mem.has("u18-ai-analysis-v1"), "이관 성공 후에만 기존 저장소 정리");
+const originalPut = IDBObjectStore.prototype.put;
+IDBObjectStore.prototype.put = function () { throw new DOMException("가상 저장공간 부족", "QuotaExceededError"); };
+try {
+  await assert.rejects(saveEntry(k, { ...savedEntry, lines: ["실패한 갱신"], focus: "batting" }));
+  mem.set("u18-ai-analysis-v1", JSON.stringify({ [otherKey]: { ...savedEntry, focus: "h2h" } }));
+  await assert.rejects(loadEntry(otherKey, "h2h"));
+  assert.ok(mem.has("u18-ai-analysis-v1"), "저장소 오류 시 이관 전 원본을 보존");
+} finally { IDBObjectStore.prototype.put = originalPut; }
+assert.deepEqual((await loadEntry(k, "batting"))?.lines, ["갱신한 타격"], "저장 실패는 기존 결과를 지우지 않음");
+assert.ok(await loadEntry(otherKey, "h2h"), "저장소 복구 후 기존 결과 이관 재시도");
+
+// 용량은 JSON UTF-8 바이트이며 1,000건 또는 20MB가 경고 기준이다. 개수 때문에 기록을 버리지 않는다.
+assert.ok(entryBytes(savedEntry) > JSON.stringify(savedEntry).length, "한국어 UTF-8 바이트 반영");
+assert.equal(storageStats(Array.from({ length: 999 }, () => savedEntry)).warning, false);
+assert.equal(storageStats(Array.from({ length: 1000 }, () => savedEntry)).warning, true);
+assert.equal(storageStats([{ ...savedEntry, lines: ["x".repeat(WARNING_BYTES)] }]).warning, true);
+assert.equal(storageWarningLevel({ count: 1000, bytes: 0, averageBytes: 0, warning: true }), 1);
+assert.equal(storageWarningLevel({ count: 1, bytes: WARNING_BYTES, averageBytes: WARNING_BYTES, warning: true }), 2);
+assert.equal(storageWarningLevel({ count: 1000, bytes: WARNING_BYTES, averageBytes: 0, warning: true }) & ~1, 2, "건수 경고 확인 후에도 20MB 도달 시 새 경고");
+await clearEntries();
+await Promise.all(Array.from({ length: 1001 }, (_, i) => saveEntry(`test-${i}`, savedEntry)));
+assert.equal(await entryCount(), 1001, "기존 200개 제한으로 삭제하지 않음");
+assert.equal((await pendingStorageWarning())?.count, 1001);
+await acknowledgeStorageWarning();
+assert.equal(await pendingStorageWarning(), null, "확인한 경고는 임계치 아래로 내려갈 때까지 반복하지 않음");
+const beforeClear = await getStorageStats();
+assert.equal(beforeClear.averageBytes, beforeClear.bytes / beforeClear.count);
+await saveApiKey("gemini", "FAKE-TEST-KEY-NOT-A-CREDENTIAL");
+await clearEntries();
+assert.equal(await entryCount(), 0);
+assert.equal(await loadApiKey("gemini"), "FAKE-TEST-KEY-NOT-A-CREDENTIAL", "분석 기록 정리는 암호화 API 키를 보존");
+assert.equal(loadSettings().provider, "gemini-free", "분석 초기화는 공급자 설정을 보존");
+await saveEntry(k, savedEntry);
+assert.equal((await getStorageStats()).count, 1);
+
+// 2027 시즌 초 가상 시뮬레이션 — 실제 시즌 데이터나 API를 변경·호출하지 않고 현재 계산 함수를 실행한다.
+const simNames = ["가상A고", "가상B고", "가상C고", "가상D고", "가상E고"];
+const simulateEarlySeason = (n: number) => {
+  const simGames: ScheduleGame[] = simNames.flatMap((name, i) => Array.from({ length: n }, (_, j) => ({
+    game_idx: `sim-${i}-${j}`, title: "2027 가상 주말리그", date: `2027-03-${String(j + 1).padStart(2, "0")}`,
+    time: "10:00", venue: "가상구장", round: "리그전", status: "완료",
+    away: { name, score: 4 + i, result: "승" }, home: { name: "가상상대고", score: 2, result: "패" },
+  })));
+  const simPlayers: Player[] = n ? simNames.map((team, i) => ({
+    id: `sim-${i}`, name: `가상선수${i + 1}`, team, number: "1", season: 2027, position: "투수",
+    batting: { g: n, pa: n * 11, ab: n * 10, h: n * (i + 1), r: n * 2, b2: 0, b3: 0, hr: 0, rbi: n, bb: n, hbp: 0, so: n * (i + 1), sb: n * (i % 2), avg: (i + 1) / 10, obp: (i + 2) / 11, slg: (i + 1) / 10 },
+    pitching: { g: n, w: n, l: 0, sv: 0, ip: n * 3, h: n * (6 - i), r: n * (5 - i), er: n * (5 - i), bb: n, so: n * (i + 2), era: (5 - i) * 3, whip: (7 - i) / 3 },
+  })) : [];
+  const simInput = buildAnalysisInput({ a: simNames[0], b: simNames[1], seasonGames: simGames, h2hGames: simGames, records: simPlayers, year: 2027, allYears: true });
+  const simGrades = buildTeamDetailGrades(2027, [], simGames, simPlayers);
+  const simCtx: QualifyContext = { scope: "season", config: seasonConfig(2027), teamGames: Object.fromEntries(simNames.map((name) => [name, n])) };
+  return {
+    games: n, pa: regPA(simCtx, simNames[0]), innings: regOuts(simCtx, simNames[0]) / 3,
+    panelAvailable: !!teamTotals(simPlayers, simNames[0]) && !!teamTotals(simPlayers, simNames[1]),
+    gradedSchools: simGrades.filter((g) => g.grades.avg != null).length,
+    recent: buildPayload(simInput, {}, "h2h").최근흐름?.[simNames[0]],
+  };
+};
+const earlySeason = [0, 1, 3, 5].map(simulateEarlySeason);
+assert.deepEqual(earlySeason.map((s) => [s.games, s.pa, s.innings, s.gradedSchools, s.panelAvailable]), [
+  [0, 0, 0, 0, false], [1, 3, 1, 0, true], [3, 9, 3, 0, true], [5, 15, 5, 5, true],
+]);
+assert.equal(earlySeason[0].recent, null);
+assert.equal(earlySeason[1].recent?.["최근 1경기"], "1승 0패");
+assert.equal(earlySeason[2].recent?.["최근 3경기"], "3승 0패");
+assert.match(SYSTEM_PROMPT, /경기 수가 5경기 미만인 학교는 표본이 적다는 점/);
+const unevenCtx: QualifyContext = { scope: "season", config: seasonConfig(2027), teamGames: { 가상A고: 1, 가상B고: 10 } };
+assert.equal(regPA(unevenCtx, "가상A고"), 9, "다른 학교가 10경기를 치렀으면 1경기 학교도 하한 3경기 적용");
+console.log("2027 가상 시즌 초 시뮬레이션", JSON.stringify(earlySeason));
 
 // 5) 설정 기본값·모델 폴백
 const s: AiSettings = { provider: "gemini-free", models: {} };

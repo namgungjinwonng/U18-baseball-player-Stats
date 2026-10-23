@@ -68,6 +68,11 @@ export interface AnalysisInput {
   seasonA?: SeasonGame[]; // 시즌 완료 경기
   seasonB?: SeasonGame[];
   common?: CommonOpp[] | null; // 공통 상대 성적
+  reference?: {
+    year: number;
+    signature: string;
+    teams: { team: string; rosterCount: number; matchedCount: number; transfers: { name: string; from: string }[] }[];
+  }; // 시즌 초 현재 엔트리의 전년도 개인 기록만 참고한다. 올해 팀 성적과 섞지 않는다.
 }
 
 export interface AnalysisLine {

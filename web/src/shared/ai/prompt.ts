@@ -111,7 +111,8 @@ const FLOW_CATS = new Set(["h2h", "h2hHistory", "h2hDetail", "h2hScore", "common
 // 모델에 넘길 기록 — 키는 한국어, 숫자는 화면과 같은 표기 문자열로 둬서 그대로 옮겨 쓰게 한다.
 export function buildPayload(input: AnalysisInput, extra: AiExtra = {}, focus: FocusId = "overall"): AiPayload {
   const full = fullPayload(input, extra, focus);
-  const keep = new Set<string>(["시즌", "학교", ...SECTIONS[focus]]);
+  const sections = input.reference ? ["참고기준", "주요선수"] : SECTIONS[focus];
+  const keep = new Set<string>(["시즌", "학교", ...sections]);
   return Object.fromEntries(Object.entries(full).filter(([k]) => keep.has(k))) as AiPayload;
 }
 
@@ -129,6 +130,12 @@ function fullPayload(input: AnalysisInput, extra: AiExtra, focus: FocusId) {
   return {
     시즌: input.year,
     학교: [A, B],
+    ...(input.reference ? { 참고기준: {
+      분석대상연도: input.year, 개인기록연도: input.reference.year,
+      대상: "현재 엔트리와 고유번호가 일치하고 전년도 3학년이 아닌 선수만 포함. 학년은 현재 엔트리 기준.",
+      학교별확인: input.reference.teams.map((t) => ({ 학교: t.team, 현재엔트리: t.rosterCount, 전년도기록확인: t.matchedCount, 미포함: t.rosterCount - t.matchedCount, 이전소속변경: t.transfers })),
+      한계: "올해 팀 성적·등급·최근 흐름이 아니다. 신입생·무기록·미확인 선수는 추정하지 않는다. 표본이 작은 전년도 기록은 제한을 밝힌다.",
+    } } : {}),
     팀지표: METRICS.flatMap(([k, label, f, gk]) => {
       const m = input.metrics[k];
       const a = fmt(m?.a, f), b = fmt(m?.b, f);
@@ -181,6 +188,7 @@ export const SYSTEM_PROMPT = [
   "- 경기 수가 5경기 미만인 학교는 표본이 적다는 점을 밝히고 단정하지 않는다.",
   "- '모두', '항상', '전부', '한 번도' 같은 말은 JSON에 그 사실이 직접 있을 때만 쓴다. 공통 상대 비교는 '공통상대'의 '비교'와 '공통상대요약'을 그대로 따른다.",
   "- '~다'로 끝나는 평서문을 쓴다. 학교·선수 이름은 JSON 표기 그대로 쓴다.",
+  "- '참고기준'이 있으면 현재 엔트리 선수의 전년도 개인 기록 참고 분석이다. 처음 항목에서 기록 연도를 밝히고, 전년도 기록을 올해 성적·팀 전체 전력·등급·최근 흐름으로 바꾸어 말하지 않는다. 입력에 없는 졸업 선수·신입생을 추가하지 않는다.",
   '응답은 {"lines": ["항목", ...]} 형식의 JSON만 보낸다.',
 ].join("\n");
 
@@ -237,8 +245,17 @@ export const focusLabel = (id?: FocusId) => FOCUS.find((f) => f.id === id)?.labe
 export function buildUserPrompt(payload: AiPayload, previous?: string[], focus: FocusId = "overall") {
   const [A, B] = payload.학교;
   const f = FOCUS.find((x) => x.id === focus) ?? FOCUS[0];
-  const plan = f.plan.map((s, i) => `${i + 1}) ${s.split("{A}").join(A).split("{B}").join(B)}`);
-  const parts = [`기록(JSON):\n${JSON.stringify(payload)}`, `구성:\n${plan.join("\n")}${f.rule ? `\n이 방향의 규칙: ${f.rule}` : ""}`];
+  const referencePlan = focus === "overall" ? [
+    "총평: 참고기준의 개인기록연도를 밝히고, 현재 엔트리에서 확인된 선수들만으로 본 두 학교의 구도와 한계",
+    "{A} 공격: 현재 엔트리 주요 타자의 전년도 기록이 보여 주는 유형과 표본",
+    "{B} 공격: 현재 엔트리 주요 타자의 전년도 기록이 보여 주는 유형과 표본",
+    "{A} 마운드: 현재 엔트리 주요 투수의 전년도 기록과 이닝 표본",
+    "{B} 마운드: 현재 엔트리 주요 투수의 전년도 기록과 이닝 표본",
+    "한계: 전년도 기록이 없는 선수·신입생·올해 성장·올해 최근 흐름은 판단할 수 없다는 점",
+  ] : f.plan.map((s) => s.replace(/마운드 성향/g, "확인 가능한 투수의 전년도 기록").replace(/타선 성향/g, "확인 가능한 타자의 전년도 기록"));
+  const plan = (payload.참고기준 ? referencePlan : f.plan).map((s, i) => `${i + 1}) ${s.split("{A}").join(A).split("{B}").join(B)}`);
+  const referenceRule = "전년도 개인 기록만으로 참고 분석한다. 첫 항목에 개인기록연도를 명시한다. 팀 지표·학교 등급·리그 평균·올해 승률·올해 연승·선발 예고는 쓰지 않는다. 이전소속변경 선수도 현재 학교 이름으로 설명하되 과거 기록임을 밝힌다. 한쪽의 타자·투수 자료가 없으면 없다고 밝히고 다른 선수를 지어내지 않는다. 선수 이름과 기록 중심으로 쓰되 확인된 선수가 적으면 다른 선수를 요구하지 말고 표본 한계를 설명한다.";
+  const parts = [`기록(JSON):\n${JSON.stringify(payload)}`, `구성:\n${plan.join("\n")}${payload.참고기준 ? `\n이 방향의 규칙: ${referenceRule}` : f.rule ? `\n이 방향의 규칙: ${f.rule}` : ""}`];
   if (previous?.length) {
     parts.push(
       `이전 분석:\n${previous.map((l) => `- ${l}`).join("\n")}\n` +
