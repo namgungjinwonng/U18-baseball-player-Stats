@@ -1,5 +1,15 @@
 # 스크롤 고정 위치 변경 체크리스트
 
+## ⚠️ 다음 작업 우선: 보안 점검 보완 (2026-10-23)
+
+상세 내용은 [SECURITY_AUDIT.md](SECURITY_AUDIT.md) 참고.
+
+- [ ] P1. web `vite` 업그레이드(npm audit 높음, esbuild 함께 해소) 후 빌드·테스트 확인
+- [ ] P2. `web/index.html` 에 CSP 추가(AI API 키 유출 완화)
+- [ ] P3. `web/src/shared/kbsa.ts` URL 파라미터 `encodeURIComponent` 적용
+- [ ] P4. GitHub Actions 를 커밋 SHA 로 고정
+- [ ] P5. react-router-dom v7 이전 검토(현재 악용 경로 없음)
+
 - [x] 클로드의 로컬 커밋을 원격 최신 데이터 커밋 위에 재배치한다.
 - [x] 랭킹 화면에서 필터 아래부터 순위 목록만 세로 스크롤되게 한다.
 - [x] 선수 기록 화면에서 열 제목 아래부터 선수 행만 세로 스크롤되게 한다.
