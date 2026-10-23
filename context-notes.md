@@ -478,3 +478,4 @@
 # GitHub 반영 승인 · 2026-10-23
 - 사용자가 이제 커밋·push를 명시적으로 승인했다. 기존 로컬 AI 기능 5개 커밋과 미커밋 방향별 기기 저장·시즌 초 참고 분석을 함께 반영한다. 개인 미추적 문서 CLAUDE_MATCHUP_SELECTION_TASK.md·CLAUDE_REVIEW_2026-10-21.md·CLAUDE_SCHOOL_GRADE_REVIEW.md·CODEX_AI_ANALYSIS_HANDOFF.md·NEXT_TASKS.md는 커밋하지 않는다.
 - git fetch 결과 origin/main에 선수현황 자동 갱신 88bdb4517 1건이 추가돼 있다. 변경은 data 아래에만 있어 AI 소스와 겹치지 않는다. 기존 커밋의 이력을 유지하는 일반 merge로 보존해 합치고, 통합 후 다시 검사한다. 강제 push는 사용하지 않는다. 통합 전 npm test 16개 파일과 npm run build가 다시 통과했다.
+- 소스 23개 파일을 4309cedf6으로 커밋하고 d65a50b51에서 원격 자동 갱신을 충돌 없이 merge했다. 통합 후 npm test 16개 파일·npm run build·git diff --check가 다시 통과했으며 git push origin main에 성공했다. git ls-remote의 main 해시와 로컬 HEAD가 모두 d65a50b514a9e7193d259393c1762c21d0bad989임을 확인했다. 이번 검증 완료 기록은 문서 커밋으로 추가 반영한다. 개인 미추적 문서 5개는 로컬에 그대로 보존했다.
