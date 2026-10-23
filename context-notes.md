@@ -440,3 +440,5 @@
 - 검증 결과는 npm test 15개 파일·npm run build(tsc -b 포함)·git diff --check 통과다. 번들은 메인 430.44KB, Claude SDK 별도 청크 326.97KB다.
 - 화면 확인은 Chrome 375px의 키 없음·설정 4종·유료 안내 팝업·가짜 Gemini 키 저장 거부·가로 넘침 없음, 1440px 상단 메뉴에 AI 항목 없음까지 완료했다. 실키는 이 Chrome의 localhost:5180에서 감지되지 않아 채팅에 키를 보내지 말고 페이지에서 입력해 달라고 요청했다. 현재 단계에서 실제 생성 API 호출은 0회다.
 - OpenAI 연결 형식은 공식 Structured Outputs 문서의 Responses text.format/json_schema/strict와 대조했다. 공급자·모델 변경은 하지 않았다. https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses
+- 사용자 키 입력 후 추가 실키 시험은 Flash-Lite 4방향 생성으로 마쳤다(각 6줄). 덕수고·충암고 종합은 맞대결을 5번 한 줄에만 언급했고, 이어 요청한 흐름 결과와 완전히 같은 문장은 0개다. 흐름은 승리 학교명(충암고)과 최근 5경기 기준을 사용했다. 강릉고·원주고 타격·마운드는 각각 6줄 모두 선수 이름이 등장했고 선발 예고 문구는 없었다. 기본 분석 전환·새로고침 후 저장 결과 표시·375px 가로 넘침 없음도 확인했다.
+- 품질 한계는 남는다. 흐름 첫 총평의 '열세를 보였던 두 학교'는 양쪽 모두 열세로 오해할 수 있고 일부 문장은 추상적이다. 종합의 짧은 맞대결 요약과 전용 흐름 분석은 같은 사실을 일부 공유한다. 프롬프트는 중복을 줄일 뿐 의미 오류·중복을 완전히 보장하지 않는다. Claude·GPT·Gemini 유료 실제 생성과 실물 휴대폰 검증은 미실시다.
