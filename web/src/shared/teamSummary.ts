@@ -1,4 +1,4 @@
-// 학교 정보 카드용 시즌 팀 합계와 전체 학교 대비 타율·ERA 백분위 등급을 계산하는 순수 함수.
+// 학교 정보 카드용 시즌 팀 합계와 개별 지표·동일 비중 종합 백분위 등급을 계산하는 순수 함수.
 import { pctGrade, percentileRank } from "./percentile";
 import type { Player, ScheduleGame, TeamRosterEntry } from "./types";
 import { teamKey, teamRecord, teamTotals, type Record3 } from "./versus";
@@ -20,6 +20,7 @@ export interface TeamSummary {
   era: number | null;
   avgGrade: TeamSummaryGrade | null;
   eraGrade: TeamSummaryGrade | null;
+  overallGrade: TeamSummaryGrade | null;
 }
 
 // 지역·검색 필터 이전에 한 번 계산해야 같은 학교의 등급이 필터에 따라 바뀌지 않는다.
@@ -62,6 +63,7 @@ export function buildTeamSummaries(
       era: totals && totals.pitching.outs > 0 && Number.isFinite(totals.pitching.era) ? totals.pitching.era : null,
       avgGrade: null,
       eraGrade: null,
+      overallGrade: null,
     };
   });
   const eligible = rows.filter((r) => r.games >= MIN_TEAM_GRADE_GAMES);
@@ -75,6 +77,24 @@ export function buildTeamSummaries(
   for (const row of eligible) {
     row.avgGrade = grade(averages, row.avg);
     row.eraGrade = grade(eras, row.era, true);
+  }
+
+  // 종합은 세 지표가 모두 있는 동일 집단으로 계산한다. 개별 지표 집단과 섞으면
+  // 자료가 일부만 있는 학교 때문에 승률·타율·ERA의 실질적인 비중이 달라질 수 있다.
+  const complete = eligible.filter((row): row is TeamSummary & { pct: number; avg: number; era: number } =>
+    row.pct != null && row.avg != null && row.era != null);
+  if (complete.length >= MIN_TEAM_GRADE_POPULATION) {
+    const winPcts = complete.map((row) => row.pct);
+    const avgs = complete.map((row) => row.avg);
+    const earnedRuns = complete.map((row) => row.era);
+    const scored = complete.map((row) => ({
+      row,
+      score: (percentileRank(winPcts, row.pct)! + percentileRank(avgs, row.avg)!
+        + percentileRank(earnedRuns, row.era, true)!) / 3,
+    }));
+    // 평균 점수 자체에 등급을 붙이지 않고 재순위화해 기존 상위 20% = A 기준을 유지한다.
+    const scores = scored.map(({ score }) => score);
+    for (const { row, score } of scored) row.overallGrade = grade(scores, score);
   }
   return rows.sort((a, b) => a.name.localeCompare(b.name, "ko"));
 }

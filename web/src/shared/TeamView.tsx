@@ -52,7 +52,7 @@ function SeasonCard({ label, value, grade }: { label: string; value: string; gra
   );
 }
 
-// 학교 정보 첫 화면 — 지역 선택 + 학교명 검색, 학교별 전적·팀타율·ERA·시즌 전체 대비 등급을
+// 학교 정보 첫 화면 — 지역 선택 + 학교명 검색, 학교별 전적·팀타율·ERA·종합등급을
 // 10개씩 가로 스와이프 페이지로 보인다. 카드를 누르면 학교 상세로 간다.
 function TeamGradeBadge({ grade, label }: { grade: TeamSummaryGrade | null; label: string }) {
   return (
@@ -119,9 +119,9 @@ export function TeamIndex({ wrapClass }: { wrapClass: string }) {
       ) : (
         <>
           <p className="caption-sm" style={{ margin: "0 0 10px" }}>{filtered.length}개 학교</p>
-          <p className="caption-sm team-summary-index__note" title={`항목별 유효 비교 학교가 ${MIN_TEAM_GRADE_POPULATION}곳 미만이면 등급을 표시하지 않습니다.`}>
-            등급: {year} 시즌 전체 · 완료 {MIN_TEAM_GRADE_GAMES}경기 이상
-            <br />팀타율 ↑ · ERA ↓가 좋음 · 표본·기록 부족은 -
+          <p className="caption-sm team-summary-index__note" title={`완료 ${MIN_TEAM_GRADE_GAMES}경기 이상·세 지표가 모두 유효한 학교가 ${MIN_TEAM_GRADE_POPULATION}곳 이상일 때 계산합니다. 승률·팀타율·ERA(낮을수록 좋음)의 백분위를 동일 비중으로 평균한 뒤 종합점수를 다시 백분위로 환산합니다. 승률은 무승부를 제외합니다.`}>
+            종합등급: {year} 시즌 전체 · 완료 {MIN_TEAM_GRADE_GAMES}경기 이상
+            <br />승률·팀타율·ERA 동일 비중 · 표본·기록 부족은 -
           </p>
           {filtered.length > 0 ? (
             <PagedCardGrid perPage={10} compact>
@@ -131,23 +131,26 @@ export function TeamIndex({ wrapClass }: { wrapClass: string }) {
                     <h3 title={t.name}>{t.name}</h3>
                     {t.region && <span className="sch-team-card__reg">{t.region}</span>}
                   </div>
-                  <div className="team-summary-card__record">
-                    <span className="team-summary-card__wins">{t.rec.w}승</span>
-                    <span className="team-summary-card__losses">{t.rec.l}패</span>
-                    {t.rec.d > 0 && <span className="team-summary-card__draws">{t.rec.d}무</span>}
-                    <span className="team-summary-card__pct">승률 <b>{t.pct == null ? "-" : t.pct.toFixed(3)}</b></span>
-                  </div>
-                  <div className="team-summary-card__metrics">
-                    <div className="team-summary-card__metric">
-                      <span className="team-summary-card__label">팀타율</span>
-                      <b>{rate(t.avg ?? undefined)}</b>
-                      <TeamGradeBadge grade={t.avgGrade} label="팀타율" />
+                  <div className="team-summary-card__summary">
+                    <div className="team-summary-card__record">
+                      <span className="team-summary-card__results">
+                        <span className="team-summary-card__wins">{t.rec.w}승</span>
+                        <span className="team-summary-card__losses">{t.rec.l}패</span>
+                        {t.rec.d > 0 && <span className="team-summary-card__draws">{t.rec.d}무</span>}
+                      </span>
+                      <span className="team-summary-card__pct" aria-label={`승률 ${t.pct == null ? "미산정" : t.pct.toFixed(3)}`}>({t.pct == null ? "-" : t.pct.toFixed(3)})</span>
                     </div>
-                    <div className="team-summary-card__metric">
-                      <span className="team-summary-card__label">ERA</span>
-                      <b>{dec2(t.era ?? undefined)}</b>
-                      <TeamGradeBadge grade={t.eraGrade} label="팀 ERA" />
+                    <div className="team-summary-card__metrics">
+                      <div className="team-summary-card__metric">
+                        <span className="team-summary-card__label">팀타율</span>
+                        <b>{rate(t.avg ?? undefined)}</b>
+                      </div>
+                      <div className="team-summary-card__metric">
+                        <span className="team-summary-card__label">ERA</span>
+                        <b>{dec2(t.era ?? undefined)}</b>
+                      </div>
                     </div>
+                    <TeamGradeBadge grade={t.overallGrade} label="종합" />
                   </div>
                 </button>
               ))}
