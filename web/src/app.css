@@ -2203,6 +2203,56 @@
 .versus-analysis li { margin: 3px 0; color: var(--color-charcoal); font-size: 13px; line-height: 1.5; }
 .versus-analysis li.is-head { font-weight: 700; color: var(--color-ink); }
 .versus-analysis li.is-note { color: var(--color-mute); font-size: 12px; }
+/* AI 경기분석 — 요청 버튼·안내 (shared/ai/AiAnalysisPanel) */
+.versus-analysis__notice { margin: 6px 0 0; color: var(--color-sale); font-size: 12px; line-height: 1.5; }
+.versus-analysis__actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.versus-analysis__btn { padding: 6px 12px; border: 1px solid var(--color-ink); border-radius: 999px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.versus-analysis__btn:disabled { opacity: 0.55; cursor: default; }
+.versus-analysis__model { color: var(--color-mute); font-size: 11px; }
+.versus-analysis__focus { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.versus-analysis__focus button { padding: 4px 10px; border: 1px solid var(--color-hairline); border-radius: 999px; background: var(--color-canvas); color: var(--color-charcoal); font: inherit; font-size: 12px; cursor: pointer; }
+.versus-analysis__focus button.is-on { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-canvas); font-weight: 600; }
+.versus-analysis__focus button:disabled { opacity: 0.55; cursor: default; }
+/* AI 분석 설정 화면 */
+.ai-settings { max-width: 560px; }
+.ai-settings section { padding-bottom: var(--space-lg); margin-bottom: var(--space-lg); border-bottom: 1px solid var(--color-hairline-soft); }
+.ai-settings section:last-child { border-bottom: none; }
+.ai-settings h3 { margin: 0 0 var(--space-sm); font-size: var(--type-heading-md); font-weight: 700; }
+.ai-settings__lead { margin: 0 0 var(--space-lg); color: var(--color-charcoal); line-height: 1.7; }
+.ai-settings__providers { display: grid; gap: 8px; }
+.ai-settings__provider { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 14px; border: 1px solid var(--color-hairline); border-radius: 12px; background: var(--color-canvas); color: var(--color-ink); font: inherit; text-align: left; cursor: pointer; }
+.ai-settings__provider small { color: var(--color-mute); font-size: 12px; }
+.ai-settings__provider.is-on { border: 2px solid var(--color-ink); padding: 11px 13px; }
+.ai-settings__select { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--color-hairline); border-radius: 12px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 14px; }
+.ai-settings__key { display: flex; gap: 8px; }
+.ai-settings__key input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; border: 1px solid var(--color-hairline); border-radius: 12px; font: inherit; font-size: 14px; }
+.ai-settings__eye { flex: none; padding: 0 14px; border: 1px solid var(--color-hairline); border-radius: 12px; background: var(--color-soft-cloud); color: var(--color-ink); font: inherit; font-size: 13px; cursor: pointer; }
+.ai-settings__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ai-settings__saved { margin: 0 0 8px; font-size: 13px; color: var(--color-charcoal); }
+.ai-settings__saved small { color: var(--color-mute); }
+.ai-settings__status { margin: 10px 0 0; font-size: 13px; line-height: 1.5; }
+.ai-settings__status.is-ok { color: var(--color-ink); }
+.ai-settings__status.is-warn, .ai-settings__status.is-error { color: var(--color-sale); }
+.ai-settings__hint { margin: 8px 0 0; color: var(--color-mute); font-size: 12px; line-height: 1.6; }
+.ai-settings a { text-decoration: underline; }
+.ai-settings__notes { margin: 0 0 12px; padding-left: 18px; color: var(--color-charcoal); font-size: 13px; line-height: 1.7; }
+.ai-settings__clear { font-size: 13px; }
+.ai-settings__clear:disabled { color: var(--color-mute); cursor: default; }
+.ai-settings__keyhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: var(--space-sm); }
+.ai-settings__keyhead h3 { margin: 0; }
+.ai-settings__guide-btn { display: inline-flex; align-items: center; gap: 4px; flex: none; padding: 5px 10px; border: 1px solid var(--color-ink); border-radius: 999px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.ai-settings__paid { padding: 1px 5px; border-radius: 4px; background: var(--color-sale); color: #fff; font-size: 10px; font-weight: 700; }
+/* API 키 발급 방법 팝업 (shared/ai/KeyGuide) */
+.key-guide h3 { font-size: 18px; }
+.key-guide__tag { display: inline-block; margin: 0 0 10px; padding: 2px 8px; border-radius: 999px; background: var(--color-soft-cloud); color: var(--color-charcoal); font-size: 12px; font-weight: 600; }
+.key-guide__tag.is-paid { background: #fde8e8; color: var(--color-sale); }
+.key-guide__warn { margin: 0 0 12px; padding: 10px 12px; border-left: 3px solid var(--color-sale); border-radius: 6px; background: #fff4f4; color: var(--color-ink); font-size: 13px; line-height: 1.6; }
+.key-guide__warn strong { display: block; margin-bottom: 2px; color: var(--color-sale); font-size: 14px; }
+.key-guide__steps { margin: 0 0 10px; padding-left: 20px; font-size: 14px; line-height: 1.6; }
+.key-guide__steps li { margin: 4px 0; }
+.key-guide__notes { margin: 0 0 14px; padding-left: 18px; color: var(--color-charcoal); font-size: 12px; line-height: 1.6; }
+.ai-settings .key-guide a.btn { text-decoration: none; }
+.key-guide__foot { margin: 8px 0 0; color: var(--color-mute); font-size: 11px; text-align: center; }
 .top-players__unq { margin: 0 0 4px; }
 .versus-top__sample { margin-left: 4px; color: var(--color-mute); font-size: 10px; font-weight: 500; }
 

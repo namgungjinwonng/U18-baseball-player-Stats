@@ -15,6 +15,7 @@ import { VersusView } from "../shared/VersusView";
 import { TeamIndex, TeamView } from "../shared/TeamView";
 import { CompareView } from "../shared/CompareView";
 import { Notice } from "../shared/Notice";
+import { AiSettingsView } from "../shared/ai/AiSettingsView";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { Ico } from "../shared/navIcons";
@@ -70,7 +71,7 @@ export function DesktopApp() {
             {NAV_GROUPS.map((group, gi) => (
               <Fragment key={group.title}>
                 {gi > 0 && <span className="nav-links__sep" aria-hidden />}
-                {group.items.map((item) => (
+                {group.items.filter((item) => !item.drawerOnly).map((item) => (
                   <NavLink key={item.to} to={item.to}>{item.label}</NavLink>
                 ))}
               </Fragment>
@@ -112,6 +113,7 @@ export function DesktopApp() {
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="container page"><LeadersView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/glossary" element={<div className="container page"><Glossary /></div>} />
           <Route path="/notice" element={<Notice wrapClass="container page" />} />
+          <Route path="/ai-settings" element={<AiSettingsView wrapClass="container page" />} />
         </Routes>
       </main>
       <Footer />

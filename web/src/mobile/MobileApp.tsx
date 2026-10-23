@@ -18,6 +18,7 @@ import { VersusView } from "../shared/VersusView";
 import { TeamIndex, TeamView } from "../shared/TeamView";
 import { CompareView } from "../shared/CompareView";
 import { Notice } from "../shared/Notice";
+import { AiSettingsView } from "../shared/ai/AiSettingsView";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
 import { MenuIcon, SearchIcon } from "../shared/LineIcons";
@@ -112,6 +113,7 @@ export function MobileApp() {
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="m-page"><LeadersView wrapClass="m-page" /></SeasonRecordsGate>} />
           <Route path="/glossary" element={<div className="m-page"><Glossary /></div>} />
           <Route path="/notice" element={<Notice wrapClass="m-page" />} />
+          <Route path="/ai-settings" element={<AiSettingsView wrapClass="m-page" />} />
         </Routes>
       </main>
       <Footer />

@@ -5,6 +5,7 @@ export interface NavItem {
   to: string;
   label: string;
   icon: IconName;
+  drawerOnly?: boolean; // 데스크탑 상단 메뉴 줄에는 넣지 않고 햄버거·모바일 메뉴에만 (상단 줄 폭 여유 없음)
 }
 
 // 메인 바로가기는 데스크톱·모바일에서 같은 순서와 연결 주소를 사용한다.
@@ -39,6 +40,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
     items: [
       { to: "/glossary", label: "지표 설명", icon: "glossary" },
       { to: "/notice", label: "알리는 글", icon: "notice" },
+      { to: "/ai-settings", label: "AI 분석 설정", icon: "ai", drawerOnly: true }, // 사용자 API 키로 매치업 경기 분석
     ],
   },
 ];

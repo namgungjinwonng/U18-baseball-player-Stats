@@ -1,5 +1,5 @@
 // 학교 A vs 학교 B 대전 모드 화면 (데스크탑·모바일 공용) — /versus?a=학교&b=학교&v=탭&g=경기
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength,
@@ -10,11 +10,14 @@ import { dec2, rate } from "./format";
 import { kbsaBoxScoreUrl } from "./kbsa";
 import { MirrorBars, type MirrorRow } from "./MirrorBars";
 import { buildAnalysisInput } from "./analysisInput";
+import { AiAnalysisPanel } from "./ai/AiAnalysisPanel";
+import type { AiExtra } from "./ai/prompt";
+import { buildTeamDetailGrades } from "./teamDetailGrades";
 import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
 import { useDevice } from "./useDevice";
 import {
-  cellKey, commonOpponents, headToHead, mergeMatrices, sameTeam, teamKey, teamRecord, teamTotals, versusMatrix,
+  cellKey, commonOpponents, headToHead, mergeMatrices, sameTeam, teamKey, teamRecord, teamTotals, topPlayers, versusMatrix,
   type MatrixSide, type Record3, type SideGame,
 } from "./versus";
 import { TopPlayersSection } from "./TopPlayers";
@@ -308,6 +311,22 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
     [ready, records.loading, records.data, totA, totB, a, b, seasonGames, games, strength.data, averages.data, year, tournamentTitle]
   );
   const analysis = useMemo(() => (engine && analysisInput ? engine.analyzeVersus(analysisInput) : []), [engine, analysisInput]);
+  // AI 분석 보강 자료 — 요청 버튼을 누를 때만 만든다. 등급은 학교 정보 화면과 같은 함수(일정의 5경기 이상 학교 집단),
+  // 주요 선수는 「팀별 주요 선수」와 같은 규정 기준으로 5명씩(한쪽이 비면 규정 미달 포함, 방향별로 잘라 씀), 참고 문장은 기록 기반 분석 10줄.
+  const getAiExtra = useCallback((): AiExtra => {
+    if (!records.data || !analysisInput) return {};
+    const detail = buildTeamDetailGrades(year, [], seasonGames, records.data, strength.data);
+    const gradeOf = (t: string) => detail.find((r) => r.name === teamKey(t)) ?? null;
+    const top = (t: string) => {
+      const strict = topPlayers(records.data!, t, ctx, 5);
+      return strict.batters.length && strict.pitchers.length ? strict : topPlayers(records.data!, t, ctx, 5, true);
+    };
+    return {
+      grades: { a: gradeOf(a), b: gradeOf(b) },
+      players: { a: top(a), b: top(b) },
+      notes: engine ? engine.analyzeVersus(analysisInput, 10).filter((l) => l.cat !== "sample").map((l) => ({ cat: l.cat, text: l.text })) : undefined,
+    };
+  }, [records.data, analysisInput, year, seasonGames, strength.data, ctx, a, b, engine]);
 
   const statSection = (
     <section className="versus-section">
@@ -318,18 +337,8 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
           {missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 지표를 비교할 수 없습니다.
         </p>
       )}
-      {analysis.length > 0 && (
-        <div className="versus-analysis">
-          <h4>경기 분석 <small>기록 기반 자동 분석 · 참고용</small></h4>
-          <ul>
-            {analysis.map((line) => (
-              <li key={line.id} className={line.cat === "overall" ? "is-head" : line.cat === "sample" ? "is-note" : undefined}>
-                {line.text}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* 키가 없으면 기록 기반 분석, 있으면 저장된 AI 분석 우선·버튼으로 AI 분석 요청 (shared/ai) */}
+      {analysis.length > 0 && analysisInput && <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} />}
       {records.loading ? <div className="state">불러오는 중…</div> : missing.length === 0 && <MirrorBars rows={statRows} aName={aName} bName={bName} />}
     </section>
   );

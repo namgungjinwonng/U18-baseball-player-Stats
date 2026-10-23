@@ -21,6 +21,9 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  // AI 공급자 요청(연결 확인의 모델 목록 등)은 캐시하지 않는다 — 키를 쓴 응답을 기기 캐시에 남기지 않기 위해.
+  const host = new URL(e.request.url).hostname;
+  if (host === "generativelanguage.googleapis.com" || host === "api.anthropic.com" || host === "api.openai.com") return;
   // 문서 재로드는 HTTP 10분 캐시를 우회해 최신 해시 번들의 index.html을 받는다.
   const request = e.request.mode === "navigate"
     ? new Request(e.request, { cache: "reload" })

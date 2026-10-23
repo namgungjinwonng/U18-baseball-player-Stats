@@ -10,6 +10,7 @@ import versusSvg from "../assets/icons/versus.svg";
 import searchPng from "../assets/icons/search.png";
 import chartPng from "../assets/icons/chart.png";
 import announcementPng from "../assets/icons/announcement.png";
+import aiSvg from "../assets/icons/ai.svg";
 
 // 메뉴명 → 아이콘 파일 (드로어·페이지 제목 공용)
 const SRC = {
@@ -23,6 +24,7 @@ const SRC = {
   search: searchPng, // 선수 검색 — 기존 검색
   glossary: chartPng, // 지표 설명 — 기존 차트
   notice: announcementPng, // 알리는 글 — 기존 알림
+  ai: aiSvg, // AI 분석 설정 — 반짝임 별
 } as const;
 
 // 드로어 첫 클릭 전에 아이콘 요청과 디코딩을 끝내도록 이미지 객체를 모듈 수명 동안 유지한다.
