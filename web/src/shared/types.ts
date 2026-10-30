@@ -198,6 +198,7 @@ export interface TeamPlayerEntry {
   team: string;
   team_idx: string;
   region: string;
+  moved_to?: string;     // 시즌 중 이적 — 옛 학교 명단에 남은 항목이면 현재 학교명
 }
 export interface TeamStaffEntry {
   type: "staff";
@@ -228,3 +229,20 @@ export interface StrengthData {
   players: Record<string, PlayerOppIdx>; // 시즌 스코프
   tournaments: Record<string, Record<string, PlayerOppIdx>>; // slug → id → 지수
 }
+
+// --- 전국 야구장 현황 (scraper/src/fields.ts 수집 — data/fields.json) ---
+export type FieldKind = "고등학교" | "중학교" | "대학교" | "일반부" | "공식경기 구장" | "프로야구장" | "야구장";
+export interface Field {
+  id: string; // kbsa:{club_idx} · osm:{type}/{id} · venue:{이름} · pro:{이름}
+  name: string;
+  kind: FieldKind;
+  sido: string; // 서울·경기…
+  sigungu: string; // 종로구·성남시·기장군…
+  lat: number;
+  lon: number;
+  addr?: string;
+  approx?: boolean; // 위치·이름이 정확하지 않을 수 있음
+  note?: string; // 「KBSA 주소 기준」·「시·군·구 중심(추정)」·「이름 없는 야구장(추정)」
+  team?: string; // KBSA 팀 표기
+}
+export interface FieldsData { updated: string; fields: Field[]; sources?: { id: string; title: string; url: string; license: string }[] }

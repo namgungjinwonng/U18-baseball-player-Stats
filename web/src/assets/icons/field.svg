@@ -1,0 +1,7 @@
+<!-- 야구장 현황 메뉴·제목 아이콘 — 단선 부채꼴 야구장과 내야 다이아몬드 (다른 메뉴 아이콘과 같은 2px 선) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21 L3.2 12.2 A12.5 12.5 0 0 1 20.8 12.2 Z" />
+    <path d="M12 17.2 L8.8 14 L12 10.8 L15.2 14 Z" />
+  </g>
+</svg>

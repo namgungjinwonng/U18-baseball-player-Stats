@@ -51,6 +51,20 @@ jobs:
         working-directory: scraper
         run: npm run teams
 
+      # 전국 야구장 현황(data/fields.json) — KBSA 신생팀만 위치를 찾고, OSM 야구장은 7일마다 갱신. 실패해도 나머지는 계속.
+      - name: Restore field geocoding cache
+        uses: actions/cache@v4
+        with:
+          path: scraper/.cache/fields-geocode.json
+          key: fields-geocode-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            fields-geocode-${{ runner.os }}-
+
+      - name: Refresh baseball fields (야구장 현황)
+        working-directory: scraper
+        continue-on-error: true
+        run: npm run fields
+
       # 로스터 변경(학년/이적/personNo)을 선수 인덱스·집계에 반영 — 캘린더 스캔 없음
       - name: Re-aggregate (재집계 전용)
         working-directory: scraper

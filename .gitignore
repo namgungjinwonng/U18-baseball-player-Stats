@@ -4,6 +4,7 @@ dist/
 .DS_Store
 .env
 .vite/
+scraper/.cache/
 web/node_modules/
 scraper/node_modules/
 scraper/dist/

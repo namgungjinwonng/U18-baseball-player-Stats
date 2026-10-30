@@ -220,7 +220,7 @@ export function TeamView({ wrapClass }: { wrapClass: string }) {
       <div className="player-meta-line">
         {roster?.region && <span>{roster.region}</span>}
         {roster?.manager && <span>감독 {roster.manager}</span>}
-        {roster && <span>선수 {roster.player_count}명</span>}
+        {roster && <span>선수 {roster.players.filter((p) => !p.moved_to).length}명</span>}
         {/* 줄의 "·" 구분자는 span 앞에만 붙으므로 링크도 span으로 감싼다 */}
         {roster && <span><Link to={`/players?team=${encodeURIComponent(roster.team)}`}>선수현황 ›</Link></span>}
         <span><Link to="/team">다른 학교 보기 ›</Link></span>

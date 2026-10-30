@@ -1,10 +1,12 @@
 // 정적 JSON "DB" 로더 + 검색 인덱스 (디바이스 무관 공통 로직).
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type {
   LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile,
-  ScheduleData, ScheduleGame, StrengthData, TeamRosterEntry,
+  FieldsData, ScheduleData, ScheduleGame, StrengthData, TeamRosterEntry,
 } from "./types";
 import { useYear } from "./year";
+import type { VenueMap, WeatherMap } from "./ai/conditions";
+import { withRecordlessPlayers, type PlayerSearchEntry } from "./playerSearch";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
 
@@ -58,6 +60,18 @@ async function getJSON<T>(rel: string): Promise<T> {
     pending.catch(() => jsonCache.delete(url));
   }
   return pending as Promise<T>;
+}
+
+// 경기분석 「경기 조건」 — AI 분석을 요청할 때만 읽는다. 파일이 없으면 날씨 없이 분석한다.
+export function loadGameWeather(year: number): Promise<WeatherMap> {
+  return getJSON<WeatherMap>(`${year}/weather.json`).catch(() => ({}));
+}
+export function loadVenues(): Promise<VenueMap> {
+  return getJSON<VenueMap>("venues.json").catch(() => ({}));
+}
+// 경기분석 구장 선택·예보 좌표도 야구장 현황 자료를 쓴다.
+export function loadFields(): Promise<FieldsData | null> {
+  return getJSON<FieldsData>("fields.json").catch(() => null);
 }
 
 export interface AsyncState<T> {
@@ -376,13 +390,28 @@ export const useTeams = () => {
   );
 };
 
+// 전국 야구장 현황 (scraper/src/fields.ts 수집 — 연도와 무관한 한 파일). 없으면 null.
+export const useFields = () => useAsync<FieldsData | null>(loadFields, []);
+
+// 선수 검색 대상 = 기록 보유 선수 + 기록 없는 선수현황 등록 선수(무기록 상세로 연결).
+// 선수현황(teams.json)이 없거나 아직 로딩 중이어도 기록 선수 결과는 먼저 보여 준다.
+export const usePlayerSearchIndex = () => {
+  const index = usePlayerIndex();
+  const teams = useTeams();
+  const data = useMemo<PlayerSearchEntry[] | null>(
+    () => (index.data ? withRecordlessPlayers(index.data, teams.data) : null),
+    [index.data, teams.data]
+  );
+  return { data, loading: index.loading };
+};
+
 // 이름/팀 부분 일치 + 등번호(백넘버) 검색.
 // 공백으로 나눈 토큰을 전부 만족(AND) — 예: "충암 45" = 충암고 45번.
 // 숫자만인 토큰은 등번호 정확 일치로만 매칭 (부분 일치 시 4 → 14·40·45 등 노이즈 방지).
-export function searchPlayers(
-  index: PlayerIndexEntry[],
+export function searchPlayers<T extends PlayerIndexEntry>(
+  index: T[],
   query: string
-): PlayerIndexEntry[] {
+): T[] {
   const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (!tokens.length) return [];
   return index.filter((p) =>

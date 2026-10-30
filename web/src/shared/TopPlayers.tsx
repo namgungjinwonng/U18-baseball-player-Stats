@@ -84,7 +84,8 @@ export function TopPlayersSection({
     };
     return teams.map((team) => {
       const entry = roster.data?.find((r) => sameTeam(r.team, team));
-      const pairs = (entry?.players ?? []).filter((p) => p.person_no).map((p) => [p.person_no, p.grade] as [string, string]);
+      // 이적해 나간 선수(moved_to)는 옛 학교 복귀 선수로 세지 않는다.
+      const pairs = (entry?.players ?? []).filter((p) => p.person_no && !p.moved_to).map((p) => [p.person_no, p.grade] as [string, string]);
       return returningTopPlayers(prevRecords.data!, team, pairs.length ? new Map(pairs) : null, prevCtx);
     });
   }, [prevYear, prevReady, prevRecords.data, prevMeta.data, roster.data, teams]);

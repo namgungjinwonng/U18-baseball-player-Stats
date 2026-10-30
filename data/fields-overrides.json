@@ -1,0 +1,2032 @@
+{
+  "extra:mcst2025:b18ba9ba77e32540": {
+    "remove": true,
+    "reason": "문체부 한밭야구장은 기존 공식 일정의 대전 한밭야구장과 같은 대표 주소다. 추가 후보의 도로 중심 좌표가 떨어져 있어 기존 공식 항목을 유지하고 중복 추가하지 않음",
+    "source": "https://www.daejeon.go.kr/drh/DrhContentsHtmlView.do?menuSeq=7968"
+  },
+  "venue:무등경기장 야구장": {
+    "sido": "광주",
+    "sigungu": "북구",
+    "addr": "광주광역시 북구 서림로 10 (임동)",
+    "lat": 35.168072,
+    "lon": 126.888266,
+    "approx": true,
+    "note": "광주시 공식 전체 주소 확인. 지도는 경기장 단지 대표 주소 위치로 개별 구장 입구는 확인 필요",
+    "source": "https://www.gwangju.go.kr/culture/contentsView.do?pageId=culture8"
+  },
+  "venue:대전 한밭야구장": {
+    "sido": "대전",
+    "sigungu": "중구",
+    "addr": "대전광역시 중구 대종로 373 (한밭종합운동장 내)",
+    "lat": 36.315396,
+    "lon": 127.433584,
+    "approx": true,
+    "note": "대전시 공식 전체 주소 확인. 지도는 해당 도로 구간 추정 위치이므로 카카오맵에서 실제 장소 확인 필요",
+    "source": "https://www.daejeon.go.kr/drh/DrhContentsHtmlView.do?menuSeq=7968"
+  },
+  "venue:한화생명이글스파크 야구장": {
+    "remove": true,
+    "reason": "대전시 공식 자료의 한화생명 이글스파크(한밭야구장)는 기존 venue:대전 한밭야구장과 같은 옛 시설. 2025년 개장한 대전한화생명볼파크와는 별개이며 한밭 항목만 유지",
+    "sido": "대전",
+    "sigungu": "중구",
+    "addr": "대전광역시 중구 대종로 373 (부사동)",
+    "lat": 36.315396,
+    "lon": 127.433584,
+    "approx": true,
+    "note": "과거 일정 구장명. 시설관리공단의 한밭야구장 공식 주소로 확인하고 지도는 도로 구간 추정 위치를 표시",
+    "source": "https://www.djsiseol.or.kr/portal/sub060207.asp"
+  },
+  "osm:node/12917355429": {
+    "remove": true,
+    "reason": "OSM 태그상 실외 구장이 아님(shop=sports)",
+    "source": "https://www.openstreetmap.org/node/12917355429"
+  },
+  "osm:node/13015003675": {
+    "remove": true,
+    "reason": "OSM 태그상 실외 구장이 아님(shop=sports)",
+    "source": "https://www.openstreetmap.org/node/13015003675"
+  },
+  "osm:way/966629235": {
+    "remove": true,
+    "reason": "OSM 태그상 실외 구장이 아님(shop=sports)",
+    "source": "https://www.openstreetmap.org/way/966629235"
+  },
+  "osm:way/983744385": {
+    "remove": true,
+    "reason": "OSM 태그상 실외 구장이 아님(shop=sports)",
+    "source": "https://www.openstreetmap.org/way/983744385"
+  },
+  "kbsa:1702": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1702&season=2026"
+  },
+  "kbsa:1924": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1924&season=2026"
+  },
+  "kbsa:1827": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1827&season=2026"
+  },
+  "kbsa:1890": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1890&season=2026"
+  },
+  "kbsa:1826": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1826&season=2026"
+  },
+  "kbsa:1573": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1573&season=2026"
+  },
+  "kbsa:1759": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1759&season=2026"
+  },
+  "kbsa:1761": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1761&season=2026"
+  },
+  "kbsa:1466": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1466&season=2026"
+  },
+  "kbsa:1637": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1637&season=2026"
+  },
+  "kbsa:476": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=476&season=2026"
+  },
+  "kbsa:1778": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1778&season=2026"
+  },
+  "kbsa:223": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=223&season=2026"
+  },
+  "kbsa:222": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=222&season=2026"
+  },
+  "kbsa:501": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=501&season=2026"
+  },
+  "kbsa:234": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=234&season=2026"
+  },
+  "kbsa:1775": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1775&season=2026"
+  },
+  "kbsa:1878": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1878&season=2026"
+  },
+  "kbsa:1350": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1350&season=2026"
+  },
+  "kbsa:1353": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1353&season=2026"
+  },
+  "kbsa:1901": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1901&season=2026"
+  },
+  "kbsa:1905": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1905&season=2026"
+  },
+  "kbsa:1683": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1683&season=2026"
+  },
+  "kbsa:1830": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1830&season=2026"
+  },
+  "kbsa:1911": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1911&season=2026"
+  },
+  "kbsa:556": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=556&season=2026"
+  },
+  "kbsa:1594": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1594&season=2026"
+  },
+  "kbsa:1588": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1588&season=2026"
+  },
+  "kbsa:1564": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1564&season=2026"
+  },
+  "kbsa:1355": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1355&season=2026"
+  },
+  "kbsa:1902": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1902&season=2026"
+  },
+  "kbsa:1458": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1458&season=2026"
+  },
+  "kbsa:1542": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1542&season=2026"
+  },
+  "kbsa:1349": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1349&season=2026"
+  },
+  "kbsa:1543": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1543&season=2026"
+  },
+  "kbsa:1465": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1465&season=2026"
+  },
+  "kbsa:1450": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1450&season=2026"
+  },
+  "kbsa:1710": {
+    "remove": true,
+    "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1710&season=2026"
+  },
+  "kbsa:156": {
+    "name": "광주진흥고등학교",
+    "addr": "광주광역시 광산구 왕버들로 307",
+    "sido": "광주",
+    "sigungu": "광산구",
+    "lat": 35.195609,
+    "lon": 126.843316,
+    "approx": true,
+    "note": "학교·교육기관 공개 주소 확인, 주소 지오코딩 위치(교내 구장 중심은 미확인). 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/988789400)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/572641125. 야구장 면·출입구는 별도 확인",
+    "source": "https://www.gen.go.kr/s_school/index.php?mode=search1&page=1&s_div1=&s_div2=0&s_div3=5&s_div4=3&s_name="
+  },
+  "kbsa:232": {
+    "name": "광주진흥중학교",
+    "addr": "광주광역시 광산구 왕버들로 307",
+    "sido": "광주",
+    "sigungu": "광산구",
+    "lat": 35.195609,
+    "lon": 126.843316,
+    "approx": true,
+    "note": "학교·교육기관 공개 주소 확인, 주소 지오코딩 위치(교내 구장 중심은 미확인). 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/988789400)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/572641125. 야구장 면·출입구는 별도 확인",
+    "source": "https://seobu.jge.go.kr/schList.php?gu=A5&id=135&mode=sv&page=1&sid=131&sno=322&st=3&syp=3"
+  },
+  "kbsa:171": {
+    "name": "대전고등학교",
+    "addr": "대전광역시 중구 대흥로 110 (대전광역시 중구 대흥동 320-2)",
+    "sido": "대전",
+    "sigungu": "중구",
+    "lat": 36.322148,
+    "lon": 127.425406,
+    "approx": false,
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 야구장(https://www.openstreetmap.org/way/765570661)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/30659208",
+    "source": "https://www.data.go.kr/data/15021148/standard.do"
+  },
+  "venue:목동야구장": {
+    "addr": "서울특별시 양천구 안양천길336",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "pro:잠실야구장": {
+    "addr": "서울특별시 송파구 올림픽로 25",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "KBO 공식 구단 안내의 잠실야구장 전체 도로명주소 · 기존 좌표 유지"
+  },
+  "venue:대구시민운동장 야구장": {
+    "addr": "대구광역시 북구 고성3가2",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "pro:광주기아챔피언스필드": {
+    "addr": "광주광역시 북구 서림로 10",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "KBO 공식 홈구장 주소 대조 · 기존 좌표 유지"
+  },
+  "osm:way/1136425481": {
+    "addr": "세종특별자치시 부강면 부강금호로 170",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1310766029": {
+    "addr": "경기도 용인시 처인구 남사면 방아리 1178-3일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/840167276": {
+    "addr": "경기도 화성시 우정읍 매향리 320-2",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1034992275": {
+    "addr": "경기도 안산시 신길동 1376",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/612873421": {
+    "addr": "경기도 안산시 사동 1640",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/671071555": {
+    "addr": "경기도 평택시 포승읍 만호리 589",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1287015833": {
+    "addr": "경기도 평택시 서탄면 금암리 124",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1125967333": {
+    "addr": "경기도 안양시 석수동 251-1",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1146080484": {
+    "addr": "경기도 김포시 고촌읍 전호리 626-1",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1046743286": {
+    "addr": "경기도 파주시 하지석길 165-75",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/779220097": {
+    "addr": "경기도 양주시 장흥면 삼상리 477-7",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/471469152": {
+    "addr": "경기도 안성시 보개면 양복리 1086",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1289547082": {
+    "addr": "경기도 가평군 가평읍 문화로 131",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:node/4553577702": {
+    "addr": "충청북도 청주시 사직동 861",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1098493309": {
+    "addr": "충청북도 제천시 금성면 적덕리 55",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/815584375": {
+    "addr": "충청남도 천안시 동남구 천안대로 320",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "venue:공주 시립야구장": {
+    "addr": "충청남도 공주시 백제큰길 2425",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/475310342": {
+    "addr": "충청남도 아산시 모종동 276-2",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/430465263": {
+    "addr": "전북특별자치도 전주시 덕진동 1가 1220",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "venue:포항야구장": {
+    "addr": "경상북도 포항시 남구 희망대로 790",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "venue:경주베이스볼파크 1구장": {
+    "addr": "경상북도 경주시 손곡동 519-1",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "venue:안동드림베이스볼파크": {
+    "addr": "경상북도 안동시 남후면 하아리 379-14",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/899193995": {
+    "addr": "경상북도 구미시 낙동제방길 200",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1228282099": {
+    "addr": "경상북도 울진군 죽변면 봉평리 632",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:relation/18115523": {
+    "addr": "경상남도 창원시 양덕동477",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "venue:가곡야구장": {
+    "addr": "경상남도 밀양시 가곡동 266-6",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/505743754": {
+    "addr": "경상남도 거제시 하청면 연하해안로 1604",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1140749597": {
+    "addr": "경상남도 양산시 물금읍 물금리 205-3",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/1449639336": {
+    "addr": "경상남도 양산시 배움터길 60-19",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/371821887": {
+    "addr": "제주특별자치도 서귀포시 오라1동 1163-4",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 현황의 원문 전체 주소(2024.12.31. 기준)"
+  },
+  "osm:way/652807266": {
+    "name": "고양장항야구장",
+    "addr": "경기도 고양시 일산동구 장항동 660-65번지 일원",
+    "source": "https://m.gys.or.kr/page/facilities/s_sports/jh_baseball.php",
+    "note": "운영기관의 사회인·리틀 시설 공통 주소 확인. 두 구장 개별 종류는 미지정 · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/652807379": {
+    "name": "고양장항야구장",
+    "addr": "경기도 고양시 일산동구 장항동 660-65번지 일원",
+    "source": "https://m.gys.or.kr/page/facilities/s_sports/jh_baseball.php",
+    "note": "운영기관의 사회인·리틀 시설 공통 주소 확인. 두 구장 개별 종류는 미지정 · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/279831028": {
+    "addr": "경기도 고양시 일산서구 중앙로 1601 (대화동)",
+    "source": "https://m.gys.or.kr/page/facilities/s_sports/baseball.php",
+    "note": "운영기관 시설 위치 확인 · 기존 위경도 유지"
+  },
+  "osm:way/470018503": {
+    "addr": "경기도 고양시 일산서구 중앙로 1601 일원",
+    "source": "https://m.gys.or.kr/page/facilities/s_sports/little_baseball.php",
+    "note": "운영기관 고양리틀야구장 위치 확인 · 기존 위경도 유지"
+  },
+  "osm:way/731968870": {
+    "addr": "경기도 고양시 덕양구 덕은동 520-68",
+    "source": "https://www.goyang.go.kr/www/www03/www03_11/www03_11_7.jsp",
+    "note": "시청 공공시설 목록의 대덕야구장 주소 확인. 운영기관 페이지의 구 표기 차이는 시청 기준 · 기존 위경도 유지"
+  },
+  "pro:고척스카이돔": {
+    "addr": "서울특별시 구로구 경인로 430",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "KBO 공식 홈구장 주소 대조 · 기존 좌표 유지"
+  },
+  "venue:울산 문수 야구장": {
+    "remove": true,
+    "reason": "동명 중복 — 시·군 중심 추정 좌표 항목. 같은 이름의 정확한 위치 osm:way/696084610 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/696084610"
+  },
+  "osm:way/696084610": {
+    "addr": "울산광역시 남구 문수로 44",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 90행 문수야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "venue:화성드림파크 여성겸용구장": {
+    "addr": "경기도 화성시 우정읍 매향리 320-2",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 119행 화성드림파크 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "venue:배나물야구장(안산시야구장)": {
+    "addr": "경기도 안산시 신원로301-15(목내동 451)",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 134행 배나물 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "osm:way/1057556026": {
+    "addr": "경기도 시흥시 정왕동 1368번지",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 146행 소망공원 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/700635093": {
+    "addr": "경기도 시흥시 월곶동 520-373번지",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 147행 월곶에코피아 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/497969069": {
+    "addr": "경기도 광명시 하안로 30-19",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 156행 시립광명야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "osm:way/694608623": {
+    "addr": "경기도 양주시 백석읍 오산리 239-3번지 일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 160행 백석생활체육공원 야구장 (성인) 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/787872279": {
+    "addr": "경기도 양주시 백석읍 오산리 239-3번지 일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 160행 백석생활체육공원 야구장 (성인) 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/665421765": {
+    "addr": "경기도 이천시 부발읍 무촌리 36",
+    "source": "https://www.openstreetmap.org/way/469935990",
+    "note": "OSM의 상위 체육시설 「이천시 종합운동장」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인.",
+    "name": "이천시 종합운동장 야구장"
+  },
+  "osm:way/665421766": {
+    "addr": "경기도 이천시 부발읍 무촌리 36",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 164행 이천시 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/1558988297": {
+    "addr": "경기도 포천시 창수면 오가리 941",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 172행 포천 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "osm:way/1558988298": {
+    "addr": "경기도 포천시 창수면 오가리 941",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 172행 포천 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "osm:way/1550504428": {
+    "addr": "충청북도 청주시 청원구 내수읍 내수리 110번지 일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 222행 내수생활체육공원 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/1550504429": {
+    "addr": "충청북도 청주시 청원구 내수읍 내수리 110번지 일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 222행 내수생활체육공원 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/1550504430": {
+    "addr": "충청북도 청주시 청원구 내수읍 내수리 110번지 일원",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 222행 내수생활체육공원 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/1240702783": {
+    "addr": "충청남도 홍성군 홍북읍 신경리 1557",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 255행 내포야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "osm:way/94508059": {
+    "addr": "전북특별자치도 군산시 번영로 281",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 269행 군산 월명 종합경기장 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "venue:정읍 필연야구장": {
+    "addr": "전북특별자치도 정읍시 신태인읍 백산감산로 107",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 277행 필연야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:way/1414679913": {
+    "addr": "경상북도 칠곡군 석적읍 남율리 790-4",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 352행 석적체육공원 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "venue:진해공설운동장 야구장(진해야구장)": {
+    "addr": "경상남도 창원시 도만동 1번지",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 360행 진해공설운동장 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지"
+  },
+  "venue:창녕스포츠파크": {
+    "addr": "경상남도 창녕군 부곡면 사창리 557",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07",
+    "note": "문체부 2025 원문 387행 창녕스포츠파크 야구장 주소 대조(2024.12.31. 기준, 시설 공통 주소) · 기존 위경도 유지 · 위치/개별 구장 대응 미확인은 추정 유지"
+  },
+  "osm:node/9093008917": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(restaurant)",
+    "source": "https://www.openstreetmap.org/node/9093008917"
+  },
+  "osm:node/11519898181": {
+    "addr": "경기도 가평군 가평읍 가화로 28-24",
+    "source": "https://www.openstreetmap.org/node/11519898181",
+    "note": "동일 OSM 객체의 addr:street·addr:housenumber로 한국식 주소 순서 복원(별도 공식기관 확인은 아님) · 기존 위경도 유지"
+  },
+  "osm:node/13042496361": {
+    "addr": "강원특별자치도 춘천시 영서로 3005",
+    "source": "https://www.openstreetmap.org/node/13042496361",
+    "note": "동일 OSM 객체의 addr:street·addr:housenumber로 한국식 주소 순서 복원(별도 공식기관 확인은 아님) · 기존 위경도 유지"
+  },
+  "osm:way/381674212": {
+    "addr": "서울특별시 도봉구 도봉로168길 30",
+    "source": "https://www.openstreetmap.org/way/381674212",
+    "note": "동일 OSM 객체의 addr:street·addr:housenumber로 한국식 주소 순서 복원(별도 공식기관 확인은 아님) · 기존 위경도 유지"
+  },
+  "osm:way/487177128": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(기장체육관)",
+    "source": "https://www.openstreetmap.org/way/487177128"
+  },
+  "osm:way/648719106": {
+    "addr": "경상남도 김해시 상동면 장척로 678",
+    "source": "https://www.openstreetmap.org/way/648719106",
+    "note": "동일 OSM 객체의 addr:street·addr:housenumber로 한국식 주소 순서 복원(별도 공식기관 확인은 아님) · 기존 위경도 유지"
+  },
+  "osm:way/1546276813": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(코리아풋볼파크 아레나)",
+    "source": "https://www.openstreetmap.org/way/1546276813"
+  },
+  "osm:way/1546276814": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(코리아풋볼파크)",
+    "source": "https://www.openstreetmap.org/way/1546276814"
+  },
+  "kbsa:169": {
+    "addr": "인천광역시 제물포구 자유공원로 58-9 (전동 26)",
+    "source": "https://jego.icehs.kr/main.do",
+    "note": "학교 공식 홈페이지의 현행 전체 주소 확인(이전 KBSA 중구·번지 누락 표기 보완) · 기존 위경도 유지"
+  },
+  "kbsa:147": {
+    "addr": "서울특별시 강남구 영동대로 643 (서울특별시 강남구 삼성동 74-4)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강남구"
+  },
+  "kbsa:190": {
+    "addr": "서울특별시 강남구 역삼로 541 (서울특별시 강남구 대치동 952-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강남구"
+  },
+  "kbsa:200": {
+    "addr": "서울특별시 강남구 남부순환로378길 39 (서울특별시 강남구 도곡동 460)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강남구"
+  },
+  "kbsa:208": {
+    "addr": "서울특별시 강남구 도산대로38길 27 (서울특별시 강남구 논현동 69)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강남구"
+  },
+  "kbsa:218": {
+    "addr": "서울특별시 강남구 역삼로 541 (서울특별시 강남구 대치동 952-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/1460022703)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/417911700. 야구장 면·출입구는 별도 확인",
+    "sigungu": "강남구",
+    "lat": 37.50571,
+    "lon": 127.063027,
+    "approx": true
+  },
+  "kbsa:164": {
+    "addr": "서울특별시 강동구 고덕로 227 (서울특별시 강동구 고덕동 313)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강동구"
+  },
+  "kbsa:1164": {
+    "addr": "서울특별시 강동구 동남로 964 (서울특별시 강동구 고덕동 295-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강동구"
+  },
+  "kbsa:1556": {
+    "addr": "서울특별시 강동구 진황도로 72 (서울특별시 강동구 천호동 447-9)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강동구"
+  },
+  "kbsa:203": {
+    "addr": "서울특별시 강동구 고덕로 227 (서울특별시 강동구 고덕동 313)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강동구"
+  },
+  "kbsa:175": {
+    "addr": "서울특별시 강북구 솔매로49길 20 (서울특별시 강북구 미아동 193-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강북구"
+  },
+  "kbsa:212": {
+    "addr": "서울특별시 광진구 뚝섬로41길 33 (서울특별시 광진구 자양동 520-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "광진구"
+  },
+  "kbsa:917": {
+    "addr": "서울특별시 구로구 부일로 917 (서울특별시 구로구 궁동 230)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/249852613)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/249855049. 야구장 면·출입구는 별도 확인",
+    "sigungu": "구로구",
+    "lat": 37.494143,
+    "lon": 126.827611,
+    "approx": true
+  },
+  "kbsa:1158": {
+    "addr": "서울특별시 노원구 공릉로 257 (서울특별시 노원구 공릉동 481-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인",
+    "sigungu": "노원구",
+    "lat": 37.630778,
+    "lon": 127.073998,
+    "approx": true
+  },
+  "kbsa:187": {
+    "addr": "서울특별시 노원구 한글비석로 506 (서울특별시 노원구 상계동 641)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인",
+    "sigungu": "노원구",
+    "lat": 37.665252,
+    "lon": 127.062533,
+    "approx": true
+  },
+  "kbsa:496": {
+    "addr": "서울특별시 노원구 덕릉로 553 (서울특별시 노원구 중계동 515)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/666003345)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/380848419. 야구장 면·출입구는 별도 확인",
+    "sigungu": "노원구",
+    "lat": 37.649071,
+    "lon": 127.06854,
+    "approx": true
+  },
+  "kbsa:215": {
+    "addr": "서울특별시 노원구 한글비석로 506 (서울특별시 노원구 상계동 641)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "노원구"
+  },
+  "kbsa:214": {
+    "addr": "서울특별시 동대문구 왕산로 301 (서울특별시 동대문구 청량리동 14)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동대문구"
+  },
+  "kbsa:172": {
+    "addr": "서울특별시 동작구 대방동길 74 (서울특별시 동작구 대방동 375-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동작구"
+  },
+  "kbsa:197": {
+    "addr": "서울특별시 동작구 대방동15길 29 (서울특별시 동작구 대방동 390-6)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동작구"
+  },
+  "kbsa:205": {
+    "addr": "서울특별시 동작구 대방동길 74 (서울특별시 동작구 대방동 375-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동작구"
+  },
+  "kbsa:555": {
+    "addr": "서울특별시 마포구 백범로 139 (서울특별시 마포구 염리동 150)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "마포구"
+  },
+  "kbsa:945": {
+    "addr": "서울특별시 마포구 백범로 139 (서울특별시 마포구 염리동 150)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/780097787)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/777927597. 야구장 면·출입구는 별도 확인",
+    "sigungu": "마포구",
+    "lat": 37.546377,
+    "lon": 126.947579,
+    "approx": true
+  },
+  "kbsa:217": {
+    "addr": "서울특별시 서대문구 연희로41길 94 (서울특별시 서대문구 홍은동 182)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서대문구"
+  },
+  "kbsa:167": {
+    "addr": "서울특별시 서초구 효령로 197 (서울특별시 서초구 서초동 1526-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서초구"
+  },
+  "kbsa:199": {
+    "addr": "서울특별시 서초구 신반포로33길 39 (서울특별시 서초구 잠원동 66-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서초구"
+  },
+  "kbsa:210": {
+    "addr": "서울특별시 서초구 성촌길 14 (서울특별시 서초구 우면동 680)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서초구"
+  },
+  "kbsa:211": {
+    "addr": "서울특별시 서초구 방배중앙로3길 32 (서울특별시 서초구 방배동 974-22)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서초구"
+  },
+  "kbsa:153": {
+    "addr": "서울특별시 성북구 보문로29길 49 (서울특별시 성북구 삼선동3가 43-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "성북구"
+  },
+  "kbsa:157": {
+    "addr": "서울특별시 송파구 위례북로 10 (서울특별시 송파구 거여동 652)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "송파구"
+  },
+  "kbsa:160": {
+    "addr": "서울특별시 송파구 삼학사로 11 (서울특별시 송파구 삼전동 172-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "송파구"
+  },
+  "kbsa:202": {
+    "addr": "서울특별시 송파구 삼학사로 11 (서울특별시 송파구 삼전동 172-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "송파구"
+  },
+  "kbsa:213": {
+    "addr": "서울특별시 송파구 잠실로 12 (서울특별시 송파구 잠실동 22-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "송파구"
+  },
+  "kbsa:206": {
+    "addr": "서울특별시 양천구 남부순환로29길 25 (서울특별시 양천구 신월동 17-6)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양천구"
+  },
+  "kbsa:207": {
+    "addr": "서울특별시 양천구 지양로7길 32 (서울특별시 양천구 신월동 948)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양천구"
+  },
+  "kbsa:209": {
+    "addr": "서울특별시 영등포구 대림로31나길 17 (서울특별시 영등포구 대림동 735)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "영등포구"
+  },
+  "kbsa:170": {
+    "addr": "서울특별시 용산구 원효로97길 33-4 (서울특별시 용산구 청파동3가 131-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "용산구"
+  },
+  "kbsa:204": {
+    "addr": "서울특별시 용산구 원효로97길 33-4 (서울특별시 용산구 청파동3가 131-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "용산구"
+  },
+  "kbsa:181": {
+    "addr": "서울특별시 은평구 가좌로5길 5 (서울특별시 은평구 응암동 272-113)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/1141598193)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/462889867. 야구장 면·출입구는 별도 확인",
+    "sigungu": "은평구",
+    "lat": 37.58492,
+    "lon": 126.922337,
+    "approx": true
+  },
+  "kbsa:216": {
+    "addr": "서울특별시 은평구 가좌로5길 5 (서울특별시 은평구 응암동 272-113)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "은평구"
+  },
+  "kbsa:1065": {
+    "addr": "서울특별시 종로구 자하문로 136 (서울특별시 종로구 청운동 89-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "종로구"
+  },
+  "kbsa:183": {
+    "addr": "서울특별시 종로구 창덕궁길 164 (서울특별시 종로구 계동 1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "종로구"
+  },
+  "kbsa:179": {
+    "addr": "서울특별시 중구 동호로15길 93 (서울특별시 중구 신당동 432-460)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "중구"
+  },
+  "kbsa:201": {
+    "addr": "서울특별시 중구 마른내로9길 10 (서울특별시 중구 인현동2가 3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "중구"
+  },
+  "kbsa:188": {
+    "addr": "부산광역시 남구 수영로196번길 80 (부산광역시 남구 대연동 918-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남구"
+  },
+  "kbsa:224": {
+    "addr": "부산광역시 동구 초량로40번길 29 (부산광역시 동구 초량동 773-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동구"
+  },
+  "kbsa:186": {
+    "addr": "부산광역시 부산진구 당감서로 137 (부산광역시 부산진구 당감동 642)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "부산진구"
+  },
+  "kbsa:220": {
+    "addr": "부산광역시 서구 까치고개로229번길 7 (부산광역시 서구 토성동3가 12)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서구"
+  },
+  "kbsa:176": {
+    "addr": "부산광역시 서구 망양로111번길 65 (부산광역시 서구 동대신동3가 1-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 야구장(https://www.openstreetmap.org/way/619880051)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/793770683",
+    "sigungu": "서구",
+    "lat": 35.121692,
+    "lon": 129.019776,
+    "approx": false
+  },
+  "kbsa:182": {
+    "addr": "부산광역시 서구 망양로33번길 12 (부산광역시 서구 서대신동3가 521)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/757042823)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/756662305. 야구장 면·출입구는 별도 확인",
+    "sigungu": "서구",
+    "lat": 35.1142,
+    "lon": 129.013292,
+    "approx": true
+  },
+  "kbsa:191": {
+    "addr": "부산광역시 동구 초량로40번길 23 (부산광역시 동구 초량동 806-177)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/530340437)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/783359219. 야구장 면·출입구는 별도 확인",
+    "sigungu": "동구",
+    "lat": 35.120886,
+    "lon": 129.036028,
+    "approx": true
+  },
+  "kbsa:180": {
+    "addr": "대구광역시 남구 중앙대로 171 (대구광역시 남구 대명동 187)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 야구장(https://www.openstreetmap.org/way/469993646)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/761843764",
+    "sigungu": "남구",
+    "lat": 35.848471,
+    "lon": 128.589533,
+    "approx": false
+  },
+  "kbsa:227": {
+    "addr": "대구광역시 남구 현충로48길 33 (대구광역시 남구 대명동 1819-11)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남구"
+  },
+  "kbsa:229": {
+    "addr": "대구광역시 남구 대봉로 120 (대구광역시 남구 이천동 258)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남구"
+  },
+  "kbsa:933": {
+    "addr": "대구광역시 남구 효성로 33 (대구광역시 남구 봉덕동 1322-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인",
+    "sigungu": "남구",
+    "lat": 35.834797,
+    "lon": 128.598582,
+    "approx": true
+  },
+  "kbsa:145": {
+    "addr": "대구광역시 달서구 월배로 241 (대구광역시 달서구 상인동 1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "달서구"
+  },
+  "kbsa:228": {
+    "addr": "대구광역시 서구 서대구로3길 32 (대구광역시 서구 내당동 352-4)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서구"
+  },
+  "kbsa:185": {
+    "addr": "대구광역시 수성구 청호로 300 (대구광역시 수성구 황금동 9)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "수성구"
+  },
+  "kbsa:236": {
+    "addr": "인천광역시 남동구 구월남로57번길 12 (인천광역시 남동구 구월동 1089-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남동구"
+  },
+  "kbsa:237": {
+    "addr": "인천광역시 남동구 백범로297번길 21 (인천광역시 남동구 간석동 11-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남동구"
+  },
+  "kbsa:161": {
+    "addr": "인천광역시 제물포구 동산로 58 (인천광역시 제물포구 송림동 97-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 야구장(https://www.openstreetmap.org/way/511076476)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/430483580",
+    "sigungu": "제물포구",
+    "lat": 37.472187,
+    "lon": 126.648979,
+    "approx": false
+  },
+  "kbsa:235": {
+    "addr": "인천광역시 제물포구 동산로 58 (인천광역시 제물포구 송림동 97-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "제물포구"
+  },
+  "kbsa:165": {
+    "addr": "인천광역시 미추홀구 경원대로 804 (인천광역시 미추홀구 주안동 1555)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "미추홀구"
+  },
+  "kbsa:238": {
+    "addr": "인천광역시 제물포구 인항로24번길 38 (인천광역시 제물포구 신흥동3가 7-338)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "제물포구"
+  },
+  "kbsa:151": {
+    "addr": "전남광주통합특별시 남구 서문대로627번길 20 (전남광주통합특별시 남구 진월동 406)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "남구"
+  },
+  "kbsa:148": {
+    "addr": "전남광주통합특별시 북구 독립로237번길 33 (전남광주통합특별시 북구 누문동 144)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "북구"
+  },
+  "kbsa:239": {
+    "addr": "대전광역시 동구 계족로 123 (대전광역시 동구 신흥동 168)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동구"
+  },
+  "kbsa:240": {
+    "addr": "대전광역시 동구 태전로 67 (대전광역시 동구 삼성동 282-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동구"
+  },
+  "kbsa:821": {
+    "addr": "대전광역시 서구 배재로46번길 77 (대전광역시 서구 도마동 155-20)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "서구"
+  },
+  "kbsa:593": {
+    "addr": "경기도 고양시 일산서구 덕이로172번길 4-39 (경기도 고양시 일산서구 덕이동 753-11)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "고양시"
+  },
+  "kbsa:1696": {
+    "addr": "경기도 고양시 일산동구 숲속마을로 202 (경기도 고양시 일산동구 풍동 195)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "고양시"
+  },
+  "kbsa:461": {
+    "addr": "경기도 고양시 일산서구 고봉로 177 (경기도 고양시 일산서구 일산동 1096)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "고양시"
+  },
+  "kbsa:513": {
+    "addr": "경기도 고양시 덕양구 마상로 1 (경기도 고양시 덕양구 주교동 527-5)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "고양시"
+  },
+  "kbsa:916": {
+    "addr": "경기도 광명시 새터안로 20 (경기도 광명시 광명동 42-122)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "광명시"
+  },
+  "kbsa:246": {
+    "addr": "경기도 구리시 건원대로34번길 118 (경기도 구리시 인창동 669-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "구리시"
+  },
+  "kbsa:1903": {
+    "addr": "경기도 김포시 봉화로 69 (경기도 김포시 북변동 477)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "김포시"
+  },
+  "kbsa:586": {
+    "addr": "경기도 동두천시 신천로 159 (경기도 동두천시 안흥동 36)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동두천시"
+  },
+  "kbsa:585": {
+    "addr": "경기도 동두천시 신천로 159 (경기도 동두천시 안흥동 36)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "동두천시"
+  },
+  "kbsa:243": {
+    "addr": "경기도 부천시 원미구 심중로75번길 64 (경기도 부천시 원미구 중동 777)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "부천시"
+  },
+  "kbsa:178": {
+    "addr": "경기도 성남시 분당구 판교로 738 (경기도 성남시 분당구 야탑동 145-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "성남시"
+  },
+  "kbsa:548": {
+    "addr": "경기도 성남시 중원구 황송로 35 (경기도 성남시 중원구 금광동 2422)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "성남시"
+  },
+  "kbsa:242": {
+    "addr": "경기도 성남시 분당구 탄천로 49 (경기도 성남시 분당구 이매동 145)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "성남시"
+  },
+  "kbsa:244": {
+    "addr": "경기도 성남시 중원구 시민로77번길 10-1 (경기도 성남시 중원구 성남동 2876)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "성남시"
+  },
+  "kbsa:189": {
+    "addr": "경기도 수원시 팔달구 월드컵로 216 (경기도 수원시 팔달구 우만동 9-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "수원시"
+  },
+  "kbsa:547": {
+    "addr": "경기도 수원시 장안구 대평로52번길 12 (경기도 수원시 장안구 정자동 886-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "수원시"
+  },
+  "kbsa:500": {
+    "addr": "경기도 수원시 팔달구 수원천로392번길 44-22 (경기도 수원시 팔달구 매향동 110-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "수원시"
+  },
+  "kbsa:519": {
+    "addr": "경기도 시흥시 수인로3287번길 26 (경기도 시흥시 은행동 108-8)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "시흥시"
+  },
+  "kbsa:420": {
+    "addr": "경기도 시흥시 은행로 60 (경기도 시흥시 은행동 107)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "시흥시"
+  },
+  "kbsa:184": {
+    "addr": "경기도 안산시 상록구 안산공고로 51 (경기도 안산시 상록구 부곡동 722)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "안산시"
+  },
+  "kbsa:247": {
+    "addr": "경기도 안산시 단원구 안산천서로 65 (경기도 안산시 단원구 고잔동 673-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "안산시"
+  },
+  "kbsa:407": {
+    "addr": "경기도 안양시 만안구 석수로 238 (경기도 안양시 만안구 석수동 595-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "안양시"
+  },
+  "kbsa:248": {
+    "addr": "경기도 안양시 동안구 관평로 127 (경기도 안양시 동안구 평촌동 899-5)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "안양시"
+  },
+  "kbsa:522": {
+    "addr": "경기도 양평군 개군면 추읍로 15 (경기도 양평군 개군면 부리 453-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양평군"
+  },
+  "kbsa:518": {
+    "addr": "경기도 양평군 단월면 보룡길 83 (경기도 양평군 단월면 보룡리 395-13)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양평군"
+  },
+  "kbsa:435": {
+    "addr": "경기도 용인시 처인구 이동읍 경기동로687번길 28-14 (경기도 용인시 처인구 이동읍 송전리 692)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "용인시"
+  },
+  "kbsa:1453": {
+    "addr": "경기도 의정부시 서부로 545 (경기도 의정부시 가능동 562-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "의정부시"
+  },
+  "kbsa:582": {
+    "addr": "경기도 의정부시 서부로 545 (경기도 의정부시 가능동 562-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "의정부시"
+  },
+  "kbsa:507": {
+    "addr": "경기도 이천시 모가면 진상미로1385번길 114 (경기도 이천시 모가면 진가리 227-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "이천시"
+  },
+  "kbsa:508": {
+    "addr": "경기도 파주시 후곡로 66 (경기도 파주시 금촌동 996)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "파주시"
+  },
+  "kbsa:592": {
+    "addr": "경기도 평택시 경기대로1376번길 38-6 (경기도 평택시 서정동 2-73)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "평택시"
+  },
+  "kbsa:815": {
+    "addr": "경기도 평택시 팽성읍 팽성송화로 192 (경기도 평택시 팽성읍 송화리 810)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "평택시"
+  },
+  "kbsa:1173": {
+    "addr": "경기도 평택시 경기대로1376번길 38-6 (경기도 평택시 서정동 2-73)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "평택시"
+  },
+  "kbsa:589": {
+    "addr": "경기도 평택시 팽성읍 부용로56번길 20 (경기도 평택시 팽성읍 송화리 810)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "평택시"
+  },
+  "kbsa:927": {
+    "addr": "경기도 화성시 효행구 비봉면 양노로109번길 5 (경기도 화성시 효행구 비봉면 양노리 259-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "화성시"
+  },
+  "kbsa:193": {
+    "addr": "강원특별자치도 강릉시 강릉대로587번길 68 (강원특별자치도 강릉시 초당동 57-2)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강릉시"
+  },
+  "kbsa:249": {
+    "addr": "강원특별자치도 강릉시 노암등길 76 (강원특별자치도 강릉시 노암동 462-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "강릉시"
+  },
+  "kbsa:194": {
+    "addr": "강원특별자치도 속초시 청대로 219 (강원특별자치도 속초시 조양동 589-7)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "속초시"
+  },
+  "kbsa:250": {
+    "addr": "강원특별자치도 속초시 미시령로 3402 (강원특별자치도 속초시 교동 780-5)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "속초시"
+  },
+  "kbsa:1701": {
+    "addr": "강원특별자치도 영월군 상동읍 태백산로 3147 (강원특별자치도 영월군 상동읍 천평리 414)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "영월군"
+  },
+  "kbsa:195": {
+    "addr": "강원특별자치도 원주시 치악로 1765 (강원특별자치도 원주시 개운동 127-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "원주시"
+  },
+  "kbsa:251": {
+    "addr": "강원특별자치도 원주시 치악로 1724 (강원특별자치도 원주시 단구동 460)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "원주시"
+  },
+  "kbsa:252": {
+    "addr": "강원특별자치도 춘천시 공지로 442-10 (강원특별자치도 춘천시 중앙로3가 69)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "춘천시"
+  },
+  "kbsa:138": {
+    "addr": "충청북도 청주시 서원구 2순환로 1572 (충청북도 청주시 서원구 미평동 349)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "청주시"
+  },
+  "kbsa:421": {
+    "addr": "충청북도 청주시 흥덕구 사직대로 79 (충청북도 청주시 흥덕구 복대동 869)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "청주시"
+  },
+  "kbsa:253": {
+    "addr": "충청북도 청주시 서원구 2순환로 1574 (충청북도 청주시 서원구 미평동 349)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "청주시"
+  },
+  "kbsa:254": {
+    "addr": "충청북도 청주시 상당구 사직대로361번길 125 (충청북도 청주시 상당구 영동 8)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "청주시"
+  },
+  "kbsa:141": {
+    "addr": "충청남도 공주시 공주고담길 2 (충청남도 공주시 중학동 137-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "공주시"
+  },
+  "kbsa:255": {
+    "addr": "충청남도 공주시 왕릉로 111 (충청남도 공주시 금성동 85)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "공주시"
+  },
+  "kbsa:381": {
+    "addr": "충청남도 부여군 외산면 외산로 55-14 (충청남도 부여군 외산면 만수리 34-14)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "부여군"
+  },
+  "kbsa:256": {
+    "addr": "충청남도 아산시 온중로 48 (충청남도 아산시 용화동 276)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "아산시"
+  },
+  "kbsa:142": {
+    "addr": "충청남도 천안시 동남구 단대로 69 (충청남도 천안시 동남구 신부동 245)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "천안시"
+  },
+  "kbsa:257": {
+    "addr": "충청남도 천안시 동남구 중앙로 188 (충청남도 천안시 동남구 성황동 4)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "천안시"
+  },
+  "kbsa:1828": {
+    "addr": "전북특별자치도 고창군 무장면 왕제산로 713 (전북특별자치도 고창군 무장면 무장리 431-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인",
+    "sigungu": "고창군",
+    "lat": 35.414224,
+    "lon": 126.558006,
+    "approx": true
+  },
+  "kbsa:1552": {
+    "addr": "전북특별자치도 군산시 석치1길 17 (전북특별자치도 군산시 문화동 785-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "군산시"
+  },
+  "kbsa:162": {
+    "addr": "전북특별자치도 전주시 완산구 권삼득로 2 (전북특별자치도 전주시 완산구 중노송동 449-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "전주시"
+  },
+  "kbsa:521": {
+    "addr": "전북특별자치도 정읍시 신태인읍 벽골제로 34 (전북특별자치도 정읍시 신태인읍 화호리 251-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "정읍시"
+  },
+  "kbsa:520": {
+    "addr": "전남광주통합특별시 나주시 세지면 동창로 112 (전남광주통합특별시 나주시 세지면 오봉리 180)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "나주시"
+  },
+  "kbsa:270": {
+    "addr": "전남광주통합특별시 순천시 수박등1길 13 (전남광주통합특별시 순천시 생목동 24)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "순천시"
+  },
+  "kbsa:269": {
+    "addr": "전남광주통합특별시 여수시 공화북4길 19-1 (전남광주통합특별시 여수시 공화동 1453)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "여수시"
+  },
+  "kbsa:378": {
+    "addr": "전남광주통합특별시 화순군 화순읍 진각로 31-9 (전남광주통합특별시 화순군 화순읍 삼천리 752-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "화순군"
+  },
+  "kbsa:271": {
+    "addr": "전남광주통합특별시 화순군 화순읍 칠충로 71 (전남광주통합특별시 화순군 화순읍 대리 97-5)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "화순군"
+  },
+  "kbsa:144": {
+    "addr": "경상북도 경주시 원효로 231 (경상북도 경주시 황오동 13)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "경주시"
+  },
+  "kbsa:258": {
+    "addr": "경상북도 경주시 원효로 231 (경상북도 경주시 황오동 13)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "경주시"
+  },
+  "kbsa:816": {
+    "addr": "경상북도 구미시 도개면 도안로 120 (경상북도 구미시 도개면 궁기리 754)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "구미시"
+  },
+  "kbsa:259": {
+    "addr": "경상북도 구미시 문장로 159 (경상북도 구미시 도량동 703-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "구미시"
+  },
+  "kbsa:818": {
+    "addr": "경상북도 안동시 예일길 85 (경상북도 안동시 정하동 401)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인",
+    "sigungu": "안동시",
+    "lat": 36.547396,
+    "lon": 128.720868,
+    "approx": true
+  },
+  "kbsa:1763": {
+    "addr": "경상북도 의성군 의성읍 군청길 57 (경상북도 의성군 의성읍 중리리 710-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "의성군"
+  },
+  "kbsa:537": {
+    "addr": "경상북도 포항시 남구 지곡로212번길 40 (경상북도 포항시 남구 지곡동 477)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "포항시"
+  },
+  "kbsa:261": {
+    "addr": "경상북도 포항시 남구 지곡로 150 (경상북도 포항시 남구 지곡동 52)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "포항시"
+  },
+  "kbsa:260": {
+    "addr": "경상북도 포항시 북구 학산로 45 (경상북도 포항시 북구 학산동 205-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "포항시"
+  },
+  "kbsa:495": {
+    "addr": "경상남도 거제시 장목면 옥포대첩로 942 (경상남도 거제시 장목면 외포리 261-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "거제시"
+  },
+  "kbsa:150": {
+    "addr": "경상남도 김해시 활천로24번길 29 (경상남도 김해시 삼정동 267-34)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "김해시"
+  },
+  "kbsa:262": {
+    "addr": "경상남도 김해시 평전로 135 (경상남도 김해시 내동 169)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "김해시"
+  },
+  "kbsa:591": {
+    "addr": "경상남도 양산시 물금읍 신주1길 20 (경상남도 양산시 물금읍 범어리 2673-11)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양산시"
+  },
+  "kbsa:487": {
+    "addr": "경상남도 양산시 원동면 원동로 1654 (경상남도 양산시 원동면 원리 577)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "양산시"
+  },
+  "kbsa:152": {
+    "addr": "경상남도 창원시 마산합포구 심온길 33 (경상남도 창원시 마산합포구 완월동 27-3)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "창원시"
+  },
+  "kbsa:155": {
+    "addr": "경상남도 창원시 마산합포구 허당로 51 (경상남도 창원시 마산합포구 산호동 438-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "창원시"
+  },
+  "kbsa:264": {
+    "addr": "경상남도 창원시 마산회원구 회원북7길 40 (경상남도 창원시 마산회원구 회원동 376-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "창원시"
+  },
+  "kbsa:263": {
+    "addr": "경상남도 창원시 마산합포구 심온길 49 (경상남도 창원시 마산합포구 자산동 274)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "창원시"
+  },
+  "kbsa:265": {
+    "addr": "경상남도 창원시 성산구 신월로37번길 12 (경상남도 창원시 성산구 신월동 33)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "창원시"
+  },
+  "kbsa:1699": {
+    "addr": "경상남도 하동군 금남면 섬진강대로 656-8 (경상남도 하동군 금남면 덕천리 1243-1)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "하동군"
+  },
+  "kbsa:379": {
+    "addr": "제주특별자치도 제주시 1100로 3213 (제주특별자치도 제주시 노형동 607)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+    "sigungu": "제주시"
+  },
+  "kbsa:272": {
+    "addr": "제주특별자치도 제주시 남광로 33 (제주특별자치도 제주시 이도이동 539-4)",
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/968500129)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/371629062. 야구장 면·출입구는 별도 확인",
+    "sigungu": "제주시",
+    "lat": 33.494632,
+    "lon": 126.539115,
+    "approx": true
+  },
+  "osm:node/357826248": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/357826248"
+  },
+  "osm:node/357964973": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/357964973"
+  },
+  "osm:node/8447426061": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447426061"
+  },
+  "osm:node/8447431327": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447431327"
+  },
+  "osm:node/8447687952": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447687952"
+  },
+  "osm:node/8447687953": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447687953"
+  },
+  "osm:node/8447895258": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447895258"
+  },
+  "osm:node/8447895259": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/8447895259"
+  },
+  "osm:node/9355314945": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/9355314945"
+  },
+  "osm:node/9355314946": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/9355314946"
+  },
+  "osm:node/9355314947": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/9355314947"
+  },
+  "osm:node/9355314948": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/9355314948"
+  },
+  "osm:node/11331301603": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/11331301603"
+  },
+  "osm:node/11379636139": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/11379636139"
+  },
+  "osm:node/12156709859": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/12156709859"
+  },
+  "osm:node/12156709860": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus_stop)",
+    "source": "https://www.openstreetmap.org/node/12156709860"
+  },
+  "osm:way/855289515": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(tertiary)",
+    "source": "https://www.openstreetmap.org/way/855289515"
+  },
+  "osm:way/1192017170": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(드림풋볼파크)",
+    "source": "https://www.openstreetmap.org/way/1192017170"
+  },
+  "osm:way/1500759643": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(construction)",
+    "source": "https://www.openstreetmap.org/way/1500759643"
+  },
+  "osm:way/1546276802": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276802"
+  },
+  "osm:way/1546276804": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276804"
+  },
+  "osm:way/1546276806": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276806"
+  },
+  "osm:way/1546276807": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276807"
+  },
+  "osm:way/1546276808": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276808"
+  },
+  "osm:way/1546276809": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(construction)",
+    "source": "https://www.openstreetmap.org/way/1546276809"
+  },
+  "osm:way/1546276861": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(residential)",
+    "source": "https://www.openstreetmap.org/way/1546276861"
+  },
+  "osm:relation/17952685": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus)",
+    "source": "https://www.openstreetmap.org/relation/17952685"
+  },
+  "osm:relation/18292744": {
+    "remove": true,
+    "reason": "OSM 현재 태그상 실외 야구장이 아닌 교통·도로·음식점·실내·축구 시설(bus)",
+    "source": "https://www.openstreetmap.org/relation/18292744"
+  },
+  "venue:송도LNG 종합스포츠타운 야구장": {
+    "lat": 37.35229,
+    "lon": 126.616828,
+    "approx": true,
+    "addr": "인천광역시 연수구 인천신항대로 916 (송도동 379)",
+    "source": "https://www.icsports.or.kr/fmcs/37",
+    "note": "인천광역시체육회 운영 안내의 916번지 시설 주소와 OSM way/700679290 야구장 형상 중심을 대조해 기존 잘못된 추정 좌표를 보정(2026-10-30). 시설 대표 위치이며 주·보조경기장 대응 및 출입구는 미확인. 인천신항대로 1190의 LNG 6면 구장과 구분."
+  },
+  "osm:way/253471840": {
+    "addr": "서울특별시 양천구 남부순환로64길 26 (신월동 149-20)",
+    "source": "https://mas.smc.seoul.kr/attach/record/SEOUL/appendix/a11/A0069477.pdf?time=20260620140159",
+    "note": "서울시의회 공공체육시설 위치 원문으로 신월야구공원 전체 주소 확인 · 기존 위경도 유지"
+  },
+  "osm:way/592118427": {
+    "source": "https://www.openstreetmap.org/way/592118427",
+    "note": "원문에 명시된 광역시·구 관계로 인접 도 ISO 혼입 보완. 동 경계·번지는 미확인, 기존 좌표 유지",
+    "sido": "서울",
+    "sigungu": "양천구"
+  },
+  "osm:way/478011641": {
+    "source": "https://www.openstreetmap.org/way/478011641",
+    "note": "원문에 명시된 광역시·구 관계로 인접 도 ISO 혼입 보완. 동 경계·번지는 미확인, 기존 좌표 유지",
+    "sido": "부산",
+    "sigungu": "강서구"
+  },
+  "kbsa:1064": {
+    "addr": "경기도 여주시 세종로 338",
+    "source": "https://iec.yit.ac.kr/ko/cms/CM_CN01_CON/index.do?MENU_SN=345",
+    "note": "대학 공식 오시는길로 여주군 옛 주소 보완 · 기존 위경도 유지"
+  },
+  "osm:way/1376669138": {
+    "sido": "대구",
+    "sigungu": "달성군",
+    "addr": "대구광역시 달성군 논공읍 위천리 552-1",
+    "source": "https://www.dalseong.daegu.kr/index.do?menu_id=00000064",
+    "note": "달성군 공공체육시설 원문 주소 확인. 광역시를 도의 하위 시군으로 수집한 오류 보완 · 기존 위경도 유지"
+  },
+  "osm:way/1376669141": {
+    "sido": "대구",
+    "sigungu": "달성군",
+    "addr": "대구광역시 달성군 논공읍 위천리 552-1",
+    "source": "https://www.dalseong.daegu.kr/index.do?menu_id=00000064",
+    "note": "달성군 공공체육시설 원문 주소 확인. 광역시를 도의 하위 시군으로 수집한 오류 보완 · 기존 위경도 유지"
+  },
+  "osm:way/1050656710": {
+    "source": "https://www.openstreetmap.org/way/1050656710",
+    "note": "시설명·주소 추정. 역주소에 구미시·칠곡군이 함께 있어 행정구역 경계와 전체 번지 재확인 필요"
+  },
+  "osm:way/1050656711": {
+    "source": "https://www.openstreetmap.org/way/1050656711",
+    "note": "시설명·주소 추정. 역주소에 구미시·칠곡군이 함께 있어 행정구역 경계와 전체 번지 재확인 필요"
+  },
+  "osm:way/677353880": {
+    "remove": true,
+    "reason": "사용자 검토(2026-10-30) 제외 — 같은 공원 안 동명 다이아몬드, osm:way/677209058 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/677353880"
+  },
+  "osm:way/677353881": {
+    "remove": true,
+    "reason": "사용자 검토(2026-10-30) 제외 — 같은 공원 안 동명 다이아몬드, osm:way/677209058 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/677353881"
+  },
+  "osm:way/677353882": {
+    "remove": true,
+    "reason": "사용자 검토(2026-10-30) 제외 — 같은 공원 안 동명 다이아몬드, osm:way/677209058 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/677353882"
+  },
+  "osm:way/677353883": {
+    "remove": true,
+    "reason": "사용자 검토(2026-10-30) 제외 — 같은 공원 안 동명 다이아몬드, osm:way/677209058 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/677353883"
+  },
+  "venue:SSG 랜더스 필드": {
+    "remove": true,
+    "reason": "사용자 검토(2026-10-30) 제외 — pro:인천SSG랜더스필드와 같은 구장(공식경기 구장 표의 별칭 중복)"
+  },
+  "venue:기장 현대차 드림 볼파크": {
+    "remove": true,
+    "reason": "동명 중복 — 시·군 중심 추정 좌표 항목. 같은 이름의 정확한 위치 osm:node/6685184913 하나만 남김",
+    "source": "https://www.openstreetmap.org/node/6685184913"
+  },
+  "venue:화성히어로즈 베이스볼파크": {
+    "remove": true,
+    "reason": "동명 중복 — 시·군 중심 추정 좌표 항목. 같은 이름의 정확한 위치 osm:way/481207560 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/481207560"
+  },
+  "venue:포항 생활체육 야구장": {
+    "remove": true,
+    "reason": "동명 중복 — 시·군 중심 추정 좌표 항목. 같은 이름의 정확한 위치 osm:way/1018183427 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/1018183427"
+  },
+  "extra:mcst2025:510854b95c5759b6": {
+    "name": "창원NC파크",
+    "kind": "프로야구장",
+    "reason": "KBO NC 다이노스 홈구장. 문체부 원문 명칭 「창원NC파크마산구장」(주소 삼호로 63)을 프로야구장으로 분류",
+    "source": "https://www.mcst.go.kr/site/s_policy/dept/deptView.jsp?pDataCD=0417000000&pSeq=2107&pType=07"
+  },
+  "venue:구의 야구공원": {
+    "remove": true,
+    "reason": "동명 중복 — 시·군 중심 추정 좌표 항목. 같은 이름의 정확한 위치 osm:way/175320275 하나만 남김",
+    "source": "https://www.openstreetmap.org/way/175320275"
+  },
+  "pro:대구삼성라이온즈파크": {
+    "lat": 35.840999,
+    "lon": 128.681306,
+    "approx": false,
+    "addr": "대구광역시 수성구 야구전설로 1",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "KBO 공식 주소와 OSM way/437117926 경기장 형상 중심 대조(2026-10-30). 주소 검색점이 아니라 구장 중심이며 출입구 좌표는 아님"
+  },
+  "pro:창원NC파크": {
+    "lat": 35.222627,
+    "lon": 128.582382,
+    "approx": false,
+    "addr": "경상남도 창원시 마산회원구 삼호로 63",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "KBO 공식 전체 주소와 OSM relation/9449453 창원 NC 파크 형상 중심 대조(2026-10-30). 인접 마산야구장과 별개"
+  },
+  "pro:대전한화생명볼파크": {
+    "lat": 36.316179,
+    "lon": 127.431272,
+    "approx": false,
+    "addr": "대전광역시 중구 대종로 373",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "2025년 개장한 새 홈구장. OSM way/1467519889 형상 위치 대조, 옛 한밭야구장과 구분"
+  },
+  "osm:way/1467519889": {
+    "remove": true,
+    "reason": "OSM 형상이 2025년 개장한 대전한화생명볼파크와 일치. 동일 좌표·공식 주소의 pro:대전한화생명볼파크를 유지하고 OSM 중복 항목 제외",
+    "name": "대전한화생명볼파크",
+    "addr": "대전광역시 중구 대종로 373",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx",
+    "note": "현재 한화 홈구장. 같은 이름의 pro 항목과 기존 동명 병합 규칙 적용"
+  },
+  "osm:way/622358165": {
+    "remove": true,
+    "reason": "임시명 시지동 야구장 좌표가 OSM 라이온즈파크 경기장 형상 안에 있어 같은 구장. 공식 이름·주소를 갖춘 프로 항목을 유지",
+    "source": "https://www.openstreetmap.org/way/437117926"
+  },
+  "extra:mcst2025:07e0e93d057c86ca": {
+    "remove": true,
+    "reason": "수원종합운동장 야구장과 수원KT위즈파크는 같은 경수대로 893의 야구장. 공식 홈구장 항목 유지(별도의 리틀야구장과 혼동하지 않음)",
+    "source": "https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx"
+  },
+  "extra:mcst2025:9dc777b01ec17c10": {
+    "remove": true,
+    "reason": "문수로 44의 문수야구장 주소 검색 추정점 중복. 울산시설공단 시설 안내와 실제 OSM 경기장 형상을 대조해 osm:way/696084610 유지",
+    "source": "https://www.uic.or.kr/munsu/institution/institution02.do"
+  },
+  "venue:신월 야구공원": {
+    "remove": true,
+    "reason": "같은 남부순환로64길 26(신월동 149-20)의 시설. 기존 항목은 구 중심 추정점으로 3.8km 떨어져 있어 실제 구장 형상 osm:way/253471840 유지",
+    "source": "https://mas.smc.seoul.kr/attach/record/SEOUL/appendix/a11/A0069477.pdf?time=20260620140159"
+  },
+  "osm:node/13851724483": {
+    "remove": true,
+    "reason": "이름이 야구장이지만 OSM 원문 amenity=bar, 신당동 건물 1층으로 실외 야구장이 아닌 업소",
+    "source": "https://www.openstreetmap.org/node/13851724483"
+  },
+  "osm:way/380848421": {
+    "name": "불암산스포츠타운 야구장",
+    "source": "https://www.openstreetmap.org/way/1015182282",
+    "note": "OSM의 상위 체육시설 「불암산스포츠타운」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1053483185": {
+    "name": "길상공설운동장 야구장",
+    "source": "https://www.openstreetmap.org/way/1053483163",
+    "note": "OSM의 상위 체육시설 「길상공설운동장」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1069362583": {
+    "name": "강화 신정체육시설 야구장",
+    "source": "https://www.openstreetmap.org/way/1069362576",
+    "note": "OSM의 상위 체육시설 「강화 신정체육시설」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1529541058": {
+    "name": "북측 운동장 (N13) 야구장",
+    "source": "https://www.openstreetmap.org/way/78058685",
+    "note": "OSM의 상위 체육시설 「북측 운동장 (N13)」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1530089646": {
+    "name": "충남대학교 농업생명과학대학 운동장 야구장",
+    "source": "https://www.openstreetmap.org/way/595721369",
+    "note": "OSM의 상위 체육시설 「충남대학교 농업생명과학대학 운동장」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/961887288": {
+    "name": "모현레스피아 야구장",
+    "source": "https://www.openstreetmap.org/way/968512319",
+    "note": "OSM의 상위 체육시설 「모현레스피아」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/967194039": {
+    "name": "두산베어스파크 야구장",
+    "source": "https://www.openstreetmap.org/way/967194043",
+    "note": "OSM의 상위 체육시설 「두산베어스파크」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/973282642": {
+    "name": "LG챔피언스파크 야구장",
+    "source": "https://www.openstreetmap.org/way/973282649",
+    "note": "OSM의 상위 체육시설 「LG챔피언스파크」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/973880968": {
+    "name": "건국대학교 스포츠과학타운 야구장",
+    "source": "https://www.openstreetmap.org/way/973880978",
+    "note": "OSM의 상위 체육시설 「건국대학교 스포츠과학타운」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/445410091": {
+    "name": "Balboni Field 야구장",
+    "source": "https://www.openstreetmap.org/way/1019688916",
+    "note": "OSM의 상위 체육시설 「Balboni Field」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/840167277": {
+    "name": "화성드림파크 야구장",
+    "source": "https://www.openstreetmap.org/way/840167276",
+    "note": "OSM의 상위 체육시설 「화성드림파크」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/840627286": {
+    "name": "기아모터스 스포츠센터 야구장",
+    "source": "https://www.openstreetmap.org/way/840731781",
+    "note": "OSM의 상위 체육시설 「기아모터스 스포츠센터」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:node/7257896366": {
+    "name": "태장체육단지 야구장",
+    "source": "https://www.openstreetmap.org/way/1187795602",
+    "note": "OSM의 상위 체육시설 「태장체육단지」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/864687019": {
+    "name": "개군레포츠공원 야구장",
+    "source": "https://www.openstreetmap.org/way/864687014",
+    "note": "OSM의 상위 공원 「개군레포츠공원」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/829497222": {
+    "name": "보은스포츠파크 야구장",
+    "source": "https://www.openstreetmap.org/way/576341844",
+    "note": "OSM의 상위 체육시설 「보은스포츠파크」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1105055710": {
+    "name": "감곡생활체육공원 야구장",
+    "source": "https://www.openstreetmap.org/way/1105055706",
+    "note": "OSM의 상위 체육시설 「감곡생활체육공원」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "osm:way/1319868752": {
+    "name": "올림픽공원 야구장",
+    "source": "https://www.openstreetmap.org/way/474960259",
+    "note": "OSM의 상위 공원 「올림픽공원」 형상 안의 야구장으로 이름 확인(2026-10-30). 기존 좌표·주소 유지, 개별 면 번호 미확인."
+  },
+  "kbsa:1546": {
+    "name": "화성동탄B(U-18) (팀 등록지·야구장 아님)",
+    "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1546&season=2026&kind_cd=31&sports_club=F",
+    "note": "야구장 아님 — KBSA 팀 등록 주소(아파트). 사용자 요청에 따라 실제 야구장과 구분해 표시. 기존 시·군·구 중심 추정 좌표 유지, 건물·훈련 구장 위치 미확인."
+  },
+  "venue:선샤인밀양스포츠파크 야구장": {
+    "name": "선샤인 밀양스포츠파크 야구장",
+    "approx": true,
+    "reason": "사용자 승인(2026-10-30)에 따라 밀양5개 표시 항목을 시설 대표1개로 통합. 기존 일반 이름 ID·추정 좌표 유지",
+    "note": "시설 대표 항목 — 사용자 승인으로 1·2구장·주·보조경기장 표시를 통합. 개별 구장 위치·면 번호 대응·출입구 미확인. 기존 시·군 중심(추정) 좌표이며 실제 시설 중심을 확정한 것이 아님."
+  },
+  "venue:선샤인 밀양스포츠파크 1구장": {
+    "remove": true,
+    "reason": "사용자 승인(2026-10-30)에 따라 시설 대표 venue:선샤인밀양스포츠파크 야구장으로 표시 통합. 개별 면이 동일하다는 판정이 아니며 개별 위치 미확인"
+  },
+  "venue:선샤인 밀양스포츠파크 2구장": {
+    "remove": true,
+    "reason": "사용자 승인(2026-10-30)에 따라 시설 대표 venue:선샤인밀양스포츠파크 야구장으로 표시 통합. 개별 면이 동일하다는 판정이 아니며 개별 위치 미확인"
+  },
+  "venue:선샤인 밀양스포츠파크 주경기장": {
+    "remove": true,
+    "reason": "사용자 승인(2026-10-30)에 따라 시설 대표 venue:선샤인밀양스포츠파크 야구장으로 표시 통합. 개별 면이 동일하다는 판정이 아니며 개별 위치 미확인"
+  },
+  "venue:선샤인 밀양스포츠파크 보조경기장": {
+    "remove": true,
+    "reason": "사용자 승인(2026-10-30)에 따라 시설 대표 venue:선샤인밀양스포츠파크 야구장으로 표시 통합. 개별 면이 동일하다는 판정이 아니며 개별 위치 미확인"
+  },
+  "kbsa:575": {
+    "lat": 37.894966,
+    "lon": 127.756419,
+    "approx": true,
+    "source": "https://www.openstreetmap.org/way/564305937",
+    "note": "좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/564305937. 야구장 면·출입구는 별도 확인"
+  },
+  "kbsa:192": {
+    "lat": 37.605581,
+    "lon": 127.14716,
+    "approx": true,
+    "source": "https://www.openstreetmap.org/way/471318596",
+    "note": "좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 학교 안 OSM 운동장(https://www.openstreetmap.org/way/471318596)으로 보정(2026-10-30). 학교 경계 https://www.openstreetmap.org/way/563019877. 야구장 면·출입구는 별도 확인"
+  },
+  "kbsa:578": {
+    "lat": 37.849383,
+    "lon": 126.881141,
+    "approx": true,
+    "source": "https://www.data.go.kr/data/15021148/standard.do",
+    "note": "좌표가 학교 부지 밖(정류장·도로·시군구 중심 등)이라 표준데이터 학교 좌표로 보정(2026-10-30). 야구장 면·출입구는 별도 확인"
+  }
+}

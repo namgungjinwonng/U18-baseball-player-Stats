@@ -2,7 +2,7 @@
 import type { AiErrorKind } from "./providers";
 import { geminiResetHourKst, hourText, loadSettings, retentionDays, type ProviderId } from "./config";
 import { cacheTransaction, dbRequest } from "./cacheDb";
-import type { FocusId } from "./prompt";
+import type { AnswerEdge, FocusId } from "./prompt";
 
 export interface AiEntry {
   lines: string[];
@@ -10,6 +10,7 @@ export interface AiEntry {
   model: string;
   at: string; // 생성 시각 ISO
   focus?: FocusId; // 분석 방향 (없으면 종합)
+  edge?: AnswerEdge; // 기록 기반 예상 우위(코드 계산)와 AI가 한 구간 안에서 조정한 비율
 }
 
 const LEGACY_KEY = "u18-ai-analysis-v1";
@@ -41,7 +42,7 @@ const stored = (key: string, entry: AiEntry): StoredEntry => {
   const focus = entry.focus ?? "overall";
   return { ...entry, focus, matchup: key, id: `${key}|${focus}` };
 };
-const toEntry = ({ lines, provider, model, at, focus }: StoredEntry): AiEntry => ({ lines, provider, model, at, focus });
+const toEntry = ({ lines, provider, model, at, focus, edge }: StoredEntry): AiEntry => ({ lines, provider, model, at, focus, ...(edge ? { edge } : {}) });
 export const entryBytes = (entry: AiEntry) => new TextEncoder().encode(JSON.stringify(entry)).byteLength;
 export const isExpired = (entry: AiEntry, days: number, now = Date.now()) =>
   !Number.isFinite(Date.parse(entry.at)) || (days > 0 && now - Date.parse(entry.at) >= days * DAY_MS);

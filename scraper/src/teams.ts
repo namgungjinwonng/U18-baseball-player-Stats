@@ -9,7 +9,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BASE, KIND, servedSeason } from "./koreaBaseball.js";
 import { collectionYear, registerSeasonYear } from "./collectionYear.js";
-import type { TeamPlayerEntry, TeamRosterEntry, TeamStaffEntry } from "./types.js";
+import { collectProfiles } from "./playerProfiles.js";
+import { markTransfers, multiTeamPlayers } from "./transfers.js";
+import type { PlayerProfile, TeamPlayerEntry, TeamRosterEntry, TeamStaffEntry } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.resolve(__dirname, "..", "..", "data");
@@ -217,6 +219,41 @@ async function fetchAllRosters(teams: TeamRef[], season: number): Promise<TeamRo
   return [...byIdx.values()].sort((a, b) => a.team.localeCompare(b.team, "ko"));
 }
 
+// 이적 선수 현재 소속 표시 — 두 학교 이상 명단에 있는 선수의 프로필(출신학교 최신순)로 moved_to 를 붙인다.
+// 프로필이 없거나, 시즌이 끝나기 전에 받았고 20시간이 넘었으면 다시 받는다
+// (지난 시즌은 시즌 종료 뒤 받은 프로필이면 그대로 쓴다).
+// historySeasons 의 roster-history 에도 프로필 이력을 병합한다(지난 시즌 아카이브는 [] 로 건드리지 않음).
+export async function markRosterTransfers(
+  dataDir: string, rosters: TeamRosterEntry[], season: number, historySeasons: number[] = [season]
+): Promise<{ multi: number; marked: number; refreshed: number }> {
+  const multi = multiTeamPlayers(rosters);
+  if (!multi.size) return { multi: 0, marked: 0, refreshed: 0 };
+  const FRESH_MS = 20 * 60 * 60 * 1000;
+  const seasonEnd = Date.parse(`${season + 1}-01-01T00:00:00+09:00`);
+  const readProfile = (pn: string): PlayerProfile | null => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(dataDir, "profiles", `${pn}.json`), "utf8")) as PlayerProfile;
+    } catch {
+      return null;
+    }
+  };
+  const stale = [...multi.keys()].filter((pn) => {
+    const updatedAt = readProfile(pn)?.updatedAt;
+    if (!updatedAt) return true;
+    const at = Date.parse(updatedAt);
+    return at < seasonEnd && Date.now() - at >= FRESH_MS;
+  });
+  if (stale.length) await collectProfiles(dataDir, stale, historySeasons);
+  const profiles = new Map<string, PlayerProfile>();
+  for (const pn of multi.keys()) {
+    const prof = readProfile(pn);
+    if (prof) profiles.set(pn, prof);
+  }
+  const marked = markTransfers(rosters, profiles, season);
+  console.log(`  이적 선수 ${multi.size}명 중 현재 소속 판정 ${marked}명 (프로필 갱신 ${stale.length}명)`);
+  return { multi: multi.size, marked, refreshed: stale.length };
+}
+
 export async function collectTeams(dataDir: string, season: number): Promise<TeamRosterEntry[]> {
   console.log("[1/2] 팀 목록 수집 중…");
   const teams = await fetchTeams(season);
@@ -236,6 +273,8 @@ export async function collectTeams(dataDir: string, season: number): Promise<Tea
     console.warn(`⚠ ${season} 시즌 팀 ${rosters.length}개에 등록 선수가 없습니다 — teams.json 갱신을 건너뜁니다.`);
     return [];
   }
+
+  await markRosterTransfers(dataDir, rosters, season);
 
   const fp = path.join(dataDir, String(season), "teams.json");
   fs.mkdirSync(path.dirname(fp), { recursive: true });

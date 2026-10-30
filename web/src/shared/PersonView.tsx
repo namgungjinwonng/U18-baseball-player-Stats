@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCareerPlayers, usePlayerProfile, useTeams } from "./data";
 import { KbsaLink } from "./KbsaLink";
+import { currentRosterEntry } from "./transfers";
 import { useYear } from "./year";
 
 export function PersonView({ wrapClass }: { wrapClass: string }) {
@@ -29,13 +30,8 @@ export function PersonView({ wrapClass }: { wrapClass: string }) {
   }, [careerLoading, careerSeasons, location.search, navigate, personNo, profile?.personNo, year]);
 
   // 선수현황에서 해당 personNo 항목 탐색 (소속/등번호/포지션/학년/신장·체중/투타)
-  const entry = useMemo(() => {
-    for (const t of teams ?? []) {
-      const p = t.players.find((p) => p.person_no === personNo);
-      if (p) return p;
-    }
-    return null;
-  }, [teams, personNo]);
+  // 이적 선수는 옛 학교 명단에도 남아 있어 현재 소속(moved_to 없는 항목)을 쓴다.
+  const entry = useMemo(() => currentRosterEntry(teams, personNo), [teams, personNo]);
 
   if (!personNo) return <div className={wrapClass}><div className="state">선수를 찾을 수 없습니다.</div></div>;
   if (teamsLoading || profileLoading) {
@@ -54,10 +50,10 @@ export function PersonView({ wrapClass }: { wrapClass: string }) {
       <div className="player-head">
         <h1 className="heading-xl" style={{ marginBottom: 0 }}>{name}</h1>
         <div className="player-meta-line">
-          {entry?.team && <span>{entry.team}</span>}
+          {entry?.team && <span>{entry.moved_to ?? entry.team}</span>}
           {entry?.position && <span>{entry.position}</span>}
           {entry?.grade && <span>{entry.grade}학년</span>}
-          {entry?.number && <span>{entry.number}번</span>}
+          {entry?.number && !entry.moved_to && <span>{entry.number}번</span>}
           {entry?.throw_bat && <span>{entry.throw_bat}</span>}
           {profile?.birth && <span>{profile.birth}</span>}
           {entry?.height_weight ? (

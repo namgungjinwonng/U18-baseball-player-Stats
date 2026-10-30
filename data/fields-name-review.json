@@ -1,0 +1,779 @@
+{
+  "checkedAt": "2026-10-30T06:36:40.711Z",
+  "targets": 79,
+  "checks": [
+    {
+      "id": "osm:way/380848421",
+      "before": "공릉동 야구장",
+      "name": "불암산스포츠타운 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1015182282",
+      "pitchSource": "https://www.openstreetmap.org/way/380848421"
+    },
+    {
+      "id": "osm:way/631058059",
+      "name": "공릉동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1032955289",
+      "name": "달성군 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1189785752",
+      "name": "달성군 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1053483185",
+      "before": "강화군 야구장",
+      "name": "길상공설운동장 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1053483163",
+      "pitchSource": "https://www.openstreetmap.org/way/1053483185"
+    },
+    {
+      "id": "osm:way/1069362583",
+      "before": "강화군 야구장",
+      "name": "강화 신정체육시설 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1069362576",
+      "pitchSource": "https://www.openstreetmap.org/way/1069362583"
+    },
+    {
+      "id": "osm:way/700679290",
+      "name": "연수구 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1052266438",
+      "name": "연수구 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1529541058",
+      "before": "어은동 야구장",
+      "name": "북측 운동장 (N13) 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/78058685",
+      "pitchSource": "https://www.openstreetmap.org/way/1529541058"
+    },
+    {
+      "id": "osm:way/1530089646",
+      "before": "어은동 야구장",
+      "name": "충남대학교 농업생명과학대학 운동장 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/595721369",
+      "pitchSource": "https://www.openstreetmap.org/way/1530089646"
+    },
+    {
+      "id": "osm:way/1204068070",
+      "name": "김포시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1226210846",
+      "name": "김포시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/473918366",
+      "name": "남양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1148495573",
+      "name": "남양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1218429893",
+      "name": "남양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1218447683",
+      "name": "남양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/435938906",
+      "name": "율동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "source": "Bing",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/436010156",
+      "name": "율동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "source": "Bing",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/779220095",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1018650072",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1089401066",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1110482674",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1124627013",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1215634475",
+      "name": "양주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/961887288",
+      "before": "용인시 야구장",
+      "name": "모현레스피아 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/968512319",
+      "pitchSource": "https://www.openstreetmap.org/way/961887288"
+    },
+    {
+      "id": "osm:way/970139487",
+      "name": "용인시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/44411814",
+      "name": "가능동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1132667341",
+      "name": "가능동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/634693695",
+      "name": "녹양동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/709889176",
+      "name": "녹양동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/665421765",
+      "before": "이천시 야구장",
+      "name": "이천시 종합운동장 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/469935990",
+      "pitchSource": "https://www.openstreetmap.org/way/665421765"
+    },
+    {
+      "id": "osm:way/967194039",
+      "before": "이천시 야구장",
+      "name": "두산베어스파크 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/967194043",
+      "pitchSource": "https://www.openstreetmap.org/way/967194039"
+    },
+    {
+      "id": "osm:way/973282642",
+      "before": "이천시 야구장",
+      "name": "LG챔피언스파크 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/973282649",
+      "pitchSource": "https://www.openstreetmap.org/way/973282642"
+    },
+    {
+      "id": "osm:way/973880968",
+      "before": "이천시 야구장",
+      "name": "건국대학교 스포츠과학타운 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/973880978",
+      "pitchSource": "https://www.openstreetmap.org/way/973880968"
+    },
+    {
+      "id": "osm:way/973923328",
+      "name": "이천시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1027583170",
+      "name": "이천시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/365433844",
+      "name": "평택시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/445410091",
+      "before": "평택시 야구장",
+      "name": "Balboni Field 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1019688916",
+      "pitchSource": "https://www.openstreetmap.org/way/445410091"
+    },
+    {
+      "id": "osm:way/586709796",
+      "name": "평택시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/591276505",
+      "name": "평택시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/987102746",
+      "name": "평택시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/586692073",
+      "name": "Canal Park 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1098297254",
+      "name": "Canal Park 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/840167277",
+      "before": "만세구 야구장",
+      "name": "화성드림파크 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/840167276",
+      "pitchSource": "https://www.openstreetmap.org/way/840167277"
+    },
+    {
+      "id": "osm:way/840371193",
+      "name": "만세구 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/840627286",
+      "before": "만세구 야구장",
+      "name": "기아모터스 스포츠센터 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/840731781",
+      "pitchSource": "https://www.openstreetmap.org/way/840627286"
+    },
+    {
+      "id": "osm:way/1433317540",
+      "name": "만세구 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1433317541",
+      "name": "만세구 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:node/7257896366",
+      "before": "태장동 야구장",
+      "name": "태장체육단지 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1187795602",
+      "pitchSource": "https://www.openstreetmap.org/node/7257896366"
+    },
+    {
+      "id": "osm:way/762008620",
+      "name": "태장동 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball",
+        "surface": "sand"
+      }
+    },
+    {
+      "id": "osm:way/664774892",
+      "name": "청주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/744239842",
+      "name": "청주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/980403830",
+      "name": "청주시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/863478783",
+      "name": "서산시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:relation/13886027",
+      "name": "서산시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "access": "private",
+        "leisure": "pitch",
+        "sport": "baseball",
+        "type": "multipolygon"
+      }
+    },
+    {
+      "id": "osm:way/1107670562",
+      "name": "서천군 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1108517634",
+      "name": "서천군 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1117087538",
+      "name": "서천군 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1318825338",
+      "name": "군산시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1359331602",
+      "name": "군산시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/505743752",
+      "name": "거제시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/531362302",
+      "name": "거제시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1563134969",
+      "name": "거제시 야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "access": "unknown",
+        "leisure": "pitch",
+        "sport": "soccer;baseball;tennis;multi",
+        "surface": "sand"
+      }
+    },
+    {
+      "id": "osm:way/421415364",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "name:en": "Baseball Field",
+        "name:ja": "野球場",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:node/13851724483",
+      "name": "야구장",
+      "status": "제외",
+      "reason": "이름이 야구장이지만 OSM 원문 amenity=bar, 신당동 건물 1층으로 실외 야구장이 아닌 업소"
+    },
+    {
+      "id": "osm:way/415939942",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/421028878",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1257721374",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1430322247",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/157972602",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "name:ko": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/469458848",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball",
+        "wikidata": "Q5004664",
+        "wikipedia": "en:Byeokje Baseball Stadium"
+      }
+    },
+    {
+      "id": "osm:way/471183014",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "name:ko": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/864687019",
+      "before": "야구장",
+      "name": "개군레포츠공원 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/864687014",
+      "pitchSource": "https://www.openstreetmap.org/way/864687019"
+    },
+    {
+      "id": "osm:way/469056059",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "park",
+        "name": "야구장"
+      }
+    },
+    {
+      "id": "osm:way/1473547070",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/1205133366",
+      "name": "야구장",
+      "status": "보류",
+      "reason": "확정 가능한 상위 시설명 없음",
+      "objectTags": {
+        "leisure": "pitch",
+        "name": "야구장",
+        "sport": "baseball"
+      }
+    },
+    {
+      "id": "osm:way/829497222",
+      "before": "야구장",
+      "name": "보은스포츠파크 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/576341844",
+      "pitchSource": "https://www.openstreetmap.org/way/829497222"
+    },
+    {
+      "id": "osm:way/1105055710",
+      "before": "야구장",
+      "name": "감곡생활체육공원 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/1105055706",
+      "pitchSource": "https://www.openstreetmap.org/way/1105055710"
+    },
+    {
+      "id": "osm:way/1319868752",
+      "before": "야구장",
+      "name": "올림픽공원 야구장",
+      "status": "이름 확인",
+      "source": "https://www.openstreetmap.org/way/474960259",
+      "pitchSource": "https://www.openstreetmap.org/way/1319868752"
+    }
+  ]
+}

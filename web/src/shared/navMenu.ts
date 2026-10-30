@@ -40,6 +40,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
     items: [
       { to: "/glossary", label: "지표 설명", icon: "glossary" },
       { to: "/notice", label: "알리는 글", icon: "notice" },
+      { to: "/fields", label: "야구장 현황", icon: "field" }, // 전국 야구장(야구부 학교·공식·프로·사회인·공원) 지역별 목록과 지도
       { to: "/ai-settings", label: "매치업 AI분석 설정", icon: "ai", drawerOnly: true }, // 사용자 API 키로 매치업 경기 분석
     ],
   },

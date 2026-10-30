@@ -1,22 +1,69 @@
 // 매치업 「경기 분석」 — 키가 없으면 기록 기반 분석만, 키가 있으면 저장된 AI 분석 우선 + 분석 방향 선택·다시 분석.
 import { useEffect, useRef, useState } from "react";
 import type { AnalysisInput, AnalysisLine } from "../analysis/core";
+import type { ScheduleGame } from "../types";
 import { AI_SETTINGS_CHANGED, currentModel, loadSettings, modelLabel, providerInfo } from "./config";
 import { FOCUS, buildPayload, buildUserPrompt, focusLabel, parseAnswer, InvalidAnswer, SYSTEM_PROMPT, type AiExtra, type FocusId } from "./prompt";
 import { AiError, generate } from "./providers";
 import { AI_CACHE_CHANGED, entryKey, errorNotice, loadMatchupEntries, saveEntry, shortDate, type AiEntry, type MatchupEntries } from "./store";
 import { loadApiKey } from "./vault";
 import { AiStorageWarning } from "./AiStorageWarning";
+import { AiOptionsBox } from "./AiOptionsBox";
+import { DEFAULT_OPTIONS, OptionsError, optionsKey, optionsSummary, scopeActive, type AiOptions, type SampleRow } from "./options";
+
+// 「분석 옵션」을 쓰는 화면이 넘기는 것 — 범위 표본 계산과, 옵션을 적용한 분석 입력·보강 자료 만들기.
+export interface AiOptionSupport {
+  upcoming: ScheduleGame[]; // 공식경기로 고를 두 학교의 남은 경기
+  sample: (o: AiOptions) => SampleRow[] | null;
+  build: (o: AiOptions, signal: AbortSignal) => Promise<{ input: AnalysisInput; extra: AiExtra }>;
+  prefetch?: (o: AiOptions) => void; // 요청 전에 내려받을 자료(날씨·구장·예보)를 미리 받아 둔다 — 실패해도 요청 때 다시 받는다
+  gradeNote?: string; // 학년 기준·항상 제외 안내(시즌 초 전년도 참고 분석)
+}
 
 interface Props {
   input: AnalysisInput;
   ruleLines: AnalysisLine[];
   getExtra?: () => AiExtra; // 요청할 때만 만드는 보강 자료(등급·주요 선수·기록 분석 문장)
+  options?: AiOptionSupport;
 }
 
-export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
-  const key = entryKey(input.aName, input.bName, input.year ?? 0, input.allYears,
+// 선수 범위·경기 조건 켜짐 여부는 이 기기에 기억한다(연말엔 매 대진 다시 고르지 않도록). 경기별 입력은 대진마다 새로.
+const OPTIONS_STORE = "u18-ai-options";
+function loadSavedOptions(): AiOptions {
+  try {
+    const v = JSON.parse(localStorage.getItem(OPTIONS_STORE) ?? "null") as Partial<AiOptions> | null;
+    return {
+      ...DEFAULT_OPTIONS,
+      excludeMovedOut: v?.excludeMovedOut === true,
+      excludeGrades: Array.isArray(v?.excludeGrades) ? v!.excludeGrades.filter((g) => g === "1" || g === "2" || g === "3") : [],
+      conditions: v?.conditions === true,
+    };
+  } catch {
+    return DEFAULT_OPTIONS;
+  }
+}
+function saveOptions(o: AiOptions) {
+  try {
+    localStorage.setItem(OPTIONS_STORE, JSON.stringify({ excludeMovedOut: o.excludeMovedOut, excludeGrades: o.excludeGrades, conditions: o.conditions }));
+  } catch {
+    // 저장 못 해도 이번 화면에서는 그대로 쓴다
+  }
+}
+
+export function AiAnalysisPanel({ input, ruleLines, getExtra, options }: Props) {
+  const baseKey = entryKey(input.aName, input.bName, input.year ?? 0, input.allYears,
     input.reference ? `${input.reference.year}:${input.reference.signature}` : undefined);
+  const [rawOpts, setRawOpts] = useState<AiOptions>(loadSavedOptions);
+  // 공식경기를 아직 고르지 않았으면 가장 가까운 남은 경기를 쓴다.
+  const opts: AiOptions = options && rawOpts.conditions && rawOpts.gameKind === "official" && !rawOpts.gameIdx && options.upcoming[0]
+    ? { ...rawOpts, gameIdx: options.upcoming[0].game_idx } : rawOpts;
+  const changeOpts = (next: AiOptions) => {
+    setRawOpts(next);
+    saveOptions(next);
+  };
+  const optKey = options ? optionsKey(opts) : "";
+  const key = optKey ? `${baseKey}|opt:${optKey}` : baseKey;
+  const optionsOn = !!options && (scopeActive(opts) || opts.conditions);
   const [settings, setSettings] = useState(loadSettings);
   const provider = providerInfo(settings.provider);
   const [hasKey, setHasKey] = useState<boolean | null>(null);
@@ -24,10 +71,17 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState("");
   const [focus, setFocus] = useState<FocusId>("overall");
-  const [basic, setBasic] = useState(false); // 「기본 분석」 칩 — 키가 있어도 기록 기반 분석을 본다
+  const [basic, setBasic] = useState(true); // 「기본 분석」 칩 — 키가 있어도 처음에는 기록 기반 분석을 보인다
   const abort = useRef<AbortController | null>(null);
   const entry = cache.key === key ? cache.entries[focus] : undefined;
   const referenceH2hUnavailable = !!input.reference && focus === "h2h";
+
+  // 대진이 바뀌면 기본 분석·분석 방향과 경기별 입력(공식경기·선공·시작·구장)을 처음으로. 옵션만 바뀔 때는 방향을 유지한다.
+  useEffect(() => {
+    setFocus("overall");
+    setBasic(true);
+    setRawOpts((o) => ({ ...o, gameKind: "official", gameIdx: "", first: "", start: "", venue: "" }));
+  }, [baseKey]);
 
   useEffect(() => {
     const sync = () => setSettings(loadSettings());
@@ -38,6 +92,12 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
       window.removeEventListener("storage", sync);
     };
   }, []);
+
+  // 키가 있으면 「AI로 분석하기」를 누르기 전에 요청에 쓸 자료를 받아 둔다(응답을 조금이라도 빨리 보이게).
+  useEffect(() => {
+    if (hasKey && options?.prefetch) options.prefetch(opts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasKey, options, optKey]);
 
   useEffect(() => {
     let alive = true;
@@ -63,8 +123,6 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
     };
     const onVisible = () => { if (!document.hidden) void refresh(); };
     setCache({ key, entries: {}, ready: false });
-    setFocus("overall");
-    setBasic(false);
     setNotice("");
     setLoading(false);
     void refresh();
@@ -96,14 +154,16 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
       if (ctl.signal.aborted) return;
       if (!apiKey) { setHasKey(false); return; }
       const model = currentModel(settings);
-      const payload = buildPayload(input, getExtra?.() ?? {}, focus);
+      const built = optionsOn ? await options!.build(opts, ctl.signal) : { input, extra: getExtra?.() ?? {} };
+      if (ctl.signal.aborted) return;
+      const payload = buildPayload(built.input, built.extra, focus);
       const raw = await generate({
         provider: settings.provider, model: model.id, apiKey, system: SYSTEM_PROMPT,
         user: buildUserPrompt(payload, entry?.lines, focus), signal: ctl.signal,
       });
       if (ctl.signal.aborted) return;
-      const { lines } = parseAnswer(raw, payload);
-      const next: AiEntry = { lines, provider: settings.provider, model: model.id, at: new Date().toISOString(), focus };
+      const { lines, edge } = parseAnswer(raw, payload);
+      const next: AiEntry = { lines, provider: settings.provider, model: model.id, at: new Date().toISOString(), focus, ...(edge ? { edge } : {}) };
       setCache((old) => ({ key, entries: { ...(old.key === key ? old.entries : {}), [focus]: next }, ready: true }));
       try {
         await saveEntry(key, next);
@@ -112,6 +172,7 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
       }
     } catch (e) {
       if (ctl.signal.aborted) return;
+      if (e instanceof OptionsError) return setNotice(e.message);
       const kind = e instanceof AiError ? e.kind : e instanceof InvalidAnswer ? "invalid" : "other";
       setNotice(errorNotice(kind, settings.provider));
     } finally {
@@ -129,8 +190,14 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
     <div className="versus-analysis">
       <h4>
         경기 분석{" "}
-        <small>{showAi ? `AI 분석 · ${focusLabel(focus)} · ${input.reference ? `${input.reference.year} 기록 참고 · ` : ""}${modelLabel(entry.model)} · ${shortDate(entry.at)} 생성 · 참고용` : showBasic ? `${input.reference ? `${input.reference.year} 개인 기록 참고 · ` : ""}기록 기반 자동 분석 · 참고용` : `${focusLabel(focus)} · ${referenceH2hUnavailable ? "자료 부족" : cache.ready && cache.key === key ? "분석 전" : "저장 기록 확인 중…"}`}</small>
+        <small>{showAi ? `AI 분석 · ${focusLabel(focus)} · ${optionsOn ? `${optionsSummary(opts)} · ` : ""}${input.reference ? `${input.reference.year} 기록 참고 · ` : ""}${modelLabel(entry.model)} · ${shortDate(entry.at)} 생성 · 참고용` : showBasic ? `${input.reference ? `${input.reference.year} 개인 기록 참고 · ` : ""}기록 기반 자동 분석 · 참고용` : `${focusLabel(focus)} · ${referenceH2hUnavailable ? "자료 부족" : cache.ready && cache.key === key ? "분석 전" : "저장 기록 확인 중…"}`}</small>
       </h4>
+      {showAi && entry.edge && (
+        <p className="versus-analysis__edge">
+          <span><b>기록 기반 예상 우위</b> {entry.edge.base}</span>
+          {entry.edge.adjusted && <span><b>AI 판단</b> {entry.edge.adjusted}</span>}
+        </p>
+      )}
       <ul>
         {showAi
           ? entry.lines.map((text, i) => <li key={i} className={i === 0 ? "is-head" : undefined}>{text}</li>)
@@ -145,20 +212,23 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra }: Props) {
       {hasKey && (
         <div className="versus-analysis__focus" role="radiogroup" aria-label="분석 선택">
           <button type="button" role="radio" aria-checked={basic} disabled={loading}
-            className={`versus-analysis__basic ${basic ? "is-on" : ""}`} onClick={() => setBasic(true)}>
+            className={`chip versus-analysis__basic ${basic ? "chip--active" : ""}`} onClick={() => setBasic(true)}>
             기본 분석
           </button>
           {FOCUS.map((f) => (
             <button key={f.id} type="button" role="radio" aria-checked={!basic && focus === f.id} disabled={loading}
-              className={!basic && focus === f.id ? "is-on" : undefined} onClick={() => { setBasic(false); setFocus(f.id); setNotice(""); }}>
+              className={`chip ${!basic && focus === f.id ? "chip--active" : ""}`} onClick={() => { setBasic(false); setFocus(f.id); setNotice(""); }}>
               {f.label}{cache.ready && cache.key === key && !cache.entries[f.id] && <small className="versus-analysis__pending">{input.reference && f.id === "h2h" ? "자료 부족" : "분석 전"}</small>}
             </button>
           ))}
         </div>
       )}
+      {hasKey && !basic && options && (
+        <AiOptionsBox opts={opts} onChange={changeOpts} support={options} aName={input.aName} bName={input.bName} disabled={loading} />
+      )}
       {hasKey && !basic && (
         <div className="versus-analysis__actions">
-          <button type="button" className="versus-analysis__btn" onClick={request} disabled={loading || !cache.ready || cache.key !== key || referenceH2hUnavailable}>
+          <button type="button" className="chip versus-analysis__btn" onClick={request} disabled={loading || !cache.ready || cache.key !== key || referenceH2hUnavailable}>
             {loading ? "AI가 분석하는 중… (10초 안팎)" : entry ? "다시 분석" : "AI로 분석하기"}
           </button>
           <span className="versus-analysis__model">{currentModel(settings).label}</span>

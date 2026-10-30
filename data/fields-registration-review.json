@@ -1,0 +1,201 @@
+{
+  "checkedAt": "2026-10-30T06:40:57.994Z",
+  "nominatim": 0,
+  "overpass": 0,
+  "other": 0,
+  "cacheHits": 2,
+  "started": "2026-10-30T06:40:57.989Z",
+  "registered": [
+    {
+      "id": "kbsa:1702",
+      "extraId": "extra:kbsa2026:1702",
+      "team": "GD챌린저스BC(U-18)",
+      "name": "GD챌린저스BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 강동구 올림픽로 594 (성내동)7층",
+      "lat": 37.5524297,
+      "lon": 127.1283812,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1702&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1700",
+      "extraId": "extra:kbsa2026:1700",
+      "team": "광남고BC",
+      "name": "광남고BC (팀 등록지·야구장 아님)",
+      "addr": "전라남도 나주시 상야4길 22 (빛가람동)2층",
+      "lat": 35.0226756,
+      "lon": 126.791255,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1700&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1890",
+      "extraId": "extra:kbsa2026:1890",
+      "team": "명지BC(U-18)",
+      "name": "명지BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 노원구 덕릉로 792 (상계동)3층",
+      "lat": 37.6500978,
+      "lon": 127.0709491,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1890&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1761",
+      "extraId": "extra:kbsa2026:1761",
+      "team": "서울HG야구단(U-18)",
+      "name": "서울HG야구단(U-18) (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 성북구 장월로 63 (장위동)",
+      "lat": 37.6184574,
+      "lon": 127.0519465,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1761&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1759",
+      "extraId": "extra:kbsa2026:1759",
+      "team": "서울HK야구단(U-18)",
+      "name": "서울HK야구단(U-18) (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 서초구 바우뫼로2길 51-7 (우면동)B1층",
+      "lat": 37.4682442,
+      "lon": 127.0260404,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1759&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1826",
+      "extraId": "extra:kbsa2026:1826",
+      "team": "서울아이티고BC",
+      "name": "서울아이티고BC (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 노원구 동일로207길 23 (중계동) H호",
+      "lat": 37.6427322,
+      "lon": 127.0641733,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1826&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1827",
+      "extraId": "extra:kbsa2026:1827",
+      "team": "세명컴퓨터고야구단",
+      "name": "세명컴퓨터고야구단 (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 광진구 광나루로36길 52 (구의동)",
+      "lat": 37.542687,
+      "lon": 127.085915,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1827&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1901",
+      "extraId": "extra:kbsa2026:1901",
+      "team": "수원야구단(U-18)",
+      "name": "수원야구단(U-18) (팀 등록지·야구장 아님)",
+      "addr": "경기도 수원시 팔달구 중부대로 177 (우만동)지하3층",
+      "lat": 37.2762441,
+      "lon": 127.0255592,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1901&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1542",
+      "extraId": "extra:kbsa2026:1542",
+      "team": "아산BC(U-18)",
+      "name": "아산BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "충청남도 아산시 신창면 온천대로 984",
+      "lat": 36.7835586,
+      "lon": 126.9487628,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1542&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1878",
+      "extraId": "extra:kbsa2026:1878",
+      "team": "울산BC(U-18)",
+      "name": "울산BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "울산광역시 남구 꽃대나리로46번길 7 (야음동)",
+      "lat": 35.5330354,
+      "lon": 129.3344403,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1878&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1683",
+      "extraId": "extra:kbsa2026:1683",
+      "team": "의왕BC(U-18)",
+      "name": "의왕BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "경기도 안양시 동안구 경수대로884번길 12 (비산동)",
+      "lat": 37.3970315,
+      "lon": 126.9391675,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1683&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1450",
+      "extraId": "extra:kbsa2026:1450",
+      "team": "창원공고야구단",
+      "name": "창원공고야구단 (팀 등록지·야구장 아님)",
+      "addr": "경상남도 창원시 마산회원구 봉암공단6길 66 (봉암동)2층",
+      "lat": 35.2157389,
+      "lon": 128.5979034,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1450&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:1637",
+      "extraId": "extra:kbsa2026:1637",
+      "team": "한광BC(U-18)",
+      "name": "한광BC(U-18) (팀 등록지·야구장 아님)",
+      "addr": "서울특별시 영등포구 국회대로 654 (영등포동7가)2층",
+      "lat": 37.5282898,
+      "lon": 126.8960894,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1637&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
+    },
+    {
+      "id": "kbsa:556",
+      "extraId": "extra:kbsa2026:556",
+      "team": "율곡고야구단",
+      "name": "율곡고야구단 (팀 등록지·야구장 아님)",
+      "addr": "경기도 파주시 파평면 청송로446번길 37-55, 1층",
+      "lat": 37.930923,
+      "lon": 126.866382,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=556&season=2026&kind_cd=31&sports_club=F",
+      "note": "야구장 아님 — KBSA 팀 등록 주소(건물). 사용자 승인으로 추가. 공개 건물 주소 페이지의 위치를 대조했으며 실제 훈련 구장·출입구는 확인하지 않음."
+    },
+    {
+      "id": "kbsa:295",
+      "extraId": "extra:kbsa2026:295",
+      "team": "순천효천고BC",
+      "name": "순천효천고BC (학교 주소·야구장 위치 미확인)",
+      "addr": "전라남도 순천시 녹색로 1360 (대룡동)",
+      "lat": 34.903862,
+      "lon": 127.484911,
+      "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=295&season=2026&kind_cd=31&sports_club=F",
+      "note": "KBSA 등록 주소를 학교 공식 안내(https://hyocheon.hs.jne.kr/)와 대조. 지도는 OSM way/490786286 학교 검색 위치이며 야구장·훈련 장소·출입구는 확인하지 않음. BC 이름이 학교명으로 인식되지 않아 기존 수집에서 누락."
+    },
+    {
+      "id": "kbsa:1338",
+      "extraId": "extra:kbsa2026:1338",
+      "team": "야로고BC",
+      "name": "야로고BC (학교 주소·야구장 위치 미확인)",
+      "addr": "경상남도 합천군 야로면 역산길 13",
+      "lat": 35.703036,
+      "lon": 128.169267,
+      "source": "https://yaro-h.gne.go.kr/yaro-h/main.do",
+      "note": "KBSA 2026 고등부 club_idx=1338 등록 확인. KBSA 상세 주소는 비어 있어 학교 공식 안내 주소로 추가. 지도는 OSM way/1186446966 학교 검색 위치이며 실제 야구장·훈련 장소·출입구는 확인하지 않음."
+    }
+  ],
+  "results": [
+    {
+      "id": "kbsa:1543",
+      "team": "거제BC(U-18)",
+      "status": "보류",
+      "reason": "건물번호와 층수 경계 미확인"
+    },
+    {
+      "id": "kbsa:1899",
+      "team": "상우고야구단",
+      "status": "보류",
+      "reason": "도로/건물 주소의 위치 검색 실패",
+      "query": "경기도 의정부시 충의로 60"
+    }
+  ]
+}

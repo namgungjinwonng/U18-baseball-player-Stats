@@ -38,7 +38,8 @@ export function buildPreviousSeasonAnalysis(year: number, a: string, b: string, 
   if (entries.some((rows) => rows.length !== 1 || rows[0].error || !rows[0].players?.length)) {
     return empty(`${year} 현재 엔트리가 없거나 수집되지 않은 학교가 있어 전년도 참고 분석을 제공할 수 없습니다.`);
   }
-  const selectedRosters = entries.map(([r]) => r.players.filter((p) => p.type === "player"));
+  // 시즌 중 이적해 나간 선수(moved_to)는 옛 학교 명단에 남아 있어도 현재 엔트리가 아니다.
+  const selectedRosters = entries.map(([r]) => r.players.filter((p) => p.type === "player" && !p.moved_to));
   const memberships = new Map<string, Set<number>>();
   selectedRosters.forEach((rows, i) => rows.forEach((p) => {
     const id = personId(p.person_no);

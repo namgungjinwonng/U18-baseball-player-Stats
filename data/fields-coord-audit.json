@@ -1,0 +1,2521 @@
+{
+  "checkedAt": "2026-10-30",
+  "sources": [
+    "https://www.data.go.kr/data/15021148/standard.do",
+    "https://www.openstreetmap.org/copyright"
+  ],
+  "counts": {
+    "보정": 0,
+    "검토": 2,
+    "미확인": 7,
+    "학교 경계 없음": 7,
+    "학교 안": 197
+  },
+  "checks": [
+    {
+      "id": "kbsa:1839",
+      "name": "전주기전대학교",
+      "ours": [
+        35.819697,
+        127.135981
+      ],
+      "status": "검토",
+      "distanceM": 246,
+      "to": [
+        35.817492,
+        127.136193
+      ],
+      "school": "https://www.openstreetmap.org/way/430361325",
+      "reason": "현재 좌표가 학교 부지 밖 — 학교 경계 중심으로 246m 이동 (학교 공식 주소 자료 없음 — 캠퍼스 밖 구장일 수 있어 검토 필요)"
+    },
+    {
+      "id": "kbsa:1838",
+      "name": "우석대학교",
+      "ours": [
+        36.845983,
+        127.438692
+      ],
+      "status": "검토",
+      "distanceM": 190,
+      "to": [
+        36.844764,
+        127.437199
+      ],
+      "school": "https://www.openstreetmap.org/way/990198954",
+      "reason": "현재 좌표가 학교 부지 밖 — 학교 경계 중심으로 190m 이동 (학교 공식 주소 자료 없음 — 캠퍼스 밖 구장일 수 있어 검토 필요)"
+    },
+    {
+      "id": "kbsa:198",
+      "name": "건대부중학교",
+      "ours": [
+        37.531532,
+        127.066742
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:1167",
+      "name": "사이버한국외대학교",
+      "ours": [
+        37.597082,
+        127.058741
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:376",
+      "name": "서울문화예술대학교",
+      "ours": [
+        37.589521,
+        126.943143
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:1451",
+      "name": "서울자동차고등학교",
+      "ours": [
+        37.536822,
+        126.970382
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:230",
+      "name": "동성중학교",
+      "ours": [
+        35.115675,
+        126.900575
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:514",
+      "name": "홍익대학교",
+      "ours": [
+        37.236982,
+        126.964273
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:1171",
+      "name": "한국골프과학기술대학교",
+      "ours": [
+        37.46464,
+        128.083095
+      ],
+      "status": "미확인",
+      "reason": "OSM 학교 경계와 표준데이터 학교 좌표 모두 없음"
+    },
+    {
+      "id": "kbsa:259",
+      "name": "구미중학교",
+      "ours": [
+        36.14758,
+        128.330024
+      ],
+      "officialAddress": "경상북도 구미시 문장로 159",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 120m",
+      "distanceM": 120
+    },
+    {
+      "id": "kbsa:585",
+      "name": "신흥중학교",
+      "ours": [
+        37.930358,
+        127.046867
+      ],
+      "officialAddress": "경기도 동두천시 신천로 159",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 115m",
+      "distanceM": 115
+    },
+    {
+      "id": "kbsa:586",
+      "name": "신흥고등학교",
+      "ours": [
+        37.930437,
+        127.046877
+      ],
+      "officialAddress": "경기도 동두천시 신천로 159",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 108m",
+      "distanceM": 108
+    },
+    {
+      "id": "kbsa:178",
+      "name": "야탑고등학교",
+      "ours": [
+        37.403484,
+        127.152941
+      ],
+      "officialAddress": "경기도 성남시 분당구 판교로 738",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 64m",
+      "distanceM": 64
+    },
+    {
+      "id": "kbsa:578",
+      "name": "율곡중학교",
+      "ours": [
+        37.849383,
+        126.881141
+      ],
+      "officialAddress": "경기도 파주시 법원읍 사임당로905번길 10",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 0m",
+      "distanceM": 0
+    },
+    {
+      "id": "kbsa:575",
+      "name": "강원고등학교",
+      "ours": [
+        37.894966,
+        127.756419
+      ],
+      "officialAddress": "강원특별자치도 춘천시 동면 장학길 24",
+      "status": "학교 경계 없음",
+      "reason": "학교 OSM 경계로는 판단 불가 — 표준데이터 학교 대표점과 0m",
+      "distanceM": 0
+    },
+    {
+      "id": "kbsa:818",
+      "name": "예일메디텍고등학교",
+      "ours": [
+        36.547396,
+        128.720868
+      ],
+      "officialAddress": "경상북도 안동시 예일길 85",
+      "status": "학교 경계 없음",
+      "reason": "OSM 학교 경계 없음 — 표준데이터 학교 대표점과 0m",
+      "distanceM": 0
+    },
+    {
+      "id": "kbsa:147",
+      "name": "경기고등학교",
+      "ours": [
+        37.517934,
+        127.056705
+      ],
+      "officialAddress": "서울특별시 강남구 영동대로 643",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/74013212"
+    },
+    {
+      "id": "kbsa:190",
+      "name": "휘문고등학교",
+      "ours": [
+        37.505238,
+        127.061998
+      ],
+      "officialAddress": "서울특별시 강남구 역삼로 541",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/417911700"
+    },
+    {
+      "id": "kbsa:200",
+      "name": "대치중학교",
+      "ours": [
+        37.484174,
+        127.047707
+      ],
+      "officialAddress": "서울특별시 강남구 남부순환로378길 39",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/353218845"
+    },
+    {
+      "id": "kbsa:208",
+      "name": "언북중학교",
+      "ours": [
+        37.519081,
+        127.033247
+      ],
+      "officialAddress": "서울특별시 강남구 도산대로38길 27",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/417446581"
+    },
+    {
+      "id": "kbsa:218",
+      "name": "휘문중학교",
+      "ours": [
+        37.50571,
+        127.063027
+      ],
+      "officialAddress": "서울특별시 강남구 역삼로 541",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/417911700"
+    },
+    {
+      "id": "kbsa:164",
+      "name": "배재고등학교",
+      "ours": [
+        37.556161,
+        127.151074
+      ],
+      "officialAddress": "서울특별시 강동구 고덕로 227",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/419366845"
+    },
+    {
+      "id": "kbsa:1164",
+      "name": "서울컨벤션고등학교",
+      "ours": [
+        37.559295,
+        127.157904
+      ],
+      "officialAddress": "서울특별시 강동구 동남로 964",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/799549199"
+    },
+    {
+      "id": "kbsa:1556",
+      "name": "동신중학교",
+      "ours": [
+        37.536529,
+        127.134153
+      ],
+      "officialAddress": "서울특별시 강동구 진황도로 72",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/419132759"
+    },
+    {
+      "id": "kbsa:203",
+      "name": "배재중학교",
+      "ours": [
+        37.555696,
+        127.149951
+      ],
+      "officialAddress": "서울특별시 강동구 고덕로 227",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/419366845"
+    },
+    {
+      "id": "kbsa:175",
+      "name": "신일고등학교",
+      "ours": [
+        37.628242,
+        127.028214
+      ],
+      "officialAddress": "서울특별시 강북구 솔매로49길 20",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/475332740"
+    },
+    {
+      "id": "kbsa:149",
+      "name": "서울대학교",
+      "ours": [
+        37.458115,
+        126.952161
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/relation/11917142"
+    },
+    {
+      "id": "kbsa:212",
+      "name": "자양중학교",
+      "ours": [
+        37.535169,
+        127.074558
+      ],
+      "officialAddress": "서울특별시 광진구 뚝섬로41길 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/174699401"
+    },
+    {
+      "id": "kbsa:130",
+      "name": "건국대학교",
+      "ours": [
+        37.541847,
+        127.077115
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/26281749"
+    },
+    {
+      "id": "kbsa:917",
+      "name": "우신고등학교",
+      "ours": [
+        37.494143,
+        126.827611
+      ],
+      "officialAddress": "서울특별시 구로구 부일로 917",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/249855049"
+    },
+    {
+      "id": "kbsa:1158",
+      "name": "서울동산고등학교",
+      "ours": [
+        37.630778,
+        127.073998
+      ],
+      "officialAddress": "서울특별시 노원구 공릉로 257",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/380911335"
+    },
+    {
+      "id": "kbsa:187",
+      "name": "청원고등학교",
+      "ours": [
+        37.665252,
+        127.062533
+      ],
+      "officialAddress": "서울특별시 노원구 한글비석로 506",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/564525824"
+    },
+    {
+      "id": "kbsa:496",
+      "name": "상명중학교",
+      "ours": [
+        37.649071,
+        127.06854
+      ],
+      "officialAddress": "서울특별시 노원구 덕릉로 553",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/380848419"
+    },
+    {
+      "id": "kbsa:215",
+      "name": "청원중학교",
+      "ours": [
+        37.666643,
+        127.061707
+      ],
+      "officialAddress": "서울특별시 노원구 한글비석로 506",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/564525824"
+    },
+    {
+      "id": "kbsa:214",
+      "name": "청량중학교",
+      "ours": [
+        37.587742,
+        127.051302
+      ],
+      "officialAddress": "서울특별시 동대문구 왕산로 301",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/476306836"
+    },
+    {
+      "id": "kbsa:172",
+      "name": "성남고등학교",
+      "ours": [
+        37.505448,
+        126.926227
+      ],
+      "officialAddress": "서울특별시 동작구 대방동길 74",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/284585459"
+    },
+    {
+      "id": "kbsa:197",
+      "name": "강남중학교",
+      "ours": [
+        37.502543,
+        126.922401
+      ],
+      "officialAddress": "서울특별시 동작구 대방동15길 29",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/466703398"
+    },
+    {
+      "id": "kbsa:205",
+      "name": "성남중학교",
+      "ours": [
+        37.504464,
+        126.927406
+      ],
+      "officialAddress": "서울특별시 동작구 대방동길 74",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/284585459"
+    },
+    {
+      "id": "kbsa:555",
+      "name": "서울디자인고등학교",
+      "ours": [
+        37.546413,
+        126.947681
+      ],
+      "officialAddress": "서울특별시 마포구 백범로 139",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/777927597"
+    },
+    {
+      "id": "kbsa:945",
+      "name": "동도중학교",
+      "ours": [
+        37.546377,
+        126.947579
+      ],
+      "officialAddress": "서울특별시 마포구 백범로 139",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/777927597"
+    },
+    {
+      "id": "kbsa:217",
+      "name": "홍은중학교",
+      "ours": [
+        37.592542,
+        126.935255
+      ],
+      "officialAddress": "서울특별시 서대문구 연희로41길 94",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/463129261"
+    },
+    {
+      "id": "kbsa:159",
+      "name": "연세대학교",
+      "ours": [
+        37.567836,
+        126.939375
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/relation/18619603"
+    },
+    {
+      "id": "kbsa:167",
+      "name": "서울고등학교",
+      "ours": [
+        37.483903,
+        127.006104
+      ],
+      "officialAddress": "서울특별시 서초구 효령로 197",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/230073203"
+    },
+    {
+      "id": "kbsa:199",
+      "name": "경원중학교",
+      "ours": [
+        37.51098,
+        127.009308
+      ],
+      "officialAddress": "서울특별시 서초구 신반포로33길 39",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/414371717"
+    },
+    {
+      "id": "kbsa:210",
+      "name": "영동중학교",
+      "ours": [
+        37.465782,
+        127.025286
+      ],
+      "officialAddress": "서울특별시 서초구 성촌길 14",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468644583"
+    },
+    {
+      "id": "kbsa:211",
+      "name": "이수중학교",
+      "ours": [
+        37.480756,
+        126.990418
+      ],
+      "officialAddress": "서울특별시 서초구 방배중앙로3길 32",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/418130510"
+    },
+    {
+      "id": "kbsa:153",
+      "name": "경동고등학교",
+      "ours": [
+        37.585822,
+        127.014809
+      ],
+      "officialAddress": "서울특별시 성북구 보문로29길 49",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/416269212"
+    },
+    {
+      "id": "kbsa:135",
+      "name": "고려대학교",
+      "ours": [
+        37.588038,
+        127.032393
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/26253960"
+    },
+    {
+      "id": "kbsa:157",
+      "name": "덕수고등학교",
+      "ours": [
+        37.485204,
+        127.146873
+      ],
+      "officialAddress": "서울특별시 송파구 위례북로 10",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/857253557"
+    },
+    {
+      "id": "kbsa:160",
+      "name": "배명고등학교",
+      "ours": [
+        37.498847,
+        127.095736
+      ],
+      "officialAddress": "서울특별시 송파구 삼학사로 11",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/169411861"
+    },
+    {
+      "id": "kbsa:202",
+      "name": "배명중학교",
+      "ours": [
+        37.499054,
+        127.095718
+      ],
+      "officialAddress": "서울특별시 송파구 삼학사로 11",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/169411861"
+    },
+    {
+      "id": "kbsa:213",
+      "name": "잠신중학교",
+      "ours": [
+        37.515381,
+        127.08791
+      ],
+      "officialAddress": "서울특별시 송파구 잠실로 12",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/129600528"
+    },
+    {
+      "id": "kbsa:206",
+      "name": "신월중학교",
+      "ours": [
+        37.540826,
+        126.828931
+      ],
+      "officialAddress": "서울특별시 양천구 남부순환로29길 25",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/464976593"
+    },
+    {
+      "id": "kbsa:207",
+      "name": "양천중학교",
+      "ours": [
+        37.519986,
+        126.83098
+      ],
+      "officialAddress": "서울특별시 양천구 지양로7길 32",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/596117752"
+    },
+    {
+      "id": "kbsa:209",
+      "name": "영남중학교",
+      "ours": [
+        37.497495,
+        126.895981
+      ],
+      "officialAddress": "서울특별시 영등포구 대림로31나길 17",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/467878771"
+    },
+    {
+      "id": "kbsa:170",
+      "name": "선린인터넷고등학교",
+      "ours": [
+        37.542502,
+        126.967219
+      ],
+      "officialAddress": "서울특별시 용산구 원효로97길 33-4",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/368634316"
+    },
+    {
+      "id": "kbsa:204",
+      "name": "선린중학교",
+      "ours": [
+        37.542777,
+        126.965262
+      ],
+      "officialAddress": "서울특별시 용산구 원효로97길 33-4",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/368634315"
+    },
+    {
+      "id": "kbsa:181",
+      "name": "충암고등학교",
+      "ours": [
+        37.58492,
+        126.922337
+      ],
+      "officialAddress": "서울특별시 은평구 가좌로5길 5",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/462889867"
+    },
+    {
+      "id": "kbsa:216",
+      "name": "충암중학교",
+      "ours": [
+        37.585292,
+        126.921986
+      ],
+      "officialAddress": "서울특별시 은평구 가좌로5길 5",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/462889867"
+    },
+    {
+      "id": "kbsa:1065",
+      "name": "경기상업고등학교",
+      "ours": [
+        37.58856,
+        126.969768
+      ],
+      "officialAddress": "서울특별시 종로구 자하문로 136",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/222963663"
+    },
+    {
+      "id": "kbsa:183",
+      "name": "중앙고등학교",
+      "ours": [
+        37.584211,
+        126.986826
+      ],
+      "officialAddress": "서울특별시 종로구 창덕궁길 164",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/233636255"
+    },
+    {
+      "id": "kbsa:179",
+      "name": "장충고등학교",
+      "ours": [
+        37.552432,
+        127.007074
+      ],
+      "officialAddress": "서울특별시 중구 동호로15길 93",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/486323260"
+    },
+    {
+      "id": "kbsa:201",
+      "name": "덕수중학교",
+      "ours": [
+        37.565048,
+        126.997181
+      ],
+      "officialAddress": "서울특별시 중구 마른내로9길 10",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/486533571"
+    },
+    {
+      "id": "kbsa:139",
+      "name": "동국대학교",
+      "ours": [
+        37.558238,
+        126.999489
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/268230784"
+    },
+    {
+      "id": "kbsa:188",
+      "name": "부산공업고등학교",
+      "ours": [
+        35.130409,
+        129.08779
+      ],
+      "officialAddress": "부산광역시 남구 수영로196번길 80",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/474606017"
+    },
+    {
+      "id": "kbsa:132",
+      "name": "경성대학교",
+      "ours": [
+        35.140661,
+        129.098052
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/420009893"
+    },
+    {
+      "id": "kbsa:191",
+      "name": "부산고등학교",
+      "ours": [
+        35.120886,
+        129.036028
+      ],
+      "officialAddress": "부산광역시 동구 초량로40번길 23",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/783359219"
+    },
+    {
+      "id": "kbsa:224",
+      "name": "부산중학교",
+      "ours": [
+        35.12211,
+        129.037126
+      ],
+      "officialAddress": "부산광역시 동구 초량로40번길 29",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/530340259"
+    },
+    {
+      "id": "kbsa:186",
+      "name": "개성고등학교",
+      "ours": [
+        35.168597,
+        129.031
+      ],
+      "officialAddress": "부산광역시 부산진구 당감서로 137",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/756633691"
+    },
+    {
+      "id": "kbsa:1339",
+      "name": "동의과학대학교",
+      "ours": [
+        35.165478,
+        129.072776
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/756752637"
+    },
+    {
+      "id": "kbsa:143",
+      "name": "동의대학교",
+      "ours": [
+        35.143096,
+        129.034164
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/662613674"
+    },
+    {
+      "id": "kbsa:1340",
+      "name": "부산과학기술대학교",
+      "ours": [
+        35.194303,
+        129.004077
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468933012"
+    },
+    {
+      "id": "kbsa:140",
+      "name": "동아대학교",
+      "ours": [
+        35.115412,
+        128.967594
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/551196510"
+    },
+    {
+      "id": "kbsa:176",
+      "name": "경남고등학교",
+      "ours": [
+        35.121692,
+        129.019776
+      ],
+      "officialAddress": "부산광역시 서구 망양로111번길 65",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/793770683"
+    },
+    {
+      "id": "kbsa:182",
+      "name": "부경고등학교",
+      "ours": [
+        35.1142,
+        129.013292
+      ],
+      "officialAddress": "부산광역시 서구 망양로33번길 12",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/756662305"
+    },
+    {
+      "id": "kbsa:220",
+      "name": "경남중학교",
+      "ours": [
+        35.100518,
+        129.020379
+      ],
+      "officialAddress": "부산광역시 서구 까치고개로229번길 7",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/534997045"
+    },
+    {
+      "id": "kbsa:180",
+      "name": "대구고등학교",
+      "ours": [
+        35.848471,
+        128.589533
+      ],
+      "officialAddress": "대구광역시 남구 중앙대로 171",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/761843764"
+    },
+    {
+      "id": "kbsa:227",
+      "name": "경상중학교",
+      "ours": [
+        35.85262,
+        128.586154
+      ],
+      "officialAddress": "대구광역시 남구 현충로48길 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1131452761"
+    },
+    {
+      "id": "kbsa:229",
+      "name": "대구중학교",
+      "ours": [
+        35.849601,
+        128.604578
+      ],
+      "officialAddress": "대구광역시 남구 대봉로 120",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/632397946"
+    },
+    {
+      "id": "kbsa:933",
+      "name": "협성경복중학교",
+      "ours": [
+        35.834797,
+        128.598582
+      ],
+      "officialAddress": "대구광역시 남구 효성로 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1221239300"
+    },
+    {
+      "id": "kbsa:145",
+      "name": "대구상원고등학교",
+      "ours": [
+        35.822102,
+        128.538642
+      ],
+      "officialAddress": "대구광역시 달서구 월배로 241",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1350323985"
+    },
+    {
+      "id": "kbsa:134",
+      "name": "계명대학교",
+      "ours": [
+        35.856713,
+        128.484942
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468951001"
+    },
+    {
+      "id": "kbsa:228",
+      "name": "경운중학교",
+      "ours": [
+        35.8595,
+        128.553852
+      ],
+      "officialAddress": "대구광역시 서구 서대구로3길 32",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/631775857"
+    },
+    {
+      "id": "kbsa:185",
+      "name": "경북고등학교",
+      "ours": [
+        35.844257,
+        128.640428
+      ],
+      "officialAddress": "대구광역시 수성구 청호로 300",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/440330043"
+    },
+    {
+      "id": "kbsa:1165",
+      "name": "수성대학교",
+      "ours": [
+        35.852694,
+        128.64713
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/305396501"
+    },
+    {
+      "id": "kbsa:236",
+      "name": "동인천중학교",
+      "ours": [
+        37.454589,
+        126.696998
+      ],
+      "officialAddress": "인천광역시 남동구 구월남로57번길 12",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/430316903"
+    },
+    {
+      "id": "kbsa:237",
+      "name": "상인천중학교",
+      "ours": [
+        37.461809,
+        126.717145
+      ],
+      "officialAddress": "인천광역시 남동구 백범로297번길 21",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/430314028"
+    },
+    {
+      "id": "kbsa:165",
+      "name": "인천고등학교",
+      "ours": [
+        37.453389,
+        126.690685
+      ],
+      "officialAddress": "인천광역시 미추홀구 경원대로 804",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/409631459"
+    },
+    {
+      "id": "kbsa:166",
+      "name": "인하대학교",
+      "ours": [
+        37.449443,
+        126.653445
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/472447787"
+    },
+    {
+      "id": "kbsa:161",
+      "name": "동산고등학교",
+      "ours": [
+        37.472187,
+        126.648979
+      ],
+      "officialAddress": "인천광역시 제물포구 동산로 58",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/430483580"
+    },
+    {
+      "id": "kbsa:169",
+      "name": "제물포고등학교",
+      "ours": [
+        37.476412,
+        126.623733
+      ],
+      "officialAddress": "인천광역시 제물포구 자유공원로 58-9",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/409633545"
+    },
+    {
+      "id": "kbsa:235",
+      "name": "동산중학교",
+      "ours": [
+        37.473726,
+        126.648243
+      ],
+      "officialAddress": "인천광역시 제물포구 동산로 58",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/430483580"
+    },
+    {
+      "id": "kbsa:238",
+      "name": "신흥중학교",
+      "ours": [
+        37.453798,
+        126.629955
+      ],
+      "officialAddress": "인천광역시 제물포구 인항로24번길 38",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/430481760"
+    },
+    {
+      "id": "kbsa:156",
+      "name": "광주진흥고등학교",
+      "ours": [
+        35.195609,
+        126.843316
+      ],
+      "officialAddress": "전남광주통합특별시 광산구 왕버들로 307",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/572641125"
+    },
+    {
+      "id": "kbsa:232",
+      "name": "광주진흥중학교",
+      "ours": [
+        35.195609,
+        126.843316
+      ],
+      "officialAddress": "전남광주통합특별시 광산구 왕버들로 307",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/572641125"
+    },
+    {
+      "id": "kbsa:151",
+      "name": "광주동성고등학교",
+      "ours": [
+        35.115677,
+        126.896631
+      ],
+      "officialAddress": "전남광주통합특별시 남구 서문대로627번길 20",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/517822710"
+    },
+    {
+      "id": "kbsa:196",
+      "name": "송원대학교",
+      "ours": [
+        35.108584,
+        126.874481
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/537754467"
+    },
+    {
+      "id": "kbsa:148",
+      "name": "광주제일고등학교",
+      "ours": [
+        35.153328,
+        126.907009
+      ],
+      "officialAddress": "전남광주통합특별시 북구 독립로237번길 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/498970641"
+    },
+    {
+      "id": "kbsa:294",
+      "name": "동강대학교",
+      "ours": [
+        35.168903,
+        126.925156
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1039585168"
+    },
+    {
+      "id": "kbsa:239",
+      "name": "충남중학교",
+      "ours": [
+        36.325201,
+        127.44436
+      ],
+      "officialAddress": "대전광역시 동구 계족로 123",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/485626103"
+    },
+    {
+      "id": "kbsa:240",
+      "name": "한밭중학교",
+      "ours": [
+        36.335546,
+        127.426179
+      ],
+      "officialAddress": "대전광역시 동구 태전로 67",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/30659526"
+    },
+    {
+      "id": "kbsa:821",
+      "name": "대전제일고등학교",
+      "ours": [
+        36.313558,
+        127.372979
+      ],
+      "officialAddress": "대전광역시 서구 배재로46번길 77",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/817309413"
+    },
+    {
+      "id": "kbsa:1555",
+      "name": "버드내중학교",
+      "ours": [
+        36.316409,
+        127.383446
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/30615122"
+    },
+    {
+      "id": "kbsa:1545",
+      "name": "대덕대학교",
+      "ours": [
+        36.390955,
+        127.366361
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/937299986"
+    },
+    {
+      "id": "kbsa:171",
+      "name": "대전고등학교",
+      "ours": [
+        36.322148,
+        127.425406
+      ],
+      "officialAddress": "대전광역시 중구 대흥로 110",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/30659208"
+    },
+    {
+      "id": "kbsa:593",
+      "name": "백송고등학교",
+      "ours": [
+        37.697387,
+        126.741716
+      ],
+      "officialAddress": "경기도 고양시 일산서구 덕이로172번길 4-39",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1012371537"
+    },
+    {
+      "id": "kbsa:1696",
+      "name": "세원고등학교",
+      "ours": [
+        37.670733,
+        126.803047
+      ],
+      "officialAddress": "경기도 고양시 일산동구 숲속마을로 202",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469430937"
+    },
+    {
+      "id": "kbsa:461",
+      "name": "신일중학교",
+      "ours": [
+        37.676479,
+        126.774507
+      ],
+      "officialAddress": "경기도 고양시 일산서구 고봉로 177",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/656241909"
+    },
+    {
+      "id": "kbsa:513",
+      "name": "원당중학교",
+      "ours": [
+        37.664277,
+        126.823088
+      ],
+      "officialAddress": "경기도 고양시 덕양구 마상로 1",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/687045894"
+    },
+    {
+      "id": "kbsa:916",
+      "name": "경기항공고등학교",
+      "ours": [
+        37.473499,
+        126.857399
+      ],
+      "officialAddress": "경기도 광명시 새터안로 20",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/473934284"
+    },
+    {
+      "id": "kbsa:1454",
+      "name": "동원대학교",
+      "ours": [
+        37.328779,
+        127.403064
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/804530569"
+    },
+    {
+      "id": "kbsa:192",
+      "name": "인창고등학교",
+      "ours": [
+        37.605581,
+        127.14716
+      ],
+      "officialAddress": "경기도 구리시 왕숙천로 339",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/563019877"
+    },
+    {
+      "id": "kbsa:246",
+      "name": "인창중학교",
+      "ours": [
+        37.606495,
+        127.14648
+      ],
+      "officialAddress": "경기도 구리시 건원대로34번길 118",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/563019877"
+    },
+    {
+      "id": "kbsa:1903",
+      "name": "김포과학기술고등학교",
+      "ours": [
+        37.620623,
+        126.709765
+      ],
+      "officialAddress": "경기도 김포시 봉화로 69",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1180122939"
+    },
+    {
+      "id": "kbsa:1833",
+      "name": "김포대학교",
+      "ours": [
+        37.729653,
+        126.546987
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1153633805"
+    },
+    {
+      "id": "kbsa:775",
+      "name": "진영고등학교",
+      "ours": [
+        37.471911,
+        126.790088
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/825069221"
+    },
+    {
+      "id": "kbsa:243",
+      "name": "부천중학교",
+      "ours": [
+        37.491155,
+        126.769564
+      ],
+      "officialAddress": "경기도 부천시 원미구 심중로75번길 64",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/486823954"
+    },
+    {
+      "id": "kbsa:548",
+      "name": "대원중학교",
+      "ours": [
+        37.446961,
+        127.172168
+      ],
+      "officialAddress": "경기도 성남시 중원구 황송로 35",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/240972965"
+    },
+    {
+      "id": "kbsa:242",
+      "name": "매송중학교",
+      "ours": [
+        37.396783,
+        127.122839
+      ],
+      "officialAddress": "경기도 성남시 분당구 탄천로 49",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/435950144"
+    },
+    {
+      "id": "kbsa:244",
+      "name": "성일중학교",
+      "ours": [
+        37.43475,
+        127.144913
+      ],
+      "officialAddress": "경기도 성남시 중원구 시민로77번길 10-1",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468303929"
+    },
+    {
+      "id": "kbsa:189",
+      "name": "유신고등학교",
+      "ours": [
+        37.282777,
+        127.041036
+      ],
+      "officialAddress": "경기도 수원시 팔달구 월드컵로 216",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/477523972"
+    },
+    {
+      "id": "kbsa:547",
+      "name": "장안고등학교",
+      "ours": [
+        37.292797,
+        126.995589
+      ],
+      "officialAddress": "경기도 수원시 장안구 대평로52번길 12",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/38141586"
+    },
+    {
+      "id": "kbsa:500",
+      "name": "매향중학교",
+      "ours": [
+        37.285492,
+        127.018659
+      ],
+      "officialAddress": "경기도 수원시 팔달구 수원천로392번길 44-22",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/relation/6949927"
+    },
+    {
+      "id": "kbsa:154",
+      "name": "성균관대학교",
+      "ours": [
+        37.294082,
+        126.97457
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/70081328"
+    },
+    {
+      "id": "kbsa:519",
+      "name": "소래고등학교",
+      "ours": [
+        37.437253,
+        126.794822
+      ],
+      "officialAddress": "경기도 시흥시 수인로3287번길 26",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469313529"
+    },
+    {
+      "id": "kbsa:420",
+      "name": "소래중학교",
+      "ours": [
+        37.437122,
+        126.79665
+      ],
+      "officialAddress": "경기도 시흥시 은행로 60",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/648719385"
+    },
+    {
+      "id": "kbsa:184",
+      "name": "안산공업고등학교",
+      "ours": [
+        37.336254,
+        126.860579
+      ],
+      "officialAddress": "경기도 안산시 상록구 안산공고로 51",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/475192014"
+    },
+    {
+      "id": "kbsa:247",
+      "name": "중앙중학교",
+      "ours": [
+        37.321283,
+        126.839732
+      ],
+      "officialAddress": "경기도 안산시 단원구 안산천서로 65",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/499485059"
+    },
+    {
+      "id": "kbsa:1549",
+      "name": "신안산대학교",
+      "ours": [
+        37.311614,
+        126.807365
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468979910"
+    },
+    {
+      "id": "kbsa:173",
+      "name": "한양대학교",
+      "ours": [
+        37.296668,
+        126.835007
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/367535809"
+    },
+    {
+      "id": "kbsa:177",
+      "name": "중앙대학교",
+      "ours": [
+        37.006502,
+        127.225969
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/471138197"
+    },
+    {
+      "id": "kbsa:407",
+      "name": "충훈고등학교",
+      "ours": [
+        37.410855,
+        126.892795
+      ],
+      "officialAddress": "경기도 안양시 만안구 석수로 238",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/380345630"
+    },
+    {
+      "id": "kbsa:248",
+      "name": "평촌중학교",
+      "ours": [
+        37.388524,
+        126.961751
+      ],
+      "officialAddress": "경기도 안양시 동안구 관평로 127",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/249856082"
+    },
+    {
+      "id": "kbsa:522",
+      "name": "개군중학교",
+      "ours": [
+        37.428144,
+        127.539314
+      ],
+      "officialAddress": "경기도 양평군 개군면 추읍로 15",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/530914219"
+    },
+    {
+      "id": "kbsa:518",
+      "name": "단월중학교",
+      "ours": [
+        37.541108,
+        127.672709
+      ],
+      "officialAddress": "경기도 양평군 단월면 보룡길 83",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1204395933"
+    },
+    {
+      "id": "kbsa:1064",
+      "name": "여주대학교",
+      "ours": [
+        37.270332,
+        127.634417
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/285948893"
+    },
+    {
+      "id": "kbsa:435",
+      "name": "송전중학교",
+      "ours": [
+        37.141208,
+        127.20017
+      ],
+      "officialAddress": "경기도 용인시 처인구 이동읍 경기동로687번길 28-14",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/860968500"
+    },
+    {
+      "id": "kbsa:133",
+      "name": "경희대학교",
+      "ours": [
+        37.242844,
+        127.080606
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/relation/11246784"
+    },
+    {
+      "id": "kbsa:1352",
+      "name": "용인예술과학대학교",
+      "ours": [
+        37.22865,
+        127.218859
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1013701109"
+    },
+    {
+      "id": "kbsa:1453",
+      "name": "경민IT고등학교",
+      "ours": [
+        37.746772,
+        127.02454
+      ],
+      "officialAddress": "경기도 의정부시 서부로 545",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469064386"
+    },
+    {
+      "id": "kbsa:582",
+      "name": "경민중학교",
+      "ours": [
+        37.746288,
+        127.025012
+      ],
+      "officialAddress": "경기도 의정부시 서부로 545",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469064614"
+    },
+    {
+      "id": "kbsa:1452",
+      "name": "경민대학교",
+      "ours": [
+        37.74548,
+        127.023849
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/701522557"
+    },
+    {
+      "id": "kbsa:507",
+      "name": "모가중학교",
+      "ours": [
+        37.176619,
+        127.473415
+      ],
+      "officialAddress": "경기도 이천시 모가면 진상미로1385번길 114",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1160007168"
+    },
+    {
+      "id": "kbsa:1910",
+      "name": "한국관광대학교",
+      "ours": [
+        37.283275,
+        127.379239
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/971168529"
+    },
+    {
+      "id": "kbsa:508",
+      "name": "금릉중학교",
+      "ours": [
+        37.751282,
+        126.772857
+      ],
+      "officialAddress": "경기도 파주시 후곡로 66",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/544992965"
+    },
+    {
+      "id": "kbsa:592",
+      "name": "라온고등학교",
+      "ours": [
+        37.06952,
+        127.067536
+      ],
+      "officialAddress": "경기도 평택시 경기대로1376번길 38-6",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469105973"
+    },
+    {
+      "id": "kbsa:815",
+      "name": "청담고등학교",
+      "ours": [
+        36.962446,
+        127.061389
+      ],
+      "officialAddress": "경기도 평택시 팽성읍 팽성송화로 192",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1499800629"
+    },
+    {
+      "id": "kbsa:1173",
+      "name": "라온중학교",
+      "ours": [
+        37.069439,
+        127.066947
+      ],
+      "officialAddress": "경기도 평택시 경기대로1376번길 38-6",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469105973"
+    },
+    {
+      "id": "kbsa:589",
+      "name": "청담중학교",
+      "ours": [
+        36.96287,
+        127.062776
+      ],
+      "officialAddress": "경기도 평택시 팽성읍 부용로56번길 20",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1505411322"
+    },
+    {
+      "id": "kbsa:927",
+      "name": "비봉고등학교",
+      "ours": [
+        37.237873,
+        126.872494
+      ],
+      "officialAddress": "경기도 화성시 효행구 비봉면 양노로109번길 5",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1420918233"
+    },
+    {
+      "id": "kbsa:1837",
+      "name": "장안대학교",
+      "ours": [
+        37.213122,
+        126.947019
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468415951"
+    },
+    {
+      "id": "kbsa:193",
+      "name": "강릉고등학교",
+      "ours": [
+        37.788569,
+        128.916716
+      ],
+      "officialAddress": "강원특별자치도 강릉시 강릉대로587번길 68",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/471354565"
+    },
+    {
+      "id": "kbsa:249",
+      "name": "경포중학교",
+      "ours": [
+        37.741482,
+        128.899845
+      ],
+      "officialAddress": "강원특별자치도 강릉시 노암등길 76",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/472328566"
+    },
+    {
+      "id": "kbsa:391",
+      "name": "강릉영동대학교",
+      "ours": [
+        37.747425,
+        128.855577
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/369249506"
+    },
+    {
+      "id": "kbsa:194",
+      "name": "설악고등학교",
+      "ours": [
+        38.185489,
+        128.573827
+      ],
+      "officialAddress": "강원특별자치도 속초시 청대로 219",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/551006791"
+    },
+    {
+      "id": "kbsa:250",
+      "name": "설악중학교",
+      "ours": [
+        38.206553,
+        128.578302
+      ],
+      "officialAddress": "강원특별자치도 속초시 미시령로 3402",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/551006786"
+    },
+    {
+      "id": "kbsa:1701",
+      "name": "상동고등학교",
+      "ours": [
+        37.125095,
+        128.820894
+      ],
+      "officialAddress": "강원특별자치도 영월군 상동읍 태백산로 3147",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/684378221"
+    },
+    {
+      "id": "kbsa:195",
+      "name": "원주고등학교",
+      "ours": [
+        37.339611,
+        127.954655
+      ],
+      "officialAddress": "강원특별자치도 원주시 치악로 1765",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469932121"
+    },
+    {
+      "id": "kbsa:251",
+      "name": "원주중학교",
+      "ours": [
+        37.336726,
+        127.95814
+      ],
+      "officialAddress": "강원특별자치도 원주시 치악로 1724",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469932128"
+    },
+    {
+      "id": "kbsa:252",
+      "name": "춘천중학교",
+      "ours": [
+        37.874866,
+        127.719171
+      ],
+      "officialAddress": "강원특별자치도 춘천시 공지로 442-10",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/472448781"
+    },
+    {
+      "id": "kbsa:926",
+      "name": "유원대학교",
+      "ours": [
+        36.195235,
+        127.799143
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469441871"
+    },
+    {
+      "id": "kbsa:138",
+      "name": "세광고등학교",
+      "ours": [
+        36.602853,
+        127.452557
+      ],
+      "officialAddress": "충청북도 청주시 서원구 2순환로 1572",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/910301924"
+    },
+    {
+      "id": "kbsa:421",
+      "name": "청주고등학교",
+      "ours": [
+        36.635592,
+        127.455464
+      ],
+      "officialAddress": "충청북도 청주시 흥덕구 사직대로 79",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/471486530"
+    },
+    {
+      "id": "kbsa:253",
+      "name": "세광중학교",
+      "ours": [
+        36.603009,
+        127.45465
+      ],
+      "officialAddress": "충청북도 청주시 서원구 2순환로 1574",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/910301926"
+    },
+    {
+      "id": "kbsa:254",
+      "name": "청주중학교",
+      "ours": [
+        36.644081,
+        127.485884
+      ],
+      "officialAddress": "충청북도 청주시 상당구 사직대로361번길 125",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/445706209"
+    },
+    {
+      "id": "kbsa:1711",
+      "name": "충북보건과학대학교",
+      "ours": [
+        36.702012,
+        127.552141
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/443362138"
+    },
+    {
+      "id": "kbsa:141",
+      "name": "공주고등학교",
+      "ours": [
+        36.447909,
+        127.123036
+      ],
+      "officialAddress": "충청남도 공주시 공주고담길 2",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/557192813"
+    },
+    {
+      "id": "kbsa:255",
+      "name": "공주중학교",
+      "ours": [
+        36.464778,
+        127.118501
+      ],
+      "officialAddress": "충청남도 공주시 왕릉로 111",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/818432786"
+    },
+    {
+      "id": "kbsa:1344",
+      "name": "신성대학교",
+      "ours": [
+        36.851699,
+        126.594278
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/886056036"
+    },
+    {
+      "id": "kbsa:381",
+      "name": "외산중학교",
+      "ours": [
+        36.299923,
+        126.701003
+      ],
+      "officialAddress": "충청남도 부여군 외산면 외산로 55-14",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/821832000"
+    },
+    {
+      "id": "kbsa:256",
+      "name": "온양중학교",
+      "ours": [
+        36.774192,
+        126.998075
+      ],
+      "officialAddress": "충청남도 아산시 온중로 48",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/817291005"
+    },
+    {
+      "id": "kbsa:142",
+      "name": "북일고등학교",
+      "ours": [
+        36.832242,
+        127.158172
+      ],
+      "officialAddress": "충청남도 천안시 동남구 단대로 69",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/116559964"
+    },
+    {
+      "id": "kbsa:257",
+      "name": "천안북중학교",
+      "ours": [
+        36.814789,
+        127.154067
+      ],
+      "officialAddress": "충청남도 천안시 동남구 중앙로 188",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/479747497"
+    },
+    {
+      "id": "kbsa:136",
+      "name": "단국대학교",
+      "ours": [
+        36.836833,
+        127.16823
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/171904156"
+    },
+    {
+      "id": "kbsa:1541",
+      "name": "청운대학교",
+      "ours": [
+        36.582671,
+        126.663133
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469595123"
+    },
+    {
+      "id": "kbsa:1828",
+      "name": "전북인공지능고등학교",
+      "ours": [
+        35.414224,
+        126.558006
+      ],
+      "officialAddress": "전북특별자치도 고창군 무장면 왕제산로 713",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469038142"
+    },
+    {
+      "id": "kbsa:1552",
+      "name": "군산상일고등학교",
+      "ours": [
+        35.97429,
+        126.699536
+      ],
+      "officialAddress": "전북특별자치도 군산시 석치1길 17",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1230242537"
+    },
+    {
+      "id": "kbsa:293",
+      "name": "호원대학교",
+      "ours": [
+        35.966906,
+        126.864535
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/922769806"
+    },
+    {
+      "id": "kbsa:61",
+      "name": "한일장신대학교",
+      "ours": [
+        35.763602,
+        127.206317
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/979742108"
+    },
+    {
+      "id": "kbsa:163",
+      "name": "원광대학교",
+      "ours": [
+        35.968779,
+        126.959102
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/relation/20397322"
+    },
+    {
+      "id": "kbsa:162",
+      "name": "전주고등학교",
+      "ours": [
+        35.824852,
+        127.15175
+      ],
+      "officialAddress": "전북특별자치도 전주시 완산구 권삼득로 2",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/428420416"
+    },
+    {
+      "id": "kbsa:521",
+      "name": "인상고등학교",
+      "ours": [
+        35.719205,
+        126.839033
+      ],
+      "officialAddress": "전북특별자치도 정읍시 신태인읍 벽골제로 34",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/311354766"
+    },
+    {
+      "id": "kbsa:520",
+      "name": "세지중학교",
+      "ours": [
+        34.91886,
+        126.748746
+      ],
+      "officialAddress": "전남광주통합특별시 나주시 세지면 동창로 112",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1362432985"
+    },
+    {
+      "id": "kbsa:270",
+      "name": "순천이수중학교",
+      "ours": [
+        34.950347,
+        127.503507
+      ],
+      "officialAddress": "전남광주통합특별시 순천시 수박등1길 13",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/490665932"
+    },
+    {
+      "id": "kbsa:269",
+      "name": "여수중학교",
+      "ours": [
+        34.74866,
+        127.741092
+      ],
+      "officialAddress": "전남광주통합특별시 여수시 공화북4길 19-1",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/64707729"
+    },
+    {
+      "id": "kbsa:378",
+      "name": "화순고등학교",
+      "ours": [
+        35.054126,
+        126.984094
+      ],
+      "officialAddress": "전남광주통합특별시 화순군 화순읍 진각로 31-9",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/474838235"
+    },
+    {
+      "id": "kbsa:271",
+      "name": "화순중학교",
+      "ours": [
+        35.056581,
+        126.978146
+      ],
+      "officialAddress": "전남광주통합특별시 화순군 화순읍 칠충로 71",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/490453012"
+    },
+    {
+      "id": "kbsa:1166",
+      "name": "경일대학교",
+      "ours": [
+        35.907764,
+        128.801107
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/178090815"
+    },
+    {
+      "id": "kbsa:296",
+      "name": "영남대학교",
+      "ours": [
+        35.828022,
+        128.757222
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/152997010"
+    },
+    {
+      "id": "kbsa:144",
+      "name": "경주고등학교",
+      "ours": [
+        35.842847,
+        129.225792
+      ],
+      "officialAddress": "경상북도 경주시 원효로 231",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/42473652"
+    },
+    {
+      "id": "kbsa:258",
+      "name": "경주중학교",
+      "ours": [
+        35.842847,
+        129.225792
+      ],
+      "officialAddress": "경상북도 경주시 원효로 231",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/42473652"
+    },
+    {
+      "id": "kbsa:816",
+      "name": "도개고등학교",
+      "ours": [
+        36.30138,
+        128.330626
+      ],
+      "officialAddress": "경상북도 구미시 도개면 도안로 120",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1457127353"
+    },
+    {
+      "id": "kbsa:1347",
+      "name": "구미대학교",
+      "ours": [
+        36.150406,
+        128.288466
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/468939239"
+    },
+    {
+      "id": "kbsa:1763",
+      "name": "의성고등학교",
+      "ours": [
+        36.353161,
+        128.699894
+      ],
+      "officialAddress": "경상북도 의성군 의성읍 군청길 57",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/854170621"
+    },
+    {
+      "id": "kbsa:537",
+      "name": "포항제철고등학교",
+      "ours": [
+        36.02888,
+        129.327595
+      ],
+      "officialAddress": "경상북도 포항시 남구 지곡로212번길 40",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/615274668"
+    },
+    {
+      "id": "kbsa:261",
+      "name": "포항제철중학교",
+      "ours": [
+        36.020499,
+        129.327613
+      ],
+      "officialAddress": "경상북도 포항시 남구 지곡로 150",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/662016160"
+    },
+    {
+      "id": "kbsa:260",
+      "name": "포항중학교",
+      "ours": [
+        36.050168,
+        129.366962
+      ],
+      "officialAddress": "경상북도 포항시 북구 학산로 45",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/471677237"
+    },
+    {
+      "id": "kbsa:495",
+      "name": "외포중학교",
+      "ours": [
+        34.944239,
+        128.717482
+      ],
+      "officialAddress": "경상남도 거제시 장목면 옥포대첩로 942",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/521147086"
+    },
+    {
+      "id": "kbsa:150",
+      "name": "김해고등학교",
+      "ours": [
+        35.230789,
+        128.896895
+      ],
+      "officialAddress": "경상남도 김해시 활천로24번길 29",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/845040670"
+    },
+    {
+      "id": "kbsa:262",
+      "name": "내동중학교",
+      "ours": [
+        35.241287,
+        128.858244
+      ],
+      "officialAddress": "경상남도 김해시 평전로 135",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/527791270"
+    },
+    {
+      "id": "kbsa:591",
+      "name": "물금고등학교",
+      "ours": [
+        35.335608,
+        129.016114
+      ],
+      "officialAddress": "경상남도 양산시 물금읍 신주1길 20",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/229543636"
+    },
+    {
+      "id": "kbsa:487",
+      "name": "원동중학교",
+      "ours": [
+        35.375452,
+        128.920991
+      ],
+      "officialAddress": "경상남도 양산시 원동면 원동로 1654",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/1427256103"
+    },
+    {
+      "id": "kbsa:1341",
+      "name": "동원과학기술대학교",
+      "ours": [
+        35.343178,
+        129.067852
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/490308512"
+    },
+    {
+      "id": "kbsa:152",
+      "name": "마산고등학교",
+      "ours": [
+        35.200189,
+        128.561785
+      ],
+      "officialAddress": "경상남도 창원시 마산합포구 심온길 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/648587599"
+    },
+    {
+      "id": "kbsa:155",
+      "name": "마산용마고등학교",
+      "ours": [
+        35.211756,
+        128.582175
+      ],
+      "officialAddress": "경상남도 창원시 마산합포구 허당로 51",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/844282307"
+    },
+    {
+      "id": "kbsa:264",
+      "name": "마산동중학교",
+      "ours": [
+        35.220594,
+        128.568025
+      ],
+      "officialAddress": "경상남도 창원시 마산회원구 회원북7길 40",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/469656984"
+    },
+    {
+      "id": "kbsa:263",
+      "name": "마산중학교",
+      "ours": [
+        35.202592,
+        128.562042
+      ],
+      "officialAddress": "경상남도 창원시 마산합포구 심온길 49",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/648587600"
+    },
+    {
+      "id": "kbsa:265",
+      "name": "신월중학교",
+      "ours": [
+        35.228696,
+        128.693535
+      ],
+      "officialAddress": "경상남도 창원시 성산구 신월로37번길 12",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/570454689"
+    },
+    {
+      "id": "kbsa:131",
+      "name": "경남대학교",
+      "ours": [
+        35.181582,
+        128.553198
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/977830839"
+    },
+    {
+      "id": "kbsa:1699",
+      "name": "금남고등학교",
+      "ours": [
+        34.98629,
+        127.839662
+      ],
+      "officialAddress": "경상남도 하동군 금남면 섬진강대로 656-8",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/696561423"
+    },
+    {
+      "id": "kbsa:379",
+      "name": "제주고등학교",
+      "ours": [
+        33.471619,
+        126.482211
+      ],
+      "officialAddress": "제주특별자치도 제주시 1100로 3213",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/371633513"
+    },
+    {
+      "id": "kbsa:272",
+      "name": "제주제일중학교",
+      "ours": [
+        33.494632,
+        126.539115
+      ],
+      "officialAddress": "제주특별자치도 제주시 남광로 33",
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/371629062"
+    },
+    {
+      "id": "kbsa:444",
+      "name": "제주관광대학교",
+      "ours": [
+        33.447877,
+        126.434596
+      ],
+      "status": "학교 안",
+      "reason": "현재 좌표가 학교 부지 안",
+      "school": "https://www.openstreetmap.org/way/370373447"
+    }
+  ]
+}

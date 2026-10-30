@@ -10,12 +10,25 @@ import { GRADE_COLORS, POS_COLORS } from "./badgeColors";
 import { Ico } from "./navIcons";
 import { PagedCardGrid } from "./PagedCardGrid";
 import type { TeamPlayerEntry, TeamStaffEntry } from "./types";
+import { transferFromMap } from "./transfers";
 import { SearchIcon } from "./LineIcons";
 import { SeasonEmpty } from "./SeasonEmpty";
 
 const POS_ORDER = ["투수", "포수", "내야수", "외야수", "미지정"];
 const getPos = (p: TeamPlayerEntry) => p.position || "미지정";
 const getGrade = (p: TeamPlayerEntry) => p.grade || "미지정";
+// 이적 선수의 옛 학교 항목(moved_to)은 학교 명단에만 표시하고 인원·목록·검색에서는 뺀다.
+const isCurrent = (p: TeamPlayerEntry) => !p.moved_to;
+
+// 이적 표시(이름 아래 작은 줄) — 옛 학교 「(새 학교 이적)」, 새 학교 「(옛 학교에서 이적)」.
+function TransferNote({ p, movedFrom }: { p: TeamPlayerEntry; movedFrom?: Map<string, string> }) {
+  const from = p.moved_to ? undefined : movedFrom?.get(p.person_no);
+  const school = p.moved_to ?? from;
+  if (!school) return null;
+  const text = `(${p.moved_to ? `${school} 이적` : `${school}에서 이적`})`;
+  const size = text.length >= 13 ? " tv-moved--long tv-moved--xlong" : text.length >= 11 ? " tv-moved--long" : "";
+  return <span className={`muted tv-moved${size}`}>{text}</span>;
+}
 
 // 색상 아웃라인 필터 칩 (선택 시 해당 색으로 반전 — 원본 pos/grade-filter-btn 이식)
 function ColorChip({
@@ -41,15 +54,17 @@ function ColorChip({
 
 // 선수 테이블 — 가로 스크롤 없이 한 화면(고정 레이아웃 + % 폭, 원본 모달/검색 테이블 이식)
 function PlayerTable({
-  rows, showTeam, scrollY, onOpen,
+  rows, showTeam, scrollY, onOpen, movedFrom,
 }: {
   rows: TeamPlayerEntry[];
+  movedFrom?: Map<string, string>; // personNo → 옛 학교 (transferFromMap)
   showTeam?: boolean;
   scrollY?: boolean; // 팀 모달: 표 영역만 세로 스크롤 (모달 크기 유지)
   onOpen: (p: TeamPlayerEntry) => void;
 }) {
   // 원본 % 폭: 모달(6칸) 10/21/18/11/22/18, 검색(7칸) 16/9/17/15/9/22/12
-  const widths = showTeam ? [16, 9, 17, 15, 9, 22, 12] : [10, 21, 18, 11, 22, 18];
+  // 모달은 이적 표시(이름 아래 작은 줄)가 한 줄에 들어가도록 선수명 칸을 포지션·학년에서 3% 넓혔다.
+  const widths = showTeam ? [16, 9, 17, 15, 9, 22, 12] : [10, 24, 16, 10, 22, 18];
   return (
     <div className={scrollY ? "tv-table-wrap" : undefined}>
       <table className="tv-table">
@@ -80,9 +95,9 @@ function PlayerTable({
               >
                 {showTeam && <td>{p.team}</td>}
                 <td>{p.number || "-"}</td>
-                <td className="tv-name">
+                <td className={p.moved_to || movedFrom?.has(p.person_no) ? "tv-name tv-name--moved" : "tv-name"}>
                   {p.name}
-                  {p.person_no && <span className="muted" aria-hidden> ›</span>}
+                  <TransferNote p={p} movedFrom={movedFrom} />
                 </td>
                 <td>
                   <span className="pos-badge" style={{ background: POS_COLORS[pos] ?? "#9AA0A6" }}>
@@ -112,9 +127,10 @@ function PlayerTable({
 const PLAYER_ROWS_PER_PAGE = 10;
 
 function PagedPlayerTable({
-  rows, showTeam, onOpen,
+  rows, showTeam, onOpen, movedFrom,
 }: {
   rows: TeamPlayerEntry[];
+  movedFrom?: Map<string, string>;
   showTeam?: boolean;
   onOpen: (p: TeamPlayerEntry) => void;
 }) {
@@ -125,7 +141,7 @@ function PagedPlayerTable({
   return (
     <PagedCardGrid perPage={1} layout="single" hint="← 옆으로 넘겨 다음 선수">
       {pages.map((page, i) => (
-        <PlayerTable key={i} rows={page} showTeam={showTeam} onOpen={onOpen} />
+        <PlayerTable key={i} rows={page} showTeam={showTeam} onOpen={onOpen} movedFrom={movedFrom} />
       ))}
     </PagedCardGrid>
   );
@@ -194,17 +210,18 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   };
 
   const rows = useMemo(() => teams ?? [], [teams]);
+  const movedFrom = useMemo(() => transferFromMap(teams), [teams]);
   const regions = useMemo(
     () => [...new Set(rows.map((t) => t.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, "ko")),
     [rows]
   );
   const scopedTeams = useMemo(() => {
     let list = region ? rows.filter((t) => t.region === region) : rows;
-    if (grade) list = list.filter((t) => t.players.some((p) => getGrade(p) === grade));
+    if (grade) list = list.filter((t) => t.players.some((p) => isCurrent(p) && getGrade(p) === grade));
     return list;
   }, [rows, region, grade]);
   const scopedPlayers = useMemo(
-    () => scopedTeams.flatMap((t) => grade ? t.players.filter((p) => getGrade(p) === grade) : t.players),
+    () => scopedTeams.flatMap((t) => t.players.filter((p) => isCurrent(p) && (!grade || getGrade(p) === grade))),
     [scopedTeams, grade]
   );
   const posCounts = useMemo(() => {
@@ -249,9 +266,13 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
   const modalPlayers = useMemo(() => {
     if (!modalInfo) return [];
     let list = modalInfo.players;
+    // 포지션·학년 필터는 현재 선수만 (이적해 나간 선수는 전체 보기에서 맨 아래에만)
+    if (modalPos || modalGrade) list = list.filter(isCurrent);
     if (modalPos) list = list.filter((p) => getPos(p) === modalPos);
     if (modalGrade) list = list.filter((p) => getGrade(p) === modalGrade);
-    return [...list].sort((a, b) => (parseInt(a.number, 10) || 999) - (parseInt(b.number, 10) || 999));
+    // 이적해 나간 선수는 맨 아래
+    return [...list].sort((a, b) =>
+      Number(!!a.moved_to) - Number(!!b.moved_to) || (parseInt(a.number, 10) || 999) - (parseInt(b.number, 10) || 999));
   }, [modalInfo, modalPos, modalGrade]);
   const openTeam = (team: string) => {
     // 히스토리에 엔트리를 쌓아 연다 — 뒤로가기로 닫히고, 선수 상세에서 복귀 시 재오픈된다.
@@ -331,12 +352,12 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
 
   const modalPosCounts = (() => {
     const m = new Map<string, number>();
-    for (const p of modalInfo?.players ?? []) m.set(getPos(p), (m.get(getPos(p)) ?? 0) + 1);
+    for (const p of modalInfo?.players.filter(isCurrent) ?? []) m.set(getPos(p), (m.get(getPos(p)) ?? 0) + 1);
     return [...m.entries()].sort((a, b) => POS_ORDER.indexOf(a[0]) - POS_ORDER.indexOf(b[0]));
   })();
   const modalGradeCounts = (() => {
     const m = new Map<string, number>();
-    for (const p of modalInfo?.players ?? []) m.set(getGrade(p), (m.get(getGrade(p)) ?? 0) + 1);
+    for (const p of modalInfo?.players.filter(isCurrent) ?? []) m.set(getGrade(p), (m.get(getGrade(p)) ?? 0) + 1);
     return [...m.entries()].sort();
   })();
 
@@ -414,7 +435,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
           {activeStat === "staff" ? (
             staffRows.length ? <PagedStaffTable rows={staffRows} /> : <div className="state">해당 지도자가 없습니다.</div>
           ) : statPlayers.length ? (
-            <PagedPlayerTable rows={statPlayers} showTeam onOpen={openPlayer} />
+            <PagedPlayerTable rows={statPlayers} showTeam onOpen={openPlayer} movedFrom={movedFrom} />
           ) : (
             <div className="state">해당 선수가 없습니다.</div>
           )}
@@ -427,7 +448,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
           {searchResults.length === 0 ? (
             <div className="state">검색 결과가 없습니다.</div>
           ) : (
-            <PagedPlayerTable rows={searchResults} showTeam onOpen={openPlayer} />
+            <PagedPlayerTable rows={searchResults} showTeam onOpen={openPlayer} movedFrom={movedFrom} />
           )}
         </>
       ) : (
@@ -445,7 +466,7 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
                 </div>
                 <div className="tv-team-card__body">
                   <div className="row"><span>감독</span><b>{t.manager || "-"}</b></div>
-                  <div className="row"><span>선수</span><b>{(grade ? t.players.filter((p) => getGrade(p) === grade).length : t.players.length)}명</b></div>
+                  <div className="row"><span>선수</span><b>{t.players.filter((p) => isCurrent(p) && (!grade || getGrade(p) === grade)).length}명</b></div>
                   <div className="row"><span>지도자</span><b>{t.staff.length}명</b></div>
                 </div>
               </button>
@@ -527,10 +548,11 @@ export function TeamsView({ wrapClass }: { wrapClass: string }) {
               <p className="caption-sm" style={{ margin: "0 0 8px" }}>
                 {modalPos || modalGrade
                   ? `필터: ${[modalPos, modalGrade && (modalGrade === "미지정" ? "미지정" : `${modalGrade}학년`)].filter(Boolean).join(" + ")} — ${modalPlayers.length}명`
-                  : `전체 ${modalPlayers.length}명`}
+                  : `전체 ${modalPlayers.filter(isCurrent).length}명${
+                      modalPlayers.some((p) => !isCurrent(p)) ? ` · 이적 ${modalPlayers.filter((p) => !isCurrent(p)).length}명` : ""}`}
               </p>
 
-              <PlayerTable rows={modalPlayers} scrollY onOpen={openPlayer} />
+              <PlayerTable rows={modalPlayers} scrollY onOpen={openPlayer} movedFrom={movedFrom} />
             </div>
           </div>
         </div>

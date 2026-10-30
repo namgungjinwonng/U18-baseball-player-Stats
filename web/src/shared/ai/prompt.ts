@@ -4,6 +4,7 @@ import type { AnalysisInput, MetricKey, SeasonGame } from "../analysis/core";
 import type { TeamDetailMetric, TeamDetailStats } from "../teamDetailGrades";
 import type { Player } from "../types";
 import type { Record3, TopPlayers } from "../versus";
+import { checkEdgeLines, parseEdgeLabel } from "./edge";
 
 export const MAX_LINES = 6;
 const MIN_LINES = 3;
@@ -29,6 +30,9 @@ export interface AiExtra {
   grades?: { a: TeamDetailStats | null; b: TeamDetailStats | null };
   players?: { a: TopPlayers; b: TopPlayers }; // 타자·투수 각 5명까지 — 방향별로 잘라 쓴다
   notes?: { cat: string; text: string }[]; // 기록 기반 분석 문장(분류 포함 — 맞대결·흐름은 흐름 분류만 쓴다)
+  scope?: Record<string, unknown>; // 「분석 옵션」 선수 범위(제외한 선수·적용 자료·표본) — 프롬프트 '선수범위'
+  conditions?: Record<string, unknown>; // 「분석 옵션」 경기 조건(대상 경기·조건별 성적) — 프롬프트 '경기조건'
+  edge?: Record<string, unknown> | null; // 강도지수로 계산한 기록 기반 예상 우위(5:5~8:2, ai/edge.ts) — 프롬프트 '예상우위'
 }
 
 const recText = (r: Pick<Record3, "w" | "l" | "d">) => `${r.w}승 ${r.l}패${r.d ? ` ${r.d}무` : ""}`;
@@ -96,12 +100,13 @@ function commonOpponents(input: AnalysisInput, A: string, B: string) {
 const playerList = (t: TopPlayers, nb: number, np: number) => ({ 타자: t.batters.slice(0, nb).map(batter), 투수: t.pitchers.slice(0, np).map(pitcher) });
 
 // 방향별로 보낼 자료 — 자료에 없으면 쓸 수 없으므로 방향끼리(특히 종합과 맞대결·흐름) 같은 이야기가 겹치지 않는다.
-type Section = "팀지표" | "리그평균" | "시즌전적" | "세부지표" | "맞대결" | "공통상대" | "공통상대요약" | "최근경기" | "최근흐름" | "주요선수" | "참고분석";
+type Section = "팀지표" | "리그평균" | "시즌전적" | "세부지표" | "맞대결" | "공통상대" | "공통상대요약" | "최근경기" | "최근흐름" | "주요선수" | "참고분석" | "선수범위" | "경기조건" | "예상우위";
 const SECTIONS: Record<FocusId, Section[]> = {
-  overall: ["팀지표", "리그평균", "시즌전적", "세부지표", "맞대결", "공통상대", "공통상대요약", "최근경기", "최근흐름", "주요선수", "참고분석"],
-  batting: ["팀지표", "리그평균", "세부지표", "주요선수"],
-  pitching: ["팀지표", "리그평균", "세부지표", "주요선수"],
-  h2h: ["시즌전적", "맞대결", "공통상대", "공통상대요약", "최근경기", "최근흐름", "참고분석"],
+  overall: ["팀지표", "리그평균", "시즌전적", "세부지표", "맞대결", "공통상대", "공통상대요약", "최근경기", "최근흐름", "주요선수", "참고분석", "선수범위", "경기조건", "예상우위"],
+  // 경기조건·예상우위는 모든 방향에 보낸다 — 사용자가 고른 경기(선공/후공·시간대·구장·날씨)가 분석 전체의 전제다.
+  batting: ["팀지표", "리그평균", "세부지표", "주요선수", "선수범위", "경기조건", "예상우위"],
+  pitching: ["팀지표", "리그평균", "세부지표", "주요선수", "선수범위", "경기조건", "예상우위"],
+  h2h: ["시즌전적", "맞대결", "공통상대", "공통상대요약", "최근경기", "최근흐름", "참고분석", "선수범위", "경기조건", "예상우위"],
 };
 // 주요 선수 수 [타자, 투수] — 타격은 타자, 마운드는 투수를 더 많이
 const PLAYER_COUNT: Record<FocusId, [number, number]> = { overall: [3, 2], batting: [5, 2], pitching: [3, 4], h2h: [0, 0] };
@@ -111,7 +116,7 @@ const FLOW_CATS = new Set(["h2h", "h2hHistory", "h2hDetail", "h2hScore", "common
 // 모델에 넘길 기록 — 키는 한국어, 숫자는 화면과 같은 표기 문자열로 둬서 그대로 옮겨 쓰게 한다.
 export function buildPayload(input: AnalysisInput, extra: AiExtra = {}, focus: FocusId = "overall"): AiPayload {
   const full = fullPayload(input, extra, focus);
-  const sections = input.reference ? ["참고기준", "주요선수"] : SECTIONS[focus];
+  const sections = input.reference ? ["참고기준", "주요선수", "선수범위", "경기조건"] : SECTIONS[focus];
   const keep = new Set<string>(["시즌", "학교", ...sections]);
   return Object.fromEntries(Object.entries(full).filter(([k]) => keep.has(k))) as AiPayload;
 }
@@ -169,6 +174,9 @@ function fullPayload(input: AnalysisInput, extra: AiExtra, focus: FocusId) {
     최근흐름: { [A]: recentForm(input.seasonA), [B]: recentForm(input.seasonB) },
     ...(extra.players ? { 주요선수: { [A]: playerList(extra.players.a, ...PLAYER_COUNT[focus]), [B]: playerList(extra.players.b, ...PLAYER_COUNT[focus]) } } : {}),
     ...(notes.length ? { 참고분석: notes } : {}),
+    ...(extra.scope ? { 선수범위: extra.scope } : {}),
+    ...(extra.conditions ? { 경기조건: extra.conditions } : {}),
+    ...(extra.edge ? { 예상우위: extra.edge } : {}),
   };
 }
 type FullPayload = ReturnType<typeof fullPayload>;
@@ -183,7 +191,10 @@ export const SYSTEM_PROMPT = [
   "- 'A는 X, B는 Y다'처럼 두 숫자를 나란히 놓기만 하는 문장은 쓰지 않는다. 숫자 뒤에는 반드시 의미를 붙인다.",
   "- 등급(A+~E-)은 그 시즌 전체 학교 가운데 위치다. 리그평균과 비교해 수준을 말할 수 있다.",
   "- 항목마다 1~2문장, 100자 이내로 쓴다. 같은 지표를 두 항목에서 반복하지 않는다.",
-  "- 근거 없는 추측(컨디션, 부상, 작전, 선발 예고), 승패 단정, 승리 확률은 쓰지 않는다. '~라면 ~할 수 있다' 같은 조건부 관전 포인트는 쓸 수 있다.",
+  "- 근거 없는 추측(컨디션, 부상, 작전, 선발 예고), 승패 단정, 승리 확률(%)은 쓰지 않는다. '~라면 ~할 수 있다' 같은 조건부 관전 포인트는 쓸 수 있다. 우위 비율은 '예상우위' 규칙으로만 쓴다.",
+  "- '예상우위'가 있으면 첫 항목을 '기록 기반 예상 우위는 {결과}'로 시작한다. 경기조건·최근흐름·맞대결·주요선수 같은 다른 기록이 한쪽으로 뚜렷하면 '조정범위' 안에서만 조정할 수 있고, 그때는 'AI 판단은 {학교} {비율}'과 그 근거 기록을 같은 항목에 쓴다. 근거가 약하면 조정하지 않고 기준을 따른다. 비율은 5:5·6:4·7:3·8:2 표기만 쓰고 %나 다른 비율로 바꾸지 않는다. '검증'의 승률은 기준 비율에만 해당한다. '표본주의'가 있으면 밝힌다.",
+  "- '선수범위'가 있으면 일부 선수를 뺀 분석이다. 첫 항목에서 무엇을 뺐는지 밝힌다. '선수범위.전체선수기준' 자료(승률·전적·맞대결·최근 흐름 등)는 뺀 선수도 뛴 팀 결과라는 점을 구분해서 쓴다.",
+  "- '경기조건'이 있으면 사용자가 고른 대상 경기(선공/후공·시간대·구장·예보 기온·비)를 분석 전체의 전제로 삼는다. 각 학교의 '대상조건'(이번 경기와 같은 조건의 승패·평균 득점·실점)을 '전체' 성적과 견주어, 그 조건에서 강해지거나 약해지는 학교를 해석한다. '통산'은 여러 시즌 표본이라 경향 확인용으로만 쓰고 기간을 밝힌다. 경기 수가 5경기 미만인 구간은 참고 수준이라고 밝힌다. 날씨 예보가 없으면 기온·비 이야기는 하지 않는다. 조건 성적은 경향이며 승패를 단정하는 근거로 쓰지 않는다.",
   "- 맞대결이 null이면 두 학교의 맞대결 이야기를 하지 않는다. 있으면 '맞대결.기준'(통산 또는 시즌)을 밝힌다.",
   "- 경기 수가 5경기 미만인 학교는 표본이 적다는 점을 밝히고 단정하지 않는다.",
   "- '모두', '항상', '전부', '한 번도' 같은 말은 JSON에 그 사실이 직접 있을 때만 쓴다. 공통 상대 비교는 '공통상대'의 '비교'와 '공통상대요약'을 그대로 따른다.",
@@ -255,7 +266,12 @@ export function buildUserPrompt(payload: AiPayload, previous?: string[], focus: 
   ] : f.plan.map((s) => s.replace(/마운드 성향/g, "확인 가능한 투수의 전년도 기록").replace(/타선 성향/g, "확인 가능한 타자의 전년도 기록"));
   const plan = (payload.참고기준 ? referencePlan : f.plan).map((s, i) => `${i + 1}) ${s.split("{A}").join(A).split("{B}").join(B)}`);
   const referenceRule = "전년도 개인 기록만으로 참고 분석한다. 첫 항목에 개인기록연도를 명시한다. 팀 지표·학교 등급·리그 평균·올해 승률·올해 연승·선발 예고는 쓰지 않는다. 이전소속변경 선수도 현재 학교 이름으로 설명하되 과거 기록임을 밝힌다. 한쪽의 타자·투수 자료가 없으면 없다고 밝히고 다른 선수를 지어내지 않는다. 선수 이름과 기록 중심으로 쓰되 확인된 선수가 적으면 다른 선수를 요구하지 말고 표본 한계를 설명한다.";
-  const parts = [`기록(JSON):\n${JSON.stringify(payload)}`, `구성:\n${plan.join("\n")}${payload.참고기준 ? `\n이 방향의 규칙: ${referenceRule}` : f.rule ? `\n이 방향의 규칙: ${f.rule}` : ""}`];
+  const conditionRule = payload.경기조건
+    ? "\n경기조건 규칙: 첫 항목에서 대상 경기 조건(선공/후공·시간대·구장·예보)을 짧게 밝히고 두 학교의 '대상조건' 성적이 구도를 어떻게 바꾸는지 쓴다. 중간 항목도 그 항목과 관련된 조건 성적(예: 기온·시간대에 따른 평균 득점·실점)이 있으면 함께 해석한다. 마지막 항목은 이번 경기 조건에서 갈릴 변수로 쓴다."
+    : "";
+  const edgeRule = payload.예상우위 ? `
+예상우위 규칙: 첫 항목은 '기록 기반 예상 우위는 ${String(payload.예상우위.결과)}'로 시작하고, 조정할 때만 '조정범위' 안에서 'AI 판단은 …'과 근거를 붙인다.` : "";
+  const parts = [`기록(JSON):\n${JSON.stringify(payload)}`, `구성:\n${plan.join("\n")}${payload.참고기준 ? `\n이 방향의 규칙: ${referenceRule}` : f.rule ? `\n이 방향의 규칙: ${f.rule}` : ""}${conditionRule}${edgeRule}`];
   if (previous?.length) {
     parts.push(
       `이전 분석:\n${previous.map((l) => `- ${l}`).join("\n")}\n` +
@@ -307,7 +323,9 @@ export class InvalidAnswer extends Error {}
 const LEAD = /^(?:[-•·]\s*|\d+[.)]\s+|(?:총평|관전\s?포인트\s?\d*|핵심\s?(?:선수|타자|투수)|흐름·?맥락|변수|공격 대 수비)\s*[.:：)]\s*)/;
 
 // 응답 문자열 → 화면 줄. 형식이 틀리거나 쓸 수 있는 줄이 3줄 미만이면 실패로 본다.
-export function parseAnswer(raw: string, payload: AiPayload): { lines: string[]; dropped: string[] } {
+// 예상우위가 있으면 기준에서 한 구간을 넘는 비율 문장을 버리고, 화면에 보일 기준·AI 판단 비율을 함께 낸다.
+export interface AnswerEdge { base: string; adjusted?: string }
+export function parseAnswer(raw: string, payload: AiPayload): { lines: string[]; dropped: string[]; edge?: AnswerEdge } {
   let lines: unknown;
   try {
     lines = (JSON.parse(raw.trim().replace(/^```(?:json)?\s*|\s*```$/g, "")) as { lines?: unknown }).lines;
@@ -323,6 +341,18 @@ export function parseAnswer(raw: string, payload: AiPayload): { lines: string[];
     if (unknownNumbers(text, allowed).length) dropped.push(text);
     else kept.push(text);
   }
-  if (kept.length < MIN_LINES) throw new InvalidAnswer("기록과 맞지 않는 숫자가 많아 분석을 쓰지 않았습니다.");
-  return { lines: kept.slice(0, MAX_LINES), dropped };
+  const result = payload.예상우위?.결과;
+  const baseLabel = typeof result === "string" ? result : null;
+  const [A, B] = payload.학교;
+  const base = baseLabel ? parseEdgeLabel(baseLabel, A) : null;
+  let edge: AnswerEdge | undefined;
+  let out = kept;
+  if (baseLabel && base !== null) {
+    const checked = checkEdgeLines(kept, A, B, base);
+    out = checked.kept;
+    dropped.push(...checked.dropped);
+    edge = { base: baseLabel, ...(checked.adjusted ? { adjusted: checked.adjusted } : {}) };
+  }
+  if (out.length < MIN_LINES) throw new InvalidAnswer("기록과 맞지 않는 숫자가 많아 분석을 쓰지 않았습니다.");
+  return { lines: out.slice(0, MAX_LINES), dropped, ...(edge ? { edge } : {}) };
 }

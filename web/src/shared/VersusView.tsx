@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "r
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useAllPlayers, useLeagueAverages, usePlayerIndexes, useSeasonPlayerFiles, usePlayerFiles, usePlayerIndex, useSchedule, useSchedules, useStrength,
-  useTournamentMatchups, useTournamentRecords, useTournaments,
+  useTeams, useTournamentMatchups, useTournamentRecords, useTournaments,
 } from "./data";
 import { useQualifyContext } from "./filters";
 import { dec2, rate } from "./format";
@@ -12,8 +12,13 @@ import { MirrorBars, type MirrorRow } from "./MirrorBars";
 import { buildAnalysisInput } from "./analysisInput";
 import { needsPreviousSeasonReference } from "./previousSeasonAnalysis";
 import { PreviousSeasonAnalysisView } from "./PreviousSeasonAnalysisView";
-import { AiAnalysisPanel } from "./ai/AiAnalysisPanel";
+import { AiAnalysisPanel, type AiOptionSupport } from "./ai/AiAnalysisPanel";
 import type { AiExtra } from "./ai/prompt";
+import { OptionsError, filterRecords, sampleRows, scopeActive, scopePayload, type AiOptions } from "./ai/options";
+import { upcomingGames } from "./ai/conditions";
+import { buildConditions } from "./ai/buildConditions";
+import { edgePayload } from "./ai/edge";
+import type { AnalysisInput } from "./analysis/core";
 import { buildTeamDetailGrades } from "./teamDetailGrades";
 import { Ico } from "./navIcons";
 import { indexById } from "./matchup";
@@ -27,14 +32,16 @@ import { VersusTeamPicker } from "./VersusTeamPicker";
 import { editParams, needsSelect } from "./versusSelect";
 import { useYear } from "./year";
 import { Chip } from "../design/ui";
-import type { ScheduleGame } from "./types";
+import type { Player, ScheduleGame } from "./types";
 
-type Tab = "sum" | "stat" | "player" | "game";
+// URL 값(v=player·game)은 기존 링크가 그대로 열리도록 유지하고 이름만 바꾼다.
+type Tab = "sum" | "stat" | "player" | "game" | "ai";
 const TABS: { id: Tab; label: string }[] = [
   { id: "sum", label: "요약" },
   { id: "stat", label: "팀지표" },
-  { id: "player", label: "선수" },
-  { id: "game", label: "경기" },
+  { id: "player", label: "투타대결" },
+  { id: "game", label: "팀전적" },
+  { id: "ai", label: "경기분석" },
 ];
 
 const shortTitle = (t: string) => (t || "").replace(/^\s*\d{4}\s*/, "").trim();
@@ -148,6 +155,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
   const allSchedules = useSchedules(all ? years : []);
   const ctx = useQualifyContext({ region: "", team: "", grade: "", tournament: slug });
   const tournamentMatchups = useTournamentMatchups(slug);
+  const teams = useTeams(); // 분석 옵션 「전학 간 선수 제외」용 이적 표시(moved_to)
 
   const tournamentTitle = tournaments.data?.find((t) => t.slug === slug)?.title;
   const seasonGames: ScheduleGame[] = schedule.data?.year === year ? schedule.data.games : [];
@@ -315,20 +323,56 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
   const analysis = useMemo(() => (engine && analysisInput ? engine.analyzeVersus(analysisInput) : []), [engine, analysisInput]);
   // AI 분석 보강 자료 — 요청 버튼을 누를 때만 만든다. 등급은 학교 정보 화면과 같은 함수(일정의 5경기 이상 학교 집단),
   // 주요 선수는 「팀별 주요 선수」와 같은 규정 기준으로 5명씩(한쪽이 비면 규정 미달 포함, 방향별로 잘라 씀), 참고 문장은 기록 기반 분석 10줄.
-  const getAiExtra = useCallback((): AiExtra => {
-    if (!records.data || !analysisInput) return {};
-    const detail = buildTeamDetailGrades(year, [], seasonGames, records.data, strength.data);
+  // 선수 범위를 적용하면 등급(전체 선수 기준 학교 순위)은 범위와 맞지 않아 넣지 않는다.
+  const makeAiExtra = useCallback((recs: Player[], input: AnalysisInput, withGrades: boolean): AiExtra => {
+    const detail = withGrades ? buildTeamDetailGrades(year, [], seasonGames, recs, strength.data) : [];
     const gradeOf = (t: string) => detail.find((r) => r.name === teamKey(t)) ?? null;
     const top = (t: string) => {
-      const strict = topPlayers(records.data!, t, ctx, 5);
-      return strict.batters.length && strict.pitchers.length ? strict : topPlayers(records.data!, t, ctx, 5, true);
+      const strict = topPlayers(recs, t, ctx, 5);
+      return strict.batters.length && strict.pitchers.length ? strict : topPlayers(recs, t, ctx, 5, true);
     };
     return {
-      grades: { a: gradeOf(a), b: gradeOf(b) },
+      ...(withGrades ? { grades: { a: gradeOf(a), b: gradeOf(b) } } : {}),
       players: { a: top(a), b: top(b) },
-      notes: engine ? engine.analyzeVersus(analysisInput, 10).filter((l) => l.cat !== "sample").map((l) => ({ cat: l.cat, text: l.text })) : undefined,
+      notes: engine ? engine.analyzeVersus(input, 10).filter((l) => l.cat !== "sample").map((l) => ({ cat: l.cat, text: l.text })) : undefined,
+      edge: edgePayload(strength.data?.teams, aName, bName),
     };
-  }, [records.data, analysisInput, year, seasonGames, strength.data, ctx, a, b, engine]);
+  }, [year, seasonGames, strength.data, ctx, a, b, aName, bName, engine]);
+  const getAiExtra = useCallback(
+    (): AiExtra => (records.data && analysisInput ? makeAiExtra(records.data, analysisInput, true) : {}),
+    [records.data, analysisInput, makeAiExtra]
+  );
+  // 「분석 옵션」 — 선수 범위로 기록을 거른 입력·보강 자료를 다시 만들고, 경기 조건은 요청할 때 날씨·예보를 읽어 붙인다.
+  const aiOptions = useMemo<AiOptionSupport | undefined>(() => {
+    if (!records.data || !analysisInput) return undefined;
+    const all0 = records.data;
+    const filtered = (o: AiOptions) => filterRecords(all0, teams.data, o);
+    const conditionArgs = { splitGames: seasonGames, splitYear: year, targetGames: seasonGames, aName, bName, basis: `${year} 시즌`, history: { games, years } };
+    return {
+      upcoming: upcomingGames(seasonGames, a, b),
+      sample: (o) => (scopeActive(o) ? sampleRows(all0, filtered(o), [aName, bName]) : null),
+      build: async (o, signal) => {
+        const recs = filtered(o), scoped = scopeActive(o);
+        const empty = [aName, bName].filter((t) => !recs.some((p) => sameTeam(p.team, t)));
+        if (empty.length) throw new OptionsError(`선택한 선수 범위에 ${empty.join("·")}의 기록이 없어 분석할 수 없습니다. 제외 조건을 줄여 주세요.`);
+        const input = scoped
+          ? buildAnalysisInput({
+              a, b, seasonGames, h2hGames: games, records: recs, strength: strength.data?.teams ?? null,
+              lg: tournamentTitle ? averages.data?.tournaments[slug]?.rates ?? averages.data?.overall : averages.data?.overall,
+              year, allYears: all,
+            })
+          : analysisInput;
+        const extra = makeAiExtra(recs, input, !scoped);
+        if (scoped) extra.scope = scopePayload(o, sampleRows(all0, recs, [aName, bName]), year, false);
+        if (o.conditions) {
+          extra.conditions = await buildConditions(o, conditionArgs, signal);
+        }
+        return { input, extra };
+      },
+      prefetch: (o) => { if (o.conditions) buildConditions(o, conditionArgs).catch(() => {}); },
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [records.data, analysisInput, teams.data, seasonGames, games, a, b, aName, bName, strength.data, averages.data, year, years, all, tournamentTitle, slug, makeAiExtra]);
 
   const currentRecordFileMissing = records.error?.includes(`${year}/records/players.json (404)`) ?? false;
   const currentRecordsReady = records.scope === `${year}:${slug}` && records.data !== null;
@@ -343,15 +387,25 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
     <section className="versus-section">
       <h3 className="heading-md">팀 지표 비교</h3>
       <p className="caption muted">{referenceMode ? `${year} 시즌 기록 전 · 현재 엔트리의 전년도 개인 기록 참고` : `${tournamentTitle ? shortTitle(tournamentTitle) : `${year} 시즌 전체`} 기준 · 비율은 합산 원자료로 재계산 · 강도지수 1.00 = 리그 평균`}</p>
-      {referenceMode && <PreviousSeasonAnalysisView year={year} a={a} b={b} />}
+      {referenceMode && <p className="state muted">{year} 시즌 기록 전이라 팀 지표가 없습니다. 현재 엔트리의 전년도 기록 참고 분석은 「경기분석」에서 볼 수 있습니다.</p>}
       {!referenceMode && missing.length > 0 && (
         <p className="state muted">
           {missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 지표를 비교할 수 없습니다.
         </p>
       )}
-      {/* 키가 없으면 기록 기반 분석, 있으면 저장된 AI 분석 우선·버튼으로 AI 분석 요청 (shared/ai) */}
-      {!referenceMode && analysis.length > 0 && analysisInput && <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} />}
       {!referenceMode && (records.loading ? <div className="state">불러오는 중…</div> : records.error || schedule.error ? <p className="state muted">올해 기록 또는 일정을 불러오지 못했습니다. 연결 오류를 무경기로 간주해 전년도 분석으로 대체하지 않습니다.</p> : missing.length === 0 && <MirrorBars rows={statRows} aName={aName} bName={bName} />)}
+    </section>
+  );
+
+  // 경기분석 — 팀지표에서 분리한 별도 탭(데스크탑은 별도 섹션). 키가 없으면 기록 기반 분석, 있으면 저장된 AI 분석 우선 (shared/ai)
+  const analysisSection = (
+    <section className="versus-section">
+      <h3 className="heading-md">경기 분석</h3>
+      {referenceMode ? <PreviousSeasonAnalysisView year={year} a={a} b={b} />
+        : records.loading ? <div className="state">불러오는 중…</div>
+        : missing.length > 0 ? <p className="state muted">{missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 경기 분석을 할 수 없습니다.</p>
+        : analysis.length > 0 && analysisInput ? <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} options={aiOptions} />
+        : <div className="state">분석을 준비하는 중…</div>}
     </section>
   );
 
@@ -525,6 +579,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
             </>
           )}
           {tab === "stat" && statSection}
+          {tab === "ai" && analysisSection}
           {tab === "player" && playerSection}
           {tab === "game" && (
             <>
@@ -540,6 +595,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
           {headline}
           {gameList()}
           {statSection}
+          {analysisSection}
           {topSection}
           {playerSection}
           {commonSection}

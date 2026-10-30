@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   useCareerPlayers, useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
-  useTournamentMatchups, useTournaments,
+  useTeams, useTournamentMatchups, useTournaments,
 } from "../../shared/data";
+import { currentRosterEntry, transferredTo } from "../../shared/transfers";
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
@@ -140,6 +141,11 @@ export function MPlayer() {
   const { year } = useYear();
   const { data: p, loading, error } = usePlayer(id);
   const { data: profile } = usePlayerProfile(p?.personNo);
+  // 시즌 중 이적 — 기록은 뛴 학교 기준, 머리줄 소속은 선수현황(teams.json)의 현재 학교만 표시.
+  const { data: teams } = useTeams();
+  const movedTo = p ? transferredTo(teams, p.personNo, p.team) : undefined;
+  // 이적 선수 등번호는 최종 학교 명단 기준(옛 학교 번호를 보이지 않는다, 미배정이면 생략).
+  const number = movedTo ? currentRosterEntry(teams, p?.personNo)?.number : p?.number;
   const { data: careerSeasons, loading: careerLoading } = useCareerPlayers(profile?.careerYears);
   const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
@@ -289,10 +295,10 @@ export function MPlayer() {
         {p.name}
       </h2>
       <div className="player-meta-line">
-        <span><Link to={`/team/${encodeURIComponent(p.team)}`}>{p.team}</Link></span>
+        <span><Link to={`/team/${encodeURIComponent(movedTo ?? p.team)}`}>{movedTo ?? p.team}</Link></span>
         <span>{p.position}</span>
         {p.grade && <span>{p.grade}학년</span>}
-        {p.number && <span>{p.number}번</span>}
+        {number && <span>{number}번</span>}
         {bt && <span>{bt}</span>}
         {profile?.birth && <span>{profile.birth}</span>}
         {profile?.height && profile?.weight && <span>{profile.height}cm·{profile.weight}kg</span>}

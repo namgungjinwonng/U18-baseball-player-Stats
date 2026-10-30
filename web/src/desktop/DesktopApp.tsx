@@ -15,6 +15,7 @@ import { VersusView } from "../shared/VersusView";
 import { TeamIndex, TeamView } from "../shared/TeamView";
 import { CompareView } from "../shared/CompareView";
 import { Notice } from "../shared/Notice";
+import { FieldsView } from "../shared/FieldsView";
 import { AiSettingsView } from "../shared/ai/AiSettingsView";
 import { SeasonRecordsGate } from "../shared/SeasonEmpty";
 import { HomeIcon } from "../shared/HomeIcon";
@@ -113,6 +114,7 @@ export function DesktopApp() {
           <Route path="/leaders/:id" element={<SeasonRecordsGate wrapClass="container page"><LeadersView wrapClass="container page" /></SeasonRecordsGate>} />
           <Route path="/glossary" element={<div className="container page"><Glossary /></div>} />
           <Route path="/notice" element={<Notice wrapClass="container page" />} />
+          <Route path="/fields" element={<FieldsView wrapClass="container page" />} />
           <Route path="/ai-settings" element={<AiSettingsView wrapClass="container page" />} />
         </Routes>
       </main>

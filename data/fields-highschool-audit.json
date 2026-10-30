@@ -1,0 +1,1894 @@
+{
+  "checkedAt": "2026-10-30T06:50:59.430Z",
+  "source": "https://www.korea-baseball.com/info/team/team_list?kind_cd=31&season=2026&sido_cd=00",
+  "nominatim": 0,
+  "overpass": 0,
+  "other": 0,
+  "cacheHits": 0,
+  "started": "2026-10-30T06:50:59.417Z",
+  "summary": {
+    "registered": 104,
+    "published": 102,
+    "missing": 1,
+    "excluded": 1,
+    "registrationOnly": 15,
+    "schoolAddressOnly": 2,
+    "merged": 0
+  },
+  "checks": [
+    {
+      "id": "kbsa:1702",
+      "team": "GD챌린저스BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1702&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "GD챌린저스BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 강동구 올림픽로 594, 7층 (성내동)",
+        "lat": 37.55243,
+        "lon": 127.128381
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1702&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:193",
+      "team": "강릉고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=193&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "강릉고등학교",
+        "kind": "고등학교",
+        "addr": "강원특별자치도 강릉시 강릉대로587번길 68 (초당동 57-2)",
+        "lat": 37.788569,
+        "lon": 128.916716
+      },
+      "override": {
+        "addr": "강원특별자치도 강릉시 강릉대로587번길 68 (강원특별자치도 강릉시 초당동 57-2)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강릉시"
+      }
+    },
+    {
+      "id": "kbsa:575",
+      "team": "강원고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=575&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "강원고등학교",
+        "kind": "고등학교",
+        "addr": "강원특별자치도 춘천시 동면 장학리 산36번지",
+        "lat": 37.886645,
+        "lon": 127.84025
+      }
+    },
+    {
+      "id": "kbsa:186",
+      "team": "개성고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=186&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "개성고등학교",
+        "kind": "고등학교",
+        "addr": "부산광역시 부산진구 당감서로 137 (당감동 642)",
+        "lat": 35.168597,
+        "lon": 129.031
+      },
+      "override": {
+        "addr": "부산광역시 부산진구 당감서로 137 (부산광역시 부산진구 당감동 642)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "부산진구"
+      }
+    },
+    {
+      "id": "kbsa:1543",
+      "team": "거제BC(U-18)",
+      "state": "기존 제외 보정",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1543&season=2026&kind_cd=31&sports_club=F",
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1543&season=2026"
+      },
+      "detail": {
+        "sido": "경남",
+        "addr": "경상남도 거제시 하청면 서리2길 94층"
+      }
+    },
+    {
+      "id": "kbsa:147",
+      "team": "경기고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=147&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경기고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 강남구 영동대로 643 (삼성동 74-4)",
+        "lat": 37.517934,
+        "lon": 127.056705
+      },
+      "override": {
+        "addr": "서울특별시 강남구 영동대로 643 (서울특별시 강남구 삼성동 74-4)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강남구"
+      }
+    },
+    {
+      "id": "kbsa:1065",
+      "team": "경기상업고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1065&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경기상업고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 종로구 자하문로 136 (청운동 89-3)",
+        "lat": 37.58856,
+        "lon": 126.969768
+      },
+      "override": {
+        "addr": "서울특별시 종로구 자하문로 136 (서울특별시 종로구 청운동 89-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "종로구"
+      }
+    },
+    {
+      "id": "kbsa:916",
+      "team": "경기항공고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=916&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경기항공고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 광명시 새터안로 20 (광명동 42-122)",
+        "lat": 37.473499,
+        "lon": 126.857399
+      },
+      "override": {
+        "addr": "경기도 광명시 새터안로 20 (경기도 광명시 광명동 42-122)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "광명시"
+      }
+    },
+    {
+      "id": "kbsa:176",
+      "team": "경남고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=176&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경남고등학교",
+        "kind": "고등학교",
+        "addr": "부산광역시 서구 망양로111번길 65 (동대신동3가 1-1)",
+        "lat": 35.110684,
+        "lon": 129.024721
+      },
+      "override": {
+        "addr": "부산광역시 서구 망양로111번길 65 (부산광역시 서구 동대신동3가 1-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "서구"
+      }
+    },
+    {
+      "id": "kbsa:153",
+      "team": "경동고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=153&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경동고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 성북구 보문로29길 49 (삼선동3가 43-1)",
+        "lat": 37.585822,
+        "lon": 127.014809
+      },
+      "override": {
+        "addr": "서울특별시 성북구 보문로29길 49 (서울특별시 성북구 삼선동3가 43-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "성북구"
+      }
+    },
+    {
+      "id": "kbsa:1453",
+      "team": "경민IT고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1453&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경민IT고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 의정부시 서부로 545 (가능동 562-1)",
+        "lat": 37.746772,
+        "lon": 127.02454
+      },
+      "override": {
+        "addr": "경기도 의정부시 서부로 545 (경기도 의정부시 가능동 562-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "의정부시"
+      }
+    },
+    {
+      "id": "kbsa:185",
+      "team": "경북고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=185&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경북고등학교",
+        "kind": "고등학교",
+        "addr": "대구광역시 수성구 청호로 300 (황금동 9)",
+        "lat": 35.844257,
+        "lon": 128.640428
+      },
+      "override": {
+        "addr": "대구광역시 수성구 청호로 300 (대구광역시 수성구 황금동 9)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "수성구"
+      }
+    },
+    {
+      "id": "kbsa:144",
+      "team": "경주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=144&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "경주고등학교",
+        "kind": "고등학교",
+        "addr": "경상북도 경주시 원효로 231 (황오동 13)",
+        "lat": 35.842847,
+        "lon": 129.225792
+      },
+      "override": {
+        "addr": "경상북도 경주시 원효로 231 (경상북도 경주시 황오동 13)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "경주시"
+      }
+    },
+    {
+      "id": "kbsa:141",
+      "team": "공주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=141&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "공주고등학교",
+        "kind": "고등학교",
+        "addr": "충청남도 공주시 공주고담길 2 (중학동 137-1)",
+        "lat": 36.447909,
+        "lon": 127.123036
+      },
+      "override": {
+        "addr": "충청남도 공주시 공주고담길 2 (충청남도 공주시 중학동 137-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "공주시"
+      }
+    },
+    {
+      "id": "kbsa:1700",
+      "team": "광남고BC",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1700&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "광남고BC (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "전라남도 나주시 상야4길 22, 2층 (빛가람동)",
+        "lat": 35.022676,
+        "lon": 126.791255
+      }
+    },
+    {
+      "id": "kbsa:151",
+      "team": "광주동성고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=151&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "광주동성고등학교",
+        "kind": "고등학교",
+        "addr": "전남광주통합특별시 남구 서문대로627번길 20 (진월동 406)",
+        "lat": 35.115677,
+        "lon": 126.896631
+      },
+      "override": {
+        "addr": "전남광주통합특별시 남구 서문대로627번길 20 (전남광주통합특별시 남구 진월동 406)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "남구"
+      }
+    },
+    {
+      "id": "kbsa:148",
+      "team": "광주제일고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=148&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "광주제일고등학교",
+        "kind": "고등학교",
+        "addr": "전남광주통합특별시 북구 독립로237번길 33 (누문동 144)",
+        "lat": 35.153328,
+        "lon": 126.907009
+      },
+      "override": {
+        "addr": "전남광주통합특별시 북구 독립로237번길 33 (전남광주통합특별시 북구 누문동 144)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "북구"
+      }
+    },
+    {
+      "id": "kbsa:156",
+      "team": "광주진흥고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=156&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "광주진흥고등학교",
+        "kind": "고등학교",
+        "addr": "광주광역시 광산구 왕버들로 307",
+        "lat": 35.195777,
+        "lon": 126.838631
+      },
+      "override": {
+        "name": "광주진흥고등학교",
+        "addr": "광주광역시 광산구 왕버들로 307",
+        "sido": "광주",
+        "sigungu": "광산구",
+        "lat": 35.195777,
+        "lon": 126.838631,
+        "approx": true,
+        "note": "학교·교육기관 공개 주소 확인, 주소 지오코딩 위치(교내 구장 중심은 미확인)",
+        "source": "https://www.gen.go.kr/s_school/index.php?mode=search1&page=1&s_div1=&s_div2=0&s_div3=5&s_div4=3&s_name="
+      }
+    },
+    {
+      "id": "kbsa:1552",
+      "team": "군산상일고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1552&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "군산상일고등학교",
+        "kind": "고등학교",
+        "addr": "전북특별자치도 군산시 석치1길 17 (문화동 785-3)",
+        "lat": 35.97429,
+        "lon": 126.699536
+      },
+      "override": {
+        "addr": "전북특별자치도 군산시 석치1길 17 (전북특별자치도 군산시 문화동 785-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "군산시"
+      }
+    },
+    {
+      "id": "kbsa:1699",
+      "team": "금남고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1699&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "금남고등학교",
+        "kind": "고등학교",
+        "addr": "경상남도 하동군 금남면 섬진강대로 656-8 (덕천리 1243-1)",
+        "lat": 34.98629,
+        "lon": 127.839662
+      },
+      "override": {
+        "addr": "경상남도 하동군 금남면 섬진강대로 656-8 (경상남도 하동군 금남면 덕천리 1243-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "하동군"
+      }
+    },
+    {
+      "id": "kbsa:1903",
+      "team": "김포과학기술고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1903&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "김포과학기술고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 김포시 봉화로 69 (북변동 477)",
+        "lat": 37.620623,
+        "lon": 126.709765
+      },
+      "override": {
+        "addr": "경기도 김포시 봉화로 69 (경기도 김포시 북변동 477)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "김포시"
+      }
+    },
+    {
+      "id": "kbsa:150",
+      "team": "김해고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=150&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "김해고등학교",
+        "kind": "고등학교",
+        "addr": "경상남도 김해시 활천로24번길 29 (삼정동 267-34)",
+        "lat": 35.230789,
+        "lon": 128.896895
+      },
+      "override": {
+        "addr": "경상남도 김해시 활천로24번길 29 (경상남도 김해시 삼정동 267-34)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "김해시"
+      }
+    },
+    {
+      "id": "kbsa:180",
+      "team": "대구고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=180&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "대구고등학교",
+        "kind": "고등학교",
+        "addr": "대구광역시 남구 중앙대로 171 (대명동 187)",
+        "lat": 35.855318,
+        "lon": 128.590666
+      },
+      "override": {
+        "addr": "대구광역시 남구 중앙대로 171 (대구광역시 남구 대명동 187)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "남구"
+      }
+    },
+    {
+      "id": "kbsa:1667",
+      "team": "대구북구SC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1667&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "대구북구SC(U-18)",
+        "kind": "고등학교",
+        "addr": "대구광역시 북구 칠성시장로23길 55 (칠성동2가)",
+        "lat": 35.880026,
+        "lon": 128.602112
+      }
+    },
+    {
+      "id": "kbsa:145",
+      "team": "대구상원고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=145&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "대구상원고등학교",
+        "kind": "고등학교",
+        "addr": "대구광역시 달서구 월배로 241 (상인동 1)",
+        "lat": 35.822102,
+        "lon": 128.538642
+      },
+      "override": {
+        "addr": "대구광역시 달서구 월배로 241 (대구광역시 달서구 상인동 1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "달서구"
+      }
+    },
+    {
+      "id": "kbsa:171",
+      "team": "대전고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=171&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "대전고등학교",
+        "kind": "고등학교",
+        "addr": "대전광역시 중구 대흥로 110 (대흥동 320-2)",
+        "lat": 36.323088,
+        "lon": 127.422011
+      },
+      "override": {
+        "name": "대전고등학교",
+        "addr": "대전광역시 중구 대흥로 110 (대전광역시 중구 대흥동 320-2)",
+        "sido": "대전",
+        "sigungu": "중구",
+        "lat": 36.323088,
+        "lon": 127.422011,
+        "approx": true,
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "source": "https://www.data.go.kr/data/15021148/standard.do"
+      }
+    },
+    {
+      "id": "kbsa:821",
+      "team": "대전제일고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=821&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "대전제일고등학교",
+        "kind": "고등학교",
+        "addr": "대전광역시 서구 배재로46번길 77 (도마동 155-20)",
+        "lat": 36.313558,
+        "lon": 127.372979
+      },
+      "override": {
+        "addr": "대전광역시 서구 배재로46번길 77 (대전광역시 서구 도마동 155-20)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "서구"
+      }
+    },
+    {
+      "id": "kbsa:157",
+      "team": "덕수고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=157&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "덕수고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 송파구 위례북로 10 (거여동 652)",
+        "lat": 37.485204,
+        "lon": 127.146873
+      },
+      "override": {
+        "addr": "서울특별시 송파구 위례북로 10 (서울특별시 송파구 거여동 652)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "송파구"
+      }
+    },
+    {
+      "id": "kbsa:816",
+      "team": "도개고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=816&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "도개고등학교",
+        "kind": "고등학교",
+        "addr": "경상북도 구미시 도개면 도안로 120 (궁기리 754)",
+        "lat": 36.30138,
+        "lon": 128.330626
+      },
+      "override": {
+        "addr": "경상북도 구미시 도개면 도안로 120 (경상북도 구미시 도개면 궁기리 754)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "구미시"
+      }
+    },
+    {
+      "id": "kbsa:161",
+      "team": "동산고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=161&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "동산고등학교",
+        "kind": "고등학교",
+        "addr": "인천광역시 제물포구 동산로 58 (송림동 97-1)",
+        "lat": 37.478798,
+        "lon": 126.652843
+      },
+      "override": {
+        "addr": "인천광역시 제물포구 동산로 58 (인천광역시 제물포구 송림동 97-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "제물포구"
+      }
+    },
+    {
+      "id": "kbsa:592",
+      "team": "라온고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=592&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "라온고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 평택시 경기대로1376번길 38-6 (서정동 2-73)",
+        "lat": 37.06952,
+        "lon": 127.067536
+      },
+      "override": {
+        "addr": "경기도 평택시 경기대로1376번길 38-6 (경기도 평택시 서정동 2-73)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "평택시"
+      }
+    },
+    {
+      "id": "kbsa:152",
+      "team": "마산고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=152&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "마산고등학교",
+        "kind": "고등학교",
+        "addr": "경상남도 창원시 마산합포구 심온길 33 (완월동 27-3)",
+        "lat": 35.200189,
+        "lon": 128.561785
+      },
+      "override": {
+        "addr": "경상남도 창원시 마산합포구 심온길 33 (경상남도 창원시 마산합포구 완월동 27-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "창원시"
+      }
+    },
+    {
+      "id": "kbsa:155",
+      "team": "마산용마고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=155&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "마산용마고등학교",
+        "kind": "고등학교",
+        "addr": "경상남도 창원시 마산합포구 허당로 51 (산호동 438-1)",
+        "lat": 35.211756,
+        "lon": 128.582175
+      },
+      "override": {
+        "addr": "경상남도 창원시 마산합포구 허당로 51 (경상남도 창원시 마산합포구 산호동 438-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "창원시"
+      }
+    },
+    {
+      "id": "kbsa:1890",
+      "team": "명지BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1890&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "명지BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 노원구 덕릉로 792, 3층 (상계동)",
+        "lat": 37.650098,
+        "lon": 127.070949
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1890&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:591",
+      "team": "물금고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=591&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "물금고등학교",
+        "kind": "고등학교",
+        "addr": "경상남도 양산시 물금읍 신주1길 20 (범어리 2673-11)",
+        "lat": 35.335608,
+        "lon": 129.016114
+      },
+      "override": {
+        "addr": "경상남도 양산시 물금읍 신주1길 20 (경상남도 양산시 물금읍 범어리 2673-11)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "양산시"
+      }
+    },
+    {
+      "id": "kbsa:1449",
+      "team": "밀양BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1449&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "밀양BC(U-18)",
+        "kind": "고등학교",
+        "addr": "경상남도 밀양시 산내면 인곡길 11",
+        "lat": 35.58976,
+        "lon": 128.9114
+      }
+    },
+    {
+      "id": "kbsa:160",
+      "team": "배명고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=160&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "배명고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 송파구 삼학사로 11 (삼전동 172-1)",
+        "lat": 37.498847,
+        "lon": 127.095736
+      },
+      "override": {
+        "addr": "서울특별시 송파구 삼학사로 11 (서울특별시 송파구 삼전동 172-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "송파구"
+      }
+    },
+    {
+      "id": "kbsa:164",
+      "team": "배재고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=164&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "배재고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 강동구 고덕로 227 (고덕동 313)",
+        "lat": 37.556161,
+        "lon": 127.151074
+      },
+      "override": {
+        "addr": "서울특별시 강동구 고덕로 227 (서울특별시 강동구 고덕동 313)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강동구"
+      }
+    },
+    {
+      "id": "kbsa:593",
+      "team": "백송고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=593&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "백송고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 고양시 일산서구 덕이로172번길 4-39 (덕이동 753-11)",
+        "lat": 37.697387,
+        "lon": 126.741716
+      },
+      "override": {
+        "addr": "경기도 고양시 일산서구 덕이로172번길 4-39 (경기도 고양시 일산서구 덕이동 753-11)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "고양시"
+      }
+    },
+    {
+      "id": "kbsa:182",
+      "team": "부경고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=182&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "부경고등학교",
+        "kind": "고등학교",
+        "addr": "부산광역시 서구 망양로33번길 12 (서대신동3가 521)",
+        "lat": 35.110684,
+        "lon": 129.024721
+      },
+      "override": {
+        "addr": "부산광역시 서구 망양로33번길 12 (부산광역시 서구 서대신동3가 521)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "서구"
+      }
+    },
+    {
+      "id": "kbsa:191",
+      "team": "부산고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=191&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "부산고등학교",
+        "kind": "고등학교",
+        "addr": "부산광역시 동구 초량로40번길 23 (초량동 806-177)",
+        "lat": 35.122066,
+        "lon": 129.034126
+      },
+      "override": {
+        "addr": "부산광역시 동구 초량로40번길 23 (부산광역시 동구 초량동 806-177)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "동구"
+      }
+    },
+    {
+      "id": "kbsa:188",
+      "team": "부산공업고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=188&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "부산공업고등학교",
+        "kind": "고등학교",
+        "addr": "부산광역시 남구 수영로196번길 80 (대연동 918-1)",
+        "lat": 35.130409,
+        "lon": 129.08779
+      },
+      "override": {
+        "addr": "부산광역시 남구 수영로196번길 80 (부산광역시 남구 대연동 918-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "남구"
+      }
+    },
+    {
+      "id": "kbsa:1900",
+      "team": "부원고야구단",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1900&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "부원고야구단",
+        "kind": "고등학교",
+        "addr": "경기도 평택시 서탄면 수월암길 60-8",
+        "lat": 37.108841,
+        "lon": 127.027744
+      }
+    },
+    {
+      "id": "kbsa:142",
+      "team": "북일고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=142&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "북일고등학교",
+        "kind": "고등학교",
+        "addr": "충청남도 천안시 동남구 단대로 69 (신부동 245)",
+        "lat": 36.832242,
+        "lon": 127.158172
+      },
+      "override": {
+        "addr": "충청남도 천안시 동남구 단대로 69 (충청남도 천안시 동남구 신부동 245)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "천안시"
+      }
+    },
+    {
+      "id": "kbsa:927",
+      "team": "비봉고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=927&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "비봉고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 화성시 효행구 비봉면 양노로109번길 5 (양노리 259-3)",
+        "lat": 37.237873,
+        "lon": 126.872494
+      },
+      "override": {
+        "addr": "경기도 화성시 효행구 비봉면 양노로109번길 5 (경기도 화성시 효행구 비봉면 양노리 259-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "화성시"
+      }
+    },
+    {
+      "id": "kbsa:1701",
+      "team": "상동고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1701&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "상동고등학교",
+        "kind": "고등학교",
+        "addr": "강원특별자치도 영월군 상동읍 태백산로 3147 (천평리 414)",
+        "lat": 37.125095,
+        "lon": 128.820894
+      },
+      "override": {
+        "addr": "강원특별자치도 영월군 상동읍 태백산로 3147 (강원특별자치도 영월군 상동읍 천평리 414)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "영월군"
+      }
+    },
+    {
+      "id": "kbsa:1899",
+      "team": "상우고야구단",
+      "state": "수집 누락",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1899&season=2026&kind_cd=31&sports_club=F",
+      "detail": {
+        "sido": "경기",
+        "addr": "경기도 의정부시 충의로 60 (용현동)3층"
+      }
+    },
+    {
+      "id": "kbsa:1761",
+      "team": "서울HG야구단(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1761&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울HG야구단(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 성북구 장월로 63 (장위동)",
+        "lat": 37.618457,
+        "lon": 127.051946
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1761&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1759",
+      "team": "서울HK야구단(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1759&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울HK야구단(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 서초구 바우뫼로2길 51-7, B1층 (우면동)",
+        "lat": 37.468244,
+        "lon": 127.02604
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1759&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:167",
+      "team": "서울고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=167&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 서초구 효령로 197 (서초동 1526-1)",
+        "lat": 37.483903,
+        "lon": 127.006104
+      },
+      "override": {
+        "addr": "서울특별시 서초구 효령로 197 (서울특별시 서초구 서초동 1526-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "서초구"
+      }
+    },
+    {
+      "id": "kbsa:1158",
+      "team": "서울동산고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1158&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울동산고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 노원구 공릉로 257 (공릉동 481-3)",
+        "lat": 37.620506,
+        "lon": 127.078089
+      },
+      "override": {
+        "addr": "서울특별시 노원구 공릉로 257 (서울특별시 노원구 공릉동 481-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "노원구"
+      }
+    },
+    {
+      "id": "kbsa:555",
+      "team": "서울디자인고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=555&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울디자인고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 마포구 백범로 139 (염리동 150)",
+        "lat": 37.546413,
+        "lon": 126.947681
+      },
+      "override": {
+        "addr": "서울특별시 마포구 백범로 139 (서울특별시 마포구 염리동 150)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "마포구"
+      }
+    },
+    {
+      "id": "kbsa:1826",
+      "team": "서울아이티고BC",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1826&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울아이티고BC (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 노원구 동일로207길 23 H호 (중계동)",
+        "lat": 37.642732,
+        "lon": 127.064173
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1826&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1451",
+      "team": "서울자동차고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1451&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울자동차고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 용산구 백범로45길 15 (효창동)",
+        "lat": 37.536822,
+        "lon": 126.970382
+      }
+    },
+    {
+      "id": "kbsa:1164",
+      "team": "서울컨벤션고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1164&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "서울컨벤션고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 강동구 동남로 964 (고덕동 295-1)",
+        "lat": 37.559295,
+        "lon": 127.157904
+      },
+      "override": {
+        "addr": "서울특별시 강동구 동남로 964 (서울특별시 강동구 고덕동 295-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강동구"
+      }
+    },
+    {
+      "id": "kbsa:170",
+      "team": "선린인터넷고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=170&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "선린인터넷고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 용산구 원효로97길 33-4 (청파동3가 131-2)",
+        "lat": 37.542502,
+        "lon": 126.967219
+      },
+      "override": {
+        "addr": "서울특별시 용산구 원효로97길 33-4 (서울특별시 용산구 청파동3가 131-2)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "용산구"
+      }
+    },
+    {
+      "id": "kbsa:194",
+      "team": "설악고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=194&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "설악고등학교",
+        "kind": "고등학교",
+        "addr": "강원특별자치도 속초시 청대로 219 (조양동 589-7)",
+        "lat": 38.185489,
+        "lon": 128.573827
+      },
+      "override": {
+        "addr": "강원특별자치도 속초시 청대로 219 (강원특별자치도 속초시 조양동 589-7)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "속초시"
+      }
+    },
+    {
+      "id": "kbsa:172",
+      "team": "성남고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=172&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "성남고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 동작구 대방동길 74 (대방동 375-1)",
+        "lat": 37.505448,
+        "lon": 126.926227
+      },
+      "override": {
+        "addr": "서울특별시 동작구 대방동길 74 (서울특별시 동작구 대방동 375-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "동작구"
+      }
+    },
+    {
+      "id": "kbsa:138",
+      "team": "세광고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=138&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "세광고등학교",
+        "kind": "고등학교",
+        "addr": "충청북도 청주시 서원구 2순환로 1572 (미평동 349)",
+        "lat": 36.602853,
+        "lon": 127.452557
+      },
+      "override": {
+        "addr": "충청북도 청주시 서원구 2순환로 1572 (충청북도 청주시 서원구 미평동 349)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "청주시"
+      }
+    },
+    {
+      "id": "kbsa:1827",
+      "team": "세명컴퓨터고야구단",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1827&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "세명컴퓨터고야구단 (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 광진구 광나루로36길 52 (구의동)",
+        "lat": 37.542687,
+        "lon": 127.085915
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1827&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1696",
+      "team": "세원고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1696&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "세원고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 고양시 일산동구 숲속마을로 202 (풍동 195)",
+        "lat": 37.670733,
+        "lon": 126.803047
+      },
+      "override": {
+        "addr": "경기도 고양시 일산동구 숲속마을로 202 (경기도 고양시 일산동구 풍동 195)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "고양시"
+      }
+    },
+    {
+      "id": "kbsa:1854",
+      "team": "세종BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1854&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "세종BC(U-18)",
+        "kind": "고등학교",
+        "addr": "세종특별자치시 조치원읍 오봉로 94-7",
+        "lat": 36.599432,
+        "lon": 127.275724
+      }
+    },
+    {
+      "id": "kbsa:519",
+      "team": "소래고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=519&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "소래고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 시흥시 수인로3287번길 26 (은행동 108-8)",
+        "lat": 37.437253,
+        "lon": 126.794822
+      },
+      "override": {
+        "addr": "경기도 시흥시 수인로3287번길 26 (경기도 시흥시 은행동 108-8)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "시흥시"
+      }
+    },
+    {
+      "id": "kbsa:1901",
+      "team": "수원야구단(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1901&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "수원야구단(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "경기도 수원시 팔달구 중부대로 177, 지하3층 (우만동)",
+        "lat": 37.276244,
+        "lon": 127.025559
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1901&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:295",
+      "team": "순천효천고BC",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=295&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "순천효천고BC (학교 주소·야구장 위치 미확인)",
+        "kind": "고등학교",
+        "addr": "전라남도 순천시 녹색로 1360 (대룡동)",
+        "lat": 34.903862,
+        "lon": 127.484911
+      }
+    },
+    {
+      "id": "kbsa:175",
+      "team": "신일고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=175&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "신일고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 강북구 솔매로49길 20 (미아동 193-1)",
+        "lat": 37.628242,
+        "lon": 127.028214
+      },
+      "override": {
+        "addr": "서울특별시 강북구 솔매로49길 20 (서울특별시 강북구 미아동 193-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강북구"
+      }
+    },
+    {
+      "id": "kbsa:586",
+      "team": "신흥고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=586&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "신흥고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 동두천시 신천로 159 (안흥동 36)",
+        "lat": 37.930437,
+        "lon": 127.046877
+      },
+      "override": {
+        "addr": "경기도 동두천시 신천로 159 (경기도 동두천시 안흥동 36)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "동두천시"
+      }
+    },
+    {
+      "id": "kbsa:1542",
+      "team": "아산BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1542&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "아산BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "충청남도 아산시 신창면 온천대로 984",
+        "lat": 36.783559,
+        "lon": 126.948763
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1542&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:184",
+      "team": "안산공업고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=184&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "안산공업고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 안산시 상록구 안산공고로 51 (부곡동 722)",
+        "lat": 37.336254,
+        "lon": 126.860579
+      },
+      "override": {
+        "addr": "경기도 안산시 상록구 안산공고로 51 (경기도 안산시 상록구 부곡동 722)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "안산시"
+      }
+    },
+    {
+      "id": "kbsa:1338",
+      "team": "야로고BC",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1338&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "야로고BC (학교 주소·야구장 위치 미확인)",
+        "kind": "고등학교",
+        "addr": "경상남도 합천군 야로면 역산길 13",
+        "lat": 35.703036,
+        "lon": 128.169267
+      }
+    },
+    {
+      "id": "kbsa:178",
+      "team": "야탑고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=178&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "야탑고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 성남시 분당구 판교로 738 (야탑동 145-3)",
+        "lat": 37.403484,
+        "lon": 127.152941
+      },
+      "override": {
+        "addr": "경기도 성남시 분당구 판교로 738 (경기도 성남시 분당구 야탑동 145-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "성남시"
+      }
+    },
+    {
+      "id": "kbsa:818",
+      "team": "예일메디텍고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=818&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "예일메디텍고등학교",
+        "kind": "고등학교",
+        "addr": "경상북도 안동시 예일길 85 (정하동 401)",
+        "lat": 36.54111,
+        "lon": 128.71983
+      },
+      "override": {
+        "addr": "경상북도 안동시 예일길 85 (경상북도 안동시 정하동 401)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "안동시"
+      }
+    },
+    {
+      "id": "kbsa:917",
+      "team": "우신고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=917&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "우신고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 구로구 부일로 917 (궁동 230)",
+        "lat": 37.500669,
+        "lon": 126.828073
+      },
+      "override": {
+        "addr": "서울특별시 구로구 부일로 917 (서울특별시 구로구 궁동 230)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "구로구"
+      }
+    },
+    {
+      "id": "kbsa:1878",
+      "team": "울산BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1878&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "울산BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "울산광역시 남구 꽃대나리로46번길 7 (야음동)",
+        "lat": 35.533035,
+        "lon": 129.33444
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1878&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:195",
+      "team": "원주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=195&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "원주고등학교",
+        "kind": "고등학교",
+        "addr": "강원특별자치도 원주시 치악로 1765 (개운동 127-1)",
+        "lat": 37.339611,
+        "lon": 127.954655
+      },
+      "override": {
+        "addr": "강원특별자치도 원주시 치악로 1765 (강원특별자치도 원주시 개운동 127-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "원주시"
+      }
+    },
+    {
+      "id": "kbsa:189",
+      "team": "유신고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=189&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "유신고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 수원시 팔달구 월드컵로 216 (우만동 9-1)",
+        "lat": 37.282777,
+        "lon": 127.041036
+      },
+      "override": {
+        "addr": "경기도 수원시 팔달구 월드컵로 216 (경기도 수원시 팔달구 우만동 9-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "수원시"
+      }
+    },
+    {
+      "id": "kbsa:556",
+      "team": "율곡고야구단",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=556&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "율곡고야구단 (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "경기도 파주시 파평면 청송로446번길 37-55, 1층",
+        "lat": 37.930923,
+        "lon": 126.866382
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=556&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1763",
+      "team": "의성고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1763&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "의성고등학교",
+        "kind": "고등학교",
+        "addr": "경상북도 의성군 의성읍 군청길 57 (중리리 710-1)",
+        "lat": 36.353161,
+        "lon": 128.699894
+      },
+      "override": {
+        "addr": "경상북도 의성군 의성읍 군청길 57 (경상북도 의성군 의성읍 중리리 710-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "의성군"
+      }
+    },
+    {
+      "id": "kbsa:1683",
+      "team": "의왕BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1683&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "의왕BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "경기도 안양시 동안구 경수대로884번길 12 (비산동)",
+        "lat": 37.397031,
+        "lon": 126.939167
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1683&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:521",
+      "team": "인상고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=521&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "인상고등학교",
+        "kind": "고등학교",
+        "addr": "전북특별자치도 정읍시 신태인읍 벽골제로 34 (화호리 251-3)",
+        "lat": 35.719205,
+        "lon": 126.839033
+      },
+      "override": {
+        "addr": "전북특별자치도 정읍시 신태인읍 벽골제로 34 (전북특별자치도 정읍시 신태인읍 화호리 251-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "정읍시"
+      }
+    },
+    {
+      "id": "kbsa:192",
+      "team": "인창고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=192&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "인창고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 구리시 왕숙천로 339 (인창동)",
+        "lat": 37.583521,
+        "lon": 127.161754
+      }
+    },
+    {
+      "id": "kbsa:165",
+      "team": "인천고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=165&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "인천고등학교",
+        "kind": "고등학교",
+        "addr": "인천광역시 미추홀구 경원대로 804 (주안동 1555)",
+        "lat": 37.453389,
+        "lon": 126.690685
+      },
+      "override": {
+        "addr": "인천광역시 미추홀구 경원대로 804 (인천광역시 미추홀구 주안동 1555)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "미추홀구"
+      }
+    },
+    {
+      "id": "kbsa:547",
+      "team": "장안고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=547&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "장안고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 수원시 장안구 대평로52번길 12 (정자동 886-3)",
+        "lat": 37.292797,
+        "lon": 126.995589
+      },
+      "override": {
+        "addr": "경기도 수원시 장안구 대평로52번길 12 (경기도 수원시 장안구 정자동 886-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "수원시"
+      }
+    },
+    {
+      "id": "kbsa:179",
+      "team": "장충고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=179&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "장충고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 중구 동호로15길 93 (신당동 432-460)",
+        "lat": 37.552432,
+        "lon": 127.007074
+      },
+      "override": {
+        "addr": "서울특별시 중구 동호로15길 93 (서울특별시 중구 신당동 432-460)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "중구"
+      }
+    },
+    {
+      "id": "kbsa:1828",
+      "team": "전북인공지능고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1828&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "전북인공지능고등학교",
+        "kind": "고등학교",
+        "addr": "전북특별자치도 고창군 무장면 왕제산로 713 (무장리 431-1)",
+        "lat": 35.41436,
+        "lon": 126.57091
+      },
+      "override": {
+        "addr": "전북특별자치도 고창군 무장면 왕제산로 713 (전북특별자치도 고창군 무장면 무장리 431-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "고창군"
+      }
+    },
+    {
+      "id": "kbsa:162",
+      "team": "전주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=162&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "전주고등학교",
+        "kind": "고등학교",
+        "addr": "전북특별자치도 전주시 완산구 권삼득로 2 (중노송동 449-1)",
+        "lat": 35.824852,
+        "lon": 127.15175
+      },
+      "override": {
+        "addr": "전북특별자치도 전주시 완산구 권삼득로 2 (전북특별자치도 전주시 완산구 중노송동 449-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "전주시"
+      }
+    },
+    {
+      "id": "kbsa:169",
+      "team": "제물포고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=169&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "제물포고등학교",
+        "kind": "고등학교",
+        "addr": "인천광역시 제물포구 자유공원로 58-9 (전동 26)",
+        "lat": 37.476412,
+        "lon": 126.623733
+      },
+      "override": {
+        "addr": "인천광역시 제물포구 자유공원로 58-9 (전동 26)",
+        "source": "https://jego.icehs.kr/main.do",
+        "note": "학교 공식 홈페이지의 현행 전체 주소 확인(이전 KBSA 중구·번지 누락 표기 보완) · 기존 위경도 유지"
+      }
+    },
+    {
+      "id": "kbsa:379",
+      "team": "제주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=379&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "제주고등학교",
+        "kind": "고등학교",
+        "addr": "제주특별자치도 제주시 1100로 3213 (노형동 607)",
+        "lat": 33.471619,
+        "lon": 126.482211
+      },
+      "override": {
+        "addr": "제주특별자치도 제주시 1100로 3213 (제주특별자치도 제주시 노형동 607)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "제주시"
+      }
+    },
+    {
+      "id": "kbsa:183",
+      "team": "중앙고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=183&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "중앙고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 종로구 창덕궁길 164 (계동 1)",
+        "lat": 37.584211,
+        "lon": 126.986826
+      },
+      "override": {
+        "addr": "서울특별시 종로구 창덕궁길 164 (서울특별시 종로구 계동 1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "종로구"
+      }
+    },
+    {
+      "id": "kbsa:775",
+      "team": "진영고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=775&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "진영고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 부천시 호현로 387 (소사본동) 41",
+        "lat": 37.471911,
+        "lon": 126.790088
+      }
+    },
+    {
+      "id": "kbsa:1937",
+      "team": "창녕SC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1937&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "창녕SC(U-18)",
+        "kind": "고등학교",
+        "addr": "경상남도 창녕군 남지읍 본동길 3-4",
+        "lat": 35.42803,
+        "lon": 128.43144
+      }
+    },
+    {
+      "id": "kbsa:1450",
+      "team": "창원공고야구단",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1450&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "창원공고야구단 (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "경상남도 창원시 마산회원구 봉암공단6길 66, 2층 (봉암동)",
+        "lat": 35.215739,
+        "lon": 128.597903
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1450&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1697",
+      "team": "천안CSBC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1697&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "천안CSBC(U-18)",
+        "kind": "고등학교",
+        "addr": "충청남도 천안시 동남구 성남면 용원1길 48, 가동",
+        "lat": 36.742429,
+        "lon": 127.236902
+      }
+    },
+    {
+      "id": "kbsa:815",
+      "team": "청담고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=815&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "청담고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 평택시 팽성읍 팽성송화로 192 (송화리 810)",
+        "lat": 36.962446,
+        "lon": 127.061389
+      },
+      "override": {
+        "addr": "경기도 평택시 팽성읍 팽성송화로 192 (경기도 평택시 팽성읍 송화리 810)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "평택시"
+      }
+    },
+    {
+      "id": "kbsa:187",
+      "team": "청원고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=187&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "청원고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 노원구 한글비석로 506 (상계동 641)",
+        "lat": 37.657597,
+        "lon": 127.075856
+      },
+      "override": {
+        "addr": "서울특별시 노원구 한글비석로 506 (서울특별시 노원구 상계동 641)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "노원구"
+      }
+    },
+    {
+      "id": "kbsa:421",
+      "team": "청주고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=421&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "청주고등학교",
+        "kind": "고등학교",
+        "addr": "충청북도 청주시 흥덕구 사직대로 79 (복대동 869)",
+        "lat": 36.635592,
+        "lon": 127.455464
+      },
+      "override": {
+        "addr": "충청북도 청주시 흥덕구 사직대로 79 (충청북도 청주시 흥덕구 복대동 869)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "청주시"
+      }
+    },
+    {
+      "id": "kbsa:181",
+      "team": "충암고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=181&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "충암고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 은평구 가좌로5길 5 (응암동 272-113)",
+        "lat": 37.597298,
+        "lon": 126.907259
+      },
+      "override": {
+        "addr": "서울특별시 은평구 가좌로5길 5 (서울특별시 은평구 응암동 272-113)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "은평구"
+      }
+    },
+    {
+      "id": "kbsa:407",
+      "team": "충훈고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=407&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "충훈고등학교",
+        "kind": "고등학교",
+        "addr": "경기도 안양시 만안구 석수로 238 (석수동 595-3)",
+        "lat": 37.410855,
+        "lon": 126.892795
+      },
+      "override": {
+        "addr": "경기도 안양시 만안구 석수로 238 (경기도 안양시 만안구 석수동 595-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "안양시"
+      }
+    },
+    {
+      "id": "kbsa:537",
+      "team": "포항제철고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=537&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "포항제철고등학교",
+        "kind": "고등학교",
+        "addr": "경상북도 포항시 남구 지곡로212번길 40 (지곡동 477)",
+        "lat": 36.02888,
+        "lon": 129.327595
+      },
+      "override": {
+        "addr": "경상북도 포항시 남구 지곡로212번길 40 (경상북도 포항시 남구 지곡동 477)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "포항시"
+      }
+    },
+    {
+      "id": "kbsa:1637",
+      "team": "한광BC(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1637&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "한광BC(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "서울특별시 영등포구 국회대로 654, 2층 (영등포동7가)",
+        "lat": 37.52829,
+        "lon": 126.896089
+      },
+      "override": {
+        "remove": true,
+        "reason": "KBSA 등록 주소가 주거지·층·호실로 실제 실외 구장 위치를 확인할 수 없음. 클럽 자체 폐쇄를 뜻하지 않음",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1637&season=2026"
+      }
+    },
+    {
+      "id": "kbsa:1694",
+      "team": "한국마사고BC",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1694&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "한국마사고BC",
+        "kind": "고등학교",
+        "addr": "전북특별자치도 장수군 장수읍 장천로 2501동",
+        "lat": 35.62911,
+        "lon": 127.51364
+      }
+    },
+    {
+      "id": "kbsa:1546",
+      "team": "화성동탄B(U-18)",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1546&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "화성동탄B(U-18) (팀 등록지·야구장 아님)",
+        "kind": "고등학교",
+        "addr": "경기도 안양시 동안구 부림로 80 (평촌동)",
+        "lat": 37.393022,
+        "lon": 126.965452
+      },
+      "override": {
+        "name": "화성동탄B(U-18) (팀 등록지·야구장 아님)",
+        "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1546&season=2026&kind_cd=31&sports_club=F",
+        "note": "야구장 아님 — KBSA 팀 등록 주소(아파트). 사용자 요청에 따라 실제 야구장과 구분해 표시. 기존 시·군·구 중심 추정 좌표 유지, 건물·훈련 구장 위치 미확인."
+      }
+    },
+    {
+      "id": "kbsa:378",
+      "team": "화순고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=378&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "화순고등학교",
+        "kind": "고등학교",
+        "addr": "전남광주통합특별시 화순군 화순읍 진각로 31-9 (삼천리 752-3)",
+        "lat": 35.054126,
+        "lon": 126.984094
+      },
+      "override": {
+        "addr": "전남광주통합특별시 화순군 화순읍 진각로 31-9 (전남광주통합특별시 화순군 화순읍 삼천리 752-3)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "화순군"
+      }
+    },
+    {
+      "id": "kbsa:190",
+      "team": "휘문고",
+      "state": "게시됨",
+      "detailUrl": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=190&season=2026&kind_cd=31&sports_club=F",
+      "field": {
+        "name": "휘문고등학교",
+        "kind": "고등학교",
+        "addr": "서울특별시 강남구 역삼로 541 (대치동 952-1)",
+        "lat": 37.505238,
+        "lon": 127.061998
+      },
+      "override": {
+        "addr": "서울특별시 강남구 역삼로 541 (서울특별시 강남구 대치동 952-1)",
+        "source": "https://www.data.go.kr/data/15021148/standard.do",
+        "note": "교육부 소관·한국교육시설안전원 학교 위치 표준데이터 주소·시군구 대조(2026-10-01). 학교 대표 주소이며 야구장 출입구는 별도 확인. 기존 좌표 유지",
+        "sigungu": "강남구"
+      }
+    }
+  ]
+}

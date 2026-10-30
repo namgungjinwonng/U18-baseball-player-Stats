@@ -1,6 +1,6 @@
 // 서비스 워커 — network-first(데이터 최신 우선), 오프라인 시 캐시 폴백.
 // u81-baseball 방식 참고.
-const CACHE = "u18-baseball-v11"; // v11: AI 경기분석(사용자 API 키)
+const CACHE = "u18-baseball-v12"; // v12: 경기분석 탭·분석 옵션·날씨 예보·야구장 현황 (v11: AI 경기분석)
 // (이전 v10: 학교 정보 종합등급·2열 카드 — 설치본이 새 서비스워커로 갱신되며 구 캐시 정리)
 // (이전 v9: 매치업 경기분석 개편(분석 엔진 지연 로딩 청크))
 // (이전 v8: 좋음 = 레드 색 규칙 반전)
@@ -25,6 +25,8 @@ self.addEventListener("fetch", (e) => {
   // AI 공급자 요청(연결 확인의 모델 목록 등)은 캐시하지 않는다 — 키를 쓴 응답을 기기 캐시에 남기지 않기 위해.
   const host = new URL(e.request.url).hostname;
   if (host === "generativelanguage.googleapis.com" || host === "api.anthropic.com" || host === "api.openai.com") return;
+  // 경기분석 날씨 예보는 요청 때마다 새 값을 쓴다. 야구장 현황 지도 타일은 기기 캐시를 채우지 않게 브라우저에 맡긴다.
+  if (host === "api.open-meteo.com" || host === "tile.openstreetmap.org") return;
   // 문서 재로드는 HTTP 10분 캐시를 우회해 최신 해시 번들의 index.html을 받는다.
   const request = e.request.mode === "navigate"
     ? new Request(e.request, { cache: "reload" })

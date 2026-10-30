@@ -1380,6 +1380,19 @@
   white-space: nowrap;
 }
 .tv-table .tv-name { font-weight: 700; }
+/* 이적해 나간 선수: 이름 아래 작은 한 줄 — 행 높이가 1.5줄 정도로만 늘게 */
+.tv-table .tv-name--moved { padding-top: 5px; padding-bottom: 5px; line-height: 1.25; }
+.tv-table .tv-moved {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  word-break: keep-all; /* 칸보다 길 때만 어절 단위로 줄바꿈 (좁은 모바일·클럽팀명) */
+}
+/* 표시 문구가 긴 경우(「(서울디자인고 이적)」「(경기상업고에서 이적)」 등 11자 이상) 더 좁게 */
+.tv-table .tv-moved--long { font-size: 9.5px; letter-spacing: -0.05em; }
+.tv-table .tv-moved--xlong { font-size: 9px; letter-spacing: -0.06em; }
 .tv-table tbody tr:active { background: var(--color-soft-cloud); }
 /* 팀 모달: 표 영역만 세로 스크롤(필터해도 모달 크기 유지 — 원본 46vh 고정 높이) */
 .tv-table-wrap {
@@ -1474,6 +1487,9 @@
 .notice a {
   text-decoration: underline;
 }
+.notice ul { margin: 0 0 var(--space-sm); padding-left: 18px; color: var(--color-charcoal); line-height: 1.7; }
+.notice li + li { margin-top: 6px; }
+.notice__license { display: block; color: var(--color-mute); font-size: var(--type-caption-sm); }
 .notice__meta {
   font-size: var(--type-caption-sm);
   color: var(--color-mute);
@@ -1773,8 +1789,11 @@
 .versus-top__col li small { color: var(--color-mute); }
 .versus-top__v { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; }
 .versus-side .chip { flex: 1 1 0; font-size: 12px; white-space: normal; }
-/* 표 영역 안에서만 상하좌우 스크롤 — 투수 이름 행(위)과 타자 이름 열(왼쪽)은 고정된다 */
-.versus-matrix { overflow: auto; max-height: min(65vh, 560px); overscroll-behavior: contain; border: 1px solid var(--color-hairline-soft); }
+/* 표 영역 안에서만 상하좌우 스크롤 — 투수 이름 행(위)과 타자 이름 열(왼쪽)은 고정된다.
+   세로는 표 끝에 닿으면 페이지로 이어서 스크롤되고, 가로만 막아 옆으로 밀 때 브라우저 뒤로가기 제스처를 막는다. */
+.versus-matrix { overflow: auto; max-height: min(65vh, 560px); overscroll-behavior-x: contain; border: 1px solid var(--color-hairline-soft); }
+/* 모바일은 표 위아래에 잡고 밀 수 있는 페이지 여백을 남긴다 */
+.m-page .versus-matrix { max-height: min(55vh, 560px); }
 .versus-matrix table { border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
 .versus-matrix th,
 .versus-matrix td { padding: 6px 8px; border-bottom: 1px solid var(--color-hairline-soft); text-align: center; white-space: nowrap; }
@@ -2206,14 +2225,43 @@
 /* AI 경기분석 — 요청 버튼·안내 (shared/ai/AiAnalysisPanel) */
 .versus-analysis__notice { margin: 6px 0 0; color: var(--color-sale); font-size: 12px; line-height: 1.5; }
 .versus-analysis__actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.versus-analysis__btn { padding: 6px 12px; border: 1px solid var(--color-ink); border-radius: 999px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+/* 분석 방향·분석 요청 버튼은 앱 공통 선택 버튼(.chip)과 같은 모양 — 방향은 기록 칩처럼 조금 작게, 요청은 기본 크기 */
+.versus-analysis__btn.chip { border-color: var(--color-ink); font-weight: 600; }
 .versus-analysis__btn:disabled { opacity: 0.55; cursor: default; }
-.versus-analysis__model { color: var(--color-mute); font-size: 11px; }
-.versus-analysis__focus { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.versus-analysis__focus button { padding: 4px 10px; border: 1px solid var(--color-hairline); border-radius: 999px; background: var(--color-canvas); color: var(--color-charcoal); font: inherit; font-size: 12px; cursor: pointer; }
-.versus-analysis__focus button.is-on { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-canvas); font-weight: 600; }
-.versus-analysis__focus button:disabled { opacity: 0.55; cursor: default; }
-.versus-analysis__pending { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; opacity: 0.8; }
+.versus-analysis__model { color: var(--color-mute); font-size: 12px; }
+.versus-analysis__edge { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0 4px; padding: 7px 10px; border-radius: 8px; background: var(--color-soft-cloud); font-size: 13px; }
+.versus-analysis__edge b { margin-right: 4px; font-size: 12px; color: var(--color-mute); font-weight: 600; }
+.versus-analysis__focus { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+/* 「분석 전」은 이름 아래 작은 글씨로 — 두 줄이어도 높이 34px 안에 들어가 다섯 버튼이 한 줄에 놓이게 한다 */
+.versus-analysis__focus .chip { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px 6px; min-height: 34px; font-size: 12px; line-height: 1.15; }
+.versus-analysis__focus .chip:disabled { opacity: 0.55; cursor: default; }
+.versus-analysis__pending { display: block; font-size: 9px; font-weight: 400; line-height: 1.1; opacity: 0.7; }
+/* 경기분석 「분석 옵션」(B안) — 접힘 한 줄 요약 / 펼침 선수 범위·경기 조건 */
+.ai-options { margin-top: 10px; border-top: 1px solid var(--color-hairline); }
+.ai-options__head { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 0 2px; border: 0; background: none; color: var(--color-ink); font: inherit; text-align: left; cursor: pointer; }
+.ai-options__head b { display: block; font-size: 13px; }
+.ai-options__head small { display: block; color: var(--color-mute); font-size: 12px; }
+.ai-options__head small.is-on { color: #0b3fd6; }
+.ai-options__chev { font-size: 14px; color: var(--color-mute); }
+.ai-options__body { margin: 0; padding: 0; border: 0; min-width: 0; }
+.ai-options__sec { margin: 12px 0 4px; color: var(--color-mute); font-size: 12px; }
+.ai-options__row { display: flex; align-items: center; gap: 8px; padding: 5px 0; color: var(--color-ink); font-size: 13px; cursor: pointer; }
+.ai-options__row input { width: 16px; height: 16px; margin: 0; accent-color: var(--color-ink); }
+.ai-options__hint { margin: 0 0 4px 24px; color: var(--color-mute); font-size: 12px; line-height: 1.5; }
+.ai-options__cond { margin: 4px 0 0 24px; }
+.ai-options__cond .ai-options__hint { margin-left: 0; }
+.ai-options__seg { display: flex; margin: 0 0 10px; border: 1px solid var(--color-hairline); border-radius: 999px; overflow: hidden; }
+.ai-options__seg button { flex: 1 1 0; min-width: 0; padding: 6px 4px; border: 0; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 12px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ai-options__seg button.is-on { background: var(--color-ink); color: var(--color-canvas); font-weight: 600; }
+.ai-options__label { display: block; margin: 0 0 4px; color: var(--color-mute); font-size: 12px; }
+.ai-options__field { display: block; margin: 0 0 10px; }
+.ai-options__field span { display: block; margin: 0 0 4px; color: var(--color-mute); font-size: 12px; }
+.ai-options__field select,
+.ai-options__field input { width: 100%; box-sizing: border-box; padding: 7px 10px; border: 1px solid var(--color-hairline); border-radius: 8px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 13px; }
+.ai-venue { display: grid; gap: 6px; }
+.ai-venue__filters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ai-options__forecast { margin: 0 0 4px; padding: 7px 10px; border-radius: 8px; background: var(--color-soft-cloud); font-size: 12px; line-height: 1.5; }
+.ai-options__warn { margin: 10px 0 0; padding: 8px 10px; border-radius: 8px; background: #fff4e0; color: #8a5300; font-size: 12px; line-height: 1.5; }
 .versus-reference { padding: 12px; margin: 12px 0; border: 1px solid var(--color-hairline); border-radius: 10px; background: var(--color-soft-cloud); color: var(--color-charcoal); font-size: 13px; line-height: 1.6; }
 .versus-reference p { margin: 4px 0 0; }
 .ai-settings__storage { font-size: 13px; font-weight: 600; line-height: 1.6; }
@@ -2271,3 +2319,48 @@
 .nav-drawer__title + a { border-top: none; }
 .career-mode-toggle.versus-year { display: inline-flex; width: auto; max-width: none; margin: 8px 0 4px; }
 .career-mode-toggle.versus-year button { min-width: 56px; padding: 5px 12px; font-size: 13px; }
+
+/* 안내 「야구장 현황」 — 지역 선택 → 종류별 목록 → 지도·길찾기 */
+.fields-note { margin: 4px 0 12px; color: var(--color-mute); font-size: 12px; line-height: 1.5; }
+.fields-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
+.fields-filters input { grid-column: 1 / -1; }
+.fields-filters select,
+.fields-filters input { width: 100%; min-width: 0; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--color-hairline); border-radius: 8px; background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 14px; }
+.fields-map { height: 280px; margin: 0 0 12px; border: 1px solid var(--color-hairline); border-radius: 10px; overflow: hidden; z-index: 0; }
+.fields-map--loading { display: flex; align-items: center; justify-content: center; color: var(--color-mute); font-size: 13px; background: var(--color-soft-cloud); }
+.fields-card { margin: 0 0 16px; padding: 12px 14px; border-left: 3px solid #0b3fd6; background: var(--color-soft-cloud); }
+.fields-card__name { font-size: 16px; font-weight: 700; color: var(--color-ink); }
+.fields-card__meta,
+.fields-card__addr { margin-top: 2px; color: var(--color-charcoal); font-size: 13px; line-height: 1.5; }
+.fields-card__note { margin-top: 2px; color: var(--color-mute); font-size: 12px; }
+.fields-card__links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 13px; }
+.fields-card__links a { color: var(--color-ink); text-decoration: underline; }
+.fields-card__address { margin-top: 8px; }
+.fields-card__address-label { font-size: 12px; color: var(--color-charcoal); }
+.fields-card__address-row { margin-top: 3px; color: var(--color-charcoal); font-size: 13px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+.fields-card__addr { white-space: pre-wrap; user-select: text; -webkit-user-select: text; }
+.fields-card__copy { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--color-hairline); border-radius: 4px; background: var(--color-canvas); color: var(--color-ink); font: inherit; line-height: 1.4; vertical-align: baseline; white-space: nowrap; cursor: pointer; }
+.fields-card__copy:focus-visible { outline: 2px solid #0b3fd6; outline-offset: 2px; }
+.fields-approx { margin-left: 4px; color: var(--color-mute); font-size: 11px; font-weight: 400; }
+.fields-sido { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.fields-sido button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px; border: 1px solid var(--color-hairline); border-radius: 10px; background: var(--color-canvas); color: var(--color-ink); font: inherit; cursor: pointer; }
+.fields-sido button b { font-size: 15px; }
+.fields-sido button small { color: var(--color-mute); font-size: 12px; }
+/* 분류는 접힌 머리줄로 시작하고 눌러 펼친다 */
+.fields-group { margin: 0; }
+.fields-group__title { margin: 0; font-size: 14px; font-weight: 700; }
+.fields-group__title small { color: var(--color-mute); font-weight: 400; }
+.fields-group__toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 10px 2px; border: 0; border-bottom: 1px solid var(--color-hairline); background: none; color: var(--color-ink); font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+.fields-group__toggle:disabled { cursor: default; }
+.fields-group__toggle:focus-visible { outline: 2px solid #0b3fd6; outline-offset: -2px; }
+.fields-group__toggle small { margin-left: 2px; }
+.fields-group__chevron { flex: none; color: var(--color-mute); font-size: 11px; }
+.fields-group .fields-list { margin: 0 0 12px; border-top: 0; }
+.fields-group .fields-list[hidden] { display: none; }
+.fields-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--color-hairline); }
+.fields-list li { border-bottom: 1px solid var(--color-hairline); }
+.fields-list button { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: 8px; padding: 10px 2px; border: 0; background: none; color: var(--color-ink); font: inherit; text-align: left; cursor: pointer; }
+.fields-list button.is-on { background: var(--color-soft-cloud); }
+.fields-list__name { font-size: 14px; font-weight: 500; }
+.fields-list__meta { flex: none; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-mute); font-size: 12px; }
+@media (min-width: 900px) { .fields-map { height: 420px; } }

@@ -63,6 +63,7 @@ for (const ps of [
 assert.equal(build([roster("A고", [member("")]), rosters[1]]).input, null);
 assert.equal(build([roster("A고", [member("a"), member("a")]), rosters[1]]).input, null, "명단 내 중복 ID도 추정하지 않음");
 assert.equal(build([rosters[0], roster("B고", [member("b", "B고"), member("a", "B고")])]).input, null, "양교에 중복된 ID 제외");
+assert.ok(build([rosters[0], roster("B고", [member("b", "B고"), { ...member("a", "B고"), moved_to: "A고" }])]).input, "이적해 나간 옛 학교 항목(moved_to)은 현재 엔트리가 아니라 중복으로 보지 않음");
 assert.equal(build([roster("A고", [{ ...member("a"), name: "" }]), rosters[1]]).input, null);
 for (const rs of [
   [rosters[0]], [roster("A고", []), rosters[1]], [{ ...rosters[0], error: "failed" }, rosters[1]],

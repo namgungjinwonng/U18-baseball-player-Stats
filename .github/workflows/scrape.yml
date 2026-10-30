@@ -49,6 +49,12 @@ jobs:
         working-directory: scraper
         run: npm run schedule
 
+      # 완료 경기 날씨(경기분석 「경기 조건」용, data/{year}/weather.json — 없는 경기만). 실패해도 기록 수집은 계속한다.
+      - name: Refresh game weather (Open-Meteo)
+        working-directory: scraper
+        continue-on-error: true
+        run: npm run weather
+
       # 신규 경기 수집 → 신규 선수 공식기록 증분 수집 → 재집계 (마지막 갱신 이후만)
       - name: Scrape new games & re-aggregate
         working-directory: scraper

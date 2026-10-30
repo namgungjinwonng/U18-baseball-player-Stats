@@ -194,6 +194,7 @@ export interface TeamPlayerEntry {
   team: string;
   team_idx: string;
   region: string;
+  moved_to?: string;     // 시즌 중 이적 — 옛 학교 명단에 남은 항목이면 현재 학교명
 }
 export interface TeamStaffEntry {
   type: "staff";

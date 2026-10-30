@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { usePlayerIndex, searchPlayers } from "../../shared/data";
+import { usePlayerSearchIndex, searchPlayers } from "../../shared/data";
+import { playerSearchLink } from "../../shared/playerSearch";
 import { Ico } from "../../shared/navIcons";
 import { SearchIcon } from "../../shared/LineIcons";
 
@@ -10,7 +11,7 @@ export function SearchPage() {
   const [params, setParams] = useSearchParams();
   const initial = params.get("q") ?? "";
   const [q, setQ] = useState(initial);
-  const { data: index, loading } = usePlayerIndex();
+  const { data: index, loading } = usePlayerSearchIndex();
 
   const results = useMemo(
     () => (index ? searchPlayers(index, q) : []),
@@ -47,7 +48,7 @@ export function SearchPage() {
       {!q && <div className="state muted">이름을 입력해 선수를 찾아보세요.</div>}
 
       {results.slice(0, limit).map((p) => (
-        <Link to={`/player/${p.id}`} key={p.id} className="result-row">
+        <Link to={playerSearchLink(p)} key={p.id} className="result-row">
           <span>
             <span className="nm" style={{ fontWeight: 500 }}>
               {p.name}
@@ -56,6 +57,7 @@ export function SearchPage() {
               {p.team}
               {p.grade && ` · ${p.grade}학년`}
               {p.number && ` · ${p.number}번`}
+              {p.recordless && " · 기록 없음"}
             </span>
           </span>
           <span className="pos">{p.position}</span>

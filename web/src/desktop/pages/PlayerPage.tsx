@@ -2,8 +2,9 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import {
   useCareerPlayers, useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
-  useTournamentMatchups, useTournaments,
+  useTeams, useTournamentMatchups, useTournaments,
 } from "../../shared/data";
+import { currentRosterEntry, transferredTo } from "../../shared/transfers";
 import { rate, dec2, inn, int, formatDate } from "../../shared/format";
 import { battingAdvanced, pitchingAdvanced, pct, dec1, signed1 } from "../../shared/sabermetrics";
 import { SaberTerm } from "../../shared/SaberTerm";
@@ -389,6 +390,11 @@ export function PlayerPage() {
   const { year } = useYear();
   const { data: player, loading, error } = usePlayer(id);
   const { data: profile } = usePlayerProfile(player?.personNo);
+  // 시즌 중 이적 — 기록은 뛴 학교 기준, 머리줄 소속은 선수현황(teams.json)의 현재 학교만 표시.
+  const { data: teams } = useTeams();
+  const movedTo = player ? transferredTo(teams, player.personNo, player.team) : undefined;
+  // 이적 선수 등번호는 최종 학교 명단 기준(옛 학교 번호를 보이지 않는다, 미배정이면 생략).
+  const number = movedTo ? currentRosterEntry(teams, player?.personNo)?.number : player?.number;
   const { data: careerSeasons, loading: careerLoading } = useCareerPlayers(profile?.careerYears);
   const { data: matchupsSeason } = usePlayerMatchups(id);
   const { data: index } = usePlayerIndex();
@@ -477,10 +483,10 @@ export function PlayerPage() {
       <div className="player-head">
         <h1 className="heading-xl" style={{ marginBottom: 0 }}>{player.name}</h1>
         <div className="player-meta-line">
-          <span><Link to={`/team/${encodeURIComponent(player.team)}`}>{player.team}</Link></span>
+          <span><Link to={`/team/${encodeURIComponent(movedTo ?? player.team)}`}>{movedTo ?? player.team}</Link></span>
           <span>{player.position}</span>
           {player.grade && <span>{player.grade}학년</span>}
-          {player.number && <span>{player.number}번</span>}
+          {number && <span>{number}번</span>}
           {bt && <span>{bt}</span>}
           {profile?.birth && <span>{profile.birth}</span>}
           {profile?.height && profile?.weight && (
