@@ -116,22 +116,21 @@ assert.ok(buildUserPrompt(payload, undefined, "pitching", "away").includes("공�
 assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("맞대결 경기들의 내용(어느 학교가 이겼는지 학교 이름으로"));
 assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("우리팀 최근 흐름: 강릉고의 '최근흐름' 최근 5경기 전적·득실·연속 기록이 뜻하는 것"));
 assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("상대팀 최근 흐름: 원주고의 '최근흐름' 최근 5경기"));
-// 관점 — 양팀 비교는 중립 해설(관점 없음), HOME 기준은 HOME 학교가 우리팀, AWAY·HOME 기준에만 방향 3개 추가
+// 관점 — 양팀 비교는 중립 해설(관점 없음), HOME 기준은 HOME 학교가 우리팀, AWAY·HOME 기준에만 방향 2개 추가
 assert.ok(!("관점" in payload), "양팀 비교는 관점 없이");
 assert.ok(buildUserPrompt(payload).includes("강릉고 공격 대 원주고 수비") && !buildUserPrompt(payload).includes("우리팀"), "양팀 비교 종합은 중립");
 assert.ok(!systemPrompt("both").includes("우리팀") && systemPrompt("home").includes("'우리팀 ○○'"));
 assert.deepEqual(buildPayload(input, extra, "overall", "home").관점, { 우리팀: "원주고", 상대팀: "강릉고" });
 assert.ok(buildUserPrompt(payload, undefined, "overall", "home").includes("총평: 우리팀 원주고 입장에서 본 상대팀 강릉고"), "HOME 기준은 원주고가 우리팀");
 assert.deepEqual(focusList("both").map((f) => f.id), ["overall", "batting", "pitching", "h2h"]);
-assert.deepEqual(focusList("away").map((f) => f.id), ["overall", "batting", "pitching", "h2h", "attack", "gameplan", "threats"]);
+assert.deepEqual(focusList("away").map((f) => f.id), ["overall", "batting", "pitching", "h2h", "attack", "threats"], "경기 운영은 감독 영역이라 두지 않는다");
 assert.ok(buildUserPrompt(payload, undefined, "attack", "away").includes("상대 마운드 약점: 원주고 마운드"));
 assert.ok(buildUserPrompt(payload, undefined, "attack", "home").includes("상대 마운드 약점: 강릉고 마운드"));
-assert.ok(buildUserPrompt(payload, undefined, "gameplan", "away").includes("작전·타순·선발 예고·누가 던질지는 단정하지 않는다"));
 assert.ok(buildUserPrompt(payload, undefined, "threats", "home").includes("경계 타자 1: '주요선수' 강릉고 타자"));
 assert.ok(buildUserPrompt(payload, undefined, "attack").includes("총평: 두 팀의 성격 차이"), "양팀 비교에 없는 방향은 종합으로");
 const threats = buildPayload(input, extra5, "threats", "away");
 assert.ok(threats.주요선수!["원주고"].타자.length > 3 && !("맞대결" in threats), "경계 선수는 타자 5명까지·맞대결 제외");
-assert.ok("최근흐름" in buildPayload(input, extra5, "gameplan", "away"), "경기 운영은 득실 흐름 포함");
+
 for (const p of ["both", "away", "home"] as const) for (const f of focusList(p)) assert.ok(!/\{[AB]\}/.test(buildUserPrompt(payload, undefined, f.id, p)), `자리표시 {A}{B}가 남지 않음 ${p} ${f.id}`);
 assert.ok(prompt.length < 12000, `프롬프트 ${prompt.length}자`);
 

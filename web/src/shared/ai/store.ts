@@ -16,7 +16,7 @@ export interface AiEntry {
 
 const LEGACY_KEY = "u18-ai-analysis-v1";
 export const AI_CACHE_CHANGED = "u18-ai-cache-changed";
-export const WARNING_COUNT = 3000; // 대진당 저장 칸이 관점 3개 × 방향(4·7·7) = 18칸으로 늘어 1,000에서 올렸다
+export const WARNING_COUNT = 3000; // 대진당 저장 칸이 관점 3개 × 방향(4·6·6) = 16칸으로 늘어 1,000에서 올렸다
 export const WARNING_BYTES = 20 * 1024 * 1024;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const PERSPECTIVE_IDS: Perspective[] = ["both", "away", "home"];

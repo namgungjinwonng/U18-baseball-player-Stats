@@ -1,10 +1,11 @@
-// 매치업 「경기 분석」 — 키가 없으면 기록 기반 분석만, 키가 있으면 저장된 AI 분석 우선 + 관점(양팀 비교·AWAY·HOME 기준)·분석 방향 선택·다시 분석.
+// 매치업 「경기 분석」 — 키가 없으면 기록 기반 분석만. 키가 있으면 접히는 「AI 분석 설정」(분석 항목·분석 기준·분석 옵션·요청 버튼) 아래에
+// 기본 분석 또는 고른 항목의 저장된 AI 분석을 보인다.
 import { useEffect, useRef, useState } from "react";
 import type { AnalysisInput, AnalysisLine } from "../analysis/core";
 import type { ScheduleGame } from "../types";
 import { AI_SETTINGS_CHANGED, currentModel, loadSettings, modelLabel, providerInfo } from "./config";
 import {
-  PERSPECTIVES, REFERENCE_UNAVAILABLE, buildPayload, buildUserPrompt, focusLabel, focusList, parseAnswer, perspectiveName, systemPrompt,
+  FOCUS_IDS, PERSPECTIVES, REFERENCE_UNAVAILABLE, buildPayload, buildUserPrompt, focusLabel, focusList, parseAnswer, systemPrompt,
   InvalidAnswer, type AiExtra, type FocusId, type Perspective,
 } from "./prompt";
 import { AiError, generate } from "./providers";
@@ -12,6 +13,7 @@ import { AI_CACHE_CHANGED, entryKey, errorNotice, loadMatchupEntries, saveEntry,
 import { loadApiKey } from "./vault";
 import { AiStorageWarning } from "./AiStorageWarning";
 import { AiOptionsBox } from "./AiOptionsBox";
+import { SegmentPicker, StepPicker, type PickItem } from "./AiPickers";
 import { perspectiveLabel } from "./edge";
 import { teamKey } from "../versus";
 import { DEFAULT_OPTIONS, OptionsError, optionsKey, optionsSummary, scopeActive, type AiOptions, type SampleRow } from "./options";
@@ -81,8 +83,10 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
   const [notice, setNotice] = useState("");
   const [perspective, setPerspective] = useState<Perspective>("both");
   const [focus, setFocus] = useState<FocusId>("overall");
-  const [basic, setBasic] = useState(true); // 「기본 분석」 칩 — 키가 있어도 처음에는 기록 기반 분석을 보인다
+  const [basic, setBasic] = useState(true); // 「기본 분석」 항목 — 키가 있어도 처음에는 기록 기반 분석을 보인다
+  const [setupOpen, setSetupOpen] = useState(true); // 「AI 분석 설정」 — 키가 있으면 처음에는 펼쳐 둔다
   const abort = useRef<AbortController | null>(null);
+  const resultRef = useRef<HTMLDivElement | null>(null);
   const slot = slotId(perspective, focus);
   const entry = cache.key === key ? cache.entries[slot] : undefined;
   const referenceUnavailable = !!input.reference && REFERENCE_UNAVAILABLE.has(focus);
@@ -190,6 +194,8 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
         ...(perspective !== "both" ? { perspective } : {}), ...(edge ? { edge } : {}),
       };
       setCache((old) => ({ key, entries: { ...(old.key === key ? old.entries : {}), [slot]: next }, ready: true }));
+      // 설정이 펼쳐져 결과가 화면 밖이면 결과 쪽으로 내린다.
+      resultRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
       try {
         await saveEntry(key, next);
       } catch {
@@ -213,71 +219,94 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
   const showBasic = !hasKey || basic;
   // 양팀 비교는 학교 이름 그대로, AWAY·HOME 기준은 「우리팀 ○○ 우위」
   const edgeText = (label: string) => (perspective === "both" ? label : perspectiveLabel(label, ourName, oppName));
-  const pick = (p: Perspective, f: FocusId) => {
-    setBasic(false);
-    setPerspective(p);
-    setFocus(focusList(p).some((x) => x.id === f) ? f : "overall");
-    setNotice("");
+  const sideName = (p: Perspective) => (p === "away" ? input.aName : input.bName);
+  const basisText = (p: Perspective) => (p === "both" ? "양팀 비교" : `${p === "away" ? "AWAY" : "HOME"} ${sideName(p)} 기준`);
+  const inBoth = (f: FocusId) => focusList("both").some((x) => x.id === f);
+  const ready = cache.ready && cache.key === key;
+  const status = (p: Perspective, f: FocusId) => {
+    if (input.reference && REFERENCE_UNAVAILABLE.has(f)) return "자료 부족";
+    if (!ready) return "확인 중";
+    const e = cache.entries[slotId(p, f)];
+    return e ? `저장됨 ${shortDate(e.at)}` : "분석 전";
   };
+  // 분석 항목 — 기본 분석 + 방향(공략 포인트·경계 선수는 AWAY·HOME 기준에만). 상태는 지금 고른 기준으로 표시한다.
+  const itemPerspective = (f: FocusId) => (perspective === "both" && !inBoth(f) ? "away" : perspective);
+  const items: PickItem<"basic" | FocusId>[] = [
+    { id: "basic", label: "기본 분석", note: "기록 기반" },
+    ...FOCUS_IDS.map((f) => ({ id: f, label: focusLabel(f), note: status(itemPerspective(f), f) })),
+  ];
+  const bases: PickItem<Perspective>[] = PERSPECTIVES.map((p) => ({
+    id: p.id,
+    label: p.id === "both" ? "양팀 비교" : `${p.id === "away" ? "AWAY" : "HOME"} 기준`,
+    note: p.id === "both" ? (inBoth(focus) ? "중립 해설" : "이 항목 없음") : `${sideName(p.id)} = 우리팀`,
+    disabled: p.id === "both" && !inBoth(focus),
+  }));
+  const pickItem = (id: "basic" | FocusId) => {
+    setNotice("");
+    if (id === "basic") return setBasic(true);
+    setBasic(false);
+    setFocus(id);
+    if (perspective === "both" && !inBoth(id)) setPerspective("away");
+  };
+  const setupSummary = basic ? "기본 분석" : `${focusLabel(focus)} · ${basisText(perspective)}${optionsOn ? ` · ${optionsSummary(opts)}` : ""}`;
   return (
-    <div className="versus-analysis">
-      <h4>
-        경기 분석{" "}
-        <small>{showAi ? `AI 분석 · ${perspectiveName(perspective)} · ${focusLabel(focus)} · ${optionsOn ? `${optionsSummary(opts)} · ` : ""}${input.reference ? `${input.reference.year} 기록 참고 · ` : ""}${modelLabel(entry.model)} · ${shortDate(entry.at)} 생성 · 참고용` : showBasic ? `${input.reference ? `${input.reference.year} 개인 기록 참고 · ` : ""}기록 기반 자동 분석 · 참고용` : `${perspectiveName(perspective)} · ${focusLabel(focus)} · ${referenceUnavailable ? "자료 부족" : cache.ready && cache.key === key ? "분석 전" : "저장 기록 확인 중…"}`}</small>
-      </h4>
-      {showAi && entry.edge && (
-        <p className="versus-analysis__edge">
-          <span><b>기록 기반 예상 우위</b> {edgeText(entry.edge.base)}</span>
-          {entry.edge.adjusted && <span><b>AI 판단</b> {edgeText(entry.edge.adjusted)}</span>}
-        </p>
-      )}
-      <ul>
-        {showAi
-          ? entry.lines.map((text, i) => <li key={i} className={i === 0 ? "is-head" : undefined}>{text}</li>)
-          : showBasic ? ruleLines.map((line) => (
-              <li key={line.id} className={line.cat === "overall" ? "is-head" : line.cat === "sample" ? "is-note" : undefined}>
-                {line.text}
-              </li>
-            )) : <li className="is-note">{referenceUnavailable ? `전년도 개인 시즌 합계만으로 현재 엔트리의 ${focusLabel(focus)}을(를) 판단할 수 없어 분석을 요청하지 않습니다. 다른 방향을 선택해 주세요.` : loading ? "선택한 항목을 분석하고 있습니다." : "이 매치업의 선택한 항목은 분석 전입니다. 버튼을 누르면 AI 분석을 생성해 이 기기에 저장합니다."}</li>}
-      </ul>
-      {notice && <p className="versus-analysis__notice" role="status">{notice}</p>}
-      {/* 키를 넣은 사용자에게만 — 관점과 분석 방향을 고르고 버튼으로 요청(고르기만 해서는 요청하지 않아 무료 횟수를 아낀다) */}
+    <>
+      {/* 키를 넣은 사용자에게만 — 항목과 기준을 고르고 버튼으로 요청(고르기만 해서는 요청하지 않아 무료 횟수를 아낀다) */}
       {hasKey && (
-        <div className="versus-analysis__focus" role="radiogroup" aria-label="분석 관점">
-          <button type="button" role="radio" aria-checked={basic} disabled={loading}
-            className={`chip versus-analysis__basic ${basic ? "chip--active" : ""}`} onClick={() => setBasic(true)}>
-            기본 분석
+        <div className="ai-setup">
+          <button type="button" className="ai-setup__head" aria-expanded={setupOpen} aria-controls="ai-setup-body" onClick={() => setSetupOpen(!setupOpen)}>
+            <span>
+              <b>AI 분석 설정</b>
+              <small>{setupSummary}</small>
+            </span>
+            <span aria-hidden className="ai-options__chev">{setupOpen ? "▴" : "▾"}</span>
           </button>
-          {PERSPECTIVES.map((p) => (
-            <button key={p.id} type="button" role="radio" aria-checked={!basic && perspective === p.id} disabled={loading}
-              className={`chip ${!basic && perspective === p.id ? "chip--active" : ""}`} onClick={() => pick(p.id, focus)}>
-              {p.label}<small className="versus-analysis__pending">{p.id === "away" ? input.aName : p.id === "home" ? input.bName : "중립"}</small>
-            </button>
-          ))}
+          {setupOpen && (
+            <div className="ai-setup__body" id="ai-setup-body">
+              <StepPicker label="분석 항목" items={items} value={basic ? "basic" : focus} onChange={pickItem} disabled={loading} />
+              {basic ? (
+                <p className="ai-options__hint">기본 분석은 기록으로 자동 계산한 문장입니다. AI 분석은 다른 항목을 골라 주세요.</p>
+              ) : (
+                <>
+                  <SegmentPicker label="분석 기준" items={bases} value={perspective} onChange={(p) => { setPerspective(p); setNotice(""); }} disabled={loading} />
+                  {options && (
+                    <AiOptionsBox opts={opts} onChange={changeOpts} support={options} aName={input.aName} bName={input.bName} disabled={loading} />
+                  )}
+                  <div className="versus-analysis__actions">
+                    <button type="button" className="chip versus-analysis__btn" onClick={request} disabled={loading || !ready || referenceUnavailable}>
+                      {loading ? "AI가 분석하는 중… (10초 안팎)" : entry ? "다시 분석" : "AI로 분석하기"}
+                    </button>
+                    <span className="versus-analysis__model">{currentModel(settings).label}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       )}
-      {hasKey && (
-        <div className="versus-analysis__focus versus-analysis__focus--dir" role="radiogroup" aria-label={`${perspectiveName(perspective)} 분석 방향`}>
-          {focusList(perspective).map((f) => (
-            <button key={f.id} type="button" role="radio" aria-checked={!basic && focus === f.id} disabled={loading}
-              className={`chip ${!basic && focus === f.id ? "chip--active" : ""}`} onClick={() => pick(perspective, f.id)}>
-              {f.label}{cache.ready && cache.key === key && !cache.entries[slotId(perspective, f.id)] && <small className="versus-analysis__pending">{input.reference && REFERENCE_UNAVAILABLE.has(f.id) ? "자료 부족" : "분석 전"}</small>}
-            </button>
-          ))}
-        </div>
-      )}
-      {hasKey && !basic && options && (
-        <AiOptionsBox opts={opts} onChange={changeOpts} support={options} aName={input.aName} bName={input.bName} disabled={loading} />
-      )}
-      {hasKey && !basic && (
-        <div className="versus-analysis__actions">
-          <button type="button" className="chip versus-analysis__btn" onClick={request} disabled={loading || !cache.ready || cache.key !== key || referenceUnavailable}>
-            {loading ? "AI가 분석하는 중… (10초 안팎)" : entry ? "다시 분석" : "AI로 분석하기"}
-          </button>
-          <span className="versus-analysis__model">{currentModel(settings).label}</span>
-        </div>
-      )}
+      <div className="versus-analysis" ref={resultRef}>
+        <h4>
+          {showBasic ? "기본 분석" : `${focusLabel(focus)} · ${basisText(perspective)}`}{" "}
+          <small>{showAi ? `AI 분석 · ${optionsOn ? `${optionsSummary(opts)} · ` : ""}${input.reference ? `${input.reference.year} 기록 참고 · ` : ""}${modelLabel(entry.model)} · ${shortDate(entry.at)} 생성 · 참고용` : showBasic ? `${input.reference ? `${input.reference.year} 개인 기록 참고 · ` : ""}기록 기반 자동 분석 · 참고용` : referenceUnavailable ? "자료 부족" : ready ? "분석 전" : "저장 기록 확인 중…"}</small>
+        </h4>
+        {showAi && entry.edge && (
+          <p className="versus-analysis__edge">
+            <span><b>기록 기반 예상 우위</b> {edgeText(entry.edge.base)}</span>
+            {entry.edge.adjusted && <span><b>AI 판단</b> {edgeText(entry.edge.adjusted)}</span>}
+          </p>
+        )}
+        <ul>
+          {showAi
+            ? entry.lines.map((text, i) => <li key={i} className={i === 0 ? "is-head" : undefined}>{text}</li>)
+            : showBasic ? ruleLines.map((line) => (
+                <li key={line.id} className={line.cat === "overall" ? "is-head" : line.cat === "sample" ? "is-note" : undefined}>
+                  {line.text}
+                </li>
+              )) : <li className="is-note">{referenceUnavailable ? `전년도 개인 시즌 합계만으로 현재 엔트리의 ${focusLabel(focus)}을(를) 판단할 수 없어 분석을 요청하지 않습니다. 다른 항목을 선택해 주세요.` : loading ? "선택한 항목을 분석하고 있습니다." : `이 매치업의 「${focusLabel(focus)} · ${basisText(perspective)}」은(는) 분석 전입니다. 위의 「AI로 분석하기」를 누르면 AI 분석을 만들어 이 기기에 저장합니다.`}</li>}
+        </ul>
+        {notice && <p className="versus-analysis__notice" role="status">{notice}</p>}
+      </div>
       <AiStorageWarning />
-    </div>
+    </>
   );
 }
