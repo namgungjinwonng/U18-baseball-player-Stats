@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFAULT_OPTIONS, filterRecords, optionsKey, optionsSummary, sampleRows, scopePayload, type AiOptions } from "./options";
-import { conditionSplits, conditionsPayload, fetchForecast, fieldForVenue, resolveVenue, targetOf, timeBand, upcomingGames, type WeatherMap } from "./conditions";
+import { conditionSplits, conditionsPayload, fetchForecast, fieldForVenue, kstStamp, resolveVenue, targetOf, timeBand, upcomingGames, type WeatherMap } from "./conditions";
 import { filterFields, sigunguCounts } from "../fieldFilter";
 import type { Field } from "../types";
 import { buildPayload, buildUserPrompt } from "./prompt";
@@ -139,6 +139,10 @@ const full = conditionsPayload({
   venueKnown: true, venueNames: ["목동야구장"], history: { games: [...older, ...games], weather: { ...weather, "9": { t: 11, p: 3, w: 1 } }, label: "2025~2026 시즌 공식경기" },
 });
 assert.deepEqual(full.대상경기.날씨, { 기온: "12.0℃", 강수확률: "70%", 강수량: "0.0mm", 풍속: "2.0m/s", 판정: "10~20℃ · 비 예보" });
+// 수집해 둔 공식경기 예보면 언제 수집한 값인지 함께 넘긴다(한국 시간).
+assert.equal(kstStamp("2026-10-30T03:05:00.000Z"), "10.30 12:05");
+const stored = conditionsPayload({ target: targetOf(official, games, "강릉고", "원주고"), forecast, games, weather, aName: "강릉고", bName: "원주고", basis: "2026 시즌", venueKnown: true, forecastAt: "2026-10-30T03:05:00.000Z" });
+assert.equal((stored.대상경기.날씨 as Record<string, string>).예보기준, "10.30 12:05 수집");
 assert.deepEqual(teamOf(full, "강릉고").대상조건, {
   "후공(홈)": "1승 0패(1경기) · 평균 득점 4.0 실점 3.0", "오전(12시 전)": "1승 0패(1경기) · 평균 득점 5.0 실점 2.0",
   "구장(목동야구장)": "1승 1패(2경기) · 평균 득점 3.0 실점 4.0", "10~20℃": "1승 0패(1경기) · 평균 득점 4.0 실점 3.0", "비(1mm 이상)": "1승 0패(1경기) · 평균 득점 4.0 실점 3.0",

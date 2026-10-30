@@ -125,6 +125,12 @@ export function resolveVenue(o: AiOptions, target: Target, fields: Field[], venu
 
 // 대상 경기 시작 시각 예보(또는 최근 날씨) — Open-Meteo 예보는 과거 92일~앞으로 16일 범위만 준다. 범위 밖·실패면 null.
 export interface Forecast { t: number; p: number; pp: number | null; w: number }
+export type StoredForecastMap = Record<string, Forecast & { at: string }>; // game_idx → 수집한 예보(at = 값이 바뀐 시각)
+// 「10.30 12:00」 — 한국 시간
+export const kstStamp = (iso: string) => {
+  const d = new Date(Date.parse(iso) + 9 * 3600e3);
+  return Number.isFinite(d.getTime()) ? `${d.getUTCMonth() + 1}.${d.getUTCDate()} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}` : "";
+};
 // 같은 구장·날짜·시각 예보는 30분 동안 다시 쓴다 — 경기분석에 들어올 때 미리 받아 두면 AI 요청이 기다리지 않는다.
 // 요청은 호출한 쪽의 취소와 무관하게 끝까지 받고(다른 호출이 같은 결과를 기다릴 수 있음), 취소한 호출만 먼저 null 로 돌아간다.
 const FORECAST_TTL_MS = 30 * 60_000;
@@ -184,6 +190,7 @@ export interface ConditionHistory { games: ScheduleGame[]; weather: WeatherMap |
 export function conditionsPayload(args: {
   target: Target; forecast: Forecast | null; games: ScheduleGame[]; weather: WeatherMap | null;
   aName: string; bName: string; basis: string; venueKnown: boolean; venueNames?: string[]; history?: ConditionHistory;
+  forecastAt?: string; // 수집해 둔 공식경기 예보면 그 예보가 바뀐 시각
 }) {
   const { target: tg, aName, bName, forecast } = args;
   const names = args.venueNames ?? [];
@@ -204,7 +211,7 @@ export function conditionsPayload(args: {
       구장: tg.venue ?? "모름",
       선공: tg.first ?? "모름",
       후공: tg.second ?? "모름",
-      날씨: forecast ? { ...forecastText(forecast), 판정: `${tempBand(forecast.t)} · ${rainy(forecast) ? "비 예보" : "비 없음"}` } : (tg.venue && args.venueKnown && tg.date ? "예보 범위 밖이거나 받지 못함" : "구장·일시를 몰라 없음"),
+      날씨: forecast ? { ...forecastText(forecast), 판정: `${tempBand(forecast.t)} · ${rainy(forecast) ? "비 예보" : "비 없음"}`, ...(args.forecastAt ? { 예보기준: `${kstStamp(args.forecastAt)} 수집` } : {}) } : (tg.venue && args.venueKnown && tg.date ? "예보 범위 밖이거나 받지 못함" : "구장·일시를 몰라 없음"),
     },
     [aName]: team(aName),
     [bName]: team(bName),

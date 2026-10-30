@@ -5,7 +5,7 @@ import type {
   FieldsData, ScheduleData, ScheduleGame, StrengthData, TeamRosterEntry,
 } from "./types";
 import { useYear } from "./year";
-import type { VenueMap, WeatherMap } from "./ai/conditions";
+import type { StoredForecastMap, VenueMap, WeatherMap } from "./ai/conditions";
 import { withRecordlessPlayers, type PlayerSearchEntry } from "./playerSearch";
 
 const BASE = import.meta.env.BASE_URL; // '/' 또는 '/U18-baseball-player/'
@@ -65,6 +65,10 @@ async function getJSON<T>(rel: string): Promise<T> {
 // 경기분석 「경기 조건」 — AI 분석을 요청할 때만 읽는다. 파일이 없으면 날씨 없이 분석한다.
 export function loadGameWeather(year: number): Promise<WeatherMap> {
   return getJSON<WeatherMap>(`${year}/weather.json`).catch(() => ({}));
+}
+// 남은 공식경기 예보(수집기가 하루 여러 번 갱신 — data/{year}/forecast.json). 없으면 앱이 직접 받는다.
+export function loadGameForecast(year: number): Promise<StoredForecastMap> {
+  return getJSON<{ games: StoredForecastMap }>(`${year}/forecast.json`).then((f) => f.games ?? {}).catch(() => ({}));
 }
 export function loadVenues(): Promise<VenueMap> {
   return getJSON<VenueMap>("venues.json").catch(() => ({}));

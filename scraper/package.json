@@ -18,7 +18,7 @@
     "strength": "tsx src/strength.ts",
     "career-index": "tsx src/syncCareerIndex.ts",
     "fill-from-ref": "tsx src/fillFromReference.ts",
-    "test": "tsx src/accumulate.test.ts && tsx src/fetchGames.test.ts && tsx src/collectionYear.test.ts && tsx src/koreaBaseball.test.ts && tsx src/transfers.test.ts && tsx src/fieldsUtil.test.ts && tsx src/fieldsPro.test.ts",
+    "test": "tsx src/accumulate.test.ts && tsx src/fetchGames.test.ts && tsx src/collectionYear.test.ts && tsx src/koreaBaseball.test.ts && tsx src/transfers.test.ts && tsx src/fieldsUtil.test.ts && tsx src/fieldsPro.test.ts && tsx src/weather.test.ts",
     "validate-data": "tsx src/validateData.ts"
   },
   "dependencies": {
