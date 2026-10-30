@@ -446,7 +446,7 @@
       "sigungu": "강동구",
       "lat": 37.5524297,
       "lon": 127.1283812,
-      "addr": "서울특별시 강동구 올림픽로 594 (성내동)7층",
+      "addr": "서울특별시 강동구 올림픽로 594 (성내동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1702&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -460,7 +460,7 @@
       "sigungu": "나주시",
       "lat": 35.0226756,
       "lon": 126.791255,
-      "addr": "전라남도 나주시 상야4길 22 (빛가람동)2층",
+      "addr": "전라남도 나주시 상야4길 22 (빛가람동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1700&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -474,7 +474,7 @@
       "sigungu": "노원구",
       "lat": 37.6500978,
       "lon": 127.0709491,
-      "addr": "서울특별시 노원구 덕릉로 792 (상계동)3층",
+      "addr": "서울특별시 노원구 덕릉로 792 (상계동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1890&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -502,7 +502,7 @@
       "sigungu": "서초구",
       "lat": 37.4682442,
       "lon": 127.0260404,
-      "addr": "서울특별시 서초구 바우뫼로2길 51-7 (우면동)B1층",
+      "addr": "서울특별시 서초구 바우뫼로2길 51-7 (우면동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1759&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -516,7 +516,7 @@
       "sigungu": "노원구",
       "lat": 37.6427322,
       "lon": 127.0641733,
-      "addr": "서울특별시 노원구 동일로207길 23 (중계동) H호",
+      "addr": "서울특별시 노원구 동일로207길 23 (중계동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1826&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -544,7 +544,7 @@
       "sigungu": "수원시",
       "lat": 37.2762441,
       "lon": 127.0255592,
-      "addr": "경기도 수원시 팔달구 중부대로 177 (우만동)지하3층",
+      "addr": "경기도 수원시 팔달구 중부대로 177 (우만동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1901&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -600,7 +600,7 @@
       "sigungu": "창원시",
       "lat": 35.2157389,
       "lon": 128.5979034,
-      "addr": "경상남도 창원시 마산회원구 봉암공단6길 66 (봉암동)2층",
+      "addr": "경상남도 창원시 마산회원구 봉암공단6길 66 (봉암동)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1450&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -614,7 +614,7 @@
       "sigungu": "영등포구",
       "lat": 37.5282898,
       "lon": 126.8960894,
-      "addr": "서울특별시 영등포구 국회대로 654 (영등포동7가)2층",
+      "addr": "서울특별시 영등포구 국회대로 654 (영등포동7가)",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=1637&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물·사무실/주거지). 실외 훈련 구장 주소가 아니며 지도는 주소 검색 위치(추정). 사용자 승인 2026-10-30."
@@ -628,7 +628,7 @@
       "sigungu": "파주시",
       "lat": 37.930923,
       "lon": 126.866382,
-      "addr": "경기도 파주시 파평면 청송로446번길 37-55, 1층",
+      "addr": "경기도 파주시 파평면 청송로446번길 37-55",
       "approx": true,
       "source": "https://www.korea-baseball.com/info/team/team_schedule?club_idx=556&season=2026&kind_cd=31&sports_club=F",
       "note": "야구장 아님 — KBSA 팀 등록 주소(건물). 사용자 승인으로 추가. 공개 건물 주소 페이지의 위치를 대조했으며 실제 훈련 구장·출입구는 확인하지 않음."
