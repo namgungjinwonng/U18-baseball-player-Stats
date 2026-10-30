@@ -1,8 +1,8 @@
-// 대진·시즌·분석 방향별 결과를 기기 IndexedDB에 보관하고 생성일 기준 만료·기존 기록 이관·용량 경고를 관리한다.
+// 대진·시즌·관점·분석 방향별 결과를 기기 IndexedDB에 보관하고 생성일 기준 만료·기존 기록 이관·용량 경고를 관리한다.
 import type { AiErrorKind } from "./providers";
 import { geminiResetHourKst, hourText, loadSettings, retentionDays, type ProviderId } from "./config";
 import { cacheTransaction, dbRequest } from "./cacheDb";
-import type { AnswerEdge, FocusId } from "./prompt";
+import { FOCUS_IDS, type AnswerEdge, type FocusId, type Perspective } from "./prompt";
 
 export interface AiEntry {
   lines: string[];
@@ -10,20 +10,23 @@ export interface AiEntry {
   model: string;
   at: string; // 생성 시각 ISO
   focus?: FocusId; // 분석 방향 (없으면 종합)
+  perspective?: Perspective; // 관점 (없으면 양팀 비교 — 관점을 나누기 전에 저장한 분석)
   edge?: AnswerEdge; // 기록 기반 예상 우위(코드 계산)와 AI가 한 구간 안에서 조정한 비율
 }
 
 const LEGACY_KEY = "u18-ai-analysis-v1";
 export const AI_CACHE_CHANGED = "u18-ai-cache-changed";
-export const WARNING_COUNT = 1000;
+export const WARNING_COUNT = 3000; // 대진당 저장 칸이 관점 3개 × 방향(4·7·7) = 18칸으로 늘어 1,000에서 올렸다
 export const WARNING_BYTES = 20 * 1024 * 1024;
 const DAY_MS = 24 * 60 * 60 * 1000;
-const FOCUS_IDS: FocusId[] = ["overall", "batting", "pitching", "h2h"];
+const PERSPECTIVE_IDS: Perspective[] = ["both", "away", "home"];
 interface StoredEntry extends AiEntry { id: string; matchup: string; focus: FocusId }
-export type MatchupEntries = Partial<Record<FocusId, AiEntry>>;
+// 대진 안의 저장 칸 — 양팀 비교는 방향 이름 그대로(관점을 나누기 전 저장 ID와 같다), AWAY·HOME 기준은 「away:종합」처럼
+export const slotId = (perspective: Perspective = "both", focus: FocusId = "overall") => (perspective === "both" ? focus : `${perspective}:${focus}`);
+export type MatchupEntries = Partial<Record<string, AiEntry>>;
 export interface StorageStats { count: number; bytes: number; averageBytes: number; warning: boolean }
 
-// 분석은 A(우리팀) 관점이라 순서가 바뀌면 다른 분석이다 — 시즌과 맞대결 범위(통산/시즌)까지 포함한다.
+// A = AWAY(선공)·B = HOME(후공)이라 순서가 바뀌면 다른 분석이다 — 시즌과 맞대결 범위(통산/시즌)까지 포함한다.
 export const entryKey = (a: string, b: string, year: number, allYears?: boolean, reference?: string) =>
   `${year}|${allYears ? "all" : "season"}|${a}|${b}${reference ? `|reference:${reference}` : ""}`;
 
@@ -36,13 +39,15 @@ const validEntry = (v: unknown): v is AiEntry => {
   return Array.isArray(e.lines) && e.lines.length > 0 && e.lines.every((l) => typeof l === "string")
     && ["gemini-free", "gemini-paid", "claude", "openai"].includes(e.provider)
     && typeof e.model === "string" && Number.isFinite(Date.parse(e.at))
-    && (e.focus === undefined || FOCUS_IDS.includes(e.focus));
+    && (e.focus === undefined || FOCUS_IDS.includes(e.focus))
+    && (e.perspective === undefined || PERSPECTIVE_IDS.includes(e.perspective));
 };
 const stored = (key: string, entry: AiEntry): StoredEntry => {
   const focus = entry.focus ?? "overall";
-  return { ...entry, focus, matchup: key, id: `${key}|${focus}` };
+  return { ...entry, focus, matchup: key, id: `${key}|${slotId(entry.perspective, focus)}` };
 };
-const toEntry = ({ lines, provider, model, at, focus, edge }: StoredEntry): AiEntry => ({ lines, provider, model, at, focus, ...(edge ? { edge } : {}) });
+const toEntry = ({ lines, provider, model, at, focus, perspective, edge }: StoredEntry): AiEntry =>
+  ({ lines, provider, model, at, focus, ...(perspective && perspective !== "both" ? { perspective } : {}), ...(edge ? { edge } : {}) });
 export const entryBytes = (entry: AiEntry) => new TextEncoder().encode(JSON.stringify(entry)).byteLength;
 export const isExpired = (entry: AiEntry, days: number, now = Date.now()) =>
   !Number.isFinite(Date.parse(entry.at)) || (days > 0 && now - Date.parse(entry.at) >= days * DAY_MS);
@@ -100,10 +105,10 @@ async function activeEntries(now = Date.now()): Promise<StoredEntry[]> {
 
 export async function loadMatchupEntries(key: string, now = Date.now()): Promise<MatchupEntries> {
   const rows = await activeEntries(now);
-  return Object.fromEntries(rows.filter((e) => e.matchup === key).map((e) => [e.focus, toEntry(e)]));
+  return Object.fromEntries(rows.filter((e) => e.matchup === key).map((e) => [slotId(e.perspective, e.focus), toEntry(e)]));
 }
-export async function loadEntry(key: string, focus: FocusId = "overall", now = Date.now()): Promise<AiEntry | null> {
-  return (await loadMatchupEntries(key, now))[focus] ?? null;
+export async function loadEntry(key: string, focus: FocusId = "overall", now = Date.now(), perspective: Perspective = "both"): Promise<AiEntry | null> {
+  return (await loadMatchupEntries(key, now))[slotId(perspective, focus)] ?? null;
 }
 export async function saveEntry(key: string, entry: AiEntry): Promise<void> {
   if (!validEntry(entry)) throw new Error("저장할 분석 형식이 올바르지 않습니다.");

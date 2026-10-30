@@ -10,9 +10,9 @@ import { buildTeamDetailGrades } from "../teamDetailGrades";
 import type { Player, ScheduleGame } from "../types";
 import { teamTotals, topPlayers } from "../versus";
 import { currentModel, geminiResetHourKst, hourText, loadSettings, retentionDays, saveSettings, type AiSettings } from "./config";
-import { buildPayload, buildUserPrompt, parseAnswer, unknownNumbers, InvalidAnswer, MAX_LINES, SYSTEM_PROMPT, type AiExtra } from "./prompt";
+import { buildPayload, buildUserPrompt, focusList, parseAnswer, systemPrompt, unknownNumbers, InvalidAnswer, MAX_LINES, type AiExtra } from "./prompt";
 import { AiError, generate, geminiErrorKind, openaiErrorKind } from "./providers";
-import { acknowledgeStorageWarning, clearEntries, entryBytes, entryCount, entryKey, errorNotice, getStorageStats, isExpired, loadEntry, loadMatchupEntries, pendingStorageWarning, saveEntry, storageStats, storageWarningLevel, WARNING_BYTES, type AiEntry } from "./store";
+import { acknowledgeStorageWarning, clearEntries, entryBytes, entryCount, entryKey, errorNotice, getStorageStats, isExpired, loadEntry, loadMatchupEntries, pendingStorageWarning, saveEntry, storageStats, storageWarningLevel, WARNING_BYTES, WARNING_COUNT, type AiEntry } from "./store";
 import { loadApiKey, newMasterKey, saveApiKey, seal, unseal } from "./vault";
 
 // --- localStorage 대용 (node) ---
@@ -75,19 +75,19 @@ assert.equal(buildPayload(mkInput("개성고", "경기고")).맞대결, null, "�
 
 // 방향별 자료 — 타격·마운드는 선수 위주, 맞대결·흐름은 팀 지표·등급·선수 없이 흐름만(종합과 겹치지 않게)
 const extra5: AiExtra = { ...extra, players: { a: topPlayers(records, "강릉고", anyCtx, 5, true), b: topPlayers(records, "원주고", anyCtx, 5, true) } };
-const bat = buildPayload(input, extra5, "batting");
+const bat = buildPayload(input, extra5, "batting", "away");
 assert.deepEqual(Object.keys(bat).sort(), ["관점", "리그평균", "세부지표", "시즌", "주요선수", "팀지표", "학교"].sort());
 assert.ok(bat.주요선수!["강릉고"].타자.length > 3 && bat.주요선수!["강릉고"].타자.length <= 5, "타격: 타자 5명까지");
 assert.ok(bat.주요선수!["강릉고"].투수.length <= 2 && "출루율" in bat.주요선수!["강릉고"].타자[0]);
-const pit = buildPayload(input, extra5, "pitching");
+const pit = buildPayload(input, extra5, "pitching", "away");
 assert.ok(pit.주요선수!["원주고"].투수.length > 2 && pit.주요선수!["원주고"].투수.length <= 4, "마운드: 투수 4명까지");
 assert.match(String(pit.주요선수!["원주고"].투수[0]["K/9"]), /^\d+\.\d{2}$/, "투수 K/9를 미리 계산해 준다");
-const flow = buildPayload(input, extra5, "h2h");
+const flow = buildPayload(input, extra5, "h2h", "away");
 assert.ok(!("팀지표" in flow) && !("주요선수" in flow) && !("리그평균" in flow) && !("세부지표" in flow), "맞대결·흐름은 팀 지표·선수 제외");
 assert.ok("맞대결" in flow && "공통상대요약" in flow && "최근경기" in flow && "최근흐름" in flow);
 assert.deepEqual(flow.참고분석, ["강릉고는 최근 5경기 4승이다."], "맞대결·흐름은 흐름 분류 문장만");
-assert.ok(buildUserPrompt(bat, undefined, "batting").includes("우리팀 핵심 타자: '주요선수' 강릉고 타자") && buildUserPrompt(bat, undefined, "batting").includes("타자 이름"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("팀 지표·등급·선수 이야기는 쓰지 않는다"));
+assert.ok(buildUserPrompt(bat, undefined, "batting", "away").includes("우리팀 핵심 타자: '주요선수' 강릉고 타자") && buildUserPrompt(bat, undefined, "batting", "away").includes("타자 이름"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("팀 지표·등급·선수 이야기는 쓰지 않는다"));
 assert.ok(buildUserPrompt(payload).includes("맞대결·공통 상대·최근 흐름은 5번 항목에서 한 번만 짧게 쓴다"), "종합은 흐름 중복을 제한");
 assert.ok(buildUserPrompt(payload).includes("다른 항목에서는 다시 꺼내지 않는다"));
 
@@ -108,15 +108,31 @@ assert.equal(formOf([]), null);
 assert.equal(formOf(), null);
 assert.deepEqual(payload.최근흐름, flow.최근흐름, "종합과 흐름은 같은 최근 요약을 사용");
 
-const prompt = buildUserPrompt(payload, ["이전 줄 하나"]);
+const prompt = buildUserPrompt(payload, ["이전 줄 하나"], "overall", "away");
 assert.ok(prompt.includes("구성:\n1) 총평") &&prompt.includes("우리팀 공격: 강릉고 타선"), "종합 6항목 구성에 학교 이름");
 assert.ok(prompt.includes("이전 분석") && prompt.includes("이전 줄 하나"));
 assert.ok(!buildUserPrompt(payload).includes("이전 분석"));
-assert.ok(buildUserPrompt(payload, undefined, "pitching").includes("공략할 상대 투수: '주요선수' 원주고 투수"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("맞대결 경기들의 내용(어느 학교가 이겼는지 학교 이름으로"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("우리팀 최근 흐름: 강릉고의 '최근흐름' 최근 5경기 전적·득실·연속 기록이 뜻하는 것"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("상대팀 최근 흐름: 원주고의 '최근흐름' 최근 5경기"));
-assert.ok(!/\{[AB]\}/.test(buildUserPrompt(payload, undefined, "batting")), "자리표시 {A}{B}가 남지 않음");
+assert.ok(buildUserPrompt(payload, undefined, "pitching", "away").includes("공략할 상대 투수: '주요선수' 원주고 투수"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("맞대결 경기들의 내용(어느 학교가 이겼는지 학교 이름으로"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("우리팀 최근 흐름: 강릉고의 '최근흐름' 최근 5경기 전적·득실·연속 기록이 뜻하는 것"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h", "away").includes("상대팀 최근 흐름: 원주고의 '최근흐름' 최근 5경기"));
+// 관점 — 양팀 비교는 중립 해설(관점 없음), HOME 기준은 HOME 학교가 우리팀, AWAY·HOME 기준에만 방향 3개 추가
+assert.ok(!("관점" in payload), "양팀 비교는 관점 없이");
+assert.ok(buildUserPrompt(payload).includes("강릉고 공격 대 원주고 수비") && !buildUserPrompt(payload).includes("우리팀"), "양팀 비교 종합은 중립");
+assert.ok(!systemPrompt("both").includes("우리팀") && systemPrompt("home").includes("'우리팀 ○○'"));
+assert.deepEqual(buildPayload(input, extra, "overall", "home").관점, { 우리팀: "원주고", 상대팀: "강릉고" });
+assert.ok(buildUserPrompt(payload, undefined, "overall", "home").includes("총평: 우리팀 원주고 입장에서 본 상대팀 강릉고"), "HOME 기준은 원주고가 우리팀");
+assert.deepEqual(focusList("both").map((f) => f.id), ["overall", "batting", "pitching", "h2h"]);
+assert.deepEqual(focusList("away").map((f) => f.id), ["overall", "batting", "pitching", "h2h", "attack", "gameplan", "threats"]);
+assert.ok(buildUserPrompt(payload, undefined, "attack", "away").includes("상대 마운드 약점: 원주고 마운드"));
+assert.ok(buildUserPrompt(payload, undefined, "attack", "home").includes("상대 마운드 약점: 강릉고 마운드"));
+assert.ok(buildUserPrompt(payload, undefined, "gameplan", "away").includes("작전·타순·선발 예고·누가 던질지는 단정하지 않는다"));
+assert.ok(buildUserPrompt(payload, undefined, "threats", "home").includes("경계 타자 1: '주요선수' 강릉고 타자"));
+assert.ok(buildUserPrompt(payload, undefined, "attack").includes("총평: 두 팀의 성격 차이"), "양팀 비교에 없는 방향은 종합으로");
+const threats = buildPayload(input, extra5, "threats", "away");
+assert.ok(threats.주요선수!["원주고"].타자.length > 3 && !("맞대결" in threats), "경계 선수는 타자 5명까지·맞대결 제외");
+assert.ok("최근흐름" in buildPayload(input, extra5, "gameplan", "away"), "경기 운영은 득실 흐름 포함");
+for (const p of ["both", "away", "home"] as const) for (const f of focusList(p)) assert.ok(!/\{[AB]\}/.test(buildUserPrompt(payload, undefined, f.id, p)), `자리표시 {A}{B}가 남지 않음 ${p} ${f.id}`);
 assert.ok(prompt.length < 12000, `프롬프트 ${prompt.length}자`);
 
 // 3) 응답 검증 — 입력에 있는 숫자만, 목록 기호·항목 제목 제거, 6줄 제한, 3줄 미만이면 실패
@@ -144,8 +160,8 @@ assert.deepEqual(unknownNumbers("타율 .312, 0.312, 31.2%", [0.3124, 31.2]), []
 assert.deepEqual(unknownNumbers("득점 87점", [86]), ["87"], "큰 정수는 입력에 있어야 함");
 assert.deepEqual(unknownNumbers("최근 5경기 4승", []), [], "작은 정수(경기 수 등)는 허용");
 
-// 4) 저장 — 학교 순서 무관 키, 저장·읽기
-assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("원주고", "강릉고", 2026, true), "우리팀 관점이라 순서가 다르면 다른 분석");
+// 4) 저장 — AWAY·HOME 순서별 키, 관점·방향별 저장·읽기
+assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("원주고", "강릉고", 2026, true), "AWAY·HOME이 바뀌면 다른 분석");
 assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("강릉고", "원주고", 2026, false));
 const k = entryKey("강릉고", "원주고", 2026, true);
 const now = Date.now();
@@ -160,6 +176,12 @@ await saveEntry(k, { ...savedEntry, lines: ["갱신한 타격"], focus: "batting
 assert.deepEqual((await loadEntry(k, "batting"))?.lines, ["갱신한 타격"], "다시 분석은 해당 방향만 갱신");
 assert.deepEqual((await loadEntry(k))?.lines, savedEntry.lines, "종합은 유지");
 assert.equal(Object.keys(await loadMatchupEntries(k)).length, 4, "네 방향을 개별 저장");
+await saveEntry(k, { ...savedEntry, lines: ["AWAY 기준 종합"], perspective: "away" });
+await saveEntry(k, { ...savedEntry, lines: ["HOME 기준 공략"], focus: "attack", perspective: "home" });
+assert.deepEqual((await loadEntry(k, "overall", Date.now(), "away"))?.lines, ["AWAY 기준 종합"], "관점별로 따로 저장");
+assert.equal((await loadEntry(k, "overall", Date.now(), "away"))?.perspective, "away");
+assert.deepEqual((await loadEntry(k))?.lines, savedEntry.lines, "양팀 비교 종합(관점 나누기 전 저장 ID)은 그대로");
+assert.deepEqual(Object.keys(await loadMatchupEntries(k)).sort(), ["away:overall", "batting", "h2h", "home:attack", "overall", "pitching"].sort());
 const otherKey = entryKey("덕수고", "충암고", 2026, true);
 assert.equal(await loadEntry(otherKey, "batting"), null, "다른 대진은 분석 전");
 assert.equal(await loadEntry(entryKey("강릉고", "원주고", 2027, true)), null, "다른 시즌은 분리");
@@ -196,18 +218,19 @@ try {
 assert.deepEqual((await loadEntry(k, "batting"))?.lines, ["갱신한 타격"], "저장 실패는 기존 결과를 지우지 않음");
 assert.ok(await loadEntry(otherKey, "h2h"), "저장소 복구 후 기존 결과 이관 재시도");
 
-// 용량은 JSON UTF-8 바이트이며 1,000건 또는 20MB가 경고 기준이다. 개수 때문에 기록을 버리지 않는다.
+// 용량은 JSON UTF-8 바이트이며 3,000건 또는 20MB가 경고 기준이다. 개수 때문에 기록을 버리지 않는다.
 assert.ok(entryBytes(savedEntry) > JSON.stringify(savedEntry).length, "한국어 UTF-8 바이트 반영");
-assert.equal(storageStats(Array.from({ length: 999 }, () => savedEntry)).warning, false);
-assert.equal(storageStats(Array.from({ length: 1000 }, () => savedEntry)).warning, true);
+assert.equal(WARNING_COUNT, 3000);
+assert.equal(storageStats(Array.from({ length: WARNING_COUNT - 1 }, () => savedEntry)).warning, false);
+assert.equal(storageStats(Array.from({ length: WARNING_COUNT }, () => savedEntry)).warning, true);
 assert.equal(storageStats([{ ...savedEntry, lines: ["x".repeat(WARNING_BYTES)] }]).warning, true);
-assert.equal(storageWarningLevel({ count: 1000, bytes: 0, averageBytes: 0, warning: true }), 1);
+assert.equal(storageWarningLevel({ count: WARNING_COUNT, bytes: 0, averageBytes: 0, warning: true }), 1);
 assert.equal(storageWarningLevel({ count: 1, bytes: WARNING_BYTES, averageBytes: WARNING_BYTES, warning: true }), 2);
-assert.equal(storageWarningLevel({ count: 1000, bytes: WARNING_BYTES, averageBytes: 0, warning: true }) & ~1, 2, "건수 경고 확인 후에도 20MB 도달 시 새 경고");
+assert.equal(storageWarningLevel({ count: WARNING_COUNT, bytes: WARNING_BYTES, averageBytes: 0, warning: true }) & ~1, 2, "건수 경고 확인 후에도 20MB 도달 시 새 경고");
 await clearEntries();
-await Promise.all(Array.from({ length: 1001 }, (_, i) => saveEntry(`test-${i}`, savedEntry)));
-assert.equal(await entryCount(), 1001, "기존 200개 제한으로 삭제하지 않음");
-assert.equal((await pendingStorageWarning())?.count, 1001);
+await Promise.all(Array.from({ length: WARNING_COUNT + 1 }, (_, i) => saveEntry(`test-${i}`, savedEntry)));
+assert.equal(await entryCount(), WARNING_COUNT + 1, "기존 200개 제한으로 삭제하지 않음");
+assert.equal((await pendingStorageWarning())?.count, WARNING_COUNT + 1);
 await acknowledgeStorageWarning();
 assert.equal(await pendingStorageWarning(), null, "확인한 경고는 임계치 아래로 내려갈 때까지 반복하지 않음");
 const beforeClear = await getStorageStats();
@@ -250,7 +273,7 @@ assert.deepEqual(earlySeason.map((s) => [s.games, s.pa, s.innings, s.gradedSchoo
 assert.equal(earlySeason[0].recent, null);
 assert.equal(earlySeason[1].recent?.["최근 1경기"], "1승 0패");
 assert.equal(earlySeason[2].recent?.["최근 3경기"], "3승 0패");
-assert.match(SYSTEM_PROMPT, /경기 수가 5경기 미만인 학교는 표본이 적다는 점/);
+assert.match(systemPrompt(), /경기 수가 5경기 미만인 학교는 표본이 적다는 점/);
 const unevenCtx: QualifyContext = { scope: "season", config: seasonConfig(2027), teamGames: { 가상A고: 1, 가상B고: 10 } };
 assert.equal(regPA(unevenCtx, "가상A고"), 9, "다른 학교가 10경기를 치렀으면 1경기 학교도 하한 3경기 적용");
 console.log("2027 가상 시즌 초 시뮬레이션", JSON.stringify(earlySeason));

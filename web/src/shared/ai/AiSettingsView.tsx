@@ -156,7 +156,7 @@ export function AiSettingsView({ wrapClass }: { wrapClass: string }) {
           <p className="ai-settings__hint">각 분석의 생성일 기준입니다. 기간이 지나면 다음 확인 시 해당 기록만 정리하며, API 키는 삭제하지 않습니다. 다시 분석하면 그 항목의 내용과 보관 시작일이 갱신됩니다.</p>
           <p className="ai-settings__hint">매치업·시즌·분석 항목별로 이 기기의 브라우저에만 저장합니다. 기기 간 동기화나 운영자 서버 저장은 하지 않습니다.</p>
           <p className="ai-settings__storage" role="status">저장 {count.toLocaleString()}개 · 약 {storageSizeText(stats.bytes)} · 1개 평균 {storageSizeText(stats.averageBytes)}</p>
-          <p className="ai-settings__hint">1,000개 또는 20MB 이상이면 경고합니다. 용량은 분석 JSON의 UTF-8 크기이며 실제 브라우저 저장공간 사용량과 다를 수 있습니다. 용량 때문에 기록을 임의 삭제하지 않습니다.</p>
+          <p className="ai-settings__hint">3,000개 또는 20MB 이상이면 경고합니다. 용량은 분석 JSON의 UTF-8 크기이며 실제 브라우저 저장공간 사용량과 다를 수 있습니다. 용량 때문에 기록을 임의 삭제하지 않습니다.</p>
           {storageError && <p className="ai-settings__status is-error" role="status">{storageError}</p>}
         </section>
 

@@ -1,4 +1,4 @@
-// 경기분석 「분석 옵션」(B안) — 접힌 한 줄 요약, 펼치면 선수 범위(전학 간 선수·학년 제외)와 경기 조건(공식/연습경기·선공·시작·구장)
+// 경기분석 「분석 옵션」(B안) — 접힌 한 줄 요약, 펼치면 선수 범위(전학 간 선수·학년 제외)와 경기 조건(공식/연습경기·시작·구장, 선공은 AWAY)
 import { useMemo, useState } from "react";
 import { teamKey } from "../versus";
 import type { AiOptionSupport } from "./AiAnalysisPanel";
@@ -72,7 +72,7 @@ export function AiOptionsBox({ opts, onChange, support, aName, bName, disabled }
               {opts.gameKind === "official" ? (
                 support.upcoming.length ? (
                   <label className="ai-options__field">
-                    <span>대상 경기 · 일정의 원정 = 선공(초공), 홈 = 후공(말공)</span>
+                    <span>대상 경기 · 일정의 원정 = AWAY·선공(초공), 홈 = HOME·후공(말공)</span>
                     <select value={opts.gameIdx} onChange={(e) => set({ gameIdx: e.target.value })}>
                       {support.upcoming.map((g) => (
                         <option key={g.game_idx} value={g.game_idx}>
@@ -82,19 +82,11 @@ export function AiOptionsBox({ opts, onChange, support, aName, bName, disabled }
                     </select>
                   </label>
                 ) : (
-                  <p className="ai-options__hint">두 학교의 남은 공식경기가 일정에 없습니다. 연습경기로 선공·시작 시간을 넣어 주세요.</p>
+                  <p className="ai-options__hint">두 학교의 남은 공식경기가 일정에 없습니다. 연습경기로 시작 시간을 넣어 주세요.</p>
                 )
               ) : (
                 <>
-                  <span className="ai-options__label">선공(초공)</span>
-                  <div className="ai-options__seg" role="radiogroup" aria-label="선공 학교">
-                    {([["a", aName], ["b", bName], ["", "모름"]] as const).map(([v, label]) => (
-                      <button key={v || "none"} type="button" role="radio" aria-checked={opts.first === v}
-                        className={opts.first === v ? "is-on" : undefined} onClick={() => set({ first: v })}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
+                  <p className="ai-options__hint">AWAY {aName} 선공(초공) · HOME {bName} 후공(말공) — 바꾸려면 위의 ⇄</p>
                   <label className="ai-options__field">
                     <span>경기 시작</span>
                     <input type="datetime-local" value={opts.start} onChange={(e) => set({ start: e.target.value })} />

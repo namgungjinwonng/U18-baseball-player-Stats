@@ -13,8 +13,8 @@ import {
 } from "./versusSelect";
 import { useYear } from "./year";
 
-// A = 우리팀(분석 기준), B = 상대팀
-const SLOT_LABEL: Record<Slot, string> = { a: "우리팀", b: "상대팀" };
+// A = AWAY(원정·선공), B = HOME(홈·후공) — 공식경기 일정의 대진 순서와 같다
+const SLOT_LABEL: Record<Slot, string> = { a: "AWAY", b: "HOME" };
 
 // 상단 A·B 선택 칸 — 칸 선택 버튼과 지우기 버튼을 따로 둔다(중첩하지 않음).
 function SlotBox({ slot, draft, region, onActivate, onClear }: {
@@ -94,8 +94,8 @@ export function VersusTeamPicker({ wrapClass }: { wrapClass: string }) {
 
   const pick = (name: string) => {
     const { draft: next, blocked } = pickTeam(draft, name);
-    const other = draft.active === "a" ? "B" : "A";
-    setNotice(blocked ? `${name}은(는) 이미 ${other}학교로 선택했습니다. 다른 학교를 고르세요.` : "");
+    const other = SLOT_LABEL[draft.active === "a" ? "b" : "a"];
+    setNotice(blocked ? `${name}은(는) 이미 ${other} 학교로 선택했습니다. 다른 학교를 고르세요.` : "");
     setDraft(next);
   };
   const confirm = () => {
@@ -127,7 +127,7 @@ export function VersusTeamPicker({ wrapClass }: { wrapClass: string }) {
           <button
             type="button"
             className="icon-btn versus-bar__swap"
-            aria-label="우리팀과 상대팀 바꾸기"
+            aria-label="AWAY와 HOME 바꾸기"
             disabled={!draft.a && !draft.b}
             onClick={() => { setNotice(""); setDraft(swapDraft(draft)); }}
           >
@@ -138,7 +138,7 @@ export function VersusTeamPicker({ wrapClass }: { wrapClass: string }) {
             onClear={() => { setNotice(""); setDraft(clearSlot(draft, "b")); }} />
         </div>
         <p className="caption versus-picker__target" aria-live="polite">
-          선택 대상 <b>{L}학교</b>
+          선택 대상 <b>{L} 학교</b>
           {draft[draft.active] ? " · 다른 학교를 누르면 바뀝니다" : ""}
         </p>
         {(notice || (draft.a && draft.b && missing)) && (
@@ -183,7 +183,7 @@ export function VersusTeamPicker({ wrapClass }: { wrapClass: string }) {
                     type="button"
                     className={`sch-team-card team-summary-card versus-pick-card${tag ? ` is-picked is-picked-${tag}` : ""}`}
                     aria-pressed={!!tag}
-                    aria-label={`${t.name}${t.region ? ` ${t.region}` : ""}${tag ? `, ${SLOT_LABEL[tag]}학교로 선택됨` : `, ${L}학교로 선택`}`}
+                    aria-label={`${t.name}${t.region ? ` ${t.region}` : ""}${tag ? `, ${SLOT_LABEL[tag]} 학교로 선택됨` : `, ${L} 학교로 선택`}`}
                     onClick={() => pick(t.name)}
                   >
                     <div className="sch-team-card__head">

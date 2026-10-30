@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import type { ScheduleGame, TeamStrength } from "../types";
 import { teamKey } from "../versus";
 import { EDGE_BANDS, checkEdgeLines, edgeBand, edgeLabel, edgePayload, edgeProb, parseEdgeLabel, perspectiveLabel } from "./edge";
-import { buildPayload, buildUserPrompt, parseAnswer, SYSTEM_PROMPT } from "./prompt";
+import { buildPayload, buildUserPrompt, parseAnswer, systemPrompt } from "./prompt";
 
 const s = (bat: number, pit: number, g = 30): TeamStrength => ({ bat, pit, g });
 // 같은 전력이면 5:5, 대칭
@@ -57,7 +57,7 @@ for (const f of ["overall", "batting", "pitching", "h2h"] as const) assert.ok(bu
 const payload = buildPayload(input, extra, "overall");
 assert.equal(payload.예상우위!.결과, "강릉고 우위 7:3");
 assert.ok(buildUserPrompt(payload).includes("기록 기반 예상 우위는 강릉고 우위 7:3"));
-assert.ok(SYSTEM_PROMPT.includes("조정범위") && SYSTEM_PROMPT.includes("승리 확률(%)"));
+assert.ok(systemPrompt().includes("조정범위") && systemPrompt().includes("승리 확률(%)"));
 assert.ok(!buildUserPrompt(buildPayload(input, {}, "overall")).includes("예상우위 규칙"));
 const answer = JSON.stringify({ lines: [
   "기록 기반 예상 우위는 강릉고 우위 7:3이다. AI 판단은 강릉고 8:2로 본다.",
@@ -69,19 +69,26 @@ assert.equal(parsed.lines.length, 4);
 assert.ok(parsed.dropped.includes("원주고 우위 7:3이다."));
 assert.equal(parseAnswer(answer, buildPayload(input, {}, "overall")).edge, undefined, "예상우위가 없으면 비율 검사·표시 없음");
 
-// 우리팀(A) 관점 — 「우리팀」「상대팀」으로 쓴 비율도 어느 쪽 우위인지 정확히 본다.
-assert.equal(ab.우리팀기준, "우리팀 우위 8:2 이상");
-assert.equal(edgePayload(teams, "원주고", "강릉고")!.우리팀기준, "상대팀 우위 8:2 이상", "원주고가 우리팀이면 상대팀 우위");
-const alias = checkEdgeLines(["AI 판단은 우리팀 6:4로 본다.", "상대팀 우위 6:4로 본다."], "강릉고", "원주고", 2);
+// AWAY·HOME 기준 — 우리팀 쪽에서 읽은 비율을 붙이고, 「우리팀」「상대팀」으로 쓴 비율도 어느 쪽 우위인지 정확히 본다.
+assert.ok(!("우리팀기준" in ab), "양팀 비교용 예상우위는 중립");
+assert.equal(buildPayload(input, extra, "overall", "away").예상우위!.우리팀기준, "우리팀 우위 7:3");
+assert.equal(buildPayload(input, extra, "overall", "home").예상우위!.우리팀기준, "상대팀 우위 7:3", "HOME 원주고가 우리팀이면 상대팀 우위");
+assert.equal(buildPayload(input, extra, "overall").예상우위!.우리팀기준, undefined);
+const alias = checkEdgeLines(["AI 판단은 우리팀 6:4로 본다.", "상대팀 우위 6:4로 본다."], "강릉고", "원주고", 2, "a");
 assert.deepEqual(alias.kept, ["AI 판단은 우리팀 6:4로 본다."]);
 assert.equal(alias.adjusted, "강릉고 우위 6:4");
 assert.deepEqual(alias.dropped, ["상대팀 우위 6:4로 본다."], "기준(우리팀 7:3)에서 두 구간 넘게 벗어남");
+const homeAlias = checkEdgeLines(["상대팀 우위 6:4로 본다.", "우리팀 우위 6:4로 본다."], "강릉고", "원주고", 2, "b");
+assert.deepEqual(homeAlias.kept, ["상대팀 우위 6:4로 본다."], "HOME 기준에서 상대팀 = AWAY 강릉고");
+assert.equal(homeAlias.adjusted, "강릉고 우위 6:4");
+const homeParsed = parseAnswer(JSON.stringify({ lines: ["기록 기반 예상 우위는 강릉고 우위 7:3이다. AI 판단은 상대팀 6:4로 본다.", "원주고 마운드가 버텨야 한다.", "변수는 수비다."] }), buildPayload(input, extra, "overall", "home"));
+assert.deepEqual(homeParsed.edge, { base: "강릉고 우위 7:3", adjusted: "강릉고 우위 6:4" });
 assert.equal(perspectiveLabel("강릉고 우위 7:3", "강릉고", "원주고"), "우리팀 강릉고 우위 7:3");
 assert.equal(perspectiveLabel("원주고 우위 6:4", "강릉고", "원주고"), "상대팀 원주고 우위 6:4");
 assert.equal(perspectiveLabel("동등 5:5", "강릉고", "원주고"), "동등 5:5");
-const view = buildPayload(input, extra, "batting");
+const view = buildPayload(input, extra, "batting", "away");
 assert.deepEqual(view.관점, { 우리팀: "강릉고", 상대팀: "원주고" }, "모든 방향에 관점");
-assert.ok(SYSTEM_PROMPT.includes("우리팀") && buildUserPrompt(view, undefined, "batting").includes("경계할 상대 타자"));
+assert.ok(systemPrompt("away").includes("우리팀") && buildUserPrompt(view, undefined, "batting", "away").includes("경계할 상대 타자"));
 
 // 검증 수치 — 현재 자료(2024~2026 공식경기)로 다시 계산해 상수와 크게 다르면 실패한다(시즌 중 자료가 늘어도 견디도록 허용 폭을 둔다).
 const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../data");

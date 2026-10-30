@@ -94,9 +94,9 @@ export function targetOf(o: AiOptions, games: ScheduleGame[], aName: string, bNa
     return { kind: "공식경기", date: g.date, time: g.time, venue: g.venue, first: teamKey(g.away.name), second: teamKey(g.home.name) };
   }
   const [date, time] = o.start ? o.start.split("T") : [];
-  const first = o.first === "a" ? aName : o.first === "b" ? bName : undefined;
   const venue = o.venue ? fields?.find((f) => f.id === o.venue)?.name : undefined;
-  return { kind: "연습경기", date, time, venue, first, second: first ? (first === aName ? bName : aName) : undefined };
+  // 연습경기는 화면의 AWAY(A) 학교가 선공 — 바꾸려면 ⇄로 AWAY·HOME을 바꾼다.
+  return { kind: "연습경기", date, time, venue, first: aName, second: bName };
 }
 
 // 일정의 구장 이름 ↔ 야구장 현황 항목. 「SSG 랜더스 필드」=「인천SSG랜더스필드」처럼 띄어쓰기·지역 접두가 다른 표기를 잇는다.

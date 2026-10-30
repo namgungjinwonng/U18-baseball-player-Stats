@@ -404,7 +404,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       {referenceMode ? <PreviousSeasonAnalysisView year={year} a={a} b={b} />
         : records.loading ? <div className="state">불러오는 중…</div>
         : missing.length > 0 ? <p className="state muted">{missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 경기 분석을 할 수 없습니다.</p>
-        : analysis.length > 0 && analysisInput ? <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} options={aiOptions} />
+        : analysis.length > 0 && analysisInput ? <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} options={aiOptions} onSwap={() => update({ a: b, b: a })} />
         : <div className="state">분석을 준비하는 중…</div>}
     </section>
   );
@@ -536,16 +536,16 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       <p className="caption muted versus-page__description">상대전적부터 팀 전력 비교까지</p>
       <div className={`versus-bar ${compact ? "versus-bar--compact" : ""}`}>
         <div className="versus-bar__teams versus-bar__teams--result">
-          <b className="versus-bar__name" title={aName}><span className="versus-bar__letter">우리팀</span><span className="versus-bar__name-text">{aName}</span></b>
+          <b className="versus-bar__name" title={aName}><span className="versus-bar__letter">AWAY</span><span className="versus-bar__name-text">{aName}</span></b>
           <button
             type="button"
             className="icon-btn versus-bar__swap"
-            aria-label="우리팀과 상대팀 바꾸기"
+            aria-label="AWAY와 HOME 바꾸기"
             onClick={() => update({ a: b, b: a })}
           >
             ⇄
           </button>
-          <b className="versus-bar__name" title={bName}><span className="versus-bar__letter">상대팀</span><span className="versus-bar__name-text">{bName}</span></b>
+          <b className="versus-bar__name" title={bName}><span className="versus-bar__letter">HOME</span><span className="versus-bar__name-text">{bName}</span></b>
           {/* 현재 두 학교를 채운 선택 화면으로 — 취소하면 이 결과(탭·선수표 연도 등)로 돌아온다 */}
           <button
             type="button"

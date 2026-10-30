@@ -43,7 +43,6 @@ export function edgePayload(teams: Record<string, TeamStrength> | null | undefin
   const few = [[aName, a], [bName, b]].filter(([, s]) => (s as TeamStrength).g < EDGE_SAMPLE_GAMES).map(([n]) => n as string);
   return {
     결과: edgeLabel(signed, aName, bName),
-    우리팀기준: edgeLabel(signed, "우리팀", "상대팀"), // A = 우리팀
     조정범위: `${edgeLabel(range[0], aName, bName)} ~ ${edgeLabel(range[1], aName, bName)}`,
     근거: {
       [aName]: `강도지수 타격 ${a.bat.toFixed(2)} · 마운드 ${a.pit.toFixed(2)} (${a.g}경기)`,
@@ -55,16 +54,20 @@ export function edgePayload(teams: Record<string, TeamStrength> | null | undefin
   };
 }
 
-// 화면 표시 — 「강릉고 우위 7:3」 → 「우리팀 강릉고 우위 7:3」(A = 우리팀, B = 상대팀)
-export const perspectiveLabel = (label: string, aName: string, bName: string) =>
-  label.startsWith(`${aName} `) ? `우리팀 ${label}` : label.startsWith(`${bName} `) ? `상대팀 ${label}` : label;
+// 화면 표시(AWAY·HOME 기준 분석) — 「강릉고 우위 7:3」 → 「우리팀 강릉고 우위 7:3」
+export const perspectiveLabel = (label: string, ourName: string, oppName: string) =>
+  label.startsWith(`${ourName} `) ? `우리팀 ${label}` : label.startsWith(`${oppName} `) ? `상대팀 ${label}` : label;
 
 // AI 응답 검사 — 우위·동등·판단을 말하는 문장의 비율은 기준에서 한 구간 안이어야 한다. 벗어나면 그 문장을 버린다.
 // 맞대결 점수(예: 6:4 승리)는 우위 표현이 없는 문장이라 검사하지 않는다.
 const EDGE_WORDS = /우위|동등|판단/;
 // 합이 10인 「a:b」만 비율로 본다(5:3 같은 점수는 비율이 아님). 9:1·4:6처럼 정해진 표기가 아니면 버린다.
 const RATIO_RE = /(?<!\d)(\d):(\d)(?!\d)/g;
-export function checkEdgeLines(lines: string[], aName: string, bName: string, base: number) {
+// ours = AWAY·HOME 기준 분석에서 「우리팀」이 가리키는 쪽(a = A 학교, b = B 학교). 양팀 비교는 없음.
+export function checkEdgeLines(lines: string[], aName: string, bName: string, base: number, ours?: "a" | "b") {
+  const aAlias = ours === "a" ? "우리팀" : ours === "b" ? "상대팀" : null;
+  const bAlias = ours === "a" ? "상대팀" : ours === "b" ? "우리팀" : null;
+  const lastAt = (s: string, name: string, alias: string | null) => Math.max(s.lastIndexOf(name), alias ? s.lastIndexOf(alias) : -1);
   const kept: string[] = [], dropped: string[] = [];
   let adjusted: number | undefined;
   for (const line of lines) {
@@ -74,10 +77,10 @@ export function checkEdgeLines(lines: string[], aName: string, bName: string, ba
       if (+m[1] + +m[2] !== 10) continue;
       const i = RATIOS.indexOf(`${m[1]}:${m[2]}` as (typeof RATIOS)[number]);
       if (i < 0) { ok = false; break; }
-      // 비율 앞에서 가장 가까이 나온 학교(또는 「우리팀」=A·「상대팀」=B)가 우위 쪽. 없으면 기준과 같은 쪽으로 본다.
+      // 비율 앞에서 가장 가까이 나온 학교(또는 그 학교를 가리키는 「우리팀」·「상대팀」)가 우위 쪽. 없으면 기준과 같은 쪽으로 본다.
       const before = line.slice(0, m.index);
-      const atA = Math.max(before.lastIndexOf(aName), before.lastIndexOf("우리팀"));
-      const atB = Math.max(before.lastIndexOf(bName), before.lastIndexOf("상대팀"));
+      const atA = lastAt(before, aName, aAlias);
+      const atB = lastAt(before, bName, bAlias);
       const side = i === 0 ? 0 : atA < 0 && atB < 0 ? Math.sign(base) || 1 : atA > atB ? 1 : -1;
       const signed = side * i;
       if (Math.abs(signed - base) > 1) { ok = false; break; }

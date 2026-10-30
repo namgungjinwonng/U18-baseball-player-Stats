@@ -16,7 +16,7 @@ const opt = (p: Partial<AiOptions>): AiOptions => ({ ...DEFAULT_OPTIONS, ...p })
 // 저장 키·요약 — 기본값은 빈 키(옵션 이전 저장 분석 유지), 학년 순서와 상관없이 같은 키
 assert.equal(optionsKey(DEFAULT_OPTIONS), "");
 assert.equal(optionsKey(opt({ excludeGrades: ["3", "1"] })), optionsKey(opt({ excludeGrades: ["1", "3"] })));
-assert.notEqual(optionsKey(opt({ conditions: true, gameKind: "practice", first: "a" })), optionsKey(opt({ conditions: true, gameKind: "practice", first: "b" })));
+assert.notEqual(optionsKey(opt({ conditions: true, gameKind: "practice", start: "2026-11-02T09:00" })), optionsKey(opt({ conditions: true, gameKind: "practice", start: "2026-11-02T13:00" })));
 assert.equal(optionsSummary(DEFAULT_OPTIONS), "전체 선수 · 경기 조건 꺼짐");
 assert.equal(optionsSummary(opt({ excludeGrades: ["3"], excludeMovedOut: true, conditions: true })), "3학년·이적 제외 · 경기 조건 켜짐");
 
@@ -93,8 +93,10 @@ assert.equal(conditionSplits(games, "강릉고", null).날씨별, undefined, "�
 assert.deepEqual(upcomingGames(games, "강릉고", "원주고").map((g) => g.game_idx), ["4"]);
 assert.deepEqual(targetOf(opt({ conditions: true, gameIdx: "4" }), games, "강릉고", "원주고"),
   { kind: "공식경기", date: "2026-11-01", time: "10:00", venue: "목동야구장", first: "원주고", second: "강릉고" });
-assert.deepEqual(targetOf(opt({ conditions: true, gameKind: "practice", first: "a", start: "2026-11-02T09:00" }), games, "강릉고", "원주고"),
+// 연습경기는 AWAY(A) 학교가 선공
+assert.deepEqual(targetOf(opt({ conditions: true, gameKind: "practice", start: "2026-11-02T09:00" }), games, "강릉고", "원주고"),
   { kind: "연습경기", date: "2026-11-02", time: "09:00", venue: undefined, first: "강릉고", second: "원주고" });
+assert.equal(targetOf(opt({ conditions: true, gameKind: "practice" }), games, "원주고", "강릉고").first, "원주고");
 
 // 구장 — 연습경기는 야구장 현황 ID 로 고르고, 예보는 그 항목의 실제 좌표로 받는다.
 const fld = (id: string, name: string, kind: Field["kind"], sido: string, sigungu: string, lat: number, lon: number, approx?: boolean): Field => ({ id, name, kind, sido, sigungu, lat, lon, ...(approx ? { approx } : {}) });
@@ -125,7 +127,7 @@ assert.deepEqual(filterFields(fields, "", "", ""), [], "지역·검색어가 없
 assert.deepEqual(filterFields(fields, "강원", "", "").map((f) => f.id), ["kbsa:1", "osm:way/1"], "고등학교 먼저");
 assert.deepEqual(filterFields(fields, "", "", "랜더스").map((f) => f.id), ["pro:인천SSG랜더스필드"]);
 assert.deepEqual(sigunguCounts(fields, "강원"), [["강릉시", 2]]);
-const cond = conditionsPayload({ target: targetOf(opt({ conditions: true, gameKind: "practice" }), games, "강릉고", "원주고"), forecast: null, games, weather, aName: "강릉고", bName: "원주고", basis: "2026 시즌", venueKnown: false });
+const cond = conditionsPayload({ target: { kind: "연습경기" }, forecast: null, games, weather, aName: "강릉고", bName: "원주고", basis: "2026 시즌", venueKnown: false });
 assert.equal(cond.대상경기.선공, "모름");
 assert.equal(cond.대상경기.날씨, "구장·일시를 몰라 없음");
 const teamOf = (p: Record<string, unknown>, t: string) => p[t] as Record<string, unknown>;

@@ -3,7 +3,7 @@ import "fake-indexeddb/auto";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { buildPreviousSeasonAnalysis, needsPreviousSeasonReference } from "./previousSeasonAnalysis";
-import { buildPayload, buildUserPrompt, SYSTEM_PROMPT } from "./ai/prompt";
+import { buildPayload, buildUserPrompt, systemPrompt } from "./ai/prompt";
 import { entryKey, loadEntry, saveEntry, type AiEntry } from "./ai/store";
 import type { Player, ScheduleGame, TeamPlayerEntry, TeamRosterEntry } from "./types";
 
@@ -95,7 +95,7 @@ assert.ok(!needsPreviousSeasonReference("A고", "A고", 2027, [], []));
 // AI에는 확인된 개인 기록만 보낸다. 졸업생·전체 학교 지표·최근 흐름·참고 문구는 섞지 않는다.
 for (const focus of ["overall", "batting", "pitching"] as const) {
   const payload = buildPayload(result.input, { ...result.extra, notes: [{ cat: "overall", text: "졸업스타가 팀을 이끈다" }] }, focus);
-  assert.deepEqual(Object.keys(payload).sort(), ["시즌", "학교", "관점", "참고기준", "주요선수"].sort());
+  assert.deepEqual(Object.keys(payload).sort(), ["시즌", "학교", "참고기준", "주요선수"].sort());
   assert.equal(payload.참고기준!.개인기록연도, 2026);
   assert.equal(payload.참고기준!.분석대상연도, 2027);
   const raw = JSON.stringify(payload);
@@ -106,7 +106,7 @@ for (const focus of ["overall", "batting", "pitching"] as const) {
   assert.match(prompt, /확인된 선수가 적으면/);
   assert.ok(!prompt.includes("5항목 이상에"), "소수 인원으로 이름 수를 강제하지 않음");
 }
-assert.match(SYSTEM_PROMPT, /참고기준/);
+assert.match(systemPrompt(), /참고기준/);
 
 // 현재 시즌 정상 분석, 참고 분석, 다른 연도 및 갱신된 명단·기록은 서로 다른 저장 키를 쓴다.
 const ref = result.input.reference;

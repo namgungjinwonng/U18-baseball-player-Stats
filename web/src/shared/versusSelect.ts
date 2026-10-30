@@ -52,10 +52,10 @@ export const canConfirm = (d: Draft) => !!d.a && !!d.b && !sameTeam(d.a, d.b);
 
 // 「매치업 보기」 비활성 사유 안내.
 export function missingMessage(d: Draft): string {
-  if (!d.a && !d.b) return "우리팀과 상대팀을 선택해 주세요";
-  if (!d.a) return "우리팀을 선택해 주세요";
-  if (!d.b) return "상대팀을 선택해 주세요";
-  if (sameTeam(d.a, d.b)) return "우리팀과 상대팀이 같은 학교입니다. 한 칸을 다른 학교로 바꿔 주세요";
+  if (!d.a && !d.b) return "AWAY와 HOME 학교를 선택해 주세요";
+  if (!d.a) return "AWAY 학교를 선택해 주세요";
+  if (!d.b) return "HOME 학교를 선택해 주세요";
+  if (sameTeam(d.a, d.b)) return "AWAY와 HOME이 같은 학교입니다. 한 칸을 다른 학교로 바꿔 주세요";
   return "";
 }
 

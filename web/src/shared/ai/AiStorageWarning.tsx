@@ -1,4 +1,4 @@
-// 기기 내 분석 기록이 1,000건 또는 20MB에 도달하면 자동 삭제 없이 용량 경고 팝업을 표시한다.
+// 기기 내 분석 기록이 3,000건 또는 20MB에 도달하면 자동 삭제 없이 용량 경고 팝업을 표시한다.
 import { useEffect, useState } from "react";
 import { useModalHistory } from "../useModalHistory";
 import { AI_CACHE_CHANGED, acknowledgeStorageWarning, pendingStorageWarning, storageSizeText, type StorageStats } from "./store";
@@ -23,7 +23,7 @@ export function AiStorageWarning() {
       <div className="modal-card">
         <h3>이 기기에 저장된 분석이 많습니다</h3>
         <p>분석 {warning.count.toLocaleString()}개 · 약 {storageSizeText(warning.bytes)}를 보관하고 있습니다.</p>
-        <p>분석 1,000개 또는 20MB 이상이면 알려드립니다. 기록은 자동 삭제하지 않습니다. 매치업 AI분석 설정에서 보관 주기를 조정하거나 기록을 정리할 수 있습니다.</p>
+        <p>분석 3,000개 또는 20MB 이상이면 알려드립니다. 기록은 자동 삭제하지 않습니다. 매치업 AI분석 설정에서 보관 주기를 조정하거나 기록을 정리할 수 있습니다.</p>
         <button type="button" className="btn btn--primary btn--sm" onClick={close}>확인</button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-// AI 경기분석 「분석 옵션」 — 선수 범위(학년·전학 간 선수 제외)와 경기 조건 설정, 저장 키·요약 문구, 기록 필터·표본 계산
+// AI 경기분석 「분석 옵션」 — 선수 범위(학년·전학 간 선수 제외)와 경기 조건 설정(연습경기 선공은 AWAY 학교), 저장 키·요약 문구, 기록 필터·표본 계산
 import type { Player, TeamRosterEntry } from "../types";
 import { sameTeam, teamKey } from "../versus";
 
@@ -11,14 +11,13 @@ export interface AiOptions {
   conditions: boolean; // 경기 조건(선공/후공·시간대·구장·날씨) 반영
   gameKind: "official" | "practice";
   gameIdx: string; // 공식경기: 일정 game_idx ("" = 고르지 않음)
-  first: "a" | "b" | ""; // 연습경기 선공 학교 ("" = 모름)
   start: string; // 연습경기 시작 "YYYY-MM-DDTHH:mm" ("" = 모름)
   venue: string; // 연습경기 구장(야구장 현황 ID — kbsa:171·venue:목동야구장 등, "" = 모름 — 날씨 제외)
 }
 
 export const DEFAULT_OPTIONS: AiOptions = {
   excludeMovedOut: false, excludeGrades: [], conditions: false,
-  gameKind: "official", gameIdx: "", first: "", start: "", venue: "",
+  gameKind: "official", gameIdx: "", start: "", venue: "",
 };
 
 export const scopeActive = (o: AiOptions) => o.excludeMovedOut || o.excludeGrades.length > 0;
@@ -28,7 +27,7 @@ export function optionsKey(o: AiOptions): string {
   const parts: string[] = [];
   if (o.excludeMovedOut) parts.push("moved");
   if (o.excludeGrades.length) parts.push(`g${[...o.excludeGrades].sort().join("")}`);
-  if (o.conditions) parts.push(o.gameKind === "official" ? `c:o:${o.gameIdx}` : `c:p:${o.first}:${o.start}:${o.venue}`);
+  if (o.conditions) parts.push(o.gameKind === "official" ? `c:o:${o.gameIdx}` : `c:p:${o.start}:${o.venue}`);
   return parts.join("|");
 }
 
