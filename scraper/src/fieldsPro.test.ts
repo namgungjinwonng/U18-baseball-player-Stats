@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { PRO_STADIUMS, type Field } from "./fieldsUtil.js";
 import { PRO_STADIUM_DETAILS, resolveProStadium } from "./fieldsPro.js";
+import { unifyProvinceName } from "./fieldsAddressUtil.js";
 
 assert.deepEqual(PRO_STADIUM_DETAILS.map((s) => s.name), PRO_STADIUMS);
 const daegu = PRO_STADIUM_DETAILS.find((s) => s.sido === "대구")!;
@@ -30,12 +31,12 @@ if (process.argv.includes("--published")) {
   for (const s of PRO_STADIUM_DETAILS) {
     const matches = pros.filter((f) => f.name === s.name);
     assert.equal(matches.length, 1, `${s.name} 정확히 1항목`);
-    assert.equal(matches[0].addr, s.addr);
+    assert.equal(matches[0].addr, unifyProvinceName(s.addr), "KBO 원문 주소(옛 시·도 이름은 게시 때 전남광주통합특별시로)");
     assert.ok(matches[0].source?.startsWith("https://"));
   }
   assert.equal(new Set(fields.map((f) => f.id)).size, fields.length, "게시 ID 중복 없음");
   const yulgok = fields.find((f) => f.id === "extra:kbsa2026:556")!;
-  assert.equal(yulgok.addr, "경기도 파주시 파평면 청송로446번길 37-55, 1층");
+  assert.equal(yulgok.addr, "경기도 파주시 파평면 청송로446번길 37-55", "등록지는 층 정보 없이 도로명·건물번호까지");
   assert.match(yulgok.name, /팀 등록지·야구장 아님/);
   assert.match(yulgok.note!, /야구장 아님/);
   for (const f of fields.filter((f) => f.id.startsWith("extra:kbsa2026:"))) {

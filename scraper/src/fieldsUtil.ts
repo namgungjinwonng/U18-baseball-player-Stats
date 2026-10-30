@@ -1,4 +1,4 @@
-import { hasFieldAddressNumber, refineFieldAddress, stripResidentialUnit } from "./fieldsAddressUtil.js";
+import { hasFieldAddressNumber, refineFieldAddress, stripRegistrationDetail, stripResidentialUnit } from "./fieldsAddressUtil.js";
 
 // 전국 야구장 현황 수집용 순수 함수 — 팀명→학교 정식명, 주소 정리, 지오코딩 결과의 시·도/시·군·구, 시설 분류·이름 거르기·중복 판단
 export type FieldKind = "고등학교" | "중학교" | "대학교" | "일반부" | "공식경기 구장" | "프로야구장" | "야구장";
@@ -168,7 +168,8 @@ const cleanField = (f: Field): Field => {
   const out = { ...f, name, lat: Number(f.lat.toFixed(6)), lon: Number(f.lon.toFixed(6)), ...(unmarked !== f.name ? { approx: true } : {}) };
   // 주소는 원문(수집·보정 값)을 정제해 싣는다. 보정 파일에는 원문을 두고, 표기 정리는 병합할 때마다 같은 규칙으로 한다.
   // 동·호수는 어느 경로로 들어와도 공개 자료(주소·대조 키)에 남기지 않는다.
-  if (out.addr !== undefined) out.addr = refineFieldAddress({ ...out, addr: stripResidentialUnit(out.addr) });
+  // 팀 등록지는 층·호·건물 이름까지 빼고 도로명·건물번호·법정동만 싣는다.
+  if (out.addr !== undefined) out.addr = refineFieldAddress({ ...out, addr: /팀 등록지/.test(out.name) ? stripRegistrationDetail(out.addr) : stripResidentialUnit(out.addr) });
   if (out.addrKey !== undefined) out.addrKey = stripResidentialUnit(out.addrKey);
   validateField(out);
   return out;

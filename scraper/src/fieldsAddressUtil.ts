@@ -19,6 +19,19 @@ export function stripResidentialUnit(addr: string): string {
     .replace(/\s+/g, " ").trim();
 }
 
+// 팀 등록지(사무실·주거지)는 도로명·건물번호와 법정동까지만 싣는다 — 층·호·건물 이름 같은 사무실·주거 정보는 뺀다.
+// 예: 동일로207길 23, H호 (중계동) → 동일로207길 23 (중계동). 도로명 주소가 아니면 동·호수만 뺀다.
+export function stripRegistrationDetail(addr: string): string {
+  const m = addr.match(/^(.*?(?:로|길)\s*\d+(?:-\d+)?)(?![\d-]|번[가-힣]?길|로|길)[^(]*(?:\(([^)]*)\))?/);
+  if (!m) return stripResidentialUnit(addr);
+  const dong = (m[2] ?? "").split(",").map((s) => s.trim()).filter((s) => /^[가-힣0-9]+(?:동|가|리|읍|면)$/.test(s));
+  return `${m[1].trim()}${dong.length ? ` (${dong.join(", ")})` : ""}`;
+}
+
+// 2026-07-01 전남광주통합특별시 출범 — 옛 광주광역시·전라남도 주소는 맨 앞 시·도 이름만 바뀌었다(시·군·구·도로명·번지는 그대로).
+// 지역 판단은 옛 이름으로 하고, 싣는 주소의 맨 앞만 새 이름으로 통일한다.
+export const unifyProvinceName = (addr: string) => addr.replace(/^(?:광주광역시|전라남도)(?=\s)/, "전남광주통합특별시");
+
 export function completeFieldAddress(f: Pick<Field, "sido" | "sigungu">, raw: string): string | null {
   let tail = raw.replace(/\s+/g, " ").trim();
   if (!hasFieldAddressNumber(tail) || !PROVINCES[f.sido]) return null;
@@ -218,7 +231,7 @@ export function refineFieldAddress(f: Pick<Field, "name" | "sido" | "sigungu" | 
   // 한국식 원문은 시·도나 시·군·구로 시작한다. 지도 역주소는 도로·시설 이름으로 시작해 큰 단위로 끝난다.
   const firstLevel = LEVEL(text.split(/[\s,]/)[0], f);
   const korean = firstLevel === 0 || (firstLevel === 1 || firstLevel === 2) && !text.includes(",");
-  return (korean ? refineKoreanOrder(f, text) : refineReversed(f, text)).replace(/\s+/g, " ").replace(/\s\)/g, ")").trim();
+  return unifyProvinceName((korean ? refineKoreanOrder(f, text) : refineReversed(f, text)).replace(/\s+/g, " ").replace(/\s\)/g, ")").trim());
 }
 
 // ── 주소 후속 확인 표시 ─────────────────────────────────────────────────────

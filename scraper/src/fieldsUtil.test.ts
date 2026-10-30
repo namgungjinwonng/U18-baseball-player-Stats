@@ -1,6 +1,6 @@
 // 전국 야구장 현황 수집 순수 함수(팀명→학교명, 주소 후보, 시·도/시·군·구, 이름 거르기, 공원 추정)를 검증한다.
 import assert from "node:assert/strict";
-import { completeFieldAddress, hasFieldAddressNumber, osmTagFieldAddress, refineFieldAddress, stripResidentialUnit } from "./fieldsAddressUtil.js";
+import { completeFieldAddress, hasFieldAddressNumber, osmTagFieldAddress, refineFieldAddress, stripRegistrationDetail, stripResidentialUnit, unifyProvinceName } from "./fieldsAddressUtil.js";
 import { addressCandidates, cleanFieldName, dedupeSameNameFields, distance, fullNomAddress, matchesStreetOrLot, isFieldName, isOutdoorBaseballTags, isProName, isSchoolResult, isOfficeAddress, mergeFieldData, parkOf, regionOf, schoolName, shortSido, teamInfoFromHtml, validateField, type Field } from "./fieldsUtil.js";
 
 assert.equal(schoolName("강원 경포중"), "경포중학교");
@@ -167,7 +167,7 @@ const cases: [string, string, string, string, string][] = [
   ["서울", "성북구", "경동고등학교", "서울특별시 성북구 보문로29길 49 (서울특별시 성북구 삼선동3가 43-1)", "서울특별시 성북구 보문로29길 49 (삼선동3가 43-1)"],
   ["광주", "남구", "광주동성고등학교", "전남광주통합특별시 남구 서문대로627번길 20 (전남광주통합특별시 남구 진월동 406)", "전남광주통합특별시 남구 서문대로627번길 20 (진월동 406)"],
   // 붙여 쓴 지번 띄우기, 다른 학교 이름은 참고항목으로
-  ["광주", "남구", "동성중학교", "광주 남구 진월동406번지 광주동성중학교", "광주광역시 남구 진월동 406번지"],
+  ["광주", "남구", "동성중학교", "광주 남구 진월동406번지 광주동성중학교", "전남광주통합특별시 남구 진월동 406번지"],
   ["전북", "전주시", "전북 전주시전라BC", "전북 전주시 덕진구 덕진동1가1200번지 전라중학교", "전북특별자치도 전주시 덕진구 덕진동1가 1200번지 (전라중학교)"],
   ["강원", "춘천시", "강원고등학교", "강원 춘천시 동면 장학리산36번지", "강원특별자치도 춘천시 동면 장학리 산36번지"],
   // 상세주소(층·호)는 쉼표 뒤, 참고항목은 괄호
@@ -232,4 +232,20 @@ const unitField = mergeFieldData([{ id: "kbsa:9", name: "예시BC (팀 등록지
   addr: "경기도 안양시 동안구 예시로 10 (예시동, 예시아파트)101동 1001호", addrKey: "|경기도 안양시 동안구 예시로 10 (예시동, 예시아파트)101동 1001호", approx: true }], {}, { fetchedAt: "", fields: [], sources: [] }).fields[0];
 assert.ok(!/호/.test(unitField.addr ?? "") && !/호/.test(unitField.addrKey ?? ""), "병합하면 주소·대조 키 모두 동·호수가 빠진다");
 assert.equal(unitField.addrKey, "|경기도 안양시 동안구 예시로 10 (예시동)", "수집기 대조 키와 같은 규칙");
+// 팀 등록지 — 층·호·건물 이름(사무실·주거 정보)을 빼고 도로명·건물번호·법정동만(예시는 가상 주소)
+assert.equal(stripRegistrationDetail("서울특별시 노원구 예시로207길 23, H호 (예시동)"), "서울특별시 노원구 예시로207길 23 (예시동)");
+assert.equal(stripRegistrationDetail("서울특별시 서초구 예시로2길 51-7, B1층 (예시동)"), "서울특별시 서초구 예시로2길 51-7 (예시동)");
+assert.equal(stripRegistrationDetail("경기도 수원시 팔달구 예시대로 177, 지하3층 (예시동)"), "경기도 수원시 팔달구 예시대로 177 (예시동)");
+assert.equal(stripRegistrationDetail("경기도 파주시 파평면 예시로446번길 37-55, 1층"), "경기도 파주시 파평면 예시로446번길 37-55", "번길 안의 숫자는 건물번호가 아님");
+assert.equal(stripRegistrationDetail("서울특별시 성북구 예시로 63 (예시동, 예시빌)"), "서울특별시 성북구 예시로 63 (예시동)");
+assert.equal(stripRegistrationDetail("경기도 파주시 법원읍 법원1리 378"), "경기도 파주시 법원읍 법원1리 378", "도로명 주소가 아니면 그대로");
+const regMerged = mergeFieldData([{ id: "kbsa:8", name: "예시BC (팀 등록지·야구장 아님)", kind: "고등학교", sido: "서울", sigungu: "노원구", lat: 37.65, lon: 127.06,
+  addr: "서울특별시 노원구 예시로 792, 3층 (예시동)", approx: true }], {}, { fetchedAt: "", fields: [], sources: [] }).fields[0];
+assert.equal(regMerged.addr, "서울특별시 노원구 예시로 792 (예시동)", "병합할 때 등록지 규칙 적용");
+// 전남광주통합특별시(2026-07-01 출범) — 맨 앞 시·도 이름만 통일
+assert.equal(unifyProvinceName("광주광역시 남구 예시로 1"), "전남광주통합특별시 남구 예시로 1");
+assert.equal(unifyProvinceName("전라남도 나주시 예시로 2"), "전남광주통합특별시 나주시 예시로 2");
+assert.equal(unifyProvinceName("경기도 광주시 예시로 3"), "경기도 광주시 예시로 3", "경기 광주시는 그대로");
+assert.equal(refine("전남", "나주시", "x", "전남광주통합특별시 나주시 예시로 2"), "전남광주통합특별시 나주시 예시로 2", "이미 새 이름이면 그대로(멱등)");
+assert.equal(refine("광주", "광산구", "x", "광주광역시 광산구 예시로 5"), "전남광주통합특별시 광산구 예시로 5");
 console.log("야구장 주소 표기 정제·멱등성·번지 비생성 검증 통과");
