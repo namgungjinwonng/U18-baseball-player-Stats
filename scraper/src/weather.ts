@@ -1,7 +1,7 @@
 // 완료 경기의 시작 시각 날씨(기온·강수·풍속·습도)를 Open-Meteo 과거 날씨로 받아 data/{year}/weather.json 에 쌓고,
 // 남은 공식경기(16일 안)의 시작 시각 예보를 data/{year}/forecast.json 에 갱신하는 수집기
 // 실행: npm run weather (수집 연도 — 예보 포함) · YEARS=2024,2025 npm run weather (지난 시즌 보정 — 예보 없음)
-// 구장 위치는 data/venues.json(시·군 단위 좌표). 날씨는 약 10km 격자 값이라 구장 정확한 지점이 아니다.
+// 구장 위치는 야구장 현황(data/fields.json)의 같은 구장 좌표를 먼저, 없으면 data/venues.json(시·군 단위 좌표). 날씨는 약 10km 격자 값이다.
 // 과거 날씨 API는 며칠 늦게 채워지므로 값이 없는 경기는 건너뛰고 다음 실행에서 다시 요청한다.
 import fs from "node:fs";
 import path from "node:path";
@@ -41,7 +41,7 @@ async function fetchJsonHourly(base: string, q: URLSearchParams): Promise<Hourly
 }
 
 // 한 구장의 기간 시간별 날씨 → "YYYY-MM-DDTHH" → 날씨
-async function fetchHourly(v: Venue, start: string, end: string): Promise<Map<string, GameWeather>> {
+async function fetchHourly(v: { lat: number; lon: number }, start: string, end: string): Promise<Map<string, GameWeather>> {
   const j = await fetchJsonHourly(ARCHIVE, new URLSearchParams({
     latitude: String(v.lat), longitude: String(v.lon), start_date: start, end_date: end,
     hourly: "temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m",
@@ -61,19 +61,22 @@ export async function collectWeather(dataDir: string, year: number) {
   if (!fs.existsSync(schedFp)) return console.warn(`⚠ ${year} 일정이 없어 날씨 수집을 건너뜁니다.`);
   const games = (JSON.parse(fs.readFileSync(schedFp, "utf8")) as { games: Game[] }).games;
   const venues = JSON.parse(fs.readFileSync(path.join(dataDir, "venues.json"), "utf8")) as Record<string, Venue>;
+  const fields = readFields(dataDir);
   const fp = path.join(dataDir, String(year), "weather.json");
   const saved: Record<string, GameWeather> = fs.existsSync(fp) ? JSON.parse(fs.readFileSync(fp, "utf8")) : {};
 
-  const need = games.filter((g) => g.status === "완료" && !saved[g.game_idx] && venues[g.venue]);
-  const unknown = [...new Set(games.filter((g) => !venues[g.venue]).map((g) => g.venue))];
-  if (unknown.length) console.warn(`  좌표 없는 구장(날씨 제외 — data/venues.json 에 추가 필요): ${unknown.join(", ")}`);
+  // 구장표에 없는 새 구장도 야구장 현황에 있으면 그 좌표로 받는다(이미 받은 경기는 다시 받지 않는다).
+  const pointOf = new Map(games.map((g) => [g.venue, venuePoint(g.venue, venues, fields)]));
+  const need = games.filter((g) => g.status === "완료" && !saved[g.game_idx] && pointOf.get(g.venue));
+  const unknown = [...pointOf].filter(([, p]) => !p).map(([v]) => v);
+  if (unknown.length) console.warn(`  좌표 없는 구장(날씨 제외 — 야구장 현황·data/venues.json 어디에도 없음): ${unknown.join(", ")}`);
   const byVenue = new Map<string, Game[]>();
   for (const g of need) byVenue.set(g.venue, [...(byVenue.get(g.venue) ?? []), g]);
 
   let added = 0, pending = 0;
   for (const [venue, list] of byVenue) {
     const dates = list.map((g) => g.date).sort();
-    const hourly = await fetchHourly(venues[venue], dates[0], dates[dates.length - 1]);
+    const hourly = await fetchHourly(pointOf.get(venue)!, dates[0], dates[dates.length - 1]);
     for (const g of list) {
       const w = hourly.get(`${g.date}T${String(startHour(g.time)).padStart(2, "0")}`);
       if (w) { saved[g.game_idx] = w; added++; } else pending++;
@@ -94,6 +97,10 @@ export const inForecastRange = (g: Game, today: string) => upcoming(g, today) &&
 
 // 구장 좌표 — 앱(web/src/shared/ai/conditions.ts fieldForVenue)과 같은 규칙: 야구장 현황 항목을 먼저, 없으면 구장표의 시·군 좌표.
 interface FieldLite { id: string; name: string; kind: string; lat: number; lon: number }
+function readFields(dataDir: string): FieldLite[] {
+  const fp = path.join(dataDir, "fields.json");
+  return fs.existsSync(fp) ? (JSON.parse(fs.readFileSync(fp, "utf8")) as { fields: FieldLite[] }).fields : [];
+}
 const venueKey = (s: string) => s.replace(/\s/g, "").replace(/\(.*?\)/g, "");
 const VENUE_KINDS = new Set(["공식경기 구장", "프로야구장", "야구장"]);
 export function venuePoint(name: string, venues: Record<string, Venue>, fields: FieldLite[]): { lat: number; lon: number } | null {
@@ -128,8 +135,7 @@ export async function collectForecast(dataDir: string, year: number, now = Date.
   if (!fs.existsSync(schedFp)) return;
   const games = (JSON.parse(fs.readFileSync(schedFp, "utf8")) as { games: Game[] }).games;
   const venues = JSON.parse(fs.readFileSync(path.join(dataDir, "venues.json"), "utf8")) as Record<string, Venue>;
-  const fieldsFp = path.join(dataDir, "fields.json");
-  const fields = fs.existsSync(fieldsFp) ? (JSON.parse(fs.readFileSync(fieldsFp, "utf8")) as { fields: FieldLite[] }).fields : [];
+  const fields = readFields(dataDir);
   const fp = path.join(dataDir, String(year), "forecast.json");
   const prev: Record<string, GameForecast> = fs.existsSync(fp) ? (JSON.parse(fs.readFileSync(fp, "utf8")) as { games: Record<string, GameForecast> }).games : {};
   const today = kstToday(now);
