@@ -536,16 +536,16 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       <p className="caption muted versus-page__description">상대전적부터 팀 전력 비교까지</p>
       <div className={`versus-bar ${compact ? "versus-bar--compact" : ""}`}>
         <div className="versus-bar__teams versus-bar__teams--result">
-          <b className="versus-bar__name" title={aName}><span className="versus-bar__letter" aria-hidden="true">A</span><span className="versus-bar__name-text">{aName}</span></b>
+          <b className="versus-bar__name" title={aName}><span className="versus-bar__letter">우리팀</span><span className="versus-bar__name-text">{aName}</span></b>
           <button
             type="button"
             className="icon-btn versus-bar__swap"
-            aria-label="A학교와 B학교 바꾸기"
+            aria-label="우리팀과 상대팀 바꾸기"
             onClick={() => update({ a: b, b: a })}
           >
             ⇄
           </button>
-          <b className="versus-bar__name" title={bName}><span className="versus-bar__letter" aria-hidden="true">B</span><span className="versus-bar__name-text">{bName}</span></b>
+          <b className="versus-bar__name" title={bName}><span className="versus-bar__letter">상대팀</span><span className="versus-bar__name-text">{bName}</span></b>
           {/* 현재 두 학교를 채운 선택 화면으로 — 취소하면 이 결과(탭·선수표 연도 등)로 돌아온다 */}
           <button
             type="button"

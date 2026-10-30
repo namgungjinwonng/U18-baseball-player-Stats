@@ -13,7 +13,8 @@ import {
 } from "./versusSelect";
 import { useYear } from "./year";
 
-const SLOT_LABEL: Record<Slot, string> = { a: "A", b: "B" };
+// A = 우리팀(분석 기준), B = 상대팀
+const SLOT_LABEL: Record<Slot, string> = { a: "우리팀", b: "상대팀" };
 
 // 상단 A·B 선택 칸 — 칸 선택 버튼과 지우기 버튼을 따로 둔다(중첩하지 않음).
 function SlotBox({ slot, draft, region, onActivate, onClear }: {
@@ -32,17 +33,17 @@ function SlotBox({ slot, draft, region, onActivate, onClear }: {
         type="button"
         className="versus-slot__main"
         aria-pressed={active}
-        aria-label={`${L}학교 ${name ? `${name}${region ? ` (${region})` : ""}` : "선택 안 됨"}${active ? ", 지금 고르는 칸" : ""}`}
+        aria-label={`${L} ${name ? `${name}${region ? ` (${region})` : ""}` : "선택 안 됨"}${active ? ", 지금 고르는 칸" : ""}`}
         onClick={onActivate}
       >
         <span className="versus-slot__letter" aria-hidden="true">{L}</span>
         <span className="versus-slot__text" aria-hidden="true">
-          <b>{name || `${L}학교 선택`}</b>
+          <b>{name || `${L} 선택`}</b>
           <small>{name ? region || "지역 정보 없음" : active ? "아래에서 학교를 누르세요" : "눌러서 선택"}</small>
         </span>
       </button>
       {name && (
-        <button type="button" className="versus-slot__clear" aria-label={`${L}학교 ${name} 선택 지우기`} onClick={onClear}>
+        <button type="button" className="versus-slot__clear" aria-label={`${L} ${name} 선택 지우기`} onClick={onClear}>
           ×
         </button>
       )}
@@ -126,7 +127,7 @@ export function VersusTeamPicker({ wrapClass }: { wrapClass: string }) {
           <button
             type="button"
             className="icon-btn versus-bar__swap"
-            aria-label="A학교와 B학교 바꾸기"
+            aria-label="우리팀과 상대팀 바꾸기"
             disabled={!draft.a && !draft.b}
             onClick={() => { setNotice(""); setDraft(swapDraft(draft)); }}
           >

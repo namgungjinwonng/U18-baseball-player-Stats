@@ -1659,12 +1659,16 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 22px;
+  /* 「우리팀」「상대팀」 배지 — 글자 길이에 맞춘 알약 모양 */
+  min-width: 22px;
   height: 22px;
+  padding: 0 7px;
+  box-sizing: border-box;
   border: 1.5px solid var(--color-ink);
-  border-radius: 50%;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
+  white-space: nowrap;
 }
 .versus-bar__change { white-space: nowrap; }
 /* 좁은 화면: 학교명 폭을 확보하려고 「학교 변경」을 다음 줄로 */

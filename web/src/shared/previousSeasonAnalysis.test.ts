@@ -95,7 +95,7 @@ assert.ok(!needsPreviousSeasonReference("A고", "A고", 2027, [], []));
 // AI에는 확인된 개인 기록만 보낸다. 졸업생·전체 학교 지표·최근 흐름·참고 문구는 섞지 않는다.
 for (const focus of ["overall", "batting", "pitching"] as const) {
   const payload = buildPayload(result.input, { ...result.extra, notes: [{ cat: "overall", text: "졸업스타가 팀을 이끈다" }] }, focus);
-  assert.deepEqual(Object.keys(payload).sort(), ["시즌", "학교", "참고기준", "주요선수"].sort());
+  assert.deepEqual(Object.keys(payload).sort(), ["시즌", "학교", "관점", "참고기준", "주요선수"].sort());
   assert.equal(payload.참고기준!.개인기록연도, 2026);
   assert.equal(payload.참고기준!.분석대상연도, 2027);
   const raw = JSON.stringify(payload);

@@ -76,7 +76,7 @@ assert.equal(buildPayload(mkInput("개성고", "경기고")).맞대결, null, "�
 // 방향별 자료 — 타격·마운드는 선수 위주, 맞대결·흐름은 팀 지표·등급·선수 없이 흐름만(종합과 겹치지 않게)
 const extra5: AiExtra = { ...extra, players: { a: topPlayers(records, "강릉고", anyCtx, 5, true), b: topPlayers(records, "원주고", anyCtx, 5, true) } };
 const bat = buildPayload(input, extra5, "batting");
-assert.deepEqual(Object.keys(bat).sort(), ["리그평균", "세부지표", "시즌", "주요선수", "팀지표", "학교"].sort());
+assert.deepEqual(Object.keys(bat).sort(), ["관점", "리그평균", "세부지표", "시즌", "주요선수", "팀지표", "학교"].sort());
 assert.ok(bat.주요선수!["강릉고"].타자.length > 3 && bat.주요선수!["강릉고"].타자.length <= 5, "타격: 타자 5명까지");
 assert.ok(bat.주요선수!["강릉고"].투수.length <= 2 && "출루율" in bat.주요선수!["강릉고"].타자[0]);
 const pit = buildPayload(input, extra5, "pitching");
@@ -86,7 +86,7 @@ const flow = buildPayload(input, extra5, "h2h");
 assert.ok(!("팀지표" in flow) && !("주요선수" in flow) && !("리그평균" in flow) && !("세부지표" in flow), "맞대결·흐름은 팀 지표·선수 제외");
 assert.ok("맞대결" in flow && "공통상대요약" in flow && "최근경기" in flow && "최근흐름" in flow);
 assert.deepEqual(flow.참고분석, ["강릉고는 최근 5경기 4승이다."], "맞대결·흐름은 흐름 분류 문장만");
-assert.ok(buildUserPrompt(bat, undefined, "batting").includes("강릉고 핵심 타자") && buildUserPrompt(bat, undefined, "batting").includes("타자 이름"));
+assert.ok(buildUserPrompt(bat, undefined, "batting").includes("우리팀 핵심 타자: '주요선수' 강릉고 타자") && buildUserPrompt(bat, undefined, "batting").includes("타자 이름"));
 assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("팀 지표·등급·선수 이야기는 쓰지 않는다"));
 assert.ok(buildUserPrompt(payload).includes("맞대결·공통 상대·최근 흐름은 5번 항목에서 한 번만 짧게 쓴다"), "종합은 흐름 중복을 제한");
 assert.ok(buildUserPrompt(payload).includes("다른 항목에서는 다시 꺼내지 않는다"));
@@ -109,13 +109,13 @@ assert.equal(formOf(), null);
 assert.deepEqual(payload.최근흐름, flow.최근흐름, "종합과 흐름은 같은 최근 요약을 사용");
 
 const prompt = buildUserPrompt(payload, ["이전 줄 하나"]);
-assert.ok(prompt.includes("구성:\n1) 총평") &&prompt.includes("강릉고 공격 대 원주고 수비"), "종합 6항목 구성에 학교 이름");
+assert.ok(prompt.includes("구성:\n1) 총평") &&prompt.includes("우리팀 공격: 강릉고 타선"), "종합 6항목 구성에 학교 이름");
 assert.ok(prompt.includes("이전 분석") && prompt.includes("이전 줄 하나"));
 assert.ok(!buildUserPrompt(payload).includes("이전 분석"));
-assert.ok(buildUserPrompt(payload, undefined, "pitching").includes("원주고 핵심 투수: '주요선수' 원주고 투수"));
+assert.ok(buildUserPrompt(payload, undefined, "pitching").includes("공략할 상대 투수: '주요선수' 원주고 투수"));
 assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("맞대결 경기들의 내용(어느 학교가 이겼는지 학교 이름으로"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("강릉고 최근 흐름: '최근흐름'의 최근 5경기 전적·득실·연속 기록이 뜻하는 것"));
-assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("원주고 최근 흐름: '최근흐름'의 최근 5경기"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("우리팀 최근 흐름: 강릉고의 '최근흐름' 최근 5경기 전적·득실·연속 기록이 뜻하는 것"));
+assert.ok(buildUserPrompt(flow, undefined, "h2h").includes("상대팀 최근 흐름: 원주고의 '최근흐름' 최근 5경기"));
 assert.ok(!/\{[AB]\}/.test(buildUserPrompt(payload, undefined, "batting")), "자리표시 {A}{B}가 남지 않음");
 assert.ok(prompt.length < 12000, `프롬프트 ${prompt.length}자`);
 
@@ -133,6 +133,8 @@ const parsed = parseAnswer(JSON.stringify({ lines }), payload);
 assert.equal(parsed.dropped.length, 1, "지어낸 숫자 줄 제거");
 assert.ok(parsed.lines[0].startsWith("2026 시즌"), "첫 숫자 2026은 목록 기호가 아님");
 assert.ok(parsed.lines[1].startsWith("팀 ERA") && parsed.lines[3].startsWith("강릉고 "), "항목 제목(총평./관전 포인트 1:) 제거");
+assert.deepEqual(parseAnswer(JSON.stringify({ lines: ["우리팀 공격: 강릉고 타선이 앞선다.", "경계할 상대 타자: 원주고 중심 타선이다.", "우리팀 공격은 출루로 풀어 간다."] }), payload).lines,
+  ["강릉고 타선이 앞선다.", "원주고 중심 타선이다.", "우리팀 공격은 출루로 풀어 간다."], "우리팀 관점 항목 제목도 떼고, 문장 속 표현은 남긴다");
 assert.ok(parsed.lines.every((l) => !/^[-•]|^\d+\.\s/.test(l)));
 assert.equal(parseAnswer("```json\n" + JSON.stringify({ lines }) + "\n```", payload).lines.length, 4, "코드 블록 감싼 응답 허용");
 assert.equal(parseAnswer(JSON.stringify({ lines: [...lines, ...lines] }), payload).lines.length, MAX_LINES);
@@ -143,7 +145,7 @@ assert.deepEqual(unknownNumbers("득점 87점", [86]), ["87"], "큰 정수는 �
 assert.deepEqual(unknownNumbers("최근 5경기 4승", []), [], "작은 정수(경기 수 등)는 허용");
 
 // 4) 저장 — 학교 순서 무관 키, 저장·읽기
-assert.equal(entryKey("강릉고", "원주고", 2026, true), entryKey("원주고", "강릉고", 2026, true));
+assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("원주고", "강릉고", 2026, true), "우리팀 관점이라 순서가 다르면 다른 분석");
 assert.notEqual(entryKey("강릉고", "원주고", 2026, true), entryKey("강릉고", "원주고", 2026, false));
 const k = entryKey("강릉고", "원주고", 2026, true);
 const now = Date.now();

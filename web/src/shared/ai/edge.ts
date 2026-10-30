@@ -43,6 +43,7 @@ export function edgePayload(teams: Record<string, TeamStrength> | null | undefin
   const few = [[aName, a], [bName, b]].filter(([, s]) => (s as TeamStrength).g < EDGE_SAMPLE_GAMES).map(([n]) => n as string);
   return {
     결과: edgeLabel(signed, aName, bName),
+    우리팀기준: edgeLabel(signed, "우리팀", "상대팀"), // A = 우리팀
     조정범위: `${edgeLabel(range[0], aName, bName)} ~ ${edgeLabel(range[1], aName, bName)}`,
     근거: {
       [aName]: `강도지수 타격 ${a.bat.toFixed(2)} · 마운드 ${a.pit.toFixed(2)} (${a.g}경기)`,
@@ -53,6 +54,10 @@ export function edgePayload(teams: Record<string, TeamStrength> | null | undefin
     ...(few.length ? { 표본주의: `${few.join("·")}은(는) ${EDGE_SAMPLE_GAMES}경기 미만이라 비율이 불안정하다` } : {}),
   };
 }
+
+// 화면 표시 — 「강릉고 우위 7:3」 → 「우리팀 강릉고 우위 7:3」(A = 우리팀, B = 상대팀)
+export const perspectiveLabel = (label: string, aName: string, bName: string) =>
+  label.startsWith(`${aName} `) ? `우리팀 ${label}` : label.startsWith(`${bName} `) ? `상대팀 ${label}` : label;
 
 // AI 응답 검사 — 우위·동등·판단을 말하는 문장의 비율은 기준에서 한 구간 안이어야 한다. 벗어나면 그 문장을 버린다.
 // 맞대결 점수(예: 6:4 승리)는 우위 표현이 없는 문장이라 검사하지 않는다.
@@ -69,10 +74,11 @@ export function checkEdgeLines(lines: string[], aName: string, bName: string, ba
       if (+m[1] + +m[2] !== 10) continue;
       const i = RATIOS.indexOf(`${m[1]}:${m[2]}` as (typeof RATIOS)[number]);
       if (i < 0) { ok = false; break; }
-      // 비율 앞에서 가장 가까이 나온 학교가 우위 쪽. 학교 이름이 없으면 기준과 같은 쪽으로 본다.
+      // 비율 앞에서 가장 가까이 나온 학교(또는 「우리팀」=A·「상대팀」=B)가 우위 쪽. 없으면 기준과 같은 쪽으로 본다.
       const before = line.slice(0, m.index);
-      const at = Math.max(before.lastIndexOf(aName), before.lastIndexOf(bName));
-      const side = i === 0 ? 0 : at < 0 ? Math.sign(base) || 1 : before.lastIndexOf(aName) === at ? 1 : -1;
+      const atA = Math.max(before.lastIndexOf(aName), before.lastIndexOf("우리팀"));
+      const atB = Math.max(before.lastIndexOf(bName), before.lastIndexOf("상대팀"));
+      const side = i === 0 ? 0 : atA < 0 && atB < 0 ? Math.sign(base) || 1 : atA > atB ? 1 : -1;
       const signed = side * i;
       if (Math.abs(signed - base) > 1) { ok = false; break; }
       if (signed !== base && adjusted === undefined) adjusted = signed;

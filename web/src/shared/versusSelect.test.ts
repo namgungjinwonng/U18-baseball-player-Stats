@@ -43,11 +43,11 @@ assert.deepEqual(d, { a: "충암고", b: "덕수고", active: "a" });
 d = clearSlot(d, "b");
 assert.deepEqual(d, { a: "충암고", b: "", active: "b" });
 assert.equal(canConfirm(d), false);
-assert.equal(missingMessage(d), "B학교를 선택해 주세요");
+assert.equal(missingMessage(d), "상대팀을 선택해 주세요");
 assert.deepEqual(swapDraft(d), { a: "", b: "충암고", active: "a" });
 assert.deepEqual(swapDraft({ a: "강릉고", b: "원주고", active: "b" }), { a: "원주고", b: "강릉고", active: "b" });
-assert.equal(missingMessage({ a: "", b: "", active: "a" }), "A학교와 B학교를 선택해 주세요");
-assert.equal(missingMessage({ a: "", b: "원주고", active: "a" }), "A학교를 선택해 주세요");
+assert.equal(missingMessage({ a: "", b: "", active: "a" }), "우리팀과 상대팀을 선택해 주세요");
+assert.equal(missingMessage({ a: "", b: "원주고", active: "a" }), "우리팀을 선택해 주세요");
 assert.match(missingMessage(initialDraft("명지BC(U-18)", "명지BC")), /같은 학교/);
 
 // 확정 주소: 새 조합이면 조합 전용 상태(g·m·py·t)를 지우고 탭(v)은 유지, select 제거

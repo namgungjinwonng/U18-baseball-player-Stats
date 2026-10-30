@@ -23,9 +23,9 @@ interface StoredEntry extends AiEntry { id: string; matchup: string; focus: Focu
 export type MatchupEntries = Partial<Record<FocusId, AiEntry>>;
 export interface StorageStats { count: number; bytes: number; averageBytes: number; warning: boolean }
 
-// 학교 순서(A/B)와 무관하게 같은 대진은 같은 키 — 시즌과 맞대결 범위(통산/시즌)까지 포함한다.
+// 분석은 A(우리팀) 관점이라 순서가 바뀌면 다른 분석이다 — 시즌과 맞대결 범위(통산/시즌)까지 포함한다.
 export const entryKey = (a: string, b: string, year: number, allYears?: boolean, reference?: string) =>
-  `${year}|${allYears ? "all" : "season"}|${[a, b].sort().join("|")}${reference ? `|reference:${reference}` : ""}`;
+  `${year}|${allYears ? "all" : "season"}|${a}|${b}${reference ? `|reference:${reference}` : ""}`;
 
 const changed = () => {
   if (typeof window !== "undefined") window.dispatchEvent(new Event(AI_CACHE_CHANGED));

@@ -9,6 +9,7 @@ import { AI_CACHE_CHANGED, entryKey, errorNotice, loadMatchupEntries, saveEntry,
 import { loadApiKey } from "./vault";
 import { AiStorageWarning } from "./AiStorageWarning";
 import { AiOptionsBox } from "./AiOptionsBox";
+import { perspectiveLabel } from "./edge";
 import { DEFAULT_OPTIONS, OptionsError, optionsKey, optionsSummary, scopeActive, type AiOptions, type SampleRow } from "./options";
 
 // 「분석 옵션」을 쓰는 화면이 넘기는 것 — 범위 표본 계산과, 옵션을 적용한 분석 입력·보강 자료 만들기.
@@ -194,8 +195,8 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options }: Props) 
       </h4>
       {showAi && entry.edge && (
         <p className="versus-analysis__edge">
-          <span><b>기록 기반 예상 우위</b> {entry.edge.base}</span>
-          {entry.edge.adjusted && <span><b>AI 판단</b> {entry.edge.adjusted}</span>}
+          <span><b>기록 기반 예상 우위</b> {perspectiveLabel(entry.edge.base, input.aName, input.bName)}</span>
+          {entry.edge.adjusted && <span><b>AI 판단</b> {perspectiveLabel(entry.edge.adjusted, input.aName, input.bName)}</span>}
         </p>
       )}
       <ul>

@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ScheduleGame, TeamStrength } from "../types";
 import { teamKey } from "../versus";
-import { EDGE_BANDS, checkEdgeLines, edgeBand, edgeLabel, edgePayload, edgeProb, parseEdgeLabel } from "./edge";
+import { EDGE_BANDS, checkEdgeLines, edgeBand, edgeLabel, edgePayload, edgeProb, parseEdgeLabel, perspectiveLabel } from "./edge";
 import { buildPayload, buildUserPrompt, parseAnswer, SYSTEM_PROMPT } from "./prompt";
 
 const s = (bat: number, pit: number, g = 30): TeamStrength => ({ bat, pit, g });
@@ -68,6 +68,20 @@ assert.deepEqual(parsed.edge, { base: "강릉고 우위 7:3", adjusted: "강릉�
 assert.equal(parsed.lines.length, 4);
 assert.ok(parsed.dropped.includes("원주고 우위 7:3이다."));
 assert.equal(parseAnswer(answer, buildPayload(input, {}, "overall")).edge, undefined, "예상우위가 없으면 비율 검사·표시 없음");
+
+// 우리팀(A) 관점 — 「우리팀」「상대팀」으로 쓴 비율도 어느 쪽 우위인지 정확히 본다.
+assert.equal(ab.우리팀기준, "우리팀 우위 8:2 이상");
+assert.equal(edgePayload(teams, "원주고", "강릉고")!.우리팀기준, "상대팀 우위 8:2 이상", "원주고가 우리팀이면 상대팀 우위");
+const alias = checkEdgeLines(["AI 판단은 우리팀 6:4로 본다.", "상대팀 우위 6:4로 본다."], "강릉고", "원주고", 2);
+assert.deepEqual(alias.kept, ["AI 판단은 우리팀 6:4로 본다."]);
+assert.equal(alias.adjusted, "강릉고 우위 6:4");
+assert.deepEqual(alias.dropped, ["상대팀 우위 6:4로 본다."], "기준(우리팀 7:3)에서 두 구간 넘게 벗어남");
+assert.equal(perspectiveLabel("강릉고 우위 7:3", "강릉고", "원주고"), "우리팀 강릉고 우위 7:3");
+assert.equal(perspectiveLabel("원주고 우위 6:4", "강릉고", "원주고"), "상대팀 원주고 우위 6:4");
+assert.equal(perspectiveLabel("동등 5:5", "강릉고", "원주고"), "동등 5:5");
+const view = buildPayload(input, extra, "batting");
+assert.deepEqual(view.관점, { 우리팀: "강릉고", 상대팀: "원주고" }, "모든 방향에 관점");
+assert.ok(SYSTEM_PROMPT.includes("우리팀") && buildUserPrompt(view, undefined, "batting").includes("경계할 상대 타자"));
 
 // 검증 수치 — 현재 자료(2024~2026 공식경기)로 다시 계산해 상수와 크게 다르면 실패한다(시즌 중 자료가 늘어도 견디도록 허용 폭을 둔다).
 const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../data");
