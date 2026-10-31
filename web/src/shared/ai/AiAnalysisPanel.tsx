@@ -50,6 +50,22 @@ function loadSavedOptions(): AiOptions {
     return DEFAULT_OPTIONS;
   }
 }
+// 「분석 옵션 계속 펼쳐 두기」 — 끄면 AI 분석을 요청할 때 옵션을 접는다.
+const OPTIONS_PIN_STORE = "u18-ai-options-pinned";
+function loadOptionsPinned(): boolean {
+  try {
+    return localStorage.getItem(OPTIONS_PIN_STORE) === "1";
+  } catch {
+    return false;
+  }
+}
+function saveOptionsPinned(on: boolean) {
+  try {
+    localStorage.setItem(OPTIONS_PIN_STORE, on ? "1" : "0");
+  } catch {
+    // 저장 못 해도 이번 화면에서는 그대로 쓴다
+  }
+}
 function saveOptions(o: AiOptions) {
   try {
     localStorage.setItem(OPTIONS_STORE, JSON.stringify({ excludeMovedOut: o.excludeMovedOut, excludeGrades: o.excludeGrades, conditions: o.conditions }));
@@ -85,6 +101,8 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
   const [focus, setFocus] = useState<FocusId>("overall");
   const [basic, setBasic] = useState(true); // 「기본 분석」 항목 — 키가 있어도 처음에는 기록 기반 분석을 보인다
   const [setupOpen, setSetupOpen] = useState(true); // 「AI 분석 설정」 — 키가 있으면 처음에는 펼쳐 둔다
+  const [optionsPinned, setOptionsPinned] = useState(loadOptionsPinned);
+  const [optionsOpen, setOptionsOpen] = useState(optionsPinned);
   const abort = useRef<AbortController | null>(null);
   const resultRef = useRef<HTMLDivElement | null>(null);
   const slot = slotId(perspective, focus);
@@ -175,6 +193,7 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
     abort.current = ctl;
     setLoading(true);
     setNotice("");
+    if (!optionsPinned) setOptionsOpen(false);
     try {
       const apiKey = await loadApiKey(provider.slot);
       if (ctl.signal.aborted) return;
@@ -223,17 +242,10 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
   const basisText = (p: Perspective) => (p === "both" ? "양팀 비교" : `${p === "away" ? "AWAY" : "HOME"} ${sideName(p)} 기준`);
   const inBoth = (f: FocusId) => focusList("both").some((x) => x.id === f);
   const ready = cache.ready && cache.key === key;
-  const status = (p: Perspective, f: FocusId) => {
-    if (input.reference && REFERENCE_UNAVAILABLE.has(f)) return "자료 부족";
-    if (!ready) return "확인 중";
-    const e = cache.entries[slotId(p, f)];
-    return e ? `저장됨 ${shortDate(e.at)}` : "분석 전";
-  };
-  // 분석 항목 — 기본 분석 + 방향(공략 포인트·경계 선수는 AWAY·HOME 기준에만). 상태는 지금 고른 기준으로 표시한다.
-  const itemPerspective = (f: FocusId) => (perspective === "both" && !inBoth(f) ? "away" : perspective);
+  // 분석 항목 — 기본 분석 + 방향(공략 포인트·경계 선수는 AWAY·HOME 기준에만)
   const items: PickItem<"basic" | FocusId>[] = [
-    { id: "basic", label: "기본 분석", note: "기록 기반" },
-    ...FOCUS_IDS.map((f) => ({ id: f, label: focusLabel(f), note: status(itemPerspective(f), f) })),
+    { id: "basic", label: "기본 분석" },
+    ...FOCUS_IDS.map((f) => ({ id: f, label: focusLabel(f) })),
   ];
   const bases: PickItem<Perspective>[] = PERSPECTIVES.map((p) => ({
     id: p.id,
@@ -270,7 +282,9 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
                 <>
                   <SegmentPicker label="분석 기준" items={bases} value={perspective} onChange={(p) => { setPerspective(p); setNotice(""); }} disabled={loading} />
                   {options && (
-                    <AiOptionsBox opts={opts} onChange={changeOpts} support={options} aName={input.aName} bName={input.bName} disabled={loading} />
+                    <AiOptionsBox opts={opts} onChange={changeOpts} support={options} aName={input.aName} bName={input.bName} disabled={loading}
+                      open={optionsOpen} onOpenChange={setOptionsOpen}
+                      pinned={optionsPinned} onPinnedChange={(on) => { setOptionsPinned(on); saveOptionsPinned(on); }} />
                   )}
                   <div className="versus-analysis__actions">
                     <button type="button" className="chip versus-analysis__btn" onClick={request} disabled={loading || !ready || referenceUnavailable}>

@@ -2247,17 +2247,12 @@
 .ai-setup__body .versus-analysis__actions { margin-top: 0; }
 .ai-pick__label { display: block; margin: 0 0 4px; color: var(--color-mute); font-size: 12px; font-weight: 600; }
 /* 분석 항목 — 랭킹 항목 선택기(.leader-cat-*)를 버튼으로 쓴다 */
-.ai-stepper { grid-template-columns: minmax(0, 1fr) minmax(96px, 1.1fr) minmax(0, 1fr); }
+/* 좌우 스와이프로 항목을 넘긴다 — 세로 스크롤만 브라우저에 맡긴다 */
+.ai-stepper { grid-template-columns: minmax(0, 1fr) minmax(96px, 1.1fr) minmax(0, 1fr); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .ai-stepper button { gap: 4px; padding-inline: 6px; border: 0; font: inherit; font-size: var(--type-button-sm); cursor: pointer; }
 .ai-stepper button:disabled { opacity: 0.55; cursor: default; }
-.ai-stepper .leader-cat-current { flex-direction: column; gap: 0; border-inline: 1px solid var(--color-hairline); }
-.ai-stepper .leader-cat-current small,
-.ai-pick__panel small,
+.ai-stepper .leader-cat-current { border-inline: 1px solid var(--color-hairline); }
 .ai-seg small { display: block; color: var(--color-mute); font-size: 10px; font-weight: 400; line-height: 1.2; }
-.ai-pick__panel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.ai-pick__panel .chip { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 40px; padding-top: 3px; padding-bottom: 3px; line-height: 1.2; }
-.ai-pick__panel .chip--active small { color: inherit; opacity: 0.75; }
-.ai-pick__panel .chip:disabled { opacity: 0.5; cursor: default; }
 /* 분석 기준 — 3칸 한 줄, 고른 칸을 진하게 */
 .ai-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); min-height: 40px; border: 1px solid var(--color-hairline); border-radius: var(--radius-lg); overflow: hidden; }
 .ai-seg button { min-width: 0; padding: 5px 4px; border: 0; border-left: 1px solid var(--color-hairline); background: var(--color-canvas); color: var(--color-ink); font: inherit; font-size: 13px; text-align: center; cursor: pointer; }
@@ -2270,7 +2265,10 @@
 .ai-seg button:disabled { color: var(--color-mute); cursor: default; }
 /* 경기분석 「분석 옵션」(B안) — 접힘 한 줄 요약 / 펼침 선수 범위·경기 조건 */
 .ai-options { margin-top: 10px; border-top: 1px solid var(--color-hairline); }
-.ai-options__head { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 0 2px; border: 0; background: none; color: var(--color-ink); font: inherit; text-align: left; cursor: pointer; }
+.ai-options__top { display: flex; align-items: center; gap: 10px; }
+.ai-options__pin { display: flex; flex: 0 0 auto; align-items: center; gap: 5px; padding-top: 8px; color: var(--color-mute); font-size: 12px; white-space: nowrap; cursor: pointer; }
+.ai-options__pin input { width: 14px; height: 14px; margin: 0; accent-color: var(--color-ink); }
+.ai-options__head { display: flex; flex: 1 1 auto; min-width: 0; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 0 2px; border: 0; background: none; color: var(--color-ink); font: inherit; text-align: left; cursor: pointer; }
 .ai-options__head b { display: block; font-size: 13px; }
 .ai-options__head small { display: block; color: var(--color-mute); font-size: 12px; }
 .ai-options__head small.is-on { color: #0b3fd6; }

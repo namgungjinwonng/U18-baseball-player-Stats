@@ -1,5 +1,5 @@
-// 경기분석 「분석 옵션」(B안) — 접힌 한 줄 요약, 펼치면 선수 범위(전학 간 선수·학년 제외)와 경기 조건(공식/연습경기·시작·구장, 선공은 AWAY)
-import { useMemo, useState } from "react";
+// 경기분석 「분석 옵션」(B안) — 접힌 한 줄 요약 + 「계속 펼쳐 두기」, 펼치면 선수 범위(전학 간 선수·학년 제외)와 경기 조건(공식/연습경기·시작·구장, 선공은 AWAY)
+import { useMemo } from "react";
 import { teamKey } from "../versus";
 import type { AiOptionSupport } from "./AiAnalysisPanel";
 import { ForecastNote } from "./ForecastNote";
@@ -19,10 +19,13 @@ interface Props {
   aName: string;
   bName: string;
   disabled?: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  pinned: boolean; // 계속 펼쳐 두기 — 끄면 AI 분석을 요청할 때 접힌다
+  onPinnedChange: (pinned: boolean) => void;
 }
 
-export function AiOptionsBox({ opts, onChange, support, aName, bName, disabled }: Props) {
-  const [open, setOpen] = useState(false);
+export function AiOptionsBox({ opts, onChange, support, aName, bName, disabled, open, onOpenChange, pinned, onPinnedChange }: Props) {
   const set = (patch: Partial<AiOptions>) => onChange({ ...opts, ...patch });
   const toggleGrade = (g: Grade) =>
     set({ excludeGrades: opts.excludeGrades.includes(g) ? opts.excludeGrades.filter((x) => x !== g) : [...opts.excludeGrades, g] });
@@ -31,13 +34,19 @@ export function AiOptionsBox({ opts, onChange, support, aName, bName, disabled }
 
   return (
     <div className="ai-options">
-      <button type="button" className="ai-options__head" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span>
-          <b>분석 옵션</b>
-          <small className={on ? "is-on" : undefined}>{optionsSummary(opts)}</small>
-        </span>
-        <span aria-hidden className="ai-options__chev">{open ? "▴" : "▾"}</span>
-      </button>
+      <div className="ai-options__top">
+        <button type="button" className="ai-options__head" aria-expanded={open} onClick={() => onOpenChange(!open)}>
+          <span>
+            <b>분석 옵션</b>
+            <small className={on ? "is-on" : undefined}>{optionsSummary(opts)}</small>
+          </span>
+          <span aria-hidden className="ai-options__chev">{open ? "▴" : "▾"}</span>
+        </button>
+        <label className="ai-options__pin">
+          <input type="checkbox" checked={pinned} onChange={(e) => onPinnedChange(e.target.checked)} />
+          계속 펼쳐 두기
+        </label>
+      </div>
       {open && (
         <fieldset className="ai-options__body" disabled={disabled}>
           <p className="ai-options__sec">선수 범위</p>
