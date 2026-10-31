@@ -56,7 +56,7 @@ const extra = { edge: edgePayload({ 강릉고: s(1.06, 1.03), 원주고: s(1.0, 
 for (const f of ["overall", "batting", "pitching", "h2h"] as const) assert.ok(buildPayload(input, extra, f).예상우위, f);
 const payload = buildPayload(input, extra, "overall");
 assert.equal(payload.예상우위!.결과, "강릉고 우위 7:3");
-assert.ok(buildUserPrompt(payload).includes("기록 기반 예상 우위는 강릉고 우위 7:3"));
+assert.ok(buildUserPrompt(payload).includes("기준 '강릉고 우위 7:3'는 화면에 따로 보이므로 되풀이하지 않는다"));
 assert.ok(systemPrompt().includes("조정범위") && systemPrompt().includes("승리 확률(%)"));
 assert.ok(!buildUserPrompt(buildPayload(input, {}, "overall")).includes("예상우위 규칙"));
 const answer = JSON.stringify({ lines: [
@@ -68,6 +68,10 @@ assert.deepEqual(parsed.edge, { base: "강릉고 우위 7:3", adjusted: "강릉�
 assert.equal(parsed.lines.length, 4);
 assert.ok(parsed.dropped.includes("원주고 우위 7:3이다."));
 assert.equal(parseAnswer(answer, buildPayload(input, {}, "overall")).edge, undefined, "예상우위가 없으면 비율 검사·표시 없음");
+// 조정 없이 기준과 같은 비율을 「AI 판단」으로 되읽은 문장은 빼고, 같은 항목의 다른 문장은 남긴다.
+const same = parseAnswer(JSON.stringify({ lines: ["강릉고는 마운드, 원주고는 타선이 강하다. AI 판단은 강릉고 우위 7:3이다.", "AI 판단은 강릉고 7:3으로 본다.", "강릉고 타선이 앞선다.", "원주고 마운드가 버텨야 한다."] }), payload);
+assert.deepEqual(same.lines, ["강릉고는 마운드, 원주고는 타선이 강하다.", "강릉고 타선이 앞선다.", "원주고 마운드가 버텨야 한다."]);
+assert.deepEqual(same.edge, { base: "강릉고 우위 7:3" });
 
 // AWAY·HOME 기준 — 우리팀 쪽에서 읽은 비율을 붙이고, 「우리팀」「상대팀」으로 쓴 비율도 어느 쪽 우위인지 정확히 본다.
 assert.ok(!("우리팀기준" in ab), "양팀 비교용 예상우위는 중립");

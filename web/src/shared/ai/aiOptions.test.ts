@@ -163,11 +163,12 @@ assert.ok(buildPayload(input, extra, "batting").경기조건, "경기조건은 �
 assert.ok(buildPayload(input, extra, "batting").선수범위);
 assert.ok(buildUserPrompt(buildPayload(input, extra, "overall")).includes("경기조건 규칙"));
 assert.ok(!buildUserPrompt(buildPayload(input, {}, "overall")).includes("경기조건 규칙"));
-// 경기조건 규칙 — 대상 경기를 모르면(대상조건이 비면) 조건 성적을 쓰지 않게, 선수 위주 방향은 처음·마지막 항목에만
+// 경기조건 규칙 — 대상 경기를 모르면(대상조건이 비면) 조건 성적을 쓰지 않게, 종합 밖의 방향은 마지막 항목에만
 assert.ok(buildUserPrompt(buildPayload(input, extra, "overall")).includes("이번 경기와 관계없으니 쓰지 않는다"), "연습경기 시작·구장을 모르면 조건 성적 금지");
 const known = { scope, conditions: full };
-assert.ok(buildUserPrompt(buildPayload(input, known, "overall")).includes("2~5번 항목 가운데 2개 이상"), "종합은 중간 항목에도 조건 수치");
-assert.ok(buildUserPrompt(buildPayload(input, known, "threats", "away"), undefined, "threats", "away").includes("선수를 다루는 항목에는 조건 수치를 섞지 않는다"), "선수 위주 방향은 처음·마지막에만");
+assert.ok(buildUserPrompt(buildPayload(input, known, "overall")).includes("2~5번 항목 가운데 1~2개"), "종합은 중간 항목에도 조건 수치");
+assert.ok(buildUserPrompt(buildPayload(input, known, "threats", "away"), undefined, "threats", "away").includes("1~5번 항목에는 조건 수치를 섞지 않는다"), "선수 위주 방향은 마지막에만");
+assert.ok(buildUserPrompt(buildPayload(input, known, "h2h"), undefined, "h2h").includes("1~5번 항목에는 조건 수치를 섞지 않는다"), "맞대결·흐름도 마지막에만");
 
 // 실데이터 — 2026 날씨 파일이 완료 경기 대부분을 덮고, 구장표가 일정 구장을 덮는다.
 const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../data");

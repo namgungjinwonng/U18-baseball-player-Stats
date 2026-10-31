@@ -63,6 +63,11 @@ assert.match(String(avgRow["강릉고"]), /^\.\d{3}$/, "타율은 .312 표기");
 assert.match(String(avgRow["강릉고 등급"]), /^[A-E][+-]?$/, "학교 상세 등급");
 assert.match(String(avgRow["차이(강릉고-원주고)"]), /^[+-]\.\d{3}$/, "차이는 같은 표기에 부호");
 assert.equal(payload.맞대결?.기준, "통산");
+// HOME 기준에서 전적 방향을 헷갈리지 않게 두 학교 기준 전적을 함께 준다(승·패가 뒤집힌 값)
+{
+  const [w, l] = String(payload.맞대결?.["강릉고 기준 전적"]).match(/\d+/g)!;
+  assert.ok(String(payload.맞대결?.["원주고 기준 전적"]).startsWith(`${l}승 ${w}패`));
+}
 assert.ok(payload.최근경기!["강릉고"].length <= 10);
 const stars = payload.주요선수!["강릉고"];
 assert.ok(stars.타자.length > 0 && stars.타자.length <= 3 && stars.투수.length <= 2, "주요 선수 타자 3·투수 2 이내");
