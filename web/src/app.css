@@ -2226,6 +2226,8 @@
 .versus-analysis li { margin: 3px 0; color: var(--color-charcoal); font-size: 13px; line-height: 1.5; }
 .versus-analysis li.is-head { font-weight: 700; color: var(--color-ink); }
 .versus-analysis li.is-note { color: var(--color-mute); font-size: 12px; }
+/* 선수 이름 뒤 학년·투타 — 문장 흐름을 끊지 않게 작고 옅게 */
+.versus-analysis .player-tag { margin-left: 1px; color: var(--color-mute); font-size: 11px; font-weight: 400; }
 /* AI 경기분석 — 요청 버튼·안내 (shared/ai/AiAnalysisPanel) */
 .versus-analysis__notice { margin: 6px 0 0; color: var(--color-sale); font-size: 12px; line-height: 1.5; }
 .versus-analysis__actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }

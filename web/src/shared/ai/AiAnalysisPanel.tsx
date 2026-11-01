@@ -1,6 +1,6 @@
 // 매치업 「경기 분석」 — 키가 없으면 기록 기반 분석만. 키가 있으면 접히는 「AI 분석 설정」(분석 항목·분석 기준·분석 옵션·요청 버튼) 아래에
 // 기본 분석 또는 고른 항목의 저장된 AI 분석을 보인다.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { AnalysisInput, AnalysisLine } from "../analysis/core";
 import type { ScheduleGame } from "../types";
 import { AI_SETTINGS_CHANGED, currentModel, loadSettings, modelLabel, providerInfo } from "./config";
@@ -15,6 +15,7 @@ import { AiStorageWarning } from "./AiStorageWarning";
 import { AiOptionsBox } from "./AiOptionsBox";
 import { SegmentPicker, StepPicker, type PickItem } from "./AiPickers";
 import { perspectiveLabel } from "./edge";
+import { playerTags, tagPlayers, type PlayerTagSource, type PlayerTags } from "./playerTags";
 import { teamKey } from "../versus";
 import { DEFAULT_OPTIONS, OptionsError, optionsKey, optionsSummary, scopeActive, type AiOptions, type SampleRow } from "./options";
 
@@ -33,6 +34,7 @@ interface Props {
   getExtra?: () => AiExtra; // 요청할 때만 만드는 보강 자료(등급·주요 선수·기록 분석 문장)
   options?: AiOptionSupport;
   onSwap?: () => void; // 고른 공식경기의 AWAY·HOME이 화면 순서와 반대면 두 학교를 바꾼다
+  players?: PlayerTagSource[]; // 두 학교 선수(학년·투타) — 분석 문장의 선수 이름 뒤에 「(2학년, 우투좌타)」를 붙인다
 }
 
 // 선수 범위·경기 조건 켜짐 여부는 이 기기에 기억한다(연말엔 매 대진 다시 고르지 않도록). 경기별 입력은 대진마다 새로.
@@ -74,7 +76,13 @@ function saveOptions(o: AiOptions) {
   }
 }
 
-export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }: Props) {
+// 선수 이름 뒤에 학년·투타를 작게 붙여 문장을 그린다(저장된 분석에도 화면에서 붙인다).
+function Tagged({ text, tags }: { text: string; tags: PlayerTags }) {
+  return <>{tagPlayers(text, tags).map((s, i) => (typeof s === "string" ? s : <span key={i}>{s.name}<span className="player-tag">({s.tag})</span></span>))}</>;
+}
+
+export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap, players }: Props) {
+  const tags = useMemo(() => playerTags(players ?? [], [input.aName, input.bName]), [players, input.aName, input.bName]);
   const reference = input.reference ? `${input.reference.year}:${input.reference.signature}` : undefined;
   const baseKey = entryKey(input.aName, input.bName, input.year ?? 0, input.allYears, reference);
   // AWAY·HOME만 바뀐 같은 대진 — 바꿔도 고른 관점·방향·경기 입력을 유지한다.
@@ -311,10 +319,10 @@ export function AiAnalysisPanel({ input, ruleLines, getExtra, options, onSwap }:
         )}
         <ul>
           {showAi
-            ? entry.lines.map((text, i) => <li key={i} className={i === 0 ? "is-head" : undefined}>{text}</li>)
+            ? entry.lines.map((text, i) => <li key={i} className={i === 0 ? "is-head" : undefined}><Tagged text={text} tags={tags} /></li>)
             : showBasic ? ruleLines.map((line) => (
                 <li key={line.id} className={line.cat === "overall" ? "is-head" : line.cat === "sample" ? "is-note" : undefined}>
-                  {line.text}
+                  <Tagged text={line.text} tags={tags} />
                 </li>
               )) : <li className="is-note">{referenceUnavailable ? `전년도 개인 시즌 합계만으로 현재 엔트리의 ${focusLabel(focus)}을(를) 판단할 수 없어 분석을 요청하지 않습니다. 다른 항목을 선택해 주세요.` : loading ? "선택한 항목을 분석하고 있습니다." : `이 매치업의 「${focusLabel(focus)} · ${basisText(perspective)}」은(는) 분석 전입니다. 위의 「AI로 분석하기」를 누르면 AI 분석을 만들어 이 기기에 저장합니다.`}</li>}
         </ul>

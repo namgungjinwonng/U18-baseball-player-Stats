@@ -17,7 +17,8 @@ export function PreviousSeasonAnalysisContent({ year, result, options }: { year:
         <p>전년도 3학년·현재 명단에 없는 선수는 제외했습니다. 올해 팀 성적·등급·선발 예고가 아닙니다.</p>
         {result.input.reference!.teams.map((t) => <p key={t.team}>{t.team} · 현재 {t.rosterCount}명 중 전년도 기록 확인 {t.matchedCount}명 · 미포함 {t.rosterCount - t.matchedCount}명</p>)}
       </div>
-      <AiAnalysisPanel input={result.input} ruleLines={result.lines} getExtra={() => result.extra} options={options} />
+      <AiAnalysisPanel input={result.input} ruleLines={result.lines} getExtra={() => result.extra} options={options}
+        players={result.extra.players ? [result.extra.players.a, result.extra.players.b].flatMap((t) => [...t.batters, ...t.pitchers]) : undefined} />
     </>
   );
 }

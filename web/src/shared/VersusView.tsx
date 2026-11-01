@@ -404,7 +404,7 @@ function VersusResult({ wrapClass }: { wrapClass: string }) {
       {referenceMode ? <PreviousSeasonAnalysisView year={year} a={a} b={b} />
         : records.loading ? <div className="state">불러오는 중…</div>
         : missing.length > 0 ? <p className="state muted">{missing.join("·")}의 {tournamentTitle ? "이 대회" : `${year} 시즌`} 기록이 없어 경기 분석을 할 수 없습니다.</p>
-        : analysis.length > 0 && analysisInput ? <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} options={aiOptions} onSwap={() => update({ a: b, b: a })} />
+        : analysis.length > 0 && analysisInput ? <AiAnalysisPanel input={analysisInput} ruleLines={analysis} getExtra={getAiExtra} options={aiOptions} onSwap={() => update({ a: b, b: a })} players={records.data ?? undefined} />
         : <div className="state">분석을 준비하는 중…</div>}
     </section>
   );
