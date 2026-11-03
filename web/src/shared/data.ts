@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type {
   LeagueAverages, Matchup, Meta, Player, PlayerIndexEntry, PlayerProfile,
   FieldsData, ScheduleData, ScheduleGame, StrengthData, TeamRosterEntry,
+  MiddleSchoolData,
 } from "./types";
 import { useYear } from "./year";
 import type { StoredForecastMap, VenueMap, WeatherMap } from "./ai/conditions";
@@ -258,6 +259,10 @@ export const useTournamentMatchups = (slug: string | "") => {
     `${year}:${slug}`
   );
 };
+
+// 중학교 기록(기록지 판독 시범 자료). 파일이 없으면 null.
+export const useMiddleSchoolRecords = () =>
+  useAsync<MiddleSchoolData | null>(() => getJSON<MiddleSchoolData>("middle-school-records.json").catch(() => null), []);
 
 // 선수 프로필(출신학교/수상내역 — KBSA player_view 수집본). personNo 없으면 null.
 export const usePlayerProfile = (personNo: string | undefined) =>

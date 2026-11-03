@@ -245,4 +245,8 @@ export interface Field {
   note?: string; // 「KBSA 주소 기준」·「시·군·구 중심(추정)」·「이름 없는 야구장(추정)」
   team?: string; // KBSA 팀 표기
 }
+export interface MiddleSchoolGame { date: string; game: string; school: string; opp: string; league: string }
+export interface MiddleSchoolBat extends MiddleSchoolGame { pa: number; ab: number; h: number }
+export interface MiddleSchoolPit extends MiddleSchoolGame { bf: number; h: number; so: number; r: number; er: number }
+export interface MiddleSchoolData { updated: string; gamesRead: number; players: Record<string, { bat: MiddleSchoolBat[]; pit: MiddleSchoolPit[] }> }
 export interface FieldsData { updated: string; fields: Field[]; sources?: { id: string; title: string; url: string; license: string }[] }

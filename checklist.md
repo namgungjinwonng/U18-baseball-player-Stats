@@ -482,3 +482,10 @@ Codex 인계 실행 계획은 누락 40팀 재현 → 위치 추출 수정 → �
 - [x] 40장 판독 (scraper/.cache/ms-sheets/readings.json, git 제외)
 - [x] 정확도 계산 (scraper/src/msSheetScore.ts)
 - [ ] 사용자 결정: 숫자만 공개 범위, 이름 교정 방식, 전체 수집 진행 여부
+
+### 2024·2025 시범 수집 (로컬 전용) — 2026-11-03
+
+- [x] 합계 검증·명단 정확 일치 규칙 + 테스트 (scraper/src/msSheetUtil.ts)
+- [x] 이미 읽은 8경기로 data/middle-school-records.json 생성 — 79명 (scraper/src/msSheetPublish.ts)
+- [x] 선수 상세에 「중학교 기록」 표시 (web/src/shared/MiddleSchoolRecords.tsx), 375px 확인
+- [ ] 나머지 897경기(기록지 1,794장) 판독 — 방식·범위 사용자 결정 대기

@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCareerPlayers, usePlayerProfile, useTeams } from "./data";
 import { KbsaLink } from "./KbsaLink";
+import { MiddleSchoolRecords } from "./MiddleSchoolRecords";
 import { currentRosterEntry } from "./transfers";
 import { useYear } from "./year";
 
@@ -98,6 +99,8 @@ export function PersonView({ wrapClass }: { wrapClass: string }) {
           </div>
         )}
       </section>
+
+      <MiddleSchoolRecords personNo={personNo} />
 
       <section className="player-section">
         <h3>수상내역</h3>

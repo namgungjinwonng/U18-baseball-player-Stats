@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { MiddleSchoolRecords } from "../../shared/MiddleSchoolRecords";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   useCareerPlayers, useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
@@ -459,7 +460,7 @@ export function MPlayer() {
         );
       })()}
 
-      {active === "schools" && <MSchools profile={profile ?? null} />}
+      {active === "schools" && <><MSchools profile={profile ?? null} /><MiddleSchoolRecords personNo={profile?.personNo} /></>}
       {active === "awards" && <MAwards profile={profile ?? null} />}
     </div>
   );

@@ -2396,3 +2396,10 @@
 .fields-list__name { font-size: 14px; font-weight: 500; }
 .fields-list__meta { flex: none; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-mute); font-size: 12px; }
 @media (min-width: 900px) { .fields-map { height: 420px; } }
+
+/* 중학교 기록(기록지 판독 시범) */
+.ms-note { margin: 0 0 8px; font-size: 12px; color: var(--color-mute); }
+.ms-sum { margin: 8px 0 6px; font-size: 14px; font-weight: 600; }
+.ms-table td:first-child { white-space: normal; min-width: 150px; }
+.ms-table th, .ms-table td { padding-left: 8px; padding-right: 8px; }
+.ms-league { font-size: 11px; color: var(--color-mute); }

@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { MiddleSchoolRecords } from "../../shared/MiddleSchoolRecords";
 import { useEffect, useMemo, useState } from "react";
 import {
   useCareerPlayers, useLeagueAverages, usePlayer, usePlayerIndex, usePlayerMatchups, usePlayerProfile,
@@ -584,7 +585,7 @@ export function PlayerPage() {
         </>
       )}
 
-      {active === "schools" && <SchoolsTab profile={profile ?? null} />}
+      {active === "schools" && <><SchoolsTab profile={profile ?? null} /><MiddleSchoolRecords personNo={profile?.personNo} /></>}
       {active === "awards" && <AwardsTab profile={profile ?? null} />}
     </div>
   );
