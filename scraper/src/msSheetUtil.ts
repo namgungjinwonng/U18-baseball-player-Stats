@@ -5,17 +5,19 @@ export interface Sheet {
   school: string; q: "A" | "B" | "C"; rows: BatRow[]; p: PitRow[];
   t: { pa: number; ab: number; r: number; h: number };
   pt: { bf: number; h: number; bb: number; so: number; r: number; er: number };
+  adj?: boolean; // 타자 칸 일부를 합계를 참고해 정한 시트
 }
 export interface Candidate { personNo: string; name: string }
 
-const REGION = /^(서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주)\s*/;
-export const normSchool = (s: string) => s.replace(REGION, "").replace(/중학교$/, "중").replace(/\s/g, "");
+// 지역명은 띄어 쓴 경우만 뺀다(경남중·부산중은 학교 이름). 기록지는 15세 이하부라 (U-15) 표기만 같은 팀으로 본다.
+const REGION = /^(서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주)\s+/;
+export const normSchool = (s: string) => s.replace(REGION, "").replace(/\(U-?15\)$/, "").replace(/중학교$/, "중").replace(/\s/g, "");
 const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
 
-// 타자 행 합이 시트 합계·KBSA 안타·득점과 모두 맞아야 쓴다.
+// 타자 행 합이 시트 합계·KBSA 안타·득점과 모두 맞아야 쓴다(득점 합계 칸이 빈 시트 -1은 득점 대조만 건너뛴다). 합계를 참고해 읽은 시트는 합이 맞아도 믿을 수 없어 뺀다.
 export const battingVerified = (s: Sheet, kbsaHits: number, kbsaRuns: number) =>
-  s.q !== "C" && sum(s.rows.map((r) => r[1])) === s.t.pa && sum(s.rows.map((r) => r[2])) === s.t.ab &&
-  sum(s.rows.map((r) => r[3])) === s.t.h && s.t.h === kbsaHits && s.t.r === kbsaRuns;
+  s.q !== "C" && !s.adj && sum(s.rows.map((r) => r[1])) === s.t.pa && sum(s.rows.map((r) => r[2])) === s.t.ab &&
+  sum(s.rows.map((r) => r[3])) === s.t.h && s.t.h === kbsaHits && (s.t.r === -1 || s.t.r === kbsaRuns);
 
 // 투수 행 합이 시트 합계·상대 팀 KBSA 안타·삼진과 모두 맞아야 쓴다.
 export const pitchingVerified = (s: Sheet, oppHits: number, oppSo: number) =>

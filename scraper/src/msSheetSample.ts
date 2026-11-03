@@ -5,8 +5,10 @@ import path from "node:path";
 const BASE = "https://www.korea-baseball.com";
 const UA = "U18-baseball-stats/1.0 (+https://github.com/namgungjinwonng/U18-baseball-player-Stats)";
 const OUT = path.resolve(".cache/ms-sheets");
-const PLAN: Record<number, number> = { 2019: 3, 2021: 2, 2023: 3, 2024: 4, 2025: 4, 2026: 4 };
-const MONTHS = [3, 4, 5, 6, 7, 8, 9, 10];
+// 인자 없으면 첫 시험 계획, "2024=48 2025=52"처럼 주면 그만큼 더 고른다.
+const ARGS = process.argv.slice(2).map((a) => a.split("=").map(Number));
+const PLAN: Record<number, number> = ARGS.length ? Object.fromEntries(ARGS) : { 2019: 3, 2021: 2, 2023: 3, 2024: 4, 2025: 4, 2026: 4 };
+const MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function get(url: string) {
@@ -33,7 +35,7 @@ function parseBox(html: string) {
     const m = text.match(new RegExp(`\\[${label}\\] (.*?)(?= \\[|스폰서)`));
     return m ? [...m[1].matchAll(/([가-힣]{2,5})(?:\((\d+)개\))?/g)].map((x) => ({ name: x[1], n: Number(x[2] ?? 1) })) : [];
   };
-  const papers = [...html.matchAll(/paper_each_download\?boxfile_seq=(\d+)">([^<]+)</g)].map((m) => ({ seq: m[1], file: m[2].trim() }));
+  const papers = [...html.matchAll(/paper_each_download\?boxfile_seq=(\d+)">([^<]+)</g)].map((m) => ({ seq: m[1], file: m[2].trim() })).filter((p) => /\.(jpe?g|png)$/i.test(p.file));
   const date = (text.match(/(\d{4}\.\d{2}\.\d{2}) \d{2}:\d{2}/) || [])[1] ?? "";
   const league = (text.match(/15세 이하부 Box Score.*?(?:-->)? ?(제?[^/]*?) \d{4}\.\d{2}\.\d{2}/) || [])[1] ?? title;
   return {
@@ -45,15 +47,18 @@ function parseBox(html: string) {
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
-  const rand = seeded(20261103);
-  const picked: unknown[] = [];
+  const rand = seeded(20261103 + ARGS.length);
+  const gamesPath = path.join(OUT, "games.json");
+  // 이미 고른 경기는 유지하고 다시 받지 않으며, 끊겨도 이어서 할 수 있게 경기마다 저장한다.
+  const picked: any[] = fs.existsSync(gamesPath) ? JSON.parse(fs.readFileSync(gamesPath, "utf8")) : [];
+  const done = new Set(picked.map((g) => g.id));
   for (const [year, want] of Object.entries(PLAN)) {
     const ids = new Set<string>();
     for (const m of MONTHS) {
       const html = await (await get(`${BASE}/game/calendar?kind_cd=21&month=${m}&year=${year}`)).text();
       for (const x of html.matchAll(/game_idx=(\d+)/g)) ids.add(x[1]);
     }
-    const pool = [...ids].sort((a, b) => Number(a) - Number(b));
+    const pool = [...ids].filter((id) => !done.has(id)).sort((a, b) => Number(a) - Number(b));
     let got = 0, tried = 0, noPaper = 0;
     while (got < want && pool.length) {
       const id = pool.splice(Math.floor(rand() * pool.length), 1)[0];
@@ -66,12 +71,12 @@ async function main() {
         fs.writeFileSync(path.join(OUT, `${id}_${i + 1}${ext}`), Buffer.from(await res.arrayBuffer()));
       }
       picked.push({ id, year: Number(year), ...box });
+      fs.writeFileSync(gamesPath, JSON.stringify(picked, null, 1));
       got++;
       console.log(year, id, box.date, box.scores.join(":"), box.papers.map((p) => p.file).join(" | "));
     }
     console.log(`${year}: 후보 ${ids.size}경기, 시도 ${tried}, 기록지/요약 없음 ${noPaper}`);
   }
-  fs.writeFileSync(path.join(OUT, "games.json"), JSON.stringify(picked, null, 1));
 }
 
 main();

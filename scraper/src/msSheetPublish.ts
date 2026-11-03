@@ -21,11 +21,12 @@ for (const f of fs.readdirSync(path.join(DATA, "profiles"))) {
   }
 }
 
-const players: Record<string, { bat: unknown[]; pit: unknown[] }> = {};
+type Rec = { date: string; [k: string]: unknown };
+const players: Record<string, { bat: Rec[]; pit: Rec[] }> = {};
 const slot = (no: string) => (players[no] ??= { bat: [], pit: [] });
 const stat = { games: 0, sheets: 0, batOk: 0, pitOk: 0, batRows: 0, batLinked: 0, pitRows: 0, pitLinked: 0 };
 
-for (const g of games.filter((x) => YEARS.has(x.year))) {
+for (const g of games.filter((x) => YEARS.has(x.year) && readings[`${x.id}_1`] && readings[`${x.id}_2`])) {
   stat.games++;
   const sides = [[readings[`${g.id}_1`], readings[`${g.id}_2`], g.lines[0], g.lines[1], g.scores[0]], [readings[`${g.id}_2`], readings[`${g.id}_1`], g.lines[1], g.lines[0], g.scores[1]]] as const;
   for (const [s, opp, mine, theirs, runs] of sides) {
@@ -51,5 +52,6 @@ for (const g of games.filter((x) => YEARS.has(x.year))) {
   }
 }
 
+for (const p of Object.values(players)) for (const list of [p.bat, p.pit]) list.sort((a, b) => a.date.localeCompare(b.date));
 fs.writeFileSync(path.join(DATA, "middle-school-records.json"), JSON.stringify({ updated: new Date().toISOString(), gamesRead: stat.games, players }));
 console.log(stat, "선수", Object.keys(players).length);
