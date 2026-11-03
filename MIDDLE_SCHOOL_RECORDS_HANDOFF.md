@@ -7,7 +7,8 @@
 **앱에 반영하지 않기로 하고 보류했다.** 사유는 판독값이 정확하다고 확인할 수 없기 때문이다. 이 브랜치는 나중에 방법을 찾을 때 이어서 쓰기 위한 기록이며 `main`에 병합하지 않는다.
 
 - 배포 워크플로(`deploy.yml`)는 `main` push에만 실행되므로 이 브랜치는 PWA에 반영되지 않는다.
-- 병합하면 시범 자료 `data/middle-school-records.json`과 선수 상세의 「중학교 기록」 화면이 함께 배포된다.
+- 저장소가 공개라서 정확도를 확인하지 못한 시범 기록 `data/middle-school-records.json`은 브랜치 이력에서 지웠고 `.gitignore`에 넣었다.
+- 기록 파일이 없으면 「중학교 기록」 영역은 표시되지 않는다. 다만 화면 코드는 병합하면 함께 배포되므로, 반영을 결정하기 전에는 병합하지 않는다.
 
 ## 목표
 
@@ -110,5 +111,6 @@ Haiku 등 저가 모델의 판독 품질은 확인하지 못했다. 서브에이
 - 기록지 이미지 240장(약 140MB)과 `games.json`
 - 판독 원본 `readings.json`, `readings.before-100.json`, `batches/b1~b5.json`
 - 판독 규칙 `READING_RULES.md`(같은 내용이 `msSheetModelTest.ts`의 지시문에 있다)
+- 시범 기록 백업 `middle-school-records.backup.json`. `scraper`에서 `npx tsx src/msSheetPublish.ts`를 실행하면 `data/middle-school-records.json`을 다시 만들 수 있다.
 
 다른 PC에서는 `msSheetSample.ts`로 표본을 다시 받을 수 있지만, 선택되는 경기가 달라질 수 있고 판독값은 다시 만들어야 한다. `msSheetPublish.ts`는 판독 원본이 있어야 실행된다.
